@@ -28,7 +28,6 @@ class WithdrawController extends Controller
 
     function withdraw(Request $request){
         $validator = Validator::make($request->all(),[
-            'affiliator_id'=>'required|integer',
             'amount'=>'required|integer',
             'name'=>'required',
             'bank_name'=>'required',
@@ -44,7 +43,7 @@ class WithdrawController extends Controller
             ]);
         }
         Withdraw::create([
-            'affiliator_id'=>$request->affiliator_id,
+            'affiliator_id'=>auth()->user()->id,
             'amount'=>$request->amount,
             'name'=>$request->name,
             'bank_name'=>$request->bank_name,
