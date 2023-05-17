@@ -45,6 +45,7 @@ class PaymentHistoryController extends Controller
 
                 if($data->status == Status::Pending->value){
                     $data->status = Status::Success->value;
+                    $data->save();
 
                     //add balance
                     $vendor = User::find($data->vendor_id);
@@ -56,6 +57,7 @@ class PaymentHistoryController extends Controller
 
             if($request->status == Status::Cancel->value){
                 $data->status = Status::Cancel->value;
+                $data->save();
             }
 
 

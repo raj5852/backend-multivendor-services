@@ -29,11 +29,11 @@ class WithdrawController extends Controller
     function withdraw(Request $request){
         $validator = Validator::make($request->all(),[
             'amount'=>'required|integer',
-            'name'=>'required',
+            // 'name'=>'required',
             'bank_name'=>'required',
-            'ac_or_number'=>'required',
-            'holder_name'=>'required',
-            'branch_name'=>'required',
+            // 'ac_or_number'=>'required',
+            // 'holder_name'=>'required',
+            // 'branch_name'=>'required',
         ]);
 
         if($validator->fails()){
