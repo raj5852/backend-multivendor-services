@@ -67,4 +67,12 @@ Route::get('demo', function () {
     // affiliator:
     // affiliator/profile //get
     // affiliator/update/profile //post parameters{name,number,image} image optional
+
+//     affi
+// pen balance
+// active balance
+
+// Admin -> vendor
+//  deposit
+
 });

@@ -265,7 +265,7 @@ Route::middleware(['auth:sanctum', 'isAPIAdmin'])->group(function () {
     Route::delete('admin/bank/delete/{id}',[BankController::class,'destroy']);
 
     //all payment request
-    Route::get('admin/deposit-history',[PaymentHistoryController::class,'history']);
+    Route::get('admin/deposit-history/{status?}',[PaymentHistoryController::class,'history']);
     Route::post('admin/deposit-history/{id}',[PaymentHistoryController::class,'statusUpdate']);
 
     //all withdraw request
@@ -322,8 +322,9 @@ Route::middleware(['auth:sanctum','isAPIaffiliator'])->group(function () {
 
 
     Route::post('affiliator/withdraw-post',[WithdrawController::class,'withdraw']);
-    Route::get('affiliator/all-withdraw',[WithdrawController::class,'index']);
+    Route::get('affiliator/all-withdraw/{status?}',[WithdrawController::class,'index']);
 
+    // Route::get('affiliator/pending-amount',[WithdrawController::class,''])
 
 });
 

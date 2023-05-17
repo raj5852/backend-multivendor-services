@@ -16,13 +16,16 @@ class PaymentHistoryController extends Controller
         $data =  VendorPaymentRequest::latest()
         ->when(request('search'),fn($q, $name)=>$q->where('transition_id','like',"%{$name}%"))
 
-        // ->when(request('status') == 'rejected', function ($q) {
-        //     return $q->where('status', 'rejected');
-        // })
+        ->when(request('status') == 'cancel' , function ($q) {
+            return $q->where('status', 'cancel');
+        })
 
-        // ->when(request('status') == 'rejected', function ($q) {
-        //     return $q->where('status', 'rejected');
-        // })
+        ->when(request('status') == 'pending', function ($q) {
+            return $q->where('status', 'pending');
+        })
+        ->when(request('status') == 'success', function ($q) {
+            return $q->where('status', 'success');
+        })
 
         ->with('vendor:id,name')
         ->paginate(10);
@@ -38,9 +41,13 @@ class PaymentHistoryController extends Controller
 
 
 
-        $data = VendorPaymentRequest::find($id);
+        $data = VendorPaymentRequest::find();
         if($data){
-
+            if($data->status == Status::Success->value){
+                return response()->json([
+                    'message'=>'Not possible to chnage'
+                ]);
+            }
             if($request->status == Status::Success->value){
 
                 if($data->status == Status::Pending->value){
@@ -59,6 +66,7 @@ class PaymentHistoryController extends Controller
                 $data->status = Status::Cancel->value;
                 $data->save();
             }
+
 
 
 

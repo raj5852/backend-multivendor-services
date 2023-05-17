@@ -19,9 +19,7 @@ class WithdrawController extends Controller
         ->when(request('status') == 'active', function ($q) {
             return $q->where('status', 'active');
         })
-        ->when(request('status') == 'rejected', function ($q) {
-            return $q->where('status', 'rejected');
-        })
+
 
         ->with('affiliator')
         ->paginate(10)

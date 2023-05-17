@@ -14,6 +14,14 @@ class WithdrawController extends Controller
         $withdraw = Withdraw::where('affiliator_id',auth()->user()->id)
         ->latest()
         ->when(request('search'),fn($q, $name)=>$q->where('bank_name','like',"%{$name}%"))
+
+        ->when(request('status') == 'success', function ($q) {
+            return $q->where('status', 'success');
+        })
+
+        ->when(request('status') == 'pending', function ($q) {
+            return $q->where('status', 'pending');
+        })
         ->paginate(10)
         ->withQueryString();
 
