@@ -3,8 +3,10 @@
 namespace App\Http\Controllers\API\Affiliate;
 
 use App\Http\Controllers\Controller;
+use App\Models\User;
 use App\Models\Withdraw;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 
 class WithdrawController extends Controller
@@ -61,6 +63,10 @@ class WithdrawController extends Controller
                 'holder_name'=>$request->holder_name,
                 'branch_name'=>$request->branch_name,
             ]);
+
+            $afi = Auth::user();
+            $afi->balance =  ($afi->balance - $request->amount);
+            $afi->save();
 
             return response()->json([
                 'status'=>200,
