@@ -39,7 +39,7 @@ class WithdrawController extends Controller
             'amount'=>'required|integer',
             // 'name'=>'required',
             'bank_name'=>'required',
-            // 'ac_or_number'=>'required',
+            'ac_or_number'=>'required',
             // 'holder_name'=>'required',
             // 'branch_name'=>'required',
         ]);
@@ -50,20 +50,34 @@ class WithdrawController extends Controller
                 'message'=>$validator->messages()
             ]);
         }
-        Withdraw::create([
-            'affiliator_id'=>auth()->user()->id,
-            'amount'=>$request->amount,
-            'name'=>$request->name,
-            'bank_name'=>$request->bank_name,
-            'ac_or_number'=>$request->ac_or_number,
-            'holder_name'=>$request->holder_name,
-            'branch_name'=>$request->branch_name,
-        ]);
+        if(auth()->user()->balance >= $request->amount){
 
-        return response()->json([
-            'status'=>200,
-            'message' => 'Withdraw successfully!'
-        ]);
+            Withdraw::create([
+                'affiliator_id'=>auth()->user()->id,
+                'amount'=>$request->amount,
+                // 'name'=>$request->name,
+                'bank_name'=>$request->bank_name,
+                'ac_or_number'=>$request->ac_or_number,
+                'holder_name'=>$request->holder_name,
+                'branch_name'=>$request->branch_name,
+            ]);
+
+            return response()->json([
+                'status'=>200,
+                'message' => 'Withdraw successfully!'
+            ]);
+
+
+        }else{
+
+            return response()->json([
+                'status'=>200,
+                'message' => 'Balance Not Available!'
+            ]);
+
+
+        }
+
 
     }
 }
