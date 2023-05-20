@@ -18,8 +18,8 @@ class WithdrawController extends Controller
             return $q->where('status', 'pending');
         })
 
-        ->when(request('status') == 'auccess', function ($q) {
-            return $q->where('status', 'auccess');
+        ->when(request('status') == 'success', function ($q) {
+            return $q->where('status', 'success');
         })
 
         ->with('affiliator')
