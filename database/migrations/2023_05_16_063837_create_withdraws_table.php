@@ -17,11 +17,14 @@ return new class extends Migration
             $table->id();
             $table->string('affiliator_id');
             $table->string('amount');
-            $table->string('name')->nullable();
             $table->string('bank_name')->nullable();
             $table->string('ac_or_number')->nullable();
             $table->string('holder_name')->nullable();
             $table->string('branch_name')->nullable();
+            $table->string('admin_transition_id')->nullable();
+            $table->string('admin_screenshot')->nullable();
+            $table->string('admin_bank_name')->nullable();
+
             $table->timestamps();
         });
     }
