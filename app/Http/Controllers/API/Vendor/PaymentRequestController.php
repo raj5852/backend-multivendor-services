@@ -69,7 +69,9 @@ class PaymentRequestController extends Controller
         })
 
         ->latest()
-        ->paginate(10);
+        ->paginate(10)
+        ->withQueryString();
+
 
         return response()->json([
             'status'=>200,
