@@ -67,7 +67,9 @@ class PaymentRequestController extends Controller
         ->when(request('status') == 'success', function ($q) {
             return $q->where('status', 'success');
         })
-
+        ->when(request('status') == 'pending', function ($q) {
+            return $q->where('status', 'pending');
+        })
         ->latest()
         ->paginate(10)
         ->withQueryString();
