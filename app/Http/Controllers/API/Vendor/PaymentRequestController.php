@@ -60,6 +60,14 @@ class PaymentRequestController extends Controller
     function history(){
         $data = VendorPaymentRequest::where('vendor_id',auth()->user()->id)
         ->when(request('search'),fn($q, $name)=>$q->where('transition_id','like',"%{$name}%"))
+
+        ->when(request('status') == 'cancel', function ($q) {
+            return $q->where('status', 'cancel');
+        })
+        ->when(request('status') == 'success', function ($q) {
+            return $q->where('status', 'success');
+        })
+
         ->latest()
         ->paginate(10);
 

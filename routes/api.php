@@ -150,7 +150,7 @@ Route::middleware(['auth:sanctum','isAPIVendor'])->group(function () {
 
     //vendor payment request
     Route::post('vendor/payment/submit',[PaymentRequestController::class,'store']);
-    Route::get('vendor/payment/history',[PaymentRequestController::class,'history']);
+    Route::get('vendor/payment/history/{status?}',[PaymentRequestController::class,'history']);
 });
 
 
