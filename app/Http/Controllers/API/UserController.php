@@ -75,7 +75,7 @@ class UserController extends Controller
                 'errors' => $validator->messages(),
             ]);
         } else {
-            if($request->amount >= 0){
+            if($request->balance >= 0){
                 return "Amount Wrong";
             }
             $vendor = new User();
@@ -84,7 +84,7 @@ class UserController extends Controller
             $vendor->password = Hash::make($request['password']);
             $vendor->status = $request->input('status');
             $vendor->number = $request->input('number');
-            $vendor->amount = $request->input('amount');
+            $vendor->balance = $request->input('balance');
             $vendor->role_as = '2';
 
             if ($request->hasFile('image')) {
