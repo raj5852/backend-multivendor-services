@@ -258,11 +258,10 @@ class UserController extends Controller
             $affiliator->role_as = '3';
 
             if ($request->hasFile('image')) {
-                $file = $request->file('image');
-                $extension = $file->getClientOriginalExtension();
-                $filename = time() . '.' . $extension;
-                $file->move('uploads/vendor/', $filename);
-                $affiliator->image = 'uploads/vendor/' . $filename;
+
+               $img =  fileUpload($request->file('image'),'uploads/affiliator',125,125);
+
+                $affiliator->image = $img;
             }
 
             $affiliator->save();
@@ -321,11 +320,10 @@ class UserController extends Controller
                     if (File::exists($path)) {
                         File::delete($path);
                     }
-                    $file = $request->file('image');
-                    $extension = $file->getClientOriginalExtension();
-                    $filename = time() . '.' . $extension;
-                    $file->move('uploads/affiliator/', $filename);
-                    $affiliator->image = 'uploads/affiliator/' . $filename;
+
+                    $img =  fileUpload($request->file('image'),'uploads/affiliator',125,125);
+
+                    $affiliator->image = $img;
                 }
 
 
