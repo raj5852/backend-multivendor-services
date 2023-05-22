@@ -75,9 +75,12 @@ class UserController extends Controller
                 'errors' => $validator->messages(),
             ]);
         } else {
-            if($request->balance < 0){
-                return "Amount Wrong";
+            if($request->balance){
+                if($request->balance < 0){
+                    return response()->json(['Balance Not Valid']);
+                }
             }
+
             $vendor = new User();
             $vendor->name = $request->input('name');
             $vendor->email = $request->input('email');
@@ -135,8 +138,11 @@ class UserController extends Controller
             $vendor = User::find($id);
             if ($vendor) {
 
-                if($request->balance < 0){
-                    return "Amount Wrong";
+                if($request->balance){
+                    // return "Amount Wrong";
+                    if($request->balance < 0){
+                        return response()->json(['Balance Not Valid']);
+                    }
                 }
 
                 $vendor->name = $request->input('name');
