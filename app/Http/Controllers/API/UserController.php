@@ -75,7 +75,7 @@ class UserController extends Controller
                 'errors' => $validator->messages(),
             ]);
         } else {
-            if($request->balance >= 0){
+            if($request->balance < 0){
                 return "Amount Wrong";
             }
             $vendor = new User();
