@@ -66,8 +66,7 @@ class UserController extends Controller
             'name' => 'required',
             'number' => 'required',
             'status' => 'required',
-            'password' => 'required:min:6',
-
+            'password' => 'required:min:8',
         ]);
 
         if ($validator->fails()) {
@@ -76,12 +75,16 @@ class UserController extends Controller
                 'errors' => $validator->messages(),
             ]);
         } else {
+            if($request->amount >= 0){
+                return "Amount Wrong";
+            }
             $vendor = new User();
             $vendor->name = $request->input('name');
             $vendor->email = $request->input('email');
             $vendor->password = Hash::make($request['password']);
             $vendor->status = $request->input('status');
             $vendor->number = $request->input('number');
+            $vendor->amount = $request->input('amount');
             $vendor->role_as = '2';
 
             if ($request->hasFile('image')) {
