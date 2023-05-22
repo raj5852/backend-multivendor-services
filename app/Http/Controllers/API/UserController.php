@@ -91,7 +91,7 @@ class UserController extends Controller
             $vendor->role_as = '2';
 
             if ($request->hasFile('image')) {
-               $img =  fileUpload($request->file('name'),'uploads/vendor',125,125);
+               $img =  fileUpload($request->file('image'),'uploads/vendor',125,125);
                $vendor->image = $img;
             }
 
@@ -160,7 +160,7 @@ class UserController extends Controller
                         File::delete($path);
                     }
 
-                    $img =  fileUpload($request->file('name'),'uploads/vendor',125,125);
+                    $img =  fileUpload($request->file('image'),'uploads/vendor',125,125);
                     $vendor->image = $img;
                 }
 
