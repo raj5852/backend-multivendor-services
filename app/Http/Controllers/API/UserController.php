@@ -88,11 +88,8 @@ class UserController extends Controller
             $vendor->role_as = '2';
 
             if ($request->hasFile('image')) {
-                $file = $request->file('image');
-                $extension = $file->getClientOriginalExtension();
-                $filename = time() . '.' . $extension;
-                $file->move('uploads/vendor/', $filename);
-                $vendor->image = 'uploads/vendor/' . $filename;
+               $img =  fileUpload($request->file('name'),'uploads/vendor',125,125);
+               $vendor->image = $img;
             }
 
             $vendor->save();
@@ -138,11 +135,16 @@ class UserController extends Controller
             $vendor = User::find($id);
             if ($vendor) {
 
+                if($request->balance < 0){
+                    return "Amount Wrong";
+                }
+
                 $vendor->name = $request->input('name');
                 $vendor->email = $request->input('email');
                 $vendor->status = $request->input('status');
                 $vendor->number = $request->input('number');
-                $vendor->image = $request->input('image');
+                // $vendor->image = $request->input('image');
+                $vendor->balance = $request->input('balance');
 
 
 
@@ -151,11 +153,9 @@ class UserController extends Controller
                     if (File::exists($path)) {
                         File::delete($path);
                     }
-                    $file = $request->file('image');
-                    $extension = $file->getClientOriginalExtension();
-                    $filename = time() . '.' . $extension;
-                    $file->move('uploads/vendor/', $filename);
-                    $vendor->image = 'uploads/vendor/' . $filename;
+
+                    $img =  fileUpload($request->file('name'),'uploads/vendor',125,125);
+                    $vendor->image = $img;
                 }
 
 
