@@ -311,7 +311,7 @@ class UserController extends Controller
                 $affiliator->email = $request->input('email');
                 $affiliator->status = $request->input('status');
                 $affiliator->number = $request->input('number');
-                $affiliator->image = $request->input('image');
+                // $affiliator->image = $request->input('image');
 
 
 
