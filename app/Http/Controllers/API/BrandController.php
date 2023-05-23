@@ -17,11 +17,22 @@ class BrandController extends Controller
         $brand = Brand::where('created_by',Status::Admin->value)
         ->when(request('search'),fn($q, $name)=>$q->where('name','like',"%{$name}%"))
         ->latest()->paginate(12);
+
         return response()->json([
             'status' => 200,
             'brand' => $brand,
         ]);
     }
+    function BrandActive(){
+        $brand = Brand::where('created_by',Status::Admin->value)
+        ->latest()->get();
+
+        return response()->json([
+            'status' => 200,
+            'brand' => $brand,
+        ]);
+    }
+
     public function BrandStore(Request $request)
     {
 

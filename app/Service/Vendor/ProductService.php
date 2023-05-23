@@ -32,7 +32,6 @@ class ProductService
                 'colors:id,name',
                 'sizes:id,name',
                 'productImage',
-
             ])
             ->latest()
             ->paginate(10)

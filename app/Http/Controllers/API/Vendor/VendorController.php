@@ -139,10 +139,10 @@ class VendorController extends Controller
             $product->meta_keyword = $request->meta_keyword;
             $product->meta_description = $request->meta_description;
 
-            $product->tags  = $request->tags;
+            $product->tags  = $request->tags; //array
             $product->discount_type = $request->discount_type;
             $product->discount_rate  = $request->discount_rate;
-            $product->variants = $request->variants;
+            $product->variants = $request->variants; //array
 
 
             if ($request->hasFile('image')) {

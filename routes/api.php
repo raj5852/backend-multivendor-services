@@ -205,6 +205,7 @@ Route::middleware(['auth:sanctum', 'isAPIAdmin'])->group(function () {
 
     Route::post('store-brand', [BrandController::class, 'BrandStore']);
     Route::get('view-brand', [BrandController::class, 'BrandIndex']);
+    Route::get('view-brand/active', [BrandController::class, 'BrandActive']);
     Route::get('edit-brand/{id}', [BrandController::class, 'BrandEdit']);
     Route::post('update-brand/{id}', [BrandController::class, 'BrandUpdate']);
     Route::delete('delete-brand/{id}', [BrandController::class, 'destroy']);
