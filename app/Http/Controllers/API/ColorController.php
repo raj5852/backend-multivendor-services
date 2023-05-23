@@ -15,11 +15,10 @@ class ColorController extends Controller
     {
 
         $userId = Auth::id();
-        $color=Color::where(function($query){
-            $query->where('created_by',Status::Admin->value)
-                ->orWhere('user_id',auth()->user()->id);
+        $color=Color::where('user_id',auth()->user()->id)
+        ->when(request('status') == 'active', function ($q) {
+            return $q->where('status', 'active');
         })
-        ->when(request('search'),fn($q, $name)=>$q->where('name','like',"%{$name}%"))
         ->latest()->get();
 
         return response()->json([
@@ -50,7 +49,7 @@ class ColorController extends Controller
             $color->code=$request->input('code');
             $color->slug = slugCreate(Color::class,$request->name);
             $color->user_id=Auth::id();
-            $color->status= Status::Active->value;
+            $color->status= $request->status;
             $color->created_by = Status::Vendor->value;
             $color->save();
             return response()->json([

@@ -138,12 +138,11 @@ class VendorController extends Controller
             $product->meta_title = $request->meta_title;
             $product->meta_keyword = $request->meta_keyword;
             $product->meta_description = $request->meta_description;
-            // $product->specification      = json_encode($request->specification);
-            // $product->specification_ans  = json_encode($request->specification_ans);
-            $product->tags  = json_encode($request->tags);
+
+            $product->tags  = $request->tags;
             $product->discount_type = $request->discount_type;
             $product->discount_rate  = $request->discount_rate;
-            $product->variants = json_encode($request->variants);
+            $product->variants = $request->variants;
 
 
             if ($request->hasFile('image')) {
@@ -162,24 +161,6 @@ class VendorController extends Controller
                     ]);
                 }
             }
-
-
-            //colors
-            // $colorIds = [];
-            // $qtys = [];
-
-
-            // foreach ($request->colors  as $data) {
-            //     $colorIds[] = $data['itemID'];
-            //     $qtys[] = $data['qty'] ?? 0;
-            // }
-
-            // foreach ($colorIds as $key => $color) {
-            //     $product->colors()->attach($color, ['qnt' => $qtys[$key]]);
-            // }
-
-            //size
-            // $product->sizes()->attach($request->sizes);
 
             $productId = $product->id;
 
@@ -205,7 +186,6 @@ class VendorController extends Controller
     {
         $userId = Auth::id();
         $product = Product::with('vendor','brand','specifications', 'category', 'subcategory', 'colors', 'sizes', 'productImage')->where('user_id', $userId)->find($id);
-       $product->variants = json_decode($product->variants);
 
         if ($product) {
             return response()->json([
@@ -261,10 +241,10 @@ class VendorController extends Controller
                 $product->meta_keyword = $request->input('meta_keyword');
                 $product->meta_description = $request->input('meta_description');
 
-                $product->tags = json_encode($request->input('tags'));
-                $product->discount_type = json_encode($request->discount_type);
-                $product->discount_rate  = json_encode($request->discount_rate);
-                $product->variants = json_encode($request->variants);
+                $product->tags = $request->input('tags');
+                $product->discount_type = $request->discount_type;
+                $product->discount_rate  = $request->discount_rate;
+                $product->variants = $request->variants;
 
                 $product->update();
                 // $product->colors()->sync($request->colors);
@@ -288,11 +268,8 @@ class VendorController extends Controller
                     if (File::exists($path)) {
                         File::delete($path);
                     }
-                    $file = $request->file('image');
-                    $extension = $file->getClientOriginalExtension();
-                    $filename = time() . '.' . $extension;
-                    $file->move('uploads/product/', $filename);
-                    $product->image = 'uploads/product/' . $filename;
+
+                    fileUpload($request->file('image'),'uploads/product');
                 }
 
                 $productId = $product->id;
@@ -361,7 +338,7 @@ class VendorController extends Controller
 
     public function AllCategory()
     {
-        $category = Category::with(['subcategory'])->get();
+        $category = Category::where('status','active')->with(['subcategory'])->get();
         return response()->json([
             'status' => 200,
             'category' => $category,
@@ -370,7 +347,7 @@ class VendorController extends Controller
 
     public function AllSubCategory()
     {
-        $subcategory = Subcategory::all();
+        $subcategory = Subcategory::where('status','active')->get();
         return response()->json([
             'status' => 200,
             'subcategory' => $subcategory,

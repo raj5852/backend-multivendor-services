@@ -42,37 +42,17 @@ Route::get('migrate', function () {
 
 
 Route::get('demo', function () {
-    // $json_data = '[{ "name": "Yellow", "itemID": 11, "id": 2, "qty": "2321" }, { "name": "Yellow", "itemID": 12, "id": 2, "qty": null }, { "name": "Yellow", "itemID": 13, "id": 2, "qty": "2321" }]';
 
-    // $php_array = json_decode($json_data, true);
-    // return $php_array;
-    // // print_r($php_array);
+// store-subcategory
+// color
+// size
+// category
+// brand
+
+//  product tag not array
+// admin-> variabns
 
 
-    // return orderId();
 
-    // [
-    //     ['qty'=>1],
-    //     ['qty'=>10],
-    //     ['qty'=>null]
-    // ]
-    // vendor:
-    // vendor/profile //get
-    // vendor/update/profile //post  parameters{name,number,image} image optional
-
-    // admin:
-    // admin/profile //get
-    // admin/update/profile //post parameters{name,number,image} image optional
-
-    // affiliator:
-    // affiliator/profile //get
-    // affiliator/update/profile //post parameters{name,number,image} image optional
-
-//     affi
-// pen balance
-// active balance
-
-// Admin -> vendor
-//  deposit
 
 });

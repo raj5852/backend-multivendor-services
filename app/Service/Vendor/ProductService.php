@@ -38,11 +38,7 @@ class ProductService
             ->paginate(10)
             ->withQueryString();
 
-            $product->map(function ($order) {
-                $order->variants = json_decode($order->variants);
-                // $order->tags = json_decode($order->tags);
-                return $order;
-            });
+
 
 
         return $product;

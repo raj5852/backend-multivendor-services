@@ -61,7 +61,8 @@ class Product extends Model
         return $this->hasMany(specification::class,'product_id','id');
     }
     protected $casts = [
-        'tags'=>'array'
+        'tags'=>'array',
+        'variants'=>'array'
     ];
 
 }

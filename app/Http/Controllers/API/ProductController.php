@@ -34,10 +34,6 @@ class ProductController extends Controller
             ->latest()->paginate(10)
             ->withQueryString();
 
-            $product->map(function ($order) {
-                $order->variants = json_decode($order->variants);
-                return $order;
-            });
 
         return response()->json([
             'status' => 200,

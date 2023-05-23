@@ -13,14 +13,12 @@ class SizeController extends Controller
 {
     public function SizeIndex()
     {
-        $size=Size::where(function($query){
-            $query->where('created_by',Status::Admin->value)
-            ->orWhere('user_id',auth()->user()->id);
-        })
-        ->when(request('search'),fn($q, $name)=>$q->where('name','like',"%{$name}%"))
+        $size=Size::where('user_id',auth()->user()->id)
+            ->when(request('status') == 'active', function ($q) {
+                return $q->where('status', 'active');
+            })
         ->latest()
-        ->paginate(15)
-        ->withQueryString();
+        ->get();
 
 
 
@@ -50,7 +48,7 @@ class SizeController extends Controller
             $size->name=$request->input('name');
             $size->slug = slugCreate(Size::class,$request->name);
             $size->user_id=Auth::id();
-            $size->status= Status::Active->value;
+            $size->status= $request->status;
             $size->created_by = Status::Vendor->value;
             $size->save();
             return response()->json([

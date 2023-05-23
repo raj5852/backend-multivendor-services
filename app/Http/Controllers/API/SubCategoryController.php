@@ -24,7 +24,7 @@ class SubCategoryController extends Controller
 
            $validator=Validator::make($request->all(),[
 
-               'name' => 'required|unique:subcategories|max:255',
+               'name' => 'required|max:255',
                'category_id'=>'required',
         ]);
 
@@ -40,7 +40,7 @@ class SubCategoryController extends Controller
             $subcategory =new Subcategory;
             $subcategory->category_id=$request->input('category_id');
             $subcategory->name=$request->input('name');
-            $subcategory->slug =Str::slug($request->name);
+            $subcategory->slug = slugCreate(Subcategory::class,$request->name);
             $subcategory->status=$request->input('status');
             $subcategory->save();
             return response()->json([
@@ -90,7 +90,7 @@ class SubCategoryController extends Controller
                   {
 
                       $subcategory->name = $request->input('name');
-                      $subcategory->slug =Str::slug($request->name);
+                      $subcategory->slug =slugUpdate(Subcategory::class,$request->name,$id);
                       $subcategory->category_id = $request->input('category_id');
                       $subcategory->status = $request->input('status');
                       $subcategory->save();
