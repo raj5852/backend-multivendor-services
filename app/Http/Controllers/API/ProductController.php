@@ -41,7 +41,12 @@ class ProductController extends Controller
         ]);
     }
     function catecoryToSubcategory($id){
-        $category = Category::find($id);
+        $category = Category::where([
+            'status'=>'active',
+            'id'=>$id
+        ])->first();
+
+
         if($category){
             return response()->json([
                 'status'=>200,
