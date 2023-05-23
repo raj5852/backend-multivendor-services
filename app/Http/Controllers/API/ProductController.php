@@ -45,7 +45,7 @@ class ProductController extends Controller
         if($category){
             return response()->json([
                 'status'=>200,
-                'message'=>$category->load('subcategory')
+                'message'=>$category->load('subcategory')->subcategory->where('status','active')
             ]);
         }else{
             return response()->json([
