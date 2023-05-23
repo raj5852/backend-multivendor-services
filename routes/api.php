@@ -90,6 +90,9 @@ Route::middleware(['auth:sanctum','isAPIVendor'])->group(function () {
     //brand create
     Route::post('vendor-brand-create',[VendorBrandController::class,'create']);
     Route::get('vendor-brands',[VendorBrandController::class,'allBrand']);
+    Route::get('vendor-brands/active',[VendorBrandController::class,'allBrandActive']);
+
+
     Route::delete('vendor-brand-delete/{id}',[VendorBrandController::class,'delete']);
     Route::get('vendor-brand-edit/{id}',[VendorBrandController::class,'edit']);
     Route::post('vendor-brand-update/{id}',[VendorBrandController::class,'update']);

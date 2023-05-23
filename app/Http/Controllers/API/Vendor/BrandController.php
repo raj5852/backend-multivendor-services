@@ -41,12 +41,22 @@ class BrandController extends Controller
     function allBrand()
     {
 
-        $brands = Brand::where(function ($query) {
-            $query->where('created_by', Status::Admin->value)
-                ->orWhere('user_id', auth()->user()->id);
-                })
+        $brands = Brand::where('status','active')
             ->latest()
             ->paginate(15);
+
+        return response()->json([
+            'status' => 200,
+            'brands' => $brands
+        ]);
+    }
+
+    function allBrandActive()
+    {
+
+        $brands = Brand::where('status','active')
+            ->latest()
+            ->get();
 
         return response()->json([
             'status' => 200,
