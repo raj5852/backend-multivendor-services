@@ -55,7 +55,7 @@ class ProductController extends Controller
         }else{
             return response()->json([
                 'status'=>400,
-                'message'=>'Not found'
+                'message'=>[]
             ]);
         }
     }
