@@ -169,7 +169,7 @@ Route::middleware(['auth:sanctum', 'isAPIAdmin'])->group(function () {
     Route::get('admin/request/product/all', [AdminController::class, 'AdminRequestAll']);
 
     Route::get('admin/request/product/rejected', [AdminController::class, 'RequestRejected']);
-    Route::get('admin/request/product/view/{id}',[AdminController::class,'RequestView']);
+    // Route::get('admin/request/product/view/{id}',[AdminController::class,'RequestView']);
     Route::post('admin/request/product-update/{id}', [AdminController::class, 'RequestUpdate']);
 
 

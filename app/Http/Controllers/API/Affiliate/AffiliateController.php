@@ -120,7 +120,7 @@ class AffiliateController extends Controller
     {
         $product = Product::with('category', 'subcategory', 'colors', 'sizes', 'productImage', 'brand', 'vendor', 'productdetails')->find($id);
         if ($product) {
-            $product->variants = json_decode($product->variants);
+            // $product->variants = json_decode($product->variants);
 
             return response()->json([
                 'status' => 200,
