@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\ApiTestController;
 use App\Http\Controllers\CategoryController;
+use App\Models\Product;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Str;
@@ -43,11 +44,6 @@ Route::get('migrate', function () {
 
 Route::get('demo', function () {
 
-// brand soft delete.
-
-
-
-//[{"id":1,"qty":"5","size":"20","color":"Green"},{"id":2,"qty":"5","size":"AC","color":"AC"},{"id":3,    "qty":"1","size":"2Xl","color":"Blue"},{"id":4,"qty":"1","size":"xl","color":"Yellow"}]
-
+$product = Product::find(145);
 
 });

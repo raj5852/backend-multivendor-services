@@ -174,7 +174,7 @@ class AffiliateController extends Controller
     public function  AffiliatorProductRejct()
     {
         $userId = Auth::id();
-        $reject = ProductDetails::with('product')->where('user_id', $userId)->where('status', 3)->latest()->paginate(10);
+        $reject = ProductDetails::with(['product','vendor:id,name'])->where('user_id', $userId)->where('status', 3)->latest()->paginate(10);
         return response()->json([
             'status' => 200,
             'pending' => $reject,

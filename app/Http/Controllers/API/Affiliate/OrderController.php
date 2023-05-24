@@ -20,7 +20,9 @@ class OrderController extends Controller
 
     function store(Request $request)
     {
-        Log::info($request->datas);
+        // Log::info($request->datas);
+        // return false;
+
         foreach ($request->datas as $data) {
 
             if ($data['name'] == null) {
@@ -60,36 +62,66 @@ class OrderController extends Controller
 
             $product = Product::find($data['product_id']);
 
-            if($product->qty >= $data['variants'][0]['qty']){
 
-                $product->qty = ($product->qty - $data['variants'][0]['qty']);
+
+
+            $sumQty = 0;
+            foreach ($data['variants'] as $item) {
+                $sumQty += intval($item['qty']);
+            }
+
+
+            if ($product->qty >= $data['variants'][0]['qty']) {
+                $product->qty = ($product->qty - $sumQty);
                 $product->save();
-
-            }else{
+            } else {
                 return response()->json([
-                    'status'=>201,
-                    'message'=>'Product quantity  not available!'
+                    'status' => 201,
+                    'message' => 'Product quantity  not available!'
                 ]);
+            }
+
+
+            $result = [];
+            $databaseValue = Product::find($data['product_id']);
+
+            if ($databaseValue->variants != '') {
+
+                foreach ($databaseValue->variants as $dbItem) {
+                    foreach ($data['variants'] as $userItem) {
+                        if ($dbItem['color_name'] === $userItem['color']) {
+                            $dbItem['qty'] -= $userItem['qty'];
+                            break;
+                        }
+                    }
+                    $result[] = $dbItem;
+                }
+
+
+
+                $databaseValue->variants = $result;
+                $databaseValue->save();
             }
 
 
 
 
+
             $pendingBalance = Order::where('vendor_id', $data['vendor_id'])
-            ->where('status','!=',Status::Delivered->value)
-            ->where('status','!=',Status::Cancel->value)
-            ->where('status','!=',Status::Rejected->value)
-            ->sum('afi_amount');
+                ->where('status', '!=', Status::Delivered->value)
+                ->where('status', '!=', Status::Cancel->value)
+                ->where('status', '!=', Status::Rejected->value)
+                ->sum('afi_amount');
 
 
             $vendor_balance = User::find($data['vendor_id'])->balance - $pendingBalance;
 
 
-            $afi_amount = $data['variants'][0]['qty'] * $data['amount'];
+            $afi_amount = $sumQty * $data['amount'];
 
-            if($vendor_balance >= $afi_amount){
+            if ($vendor_balance >= $afi_amount) {
                 $status = Status::Pending->value;
-            }else{
+            } else {
                 $status = Status::Hold->value;
             }
 
@@ -106,17 +138,17 @@ class OrderController extends Controller
                 'address' => $data['address'],
                 'variants' => json_encode($data['variants']),
                 'afi_amount' => $afi_amount,
-                'product_amount' => $product->selling_price * $data['variants'][0]['qty'],
+                'product_amount' => $product->selling_price * $sumQty,
                 'status' =>  $status,
             ]);
 
             PendingBalance::create([
-                'affiliator_id'=>auth()->user()->id,
-                'product_id'=> $data['product_id'],
-                'order_id'=>$order->id,
-                'qty'=>$data['variants'][0]['qty'],
-                'amount'=>$afi_amount,
-                'status'=>Status::Pending->value
+                'affiliator_id' => auth()->user()->id,
+                'product_id' => $data['product_id'],
+                'order_id' => $order->id,
+                'qty' => $sumQty,
+                'amount' => $afi_amount,
+                'status' => Status::Pending->value
             ]);
 
             DB::table('carts')->where('id', $data['cart_id'])->delete();
@@ -133,7 +165,7 @@ class OrderController extends Controller
         $orders = Order::searchProduct()
             ->where('affiliator_id', auth()->user()->id)
             ->where('status', Status::Pending->value)
-            ->with(['product:id,name','vendor:id,name'])
+            ->with(['product:id,name', 'vendor:id,name'])
             ->latest()
             ->paginate(10)
             ->withQueryString();
@@ -154,9 +186,9 @@ class OrderController extends Controller
     function ProgressOrders()
     {
         $orders = Order::searchProduct()
-            ->where('affiliator_id',auth()->user()->id)
+            ->where('affiliator_id', auth()->user()->id)
             ->where('status', Status::Progress->value)
-            ->with(['product:id,name','vendor:id,name'])
+            ->with(['product:id,name', 'vendor:id,name'])
             ->latest()
             ->paginate(10)
             ->withQueryString();
@@ -178,8 +210,8 @@ class OrderController extends Controller
     {
         $orders = Order::searchProduct()
             ->where('affiliator_id', auth()->user()->id)
-            ->where('status',Status::Delivered->value)
-            ->with(['product:id,name','vendor:id,name'])
+            ->where('status', Status::Delivered->value)
+            ->with(['product:id,name', 'vendor:id,name'])
             ->latest()
             ->paginate(10)
             ->withQueryString();
@@ -201,7 +233,7 @@ class OrderController extends Controller
         $orders = Order::searchProduct()
             ->where('affiliator_id', auth()->user()->id)
             ->where('status', Status::Cancel->value)
-            ->with(['product:id,name','vendor:id,name'])
+            ->with(['product:id,name', 'vendor:id,name'])
             ->latest()
             ->paginate(10)
             ->withQueryString();
@@ -222,17 +254,17 @@ class OrderController extends Controller
     {
         $orders = Order::searchProduct()
             ->where('affiliator_id', auth()->user()->id)
-            ->with(['product:id,name','vendor:id,name','affiliator:id,name'])
+            ->with(['product:id,name', 'vendor:id,name', 'affiliator:id,name'])
             ->latest()
             ->paginate(10)
             ->withQueryString();
 
 
 
-            $orders->map(function ($order) {
-                $order->variants = json_decode($order->variants);
-                return $order;
-            });
+        $orders->map(function ($order) {
+            $order->variants = json_decode($order->variants);
+            return $order;
+        });
 
 
 
@@ -242,32 +274,31 @@ class OrderController extends Controller
         ]);
     }
 
-    function orderView($id){
-        $order  = Order::where('id',$id)->where('affiliator_id',auth()->user()->id)->first();
-        if($order){
-         $allData =    $order->load(['product','vendor','affiliator']);
+    function orderView($id)
+    {
+        $order  = Order::where('id', $id)->where('affiliator_id', auth()->user()->id)->first();
+        if ($order) {
+            $allData =    $order->load(['product', 'vendor', 'affiliator']);
 
             $allData->variants = json_decode($allData->variants);
 
             return response()->json([
-                'status'=>200,
-                'message'=>$allData
+                'status' => 200,
+                'message' => $allData
             ]);
-
-        }else{
+        } else {
             return response()->json([
-                'status'=>404,
-                'message'=>'Not found'
+                'status' => 404,
+                'message' => 'Not found'
             ]);
         }
-
-
     }
-    function HoldOrders(){
+    function HoldOrders()
+    {
         $orders = Order::searchProduct()
             ->where('affiliator_id', auth()->user()->id)
             ->where('status', Status::Hold->value)
-            ->with(['product:id,name','vendor:id,name'])
+            ->with(['product:id,name', 'vendor:id,name'])
             ->latest()
             ->paginate(10)
             ->withQueryString();
