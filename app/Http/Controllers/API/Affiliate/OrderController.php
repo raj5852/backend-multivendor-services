@@ -20,7 +20,7 @@ class OrderController extends Controller
 
     function store(Request $request)
     {
-        // Log::info($request->datas);
+        Log::info($request->datas);
         foreach ($request->datas as $data) {
 
             if ($data['name'] == null) {
@@ -59,7 +59,6 @@ class OrderController extends Controller
 
 
             $product = Product::find($data['product_id']);
-            // $cart = Cart::find($data['product_id']);
 
             if($product->qty >= $data['variants'][0]['qty']){
 
@@ -76,17 +75,18 @@ class OrderController extends Controller
 
 
 
-            $pendingBalance = PendingBalance::where('affiliator_id',auth()->user()->id)
+            $pendingBalance = Order::where('vendor_id', $data['vendor_id'])
             ->where('status','!=',Status::Delivered->value)
             ->where('status','!=',Status::Cancel->value)
             ->where('status','!=',Status::Rejected->value)
-            ->sum('amount');
+            ->sum('afi_amount');
 
 
             $vendor_balance = User::find($data['vendor_id'])->balance - $pendingBalance;
 
 
             $afi_amount = $data['variants'][0]['qty'] * $data['amount'];
+
             if($vendor_balance >= $afi_amount){
                 $status = Status::Pending->value;
             }else{
@@ -222,7 +222,7 @@ class OrderController extends Controller
     {
         $orders = Order::searchProduct()
             ->where('affiliator_id', auth()->user()->id)
-            ->with(['product:id,name','vendor:id,name'])
+            ->with(['product:id,name','vendor:id,name','affiliator:id,name'])
             ->latest()
             ->paginate(10)
             ->withQueryString();

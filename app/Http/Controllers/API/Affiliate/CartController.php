@@ -15,6 +15,7 @@ class CartController extends Controller
 {
     public function addtocart(Request $request)
     {
+        Log::info($request->all());
 
         $user_id = auth()->user()->id;
         $product_id = $request->product_id;
@@ -27,11 +28,13 @@ class CartController extends Controller
 
         if($request->discount_type == 'flat'){
             $amount = $request->discount_rate;
-        }else if($request->discount_type == 'percent'){
-            $amount = ($productAmount/100)*$request->discount_rate;
-        }else{
-            $amount = 0;
+
         }
+
+        if($request->discount_type == 'percent'){
+            $amount = ($productAmount/100)*$request->discount_rate;
+        }
+
 
         $productCheck = Product::where('id',$product_id)->first();
         if($productCheck)

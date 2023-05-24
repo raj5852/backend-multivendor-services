@@ -43,16 +43,11 @@ Route::get('migrate', function () {
 
 Route::get('demo', function () {
 
-// store-subcategory
-// color
-// size
-// category
-// brand
-
-//  product tag not array
-// admin-> variabns
+// brand soft delete.
 
 
+
+//[{"id":1,"qty":"5","size":"20","color":"Green"},{"id":2,"qty":"5","size":"AC","color":"AC"},{"id":3,    "qty":"1","size":"2Xl","color":"Blue"},{"id":4,"qty":"1","size":"xl","color":"Yellow"}]
 
 
 });
