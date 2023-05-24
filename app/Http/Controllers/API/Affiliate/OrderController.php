@@ -76,7 +76,7 @@ class OrderController extends Controller
 
 
 
-            $pendingBalance = PendingBalance::where('vendor_id',auth()->user()->id)
+            $pendingBalance = PendingBalance::where('affiliator_id',auth()->user()->id)
             ->where('status','!=',Status::Delivered->value)
             ->where('status','!=',Status::Cancel->value)
             ->where('status','!=',Status::Rejected->value)

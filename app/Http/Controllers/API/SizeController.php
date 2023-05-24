@@ -15,8 +15,8 @@ class SizeController extends Controller
     {
         $size=Size::where('user_id',auth()->user()->id)
             ->when(request('status') == 'active', function ($q) {
-                return $q->where('status', 'active');
-            })
+                    return $q->where('status', 'active');
+                })
         ->latest()
         ->get();
 
