@@ -30,7 +30,7 @@ class ProductController extends Controller
             ->when(request('status') == 'rejected', function ($q) {
                 return $q->where('status', 'rejected');
             })
-            ->with('specifications','category', 'brand', 'subcategory', 'productImage')
+            ->with('specifications','category', 'brand', 'subcategory', 'productImage','vendor:id,name')
             ->latest()->paginate(10)
             ->withQueryString();
 
