@@ -21,6 +21,7 @@ class OrderController extends Controller
     function store(Request $request)
     {
 
+        Log::info($request->all());
 
         foreach ($request->datas as $data) {
 
