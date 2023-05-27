@@ -13,6 +13,7 @@ use Illuminate\Support\Facades\File;
 use App\Models\Category;
 use App\Models\Brand;
 use App\Models\ProductDetails;
+use App\Models\Subcategory;
 use Illuminate\Support\Facades\DB;
 
 class ProductController extends Controller
@@ -50,7 +51,10 @@ class ProductController extends Controller
         if($category){
             return response()->json([
                 'status'=>200,
-                'message'=>$category->subcategory->where('status','active')
+                'message'=>Subcategory::where([
+                    'category_id'=>$category->id,
+                    'status'=>'active'
+                ])->latest()->get()
             ]);
         }else{
             return response()->json([
