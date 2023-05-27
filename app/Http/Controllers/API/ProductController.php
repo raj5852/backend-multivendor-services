@@ -50,7 +50,7 @@ class ProductController extends Controller
         if($category){
             return response()->json([
                 'status'=>200,
-                'message'=>$category->subcategory->where('status','active')->get()
+                'message'=>$category->subcategory->where('status','active')
             ]);
         }else{
             return response()->json([
