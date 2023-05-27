@@ -136,7 +136,7 @@ class VendorController extends Controller
             $product->qty = $request->qty;
             $product->status = Status::Pending->value;
             $product->meta_title = $request->meta_title;
-            $product->meta_keyword = $request->meta_keyword;
+            $product->meta_keyword = $request->meta_keyword; //array
             $product->meta_description = $request->meta_description;
 
             $product->tags  = $request->tags; //array

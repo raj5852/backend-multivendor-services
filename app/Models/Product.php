@@ -62,7 +62,8 @@ class Product extends Model
     }
     protected $casts = [
         'tags'=>'array',
-        'variants'=>'array'
+        'variants'=>'array',
+        'meta_keyword'=>'array'
     ];
 
 }
