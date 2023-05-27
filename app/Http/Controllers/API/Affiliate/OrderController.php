@@ -65,10 +65,13 @@ class OrderController extends Controller
 
 
 
+
             $sumQty = 0;
             foreach ($data['variants'] as $item) {
                 $sumQty += intval($item['qty']);
             }
+
+            if($product > )
 
 
             if ($product->qty >= $data['variants'][0]['qty']) {

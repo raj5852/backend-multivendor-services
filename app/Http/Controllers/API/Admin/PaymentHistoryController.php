@@ -41,7 +41,7 @@ class PaymentHistoryController extends Controller
 
 
 
-        $data = VendorPaymentRequest::find();
+        $data = VendorPaymentRequest::find($id);
         if($data){
             if($data->status == Status::Success->value){
                 return response()->json([
