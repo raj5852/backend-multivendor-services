@@ -20,8 +20,7 @@ class OrderController extends Controller
 
     function store(Request $request)
     {
-        // Log::info($request->datas);
-        // return false;
+
 
         foreach ($request->datas as $data) {
 
@@ -71,7 +70,7 @@ class OrderController extends Controller
                 $sumQty += intval($item['qty']);
             }
 
-            if($product > )
+
 
 
             if ($product->qty >= $data['variants'][0]['qty']) {
