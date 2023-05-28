@@ -19,6 +19,9 @@ use App\Models\User;
 use App\Models\Subcategory;
 use App\Models\ProductDetails;
 use App\Models\specification;
+use App\Rules\BrandRule;
+use App\Rules\CategoryRule;
+use App\Rules\SubCategorydRule;
 use App\Service\Vendor\ProductService;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
@@ -41,7 +44,7 @@ class VendorController extends Controller
         $validator =  Validator::make($request->all(), [
             'name' => 'required',
             'number' => 'required|integer',
-            'number2'=>'nullable|integer',
+            'number2' => 'nullable|integer',
             'old_password' => 'nullable',
             'new_password' => 'nullable',
         ]);
@@ -70,7 +73,7 @@ class VendorController extends Controller
                     'status' => 400,
                     'message' => 'Old Password Not Match!'
                 ]);
-            }else{
+            } else {
                 $data->password = bcrypt($request->new_password);
             }
         }
@@ -107,14 +110,32 @@ class VendorController extends Controller
 
         $validator = Validator::make($request->all(), [
             'name' => 'required|max:255',
-            'category_id' => 'required',
-            'qty' => 'required',
-            'selling_price' => ['required|numeric|min:1'],
-            'original_price' => 'required',
-            'brand_id' => 'required',
-            'image' => 'required',
-            'images' => 'required'
+            'category_id' => ['required', 'integer', 'min:1', new CategoryRule],
+            'subcategory_id' => ['nullable', new SubCategorydRule],
+            'qty' => ['required', 'integer', 'min:1'],
+            'selling_price' => ['required', 'numeric', 'min:1'],
+            'original_price' => ['required', 'numeric', 'min:1'],
+            'brand_id' => ['required', 'integer', 'min:1', new BrandRule],
+            'discount_type' => ['nullable', 'in:percent,flat'],
+            'discount_rate' => ['required_with:discount_type', 'integer', 'min:1'],
+            'meta_keyword' => ['nullable', 'array'],
+            'tags' => ['nullable', 'array'],
+            'variants' => ['nullable', 'array'],
+            'variants.*.size_name' => ['required_with:variants'],
+            'variants.*.color_name' => ['required_with:variants'],
+            'variants.*.qty' => ['required_with:variants','integer','min:0'],
+
+            'image'=>['required','mimes:jpeg,png,jpg'],
+            'images'=>['required','mimes:jpeg,png,jpg'],
+
         ]);
+        $validator->after(function ($validator) {
+            if (request('selling_price') > auth()->user()->balance) {
+                $validator->errors()->add('selling_price', 'At least one product should have a balance');
+            }
+        });
+
+
 
 
         if ($validator->fails()) {
@@ -124,12 +145,6 @@ class VendorController extends Controller
             ]);
         } else {
 
-            if($request->selling_price > auth()->user()->balance){
-                return response()->json([
-                    'status'=>201,
-                    'message'=>'At least one product should have a balance'
-                ]);
-            }
 
             $product = new Product;
             $product->category_id = $request->category_id;
@@ -155,7 +170,7 @@ class VendorController extends Controller
 
 
             if ($request->hasFile('image')) {
-                $filename =   fileUpload($request->file('image'), 'uploads/product',500,500);
+                $filename =   fileUpload($request->file('image'), 'uploads/product', 500, 500);
                 $product->image =  $filename;
             }
 
@@ -194,7 +209,7 @@ class VendorController extends Controller
     public function VendorProductEdit($id)
     {
         $userId = Auth::id();
-        $product = Product::with('vendor','brand','specifications', 'category', 'subcategory', 'colors', 'sizes', 'productImage')->where('user_id', $userId)->find($id);
+        $product = Product::with('vendor', 'brand', 'specifications', 'category', 'subcategory', 'colors', 'sizes', 'productImage')->where('user_id', $userId)->find($id);
 
         if ($product) {
             return response()->json([
@@ -214,12 +229,31 @@ class VendorController extends Controller
     public function VendotUpdateProduct(Request $request, $id)
     {
         $validator = Validator::make($request->all(), [
+            // 'name' => 'required|max:255',
+            // 'category_id' => 'required',
+            // 'qty' => 'required',
+            // 'selling_price' => 'required',
+            // 'original_price' => 'required',
+            // 'brand_id' => 'required',
+
             'name' => 'required|max:255',
-            'category_id' => 'required',
-            'qty' => 'required',
-            'selling_price' => 'required',
-            'original_price' => 'required',
-            'brand_id' => 'required',
+            'category_id' => ['required', 'integer', 'min:1', new CategoryRule],
+            'subcategory_id' => ['nullable', new SubCategorydRule],
+            'qty' => ['required', 'integer', 'min:1'],
+            'selling_price' => ['required', 'numeric', 'min:1'],
+            'original_price' => ['required', 'numeric', 'min:1'],
+            'brand_id' => ['required', 'integer', 'min:1', new BrandRule],
+            'discount_type' => ['nullable', 'in:percent,flat'],
+            'discount_rate' => ['required_with:discount_type', 'integer', 'min:1'],
+            'meta_keyword' => ['nullable', 'array'],
+            'tags' => ['nullable', 'array'],
+            'variants' => ['nullable', 'array'],
+            'variants.*.size_name' => ['required_with:variants'],
+            'variants.*.color_name' => ['required_with:variants'],
+            'variants.*.qty' => ['required_with:variants','integer','min:0'],
+
+            'image'=>['required','mimes:jpeg,png,jpg'],
+            'images'=>['required','mimes:jpeg,png,jpg'],
 
 
         ]);
@@ -278,7 +312,7 @@ class VendorController extends Controller
                         File::delete($path);
                     }
 
-                    fileUpload($request->file('image'),'uploads/product');
+                    fileUpload($request->file('image'), 'uploads/product');
                 }
 
                 $productId = $product->id;
@@ -347,7 +381,7 @@ class VendorController extends Controller
 
     public function AllCategory()
     {
-        $category = Category::where('status','active')->with(['subcategory'])->get();
+        $category = Category::where('status', 'active')->with(['subcategory'])->get();
         return response()->json([
             'status' => 200,
             'category' => $category,
@@ -356,7 +390,7 @@ class VendorController extends Controller
 
     public function AllSubCategory()
     {
-        $subcategory = Subcategory::where('status','active')->get();
+        $subcategory = Subcategory::where('status', 'active')->get();
         return response()->json([
             'status' => 200,
             'subcategory' => $subcategory,
