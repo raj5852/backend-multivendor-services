@@ -109,12 +109,13 @@ class VendorController extends Controller
             'name' => 'required|max:255',
             'category_id' => 'required',
             'qty' => 'required',
-            'selling_price' => 'required',
+            'selling_price' => ['required|numeric|min:1'],
             'original_price' => 'required',
             'brand_id' => 'required',
             'image' => 'required',
             'images' => 'required'
         ]);
+
 
         if ($validator->fails()) {
             return response()->json([
@@ -122,6 +123,14 @@ class VendorController extends Controller
                 'errors' => $validator->messages(),
             ]);
         } else {
+
+            if($request->selling_price > auth()->user()->balance){
+                return response()->json([
+                    'status'=>201,
+                    'message'=>'At least one product should have a balance'
+                ]);
+            }
+
             $product = new Product;
             $product->category_id = $request->category_id;
             $product->subcategory_id = $request->subcategory_id;

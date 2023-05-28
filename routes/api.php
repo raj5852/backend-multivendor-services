@@ -319,7 +319,7 @@ Route::middleware(['auth:sanctum','isAPIaffiliator'])->group(function () {
 
 
     //pending balance
-    Route::get('affiliator/balance/history',[PendingBalanceController::class,'balance']);
+    Route::get('affiliator/balance/history/{status?}',[PendingBalanceController::class,'balance']);
 
     //bank show
     Route::get('affiliator/banks',[AffiliateBankController::class,'index']);
