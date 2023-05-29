@@ -275,7 +275,7 @@ class VendorController extends Controller
                 $product->user_id = auth()->user()->id;
 
                 $product->name = $request->input('name');
-                $product->slug = slugCreate(Product::class, $request->name);
+                $product->slug =  slugUpdate(Product::class,$request->name,$id);
                 $product->short_description = $request->input('short_description');
                 $product->long_description = $request->input('long_description');
                 $product->selling_price = $request->input('selling_price');
@@ -292,8 +292,7 @@ class VendorController extends Controller
                 $product->variants = $request->variants;
 
                 $product->update();
-                // $product->colors()->sync($request->colors);
-                // $product->sizes()->sync($request->sizes);
+
 
                 DB::table('specifications')->where('product_id', $product->id)->delete();
 
@@ -314,34 +313,22 @@ class VendorController extends Controller
                         File::delete($path);
                     }
 
-                    fileUpload($request->file('image'), 'uploads/product');
+                    $filename =   fileUpload($request->file('image'), 'uploads/product');
+                    $product->image =  $filename;
                 }
 
-                $productId = $product->id;
-                $update_images = ProductImage::where('product_id', $productId)->get();
-                $images = $request->file('images');
 
-                if ($images) {
-                    foreach ($images as $key => $image) {
-                        // image01 upload
-                        $name =  time() . $key . '-' . $image->getClientOriginalName();
-                        $uploadpath = 'uploads/product/';
-                        $image->move($uploadpath, $name);
-                        $imageUrl = $uploadpath . $name;
 
+                if ($request->file('images')) {
+                    foreach ($request->file('images') as $key => $image) {
+                        $imageUrl = fileUpload($request->file('images')[$key],'uploads/product');
                         $proimage = new ProductImage();
-                        $proimage->product_id = $productId;
+                        $proimage->product_id = $product->id;
                         $proimage->image = $imageUrl;
                         $proimage->save();
-                    }
-                } else {
-                    foreach ($update_images as $update_image) {
-                        $uimage = $update_image->image;
-                        $update_image->image  = $uimage;
-                        $update_image->save();
+
                     }
                 }
-
 
 
                 $product->update();
