@@ -296,11 +296,11 @@ class VendorController extends Controller
 
                 DB::table('specifications')->where('product_id', $product->id)->delete();
 
-                if ($request->specification) {
-                    foreach ($request->specification as $key => $sp) {
+                if ($request->specifications) {
+                    foreach ($request->specifications as $key => $sp) {
                         specification::create([
                             'product_id' => $product->id,
-                            'specification' => $sp,
+                            'specification' => $request->specification[$key],
                             'specification_ans' => $request->specification_ans[$key]
                         ]);
                     }
