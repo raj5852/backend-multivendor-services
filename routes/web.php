@@ -3,6 +3,7 @@
 use App\Http\Controllers\ApiTestController;
 use App\Http\Controllers\CategoryController;
 use App\Models\Product;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Str;
@@ -44,6 +45,6 @@ Route::get('migrate', function () {
 
 Route::get('demo', function () {
 
-$product = Product::find(145);
+    return $today = Carbon::now()->toDateString();
 
 });

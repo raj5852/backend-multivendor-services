@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\API\Admin\BankController;
 use App\Http\Controllers\API\Admin\ColorController as AdminColorController;
+use App\Http\Controllers\API\Admin\DashboardController;
 use App\Http\Controllers\API\Admin\OrderController as AdminOrderController;
 use App\Http\Controllers\API\Admin\PaymentHistoryController;
 use App\Http\Controllers\API\Admin\SizeController as AdminSizeController;
@@ -275,6 +276,9 @@ Route::middleware(['auth:sanctum', 'isAPIAdmin'])->group(function () {
     //all withdraw request
     Route::get('admin/all-withdraw/{status?}',[AdminWithdrawController::class,'index']);
     Route::post('admin/withdraw-paid/{id}',[AdminWithdrawController::class,'paid']);
+
+    //dashboard data
+    Route::get('dashboard-datas',[DashboardController::class,'index']);
 });
 
 

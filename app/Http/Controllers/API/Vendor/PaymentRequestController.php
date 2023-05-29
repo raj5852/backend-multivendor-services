@@ -14,14 +14,15 @@ class PaymentRequestController extends Controller
     function store(Request $request)
     {
         $validate = Validator::make($request->all(), [
-            'admin_bank_id' => 'required',
+            'admin_bank_id' => 'required|integer',
             'vendor_bank_number' => 'required',
-            'balance' => 'required',
+            'balance' => 'required|numeric|min:1',
             'transition_id' => 'required',
             'screenshot' => 'nullable',
             'reference_field' => 'nullable',
 
         ]);
+
 
         if ($validate->fails()) {
             return response()->json([

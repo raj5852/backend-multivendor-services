@@ -121,8 +121,8 @@ class VendorController extends Controller
             'meta_keyword' => ['nullable', 'array'],
             'tags' => ['nullable', 'array'],
             'variants' => ['nullable', 'array'],
-            'variants.*.size_name' => ['required_with:variants'],
-            'variants.*.color_name' => ['required_with:variants'],
+            // 'variants.*.size_name' => ['required_with:variants'],
+            // 'variants.*.color_name' => ['required_with:variants'],
             'variants.*.qty' => ['required_with:variants','integer','min:0'],
 
             'image'=>['required','mimes:jpeg,png,jpg'],
