@@ -259,6 +259,11 @@ class VendorController extends Controller
 
 
         ]);
+        $validator->after(function ($validator) {
+            if (request('selling_price') > auth()->user()->balance) {
+                $validator->errors()->add('selling_price', 'At least one product should have a balance');
+            }
+        });
 
         if ($validator->fails()) {
             return response()->json([
