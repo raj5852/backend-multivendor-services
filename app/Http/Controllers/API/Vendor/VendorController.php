@@ -228,6 +228,8 @@ class VendorController extends Controller
 
     public function VendotUpdateProduct(Request $request, $id)
     {
+        Log::info($request->all());
+        Log::info($request->file('image'));
         $validator = Validator::make($request->all(), [
             // 'name' => 'required|max:255',
             // 'category_id' => 'required',
