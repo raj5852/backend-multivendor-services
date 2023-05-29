@@ -300,8 +300,8 @@ class VendorController extends Controller
                     foreach ($request->specifications as $key => $sp) {
                         specification::create([
                             'product_id' => $product->id,
-                            'specification' => $request->specification[$key],
-                            'specification_ans' => $request->specification_ans[$key]
+                            'specification' => $sp['specification'],
+                            'specification_ans' =>  $sp['specification_ans']
                         ]);
                     }
                 }
