@@ -126,7 +126,7 @@ class VendorController extends Controller
             'variants.*.qty' => ['required_with:variants','integer','min:0'],
 
             'image'=>['required','mimes:jpeg,png,jpg'],
-            'images'=>['required','mimes:jpeg,png,jpg'],
+            'images.*'=>['required','mimes:jpeg,png,jpg'],
 
         ]);
         $validator->after(function ($validator) {
@@ -252,8 +252,8 @@ class VendorController extends Controller
             'variants.*.color_name' => ['required_with:variants'],
             'variants.*.qty' => ['required_with:variants','integer','min:0'],
 
-            'image'=>['required','mimes:jpeg,png,jpg'],
-            'images'=>['required','mimes:jpeg,png,jpg'],
+            'image'=>['nullable','mimes:jpeg,png,jpg'],
+            'images.*'=>['nullable','mimes:jpeg,png,jpg'],
 
 
         ]);
