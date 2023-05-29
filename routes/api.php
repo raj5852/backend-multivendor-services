@@ -194,6 +194,8 @@ Route::middleware(['auth:sanctum', 'isAPIAdmin'])->group(function () {
     Route::post('update-category/{id}', [CategoryController::class, 'UpdateCategory']);
     Route::delete('delete-category/{id}', [CategoryController::class, 'destroy']);
 
+    Route::post('category-status/{id}',[CategoryController::class,'status']);
+
     // Route::get('all/category', [CategoryController::class, 'AllCategory']);
 
 
@@ -204,7 +206,7 @@ Route::middleware(['auth:sanctum', 'isAPIAdmin'])->group(function () {
     Route::post('update-subcategory/{id}', [SubCategoryController::class, 'UpdateSubCategory']);
     Route::delete('delete-subcategory/{id}', [SubCategoryController::class, 'destroy']);
 
-
+    Route::post('subcategory-status/{id}',[SubCategoryController::class,'status']);
 
 
     Route::post('store-brand', [BrandController::class, 'BrandStore']);
