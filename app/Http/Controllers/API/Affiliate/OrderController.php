@@ -21,49 +21,44 @@ class OrderController extends Controller
     function store(Request $request)
     {
 
-        Log::info($request->all());
+        // return $request->datas;
+
+        $validator =  Validator::make($request->all(),[
+            'datas'=>['required','array'],
+            'datas.*.name'=>['required'],
+            'datas.*.phone'=>['required','integer','min:1'],
+            'datas.*.email'=>['nullable'],
+            'datas.*.city'=>['required'],
+            'datas.*.address'=>['required'],
+            'datas.*.vendor_id'=>['required','integer'],
+            'datas.*.variants'=>['required','array'],
+            'datas.*.variants.*.qty'=>['required','integer','min:1']
+        ]);
+
+        $validator->after(function($validator){
+
+            $totalProductQty = Product::find(request('datas')[0]['product_id'])->qty;
+
+            $totalQty = collect(request('datas'))->sum(function ($item) {
+                return collect($item['variants'])->sum('qty');
+            });
+
+            if($totalQty > $totalProductQty){
+                $validator->errors()->add('datas.*.variants.*.qty','Product quantity not available');
+            }
+        });
+
+
+        if ($validator->fails()) {
+            return response()->json([
+                'status' => 422,
+                'errors' => $validator->messages(),
+            ]);
+        }
+
+        $product = Product::find(request('datas')[0]['product_id']);
 
         foreach ($request->datas as $data) {
-
-            if ($data['name'] == null) {
-                return response()->json([
-                    'status' => 201,
-                    'message' => 'Name fild is required'
-                ]);
-            }
-
-            if ($data['phone'] == null) {
-                return response()->json([
-                    'status' => 201,
-                    'message' => 'Phone fild is required'
-                ]);
-            }
-
-            if ($data['city'] == null) {
-                return response()->json([
-                    'status' => 201,
-                    'message' => 'City fild is required'
-                ]);
-            }
-            if ($data['address'] == null) {
-                return response()->json([
-                    'status' => 201,
-                    'message' => 'Address fild is required'
-                ]);
-            }
-
-            if ($data['variants'][0]['qty'] <= 0) {
-                return response()->json([
-                    'status' => 201,
-                    'message' => 'Quantity fild is required'
-                ]);
-            }
-
-
-            $product = Product::find($data['product_id']);
-
-
-
 
 
             $sumQty = 0;
