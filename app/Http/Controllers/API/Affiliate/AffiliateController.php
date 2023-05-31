@@ -154,7 +154,16 @@ class AffiliateController extends Controller
     public function  AffiliatorProductPendingProduct()
     {
         $userId = Auth::id();
-        $pending = ProductDetails::with('product')->where('user_id', $userId)->where('status', 2)->latest()->paginate(10);
+        $searchTerm = request('search');
+
+        $pending = ProductDetails::with('product')
+        ->where('user_id', $userId)
+        ->where('status', 2)
+        ->whereHas('product', function ($query) use ($searchTerm) {
+            $query->where('name', 'like', '%'.$searchTerm.'%');
+        })
+        ->latest()->paginate(10);
+
         return response()->json([
             'status' => 200,
             'pending' => $pending,
@@ -164,7 +173,15 @@ class AffiliateController extends Controller
     public function AffiliatorProductActiveProduct()
     {
         $userId = Auth::id();
-        $active = ProductDetails::with('product')->where('user_id', $userId)->where('status', 1)->latest()->paginate(10);
+        $searchTerm = request('search');
+
+        $active = ProductDetails::with('product')->where('user_id', $userId)->where('status', 1)
+        ->whereHas('product', function ($query) use ($searchTerm) {
+            $query->where('name', 'like', '%'.$searchTerm.'%');
+        })
+        ->latest()->paginate(10);
+
+
         return response()->json([
             'status' => 200,
             'active' => $active,
