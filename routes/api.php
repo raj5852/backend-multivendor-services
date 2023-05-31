@@ -160,7 +160,7 @@ Route::middleware(['auth:sanctum','isAPIVendor'])->group(function () {
 
 
 //admin route
-Route::middleware(['auth:sanctum', 'isAPIAdmin'])->group(function () {
+Route::middleware(['auth:sanctum', 'isAPIAdmin','userOnline'])->group(function () {
 
     Route::get('/checkingAuthenticated', function () {
         return response()->json(['message' => 'You are in', 'status' => 200], 200);
@@ -286,7 +286,7 @@ Route::middleware(['auth:sanctum', 'isAPIAdmin'])->group(function () {
 
 //affiliator
 
-Route::middleware(['auth:sanctum','isAPIaffiliator'])->group(function () {
+Route::middleware(['auth:sanctum','isAPIaffiliator','userOnline'])->group(function () {
 
     Route::get('affiliator/profile', [AffiliateController::class, 'AffiliatorProfile']);
     Route::post('affiliator/update/profile', [AffiliateController::class, 'AffiliatorUpdateProfile']);

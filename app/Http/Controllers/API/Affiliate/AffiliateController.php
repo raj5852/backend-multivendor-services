@@ -193,7 +193,8 @@ class AffiliateController extends Controller
     public function  AffiliatorProductRejct()
     {
         $userId = Auth::id();
-        $$searchTerm  = request('search');
+        $searchTerm  = request('search');
+
         $reject = ProductDetails::with(['product','vendor:id,name'])->where('user_id', $userId)->where('status', 3)
         ->whereHas('product', function ($query) use ($searchTerm) {
             $query->where('name', 'like', '%'.$searchTerm.'%');

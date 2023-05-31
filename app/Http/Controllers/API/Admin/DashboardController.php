@@ -14,7 +14,7 @@ class DashboardController extends Controller
     //
     function index(){
 
-       DashboardService::index();
+     return  DashboardService::index();
 
     }
 }
