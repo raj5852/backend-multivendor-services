@@ -105,32 +105,12 @@ class CartController extends Controller
     {
         if(auth('sanctum')->check())
         {
-            $user_id = auth('sanctum')->user()->id;
-            $cartitems = Cart::with(['cartDetails','product:id,name'])->get();
-
-
-            // foreach ($cartitems as $cartitem) {
-            //     $color = json_decode($cartitem->color);
-            //     array_push($colors, $color);
-            // }
-
-
-            // foreach ($cartitems as $cartitem) {
-            //     $size = json_decode($cartitem->size);
-            //     array_push($sizes, $size);
-            // }
-
-            // foreach ($cartitems as $cartitem) {
-            //     $product_qty = json_decode($cartitem->product_qty);
-            //     array_push($product_qtys, $product_qty);
-            // }
-
+            $user_id = auth()->user()->id;
+            $cartitems = Cart::where('user_id',$user_id)->with(['cartDetails','product:id,name'])->get();
 
             return response()->json([
                 'status'=> 200,
                  'cart'=> $cartitems,
-
-
             ]);
         }
         else
