@@ -20,8 +20,10 @@ class RequestProductController extends Controller
             ->whereHas('product', function ($query) {
                 $query->where('name', 'LIKE', '%' . request('search') . '%');
             })
+            ->with(['affiliator:id,name','vendor:id,name'])
             ->latest()
-            ->paginate(10);
+            ->paginate(10)
+            ->withQueryString();
 
         return response()->json([
             'status' => 200,
