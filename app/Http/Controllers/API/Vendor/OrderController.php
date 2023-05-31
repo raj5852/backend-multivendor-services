@@ -194,7 +194,7 @@ class OrderController extends Controller
     function  orderView($id){
         $order  = Order::where('id',$id)->where('vendor_id',auth()->user()->id)->first();
         if($order){
-            $allData =    $order->load(['product','vendor','affiliator']);
+            $allData =    $order->load(['product','vendor:id,name,image','affiliator']);
 
             $allData->variants = json_decode($allData->variants);
             return response()->json([

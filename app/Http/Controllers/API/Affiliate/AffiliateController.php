@@ -118,7 +118,7 @@ class AffiliateController extends Controller
 
     public function AffiliatorProductSingle($id)
     {
-        $product = Product::with('category', 'subcategory', 'colors', 'sizes', 'productImage', 'brand', 'vendor:id,name,email,role_as,image,number,number2,status,created_at,updated_at', 'productdetails')->find($id);
+        $product = Product::with('category', 'subcategory', 'colors', 'sizes', 'productImage', 'brand', 'vendor:id,name,image', 'productdetails')->find($id);
         if ($product) {
             // $product->variants = json_decode($product->variants);
 

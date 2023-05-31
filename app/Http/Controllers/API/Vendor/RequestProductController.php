@@ -66,7 +66,7 @@ class RequestProductController extends Controller
     {
 
         $product = ProductDetails::where('vendor_id', auth()->user()->id)
-            ->with(['affiliator','vendor','product'])
+            ->with(['affiliator','vendor:id,name,image','product'])
             ->whereHas('product', function ($query) {
                 $query->where('name', 'LIKE', '%' . request('search') . '%');
             })
