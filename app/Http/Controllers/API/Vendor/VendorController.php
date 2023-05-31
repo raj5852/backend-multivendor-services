@@ -130,9 +130,22 @@ class VendorController extends Controller
 
         ]);
         $validator->after(function ($validator) {
-            if (request('selling_price') > auth()->user()->balance) {
-                $validator->errors()->add('selling_price', 'At least one product should have a balance');
+            $discount_type = request('discount_type');
+            $discount_rate = request('discount_rate');
+
+            if($discount_type == 'flat'){
+                $required_balance =  $discount_rate;
             }
+
+            if($discount_type == 'percent'){
+
+                $required_balance =  (request('selling_price')/100) * $discount_rate;
+            }
+
+            if ($required_balance > auth()->user()->balance) {
+                $validator->errors()->add('selling_price', 'At least one product should have  a commission balance');
+            }
+
         });
 
 
@@ -254,9 +267,22 @@ class VendorController extends Controller
 
         ]);
         $validator->after(function ($validator) {
-            if (request('selling_price') > auth()->user()->balance) {
-                $validator->errors()->add('selling_price', 'At least one product should have a balance');
+            $discount_type = request('discount_type');
+            $discount_rate = request('discount_rate');
+
+            if($discount_type == 'flat'){
+                $required_balance =  $discount_rate;
             }
+
+            if($discount_type == 'percent'){
+
+                $required_balance =  (request('selling_price')/100) * $discount_rate;
+            }
+
+            if ($required_balance > auth()->user()->balance) {
+                $validator->errors()->add('selling_price', 'At least one product should have  a commission balance');
+            }
+
         });
 
         if ($validator->fails()) {
