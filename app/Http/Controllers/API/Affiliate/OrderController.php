@@ -46,7 +46,7 @@ class OrderController extends Controller
             if($totalQty > $totalProductQty){
                 $validator->errors()->add('datas.*.variants.*.qty','Product quantity not available');
             }
-            if($product == Status::Pending->value){
+            if($product->status == Status::Pending->value){
                 $validator->errors()->add('datas','The product under construction');
             }
         });
