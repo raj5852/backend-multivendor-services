@@ -24,6 +24,7 @@ return new class extends Migration
             $table->string('status')->nullable();
             $table->string('balance')->nullable();
             $table->string('password');
+            $table->timestamp('last_seen')->nullable();
             $table->rememberToken();
             $table->timestamps();
             $table->softDeletes();

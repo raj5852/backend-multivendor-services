@@ -229,14 +229,8 @@ class VendorController extends Controller
     public function VendotUpdateProduct(Request $request, $id)
     {
         Log::info($request->all());
-        Log::info($request->file('image'));
         $validator = Validator::make($request->all(), [
-            // 'name' => 'required|max:255',
-            // 'category_id' => 'required',
-            // 'qty' => 'required',
-            // 'selling_price' => 'required',
-            // 'original_price' => 'required',
-            // 'brand_id' => 'required',
+
 
             'name' => 'required|max:255',
             'category_id' => ['required', 'integer', 'min:1', new CategoryRule],
@@ -290,7 +284,7 @@ class VendorController extends Controller
                 $product->meta_title = $request->input('meta_title');
                 $product->meta_keyword = $request->input('meta_keyword');
                 $product->meta_description = $request->input('meta_description');
-
+                $product->status = Status::Pending->value;
                 $product->tags = $request->input('tags');
                 $product->discount_type = $request->discount_type;
                 $product->discount_rate  = $request->discount_rate;
