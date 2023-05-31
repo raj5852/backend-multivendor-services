@@ -40,6 +40,10 @@ class DashboardService
             ->count();
 
         // $monthly_completed_order = Order::
+        $currentMonth = Carbon::now()->month;
+        $monthly_completed_order = Order::whereMonth('created_at', $currentMonth)->count();
+
+        return $monthly_completed_order;
 
 
 

@@ -4,6 +4,7 @@ use App\Http\Controllers\ApiTestController;
 use App\Http\Controllers\CategoryController;
 use App\Models\Product;
 use App\Models\User;
+use App\Service\Admin\DashboardService;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Route;
@@ -48,8 +49,7 @@ Route::get('demo', function () {
 
     // return $today = Carbon::now()->toDateString();
 
-     $user = new User();
-    return $user->where('name','raj')->get();
+return DashboardService::index();
 
 
 });
