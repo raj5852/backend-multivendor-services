@@ -162,7 +162,8 @@ class AffiliateController extends Controller
         ->whereHas('product', function ($query) use ($searchTerm) {
             $query->where('name', 'like', '%'.$searchTerm.'%');
         })
-        ->latest()->paginate(10);
+        ->latest()->paginate(10)
+        ->withQueryString();
 
         return response()->json([
             'status' => 200,
@@ -179,7 +180,8 @@ class AffiliateController extends Controller
         ->whereHas('product', function ($query) use ($searchTerm) {
             $query->where('name', 'like', '%'.$searchTerm.'%');
         })
-        ->latest()->paginate(10);
+        ->latest()->paginate(10)
+        ->withQueryString();
 
 
         return response()->json([
