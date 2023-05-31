@@ -2,6 +2,7 @@
 
 namespace App\Service\Admin;
 
+use App\Enums\Status;
 use App\Models\Order;
 use App\Models\User;
 use Illuminate\Support\Carbon;
@@ -12,12 +13,16 @@ class DashboardService
     static  function index()
     {
         $user = new User();
+        $order = new Order();
+        $currentMonth = Carbon::now()->month;
 
-        $today_revenue = Order::whereDate('created_at', Carbon::now()->toDateString())
+
+
+        $today_revenue = $order::whereDate('created_at', Carbon::now()->toDateString())
             ->where('status', 'pending')
             ->sum('product_amount');
 
-        $today_order = Order::whereDate('created_at', Carbon::now()->toDateString())
+        $today_order = $order::whereDate('created_at', Carbon::now()->toDateString())
             ->where('status', 'pending')
             ->count();
 
@@ -39,15 +44,23 @@ class DashboardService
             ->where('role_as', 3)
             ->count();
 
-        // $monthly_completed_order = Order::
-        $currentMonth = Carbon::now()->month;
-        $monthly_completed_order = Order::whereMonth('created_at', $currentMonth)->count();
+
+        $monthly_completed_order = $order::whereMonth('created_at', $currentMonth)
+            ->where('status', Status::Delivered->value)
+            ->count();
+
+        $monthly_cancelled_order  =  $order::whereMonth('created_at', $currentMonth)
+            ->where('status', Status::Cancel->value)
+            ->count();
+
+        $monthly_progress_order  =  $order::whereMonth('created_at', $currentMonth)
+            ->where('status', Status::Progress->value)
+            ->count();
+
+        $monthly_pending_order  =  $order::whereMonth('created_at', $currentMonth)
+            ->where('status', Status::Pending->value)
+            ->count();
 
         return $monthly_completed_order;
-
-
-
-
-
     }
 }

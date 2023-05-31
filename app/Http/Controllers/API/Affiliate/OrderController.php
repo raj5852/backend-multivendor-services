@@ -36,7 +36,7 @@ class OrderController extends Controller
         ]);
 
         $validator->after(function($validator){
-
+            $product = Product::find(request('datas')[0]['product_id']);
             $totalProductQty = Product::find(request('datas')[0]['product_id'])->qty;
 
             $totalQty = collect(request('datas'))->sum(function ($item) {
@@ -45,6 +45,9 @@ class OrderController extends Controller
 
             if($totalQty > $totalProductQty){
                 $validator->errors()->add('datas.*.variants.*.qty','Product quantity not available');
+            }
+            if($product == Status::Pending->value){
+                $validator->errors()->add('datas','The product under construction');
             }
         });
 
