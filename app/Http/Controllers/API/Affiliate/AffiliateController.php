@@ -193,7 +193,15 @@ class AffiliateController extends Controller
     public function  AffiliatorProductRejct()
     {
         $userId = Auth::id();
-        $reject = ProductDetails::with(['product','vendor:id,name'])->where('user_id', $userId)->where('status', 3)->latest()->paginate(10);
+        $$searchTerm  = request('search');
+        $reject = ProductDetails::with(['product','vendor:id,name'])->where('user_id', $userId)->where('status', 3)
+        ->whereHas('product', function ($query) use ($searchTerm) {
+            $query->where('name', 'like', '%'.$searchTerm.'%');
+        })
+        ->latest()->paginate(10)
+        ->withQueryString();
+
+
         return response()->json([
             'status' => 200,
             'pending' => $reject,
