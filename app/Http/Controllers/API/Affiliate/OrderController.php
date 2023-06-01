@@ -22,7 +22,7 @@ class OrderController extends Controller
     {
 
         // return $request->datas;
-
+        Log::info($request->all());
         $validator =  Validator::make($request->all(),[
             'datas'=>['required','array'],
             'datas.*.name'=>['required'],
