@@ -69,7 +69,7 @@ class CartController extends Controller
                     $colors[] = $data['color'] ?? null;
                     $sizes[] = $data['size'] ?? null;
                     $qnts[] = $data['qty'];
-                    $variants[] = $data['id'];
+                    $variants[] = $data['id'] ?? null;
                 }
 
 
