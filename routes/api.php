@@ -343,6 +343,12 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 
 
-Route::post('test',function(Request $request){
+Route::get('test',function(Request $request){
+  $data =   $request->all();
 
+  return collect($data)->where(
+    'size','!=',null,
+  )->where(
+    'color','!=',null
+  )->pluck('id','qty');
 });

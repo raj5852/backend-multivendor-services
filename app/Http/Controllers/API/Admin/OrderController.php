@@ -137,6 +137,16 @@ class OrderController extends Controller
             }
 
             if ($request->status == Status::Delivered->value) {
+                $vendor = User::find($order->vendor_id);
+                $product_amount = $order->product_amount;
+
+                if($vendor->balance < $product_amount){
+                    return response()->json([
+                        'status'=>'401',
+                        'message'=>'Vendor Balance Not Available!'
+                    ]);
+                }
+
 
                 $balance = PendingBalance::where('order_id', $order->id)->first();
                 $balance->status = Status::Success->value;
@@ -172,6 +182,9 @@ class OrderController extends Controller
 
                 $product =  Product::find($order->product_id);
                 $product->qty = ($product->qty + $balance->qty);
+                $variants = json_decode($order->variants);
+
+
                 $product->save();
             }
 

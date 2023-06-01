@@ -15,7 +15,7 @@ class CartController extends Controller
 {
     public function addtocart(Request $request)
     {
-        // Log::info($request->all());
+        Log::info($request->all());
 
         $user_id = auth()->user()->id;
         $product_id = $request->product_id;
