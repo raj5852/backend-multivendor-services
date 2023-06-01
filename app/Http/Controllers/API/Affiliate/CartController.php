@@ -62,13 +62,14 @@ class CartController extends Controller
                 $colors = [];
                 $sizes = [];
                 $qnts = [];
-
+                $variants = [];
 
 
                 foreach ($request->cartItems  as $data) {
                     $colors[] = $data['color'] ?? null;
                     $sizes[] = $data['size'] ?? null;
                     $qnts[] = $data['qty'];
+                    $variants[] = $data['id'];
                 }
 
 
@@ -77,7 +78,8 @@ class CartController extends Controller
                         'cart_id'=>$cartitem->id,
                         'color'=>$colors[$key],
                         'size'=>$sizes[$key],
-                        'qty'=>$value
+                        'qty'=>$value,
+                        'variant_id'=>$variants[$key]
                     ]);
                 }
 
