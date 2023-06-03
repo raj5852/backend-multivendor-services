@@ -20,11 +20,17 @@ class DashboardService
 
 
         $today_revenue = $order::whereDate('created_at', Carbon::now()->toDateString())
-            ->where('status', 'pending')
+            ->where(function ($query) {
+                $query->where('status', Status::Pending->value )
+                    ->orWhere('status', Status::Progress->value );
+            })
             ->sum('product_amount');
 
         $today_order = $order::whereDate('created_at', Carbon::now()->toDateString())
-            ->where('status', 'pending')
+        ->where(function ($query) {
+            $query->where('status', Status::Pending->value )
+                ->orWhere('status', Status::Progress->value );
+        })
             ->count();
 
         $active_vendor = $user::where([
