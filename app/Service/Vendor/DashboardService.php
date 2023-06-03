@@ -50,7 +50,7 @@ class DashboardService
 
         // $recent_orders = $order->where('')
 
-        return response([
+        return response()->json([
             'today_sell'=>$today_sell,
             'today_order'=>$today_order,
             'active_product'=>$active_product,
