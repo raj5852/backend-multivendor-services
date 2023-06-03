@@ -65,7 +65,7 @@ Route::post('logout', [AuthController::class, 'logout']);
 
 // vendor
 
-Route::middleware(['auth:sanctum','isAPIVendor'])->group(function () {
+Route::middleware(['auth:sanctum','isAPIVendor','userOnline'])->group(function () {
     Route::get('/checkingAuthenticatedVendor', function () {
         return response()->json(['message' => 'You are in', 'status' => 200], 200);
     });
@@ -160,7 +160,7 @@ Route::middleware(['auth:sanctum','isAPIVendor'])->group(function () {
 
 
 //admin route
-Route::middleware(['auth:sanctum', 'isAPIAdmin','userOnline'])->group(function () {
+Route::middleware(['auth:sanctum', 'isAPIAdmin'])->group(function () {
 
     Route::get('/checkingAuthenticated', function () {
         return response()->json(['message' => 'You are in', 'status' => 200], 200);
