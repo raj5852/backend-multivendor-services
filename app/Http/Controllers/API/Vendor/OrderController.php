@@ -129,14 +129,32 @@ class OrderController extends Controller
 
     function updateStatus(Request $request, $id)
     {
-        $order =  Order::where('id',$id)->where('vendor_id',auth()->user()->id)->first();
+        $order =  Order::find($id);
         if ($order) {
+
 
             if ($order->reason) {
                 $order->reason = $request->reason;
             }
 
+
+            if($order->status == Status::Hold->value){
+               if($request->status != Status::Cancel->value){
+                    $vendor = User::find($order->vendor_id);
+                    if($order->afi_amount > $vendor->balance){
+                        return response()->json([
+                            'status'=>401,
+                            'message'=>'Vendor balance not available'
+                        ]);
+                    }else{
+                        $vendor->balance = ($vendor->balance - $order->afi_amount);
+                        $vendor->save();
+                    }
+               }
+            }
+
             if ($request->status == Status::Delivered->value) {
+                $vendor = User::find($order->vendor_id);
 
                 $balance = PendingBalance::where('order_id', $order->id)->first();
                 $balance->status = Status::Success->value;
@@ -145,26 +163,29 @@ class OrderController extends Controller
                 $user =  User::find($balance->affiliator_id);
                 $user->balance = ($user->balance + $balance->amount);
                 $user->save();
-
-                $vendor = User::find($order->vendor_id);
-                $vendor->balance = ($vendor->balance - $balance->amount);
-                $vendor->save();
             }
 
             if ($request->status == Status::Cancel->value) {
 
+
+
                 $balance = PendingBalance::where('order_id', $order->id)->first();
 
-                if ($balance->status == Status::Success->value) {
+                if ($order->status == Status::Delivered->value) {
 
                     $user =  User::find($balance->affiliator_id);
                     $user->balance = ($user->balance - $balance->amount);
                     $user->save();
 
+                }
+
+
+                if($order->status != Status::Hold->value){
                     $vendor = User::find($order->vendor_id);
                     $vendor->balance = ($vendor->balance + $balance->amount);
                     $vendor->save();
                 }
+
 
                 $balance->status = Status::Cancel->value;
                 $balance->save();
@@ -172,8 +193,46 @@ class OrderController extends Controller
 
                 $product =  Product::find($order->product_id);
                 $product->qty = ($product->qty + $balance->qty);
+
+                $variants = json_decode($order->variants);
+                $data = collect($variants)->pluck('qty','variant_id');
+
+
+                $result = [];
+
+                foreach ($data as $variantId => $qty) {
+                    $result[] = [
+                        "variant_id" => $variantId,
+                        "qty" => $qty
+                    ];
+                }
+
+
+                $databaseValues = $product->variants;
+                $userValues = $result;
+
+
+
+                if($databaseValues != ''){
+                    foreach ($databaseValues as &$databaseItem) {
+                        $variantId = $databaseItem['id'];
+                        $matchingUserValue = collect($userValues)->firstWhere('variant_id', $variantId);
+
+                        if ($matchingUserValue) {
+                            $userQty = $matchingUserValue['qty'];
+                            $databaseItem['qty'] += $userQty;
+                        }
+                    }
+
+                    $product->variants = $databaseValues;
+                }
+
                 $product->save();
             }
+
+
+
+
 
             $order->status = $request->status;
             $order->save();
@@ -182,14 +241,14 @@ class OrderController extends Controller
                 'status' => 200,
                 'message' => 'Updated Successfully!'
             ]);
-
-
         } else {
             return response()->json([
                 'status' => 404,
                 'message' => 'Not found'
             ]);
         }
+
+
     }
     function  orderView($id){
         $order  = Order::where('id',$id)->where('vendor_id',auth()->user()->id)->first();
