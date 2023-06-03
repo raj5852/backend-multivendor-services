@@ -182,7 +182,7 @@ class OrderController extends Controller
 
                 if($order->status != Status::Hold->value){
                     $vendor = User::find($order->vendor_id);
-                    $vendor->balance = ($vendor->balance + $order->product_amount);
+                    $vendor->balance = ($vendor->balance + $balance->amount);
                     $vendor->save();
                 }
 
