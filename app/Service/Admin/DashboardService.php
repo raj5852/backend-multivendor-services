@@ -86,19 +86,23 @@ class DashboardService
 
     static function orderVsRevenue()
     {
-        // daily
+        $startDate = Carbon::now()->startOfDay();
+        $endDate = Carbon::now()->endOfDay();
 
-        $startHour = 1; // Starting hour
-        $endHour = 3; // Ending hour
-
-        $salesData = Order::selectRaw('HOUR(created_at) AS hour, SUM(product_amount) AS sales')
+        $today_order = Order::selectRaw('HOUR(created_at) AS hour, SUM(product_amount) AS sales')
             ->whereDate('created_at', Carbon::today())
-            ->whereBetween(DB::raw('HOUR(created_at)'), [$startHour, $endHour]) // Filter by the hour range
+            ->whereIn('status', [Status::Pending->value, Status::Progress->value,Status::Delivered->value]) // Add this line
             ->groupBy('hour')
             ->orderBy('hour', 'asc')
             ->pluck('sales', 'hour');
 
-            return $salesData;
+        return response()->json([
+            'daily'=>[
+                'today_order'=>$today_order,
+            ]
+            ]);
+
+
     }
 
   static  function recentOrder(){

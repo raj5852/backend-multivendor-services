@@ -286,7 +286,7 @@ Route::middleware(['auth:sanctum', 'isAPIAdmin'])->group(function () {
 
     //dashboard data
     Route::get('dashboard-datas',[DashboardController::class,'index']);
-    Route::get('order-vs-revenue',[DashboardController::class,'orderVsRevenue']);
+    Route::get('admin/order-vs-revenue',[DashboardController::class,'orderVsRevenue']);
     Route::get('admin/recent-order',[DashboardController::class,'recentOrder']);
 
 });
