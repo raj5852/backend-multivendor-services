@@ -342,8 +342,9 @@ Route::middleware(['auth:sanctum','isAPIaffiliator','userOnline'])->group(functi
     Route::post('affiliator/withdraw-post',[WithdrawController::class,'withdraw']);
     Route::get('affiliator/all-withdraw/{status?}',[WithdrawController::class,'index']);
 
-    // Route::get('affiliator/pending-amount',[WithdrawController::class,''])
     Route::get('affiliator/dashboard-datas',[AffiliateDashboardController::class,'index']);
+    Route::get('affiliator/order-vs-revenue',[AffiliateDashboardController::class,'orderVsRevenue']);
+
 });
 
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {

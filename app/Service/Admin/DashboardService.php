@@ -102,8 +102,8 @@ class DashboardService
 
 
         $weeklyData = Order::selectRaw('DATE(created_at) AS date, COUNT(*) AS order_count, SUM(product_amount) AS sales')
-            ->whereBetween('created_at', [Carbon::now()->startOfWeek(), Carbon::now()->endOfWeek()])
-            ->whereIn('status', [Status::Pending->value, Status::Progress->value, Status::Delivered->value])
+        ->whereBetween('created_at', [Carbon::now()->subWeek()->startOfWeek(), Carbon::now()->subWeek()->endOfWeek()])
+        ->whereIn('status', [Status::Pending->value, Status::Progress->value, Status::Delivered->value])
             ->groupBy('date')
             ->orderBy('date', 'asc')
             ->get();
@@ -117,8 +117,8 @@ class DashboardService
 
 
         $monthlyData = Order::selectRaw('DATE(created_at) AS date, COUNT(*) AS order_count, SUM(product_amount) AS sales')
-            ->whereBetween('created_at', [Carbon::now()->startOfMonth(), Carbon::now()->endOfMonth()])
-            ->whereIn('status', [Status::Pending->value, Status::Progress->value, Status::Delivered->value])
+        ->whereBetween('created_at', [Carbon::now()->subMonth()->startOfMonth(), Carbon::now()->subMonth()->endOfMonth()])
+        ->whereIn('status', [Status::Pending->value, Status::Progress->value, Status::Delivered->value])
             ->groupBy('date')
             ->orderBy('date', 'asc')
             ->get();
