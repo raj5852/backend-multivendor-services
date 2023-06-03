@@ -89,17 +89,20 @@ class DashboardService
         $startDate = Carbon::now()->startOfDay();
         $endDate = Carbon::now()->endOfDay();
 
-        $today_order = Order::selectRaw('HOUR(created_at) AS hour, SUM(product_amount) AS sales')
+
+        $daily_report = Order::selectRaw('HOUR(created_at) AS hour, COUNT(*) AS order_count, SUM(product_amount) AS sales')
             ->whereDate('created_at', Carbon::today())
-            ->whereIn('status', [Status::Pending->value, Status::Progress->value,Status::Delivered->value]) // Add this line
+            ->whereIn('status', [Status::Pending->value, Status::Progress->value, Status::Delivered->value])
             ->groupBy('hour')
             ->orderBy('hour', 'asc')
-            ->pluck('sales', 'hour');
+            ->pluck('sales', 'hour', 'order_count');
+
+
 
         return response()->json([
-            'daily'=>[
-                'today_order'=>$today_order,
-            ]
+                'daily'=>[
+                    'daily_report'=>$daily_report,
+                ]
             ]);
 
 
