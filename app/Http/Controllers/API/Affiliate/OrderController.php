@@ -22,7 +22,7 @@ class OrderController extends Controller
     {
 
         // return $request->datas;
-        Log::info($request->all());
+        // Log::info($request->all());
         $validator =  Validator::make($request->all(),[
             'datas'=>['required','array'],
             'datas.*.name'=>['required'],
@@ -108,20 +108,17 @@ class OrderController extends Controller
 
 
 
-            $pendingBalance = Order::where('vendor_id', $data['vendor_id'])
-                ->where('status', '!=', Status::Delivered->value)
-                ->where('status', '!=', Status::Cancel->value)
-                ->where('status', '!=', Status::Rejected->value)
-                ->sum('afi_amount');
 
 
-            $vendor_balance = User::find($data['vendor_id'])->balance - $pendingBalance;
+            $vendor_balance = User::find($data['vendor_id']);
 
 
             $afi_amount = $sumQty * $data['amount'];
 
-            if ($vendor_balance >= $afi_amount) {
+            if ($vendor_balance->balance >= $afi_amount) {
                 $status = Status::Pending->value;
+                $vendor_balance->balance = ($vendor_balance->balance - $afi_amount);
+                $vendor_balance->save();
             } else {
                 $status = Status::Hold->value;
             }

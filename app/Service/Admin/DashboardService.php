@@ -61,6 +61,19 @@ class DashboardService
             ->where('status', Status::Pending->value)
             ->count();
 
-        return $monthly_completed_order;
+
+
+        return response()->json([
+            'today_revenue'=>$today_revenue,
+            'today_order'=>$today_order,
+            'active_vendor'=>$active_vendor,
+            'active_afi'=>$active_afi,
+            'user_activity'=>$user_activity,
+            'affi_activity'=>$affi_activity,
+            'monthly_completed_order'=>$monthly_completed_order,
+            'monthly_cancelled_order'=>$monthly_cancelled_order,
+            'monthly_progress_order'=>$monthly_progress_order,
+            'monthly_pending_order'=>$monthly_pending_order,
+        ]);
     }
 }
