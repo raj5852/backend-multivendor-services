@@ -69,7 +69,7 @@ class DashboardService
             'today_order' => $today_order,
             'active_vendor' => $active_vendor,
             'active_afi' => $active_afi,
-            'user_activity' => $user_activity,
+            'vendor_activity' => $user_activity,
             'affi_activity' => $affi_activity,
             'monthly_completed_order' => $monthly_completed_order,
             'monthly_cancelled_order' => $monthly_cancelled_order,
