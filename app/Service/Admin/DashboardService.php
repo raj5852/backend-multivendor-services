@@ -102,7 +102,7 @@ class DashboardService
     }
 
   static  function recentOrder(){
-         $latestOrders = Order::latest()->take(10)->get();
+         $latestOrders = Order::latest()->with(['vendor:id,name','affiliator:id,name','product:id,name,image'])->take(10)->get();
         return response()->json([
             'staus'=>200,
             'message'=>$latestOrders
