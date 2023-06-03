@@ -156,7 +156,8 @@ Route::middleware(['auth:sanctum','isAPIVendor','userOnline'])->group(function (
     //vendor payment request
     Route::post('vendor/payment/submit',[PaymentRequestController::class,'store']);
     Route::get('vendor/payment/history/{status?}',[PaymentRequestController::class,'history']);
-    Route::get('dashboard-datas',[VendorDashboardController::class,'index']);
+
+    Route::get('vendor/dashboard-datas',[VendorDashboardController::class,'index']);
 
 });
 
