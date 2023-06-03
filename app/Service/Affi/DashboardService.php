@@ -40,5 +40,12 @@ class DashboardService
         ])->count();
 
 
+        return response()->json([
+            'today_earning'=>$today_earning,
+            'active_product'=>$active_product,
+            'requested_product'=>$requested_product,
+            'active_orders'=>$active_orders
+        ]);
+
     }
 }

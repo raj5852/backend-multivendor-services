@@ -24,6 +24,7 @@ use App\Http\Controllers\API\Affiliate\BalanceController;
 use App\Http\Controllers\API\Affiliate\BankController as AffiliateBankController;
 use App\Http\Controllers\API\Affiliate\CartController;
 use App\Http\Controllers\API\Affiliate\CheckoutController;
+use App\Http\Controllers\API\Affiliate\DashboardController as AffiliateDashboardController;
 use App\Http\Controllers\API\Affiliate\OrderController;
 use App\Http\Controllers\API\Affiliate\PendingBalanceController;
 use App\Http\Controllers\API\Affiliate\WithdrawController;
@@ -342,7 +343,7 @@ Route::middleware(['auth:sanctum','isAPIaffiliator','userOnline'])->group(functi
     Route::get('affiliator/all-withdraw/{status?}',[WithdrawController::class,'index']);
 
     // Route::get('affiliator/pending-amount',[WithdrawController::class,''])
-
+    Route::get('affiliator/dashboard-datas',[AffiliateDashboardController::class,'index']);
 });
 
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
