@@ -6,6 +6,7 @@ use App\Enums\Status;
 use App\Models\Order;
 use App\Models\User;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\DB;
 
 class DashboardService
 {
@@ -64,31 +65,33 @@ class DashboardService
 
 
         return response()->json([
-            'today_revenue'=>$today_revenue,
-            'today_order'=>$today_order,
-            'active_vendor'=>$active_vendor,
-            'active_afi'=>$active_afi,
-            'user_activity'=>$user_activity,
-            'affi_activity'=>$affi_activity,
-            'monthly_completed_order'=>$monthly_completed_order,
-            'monthly_cancelled_order'=>$monthly_cancelled_order,
-            'monthly_progress_order'=>$monthly_progress_order,
-            'monthly_pending_order'=>$monthly_pending_order,
+            'today_revenue' => $today_revenue,
+            'today_order' => $today_order,
+            'active_vendor' => $active_vendor,
+            'active_afi' => $active_afi,
+            'user_activity' => $user_activity,
+            'affi_activity' => $affi_activity,
+            'monthly_completed_order' => $monthly_completed_order,
+            'monthly_cancelled_order' => $monthly_cancelled_order,
+            'monthly_progress_order' => $monthly_progress_order,
+            'monthly_pending_order' => $monthly_pending_order,
         ]);
     }
 
-    static function orderVsRevenue(){
-         // daily
+    static function orderVsRevenue()
+    {
+        // daily
 
-         $startDate = Carbon::now()->startOfDay();
-         $endDate = Carbon::now()->endOfDay();
+        $startHour = 1; // Starting hour
+        $endHour = 3; // Ending hour
 
-         $salesData = Order::selectRaw('HOUR(created_at) AS hour, SUM(product_amount) AS sales')
-             ->whereDate('created_at', Carbon::today())
-             ->groupBy('hour')
-             ->orderBy('hour', 'asc')
-             ->pluck('sales', 'hour');
+        $salesData = Order::selectRaw('HOUR(created_at) AS hour, SUM(product_amount) AS sales')
+            ->whereDate('created_at', Carbon::today())
+            ->whereBetween(DB::raw('HOUR(created_at)'), [$startHour, $endHour]) // Filter by the hour range
+            ->groupBy('hour')
+            ->orderBy('hour', 'asc')
+            ->pluck('sales', 'hour');
 
-         return response()->json($salesData);
+            return $salesData;
     }
 }
