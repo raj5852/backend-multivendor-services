@@ -171,16 +171,21 @@ class OrderController extends Controller
 
                 $balance = PendingBalance::where('order_id', $order->id)->first();
 
-                if ($balance->status == Status::Success->value) {
+                if ($order->status == Status::Success->value) {
 
                     $user =  User::find($balance->affiliator_id);
                     $user->balance = ($user->balance - $balance->amount);
                     $user->save();
 
+                }
+
+
+                if($order->status != Status::Hold->value){
                     $vendor = User::find($order->vendor_id);
                     $vendor->balance = ($vendor->balance + $balance->amount);
                     $vendor->save();
                 }
+
 
                 $balance->status = Status::Cancel->value;
                 $balance->save();
