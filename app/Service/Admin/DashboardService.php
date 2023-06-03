@@ -33,7 +33,7 @@ class DashboardService
         ])->count();
 
         $active_afi = $user::where([
-            'role_as' => 2,
+            'role_as' => 3,
             'status' => 'active'
         ])->count();
 
