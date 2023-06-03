@@ -141,13 +141,13 @@ class OrderController extends Controller
             if($order->status == Status::Hold->value){
                if($request->status != Status::Cancel->value){
                     $vendor = User::find($order->vendor_id);
-                    if($order->product_amount > $vendor->balance){
+                    if($order->afi_amount > $vendor->balance){
                         return response()->json([
                             'status'=>401,
                             'message'=>'Vendor balance not available'
                         ]);
                     }else{
-                        $vendor->balance = ($vendor->balance - $order->product_amount);
+                        $vendor->balance = ($vendor->balance - $order->afi_amount);
                         $vendor->save();
                     }
                }
