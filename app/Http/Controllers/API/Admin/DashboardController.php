@@ -20,4 +20,8 @@ class DashboardController extends Controller
     function orderVsRevenue(){
         return  DashboardService::orderVsRevenue();
     }
+    function recentOrder(){
+        return  DashboardService::recentOrder();
+
+    }
 }
