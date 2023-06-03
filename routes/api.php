@@ -159,6 +159,7 @@ Route::middleware(['auth:sanctum','isAPIVendor','userOnline'])->group(function (
     Route::get('vendor/payment/history/{status?}',[PaymentRequestController::class,'history']);
 
     Route::get('vendor/dashboard-datas',[VendorDashboardController::class,'index']);
+    Route::get('vendor/order-vs-revenue',[VendorDashboardController::class,'orderVsRevenue']);
 
 });
 

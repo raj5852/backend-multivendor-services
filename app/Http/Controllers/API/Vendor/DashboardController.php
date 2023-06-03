@@ -12,4 +12,7 @@ class DashboardController extends Controller
     function index(){
         return DashboardService::index();
     }
+    function orderVsRevenue(){
+        return DashboardService::orderVsRevenue();
+    }
 }
