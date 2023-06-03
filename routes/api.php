@@ -281,6 +281,8 @@ Route::middleware(['auth:sanctum', 'isAPIAdmin','userOnline'])->group(function (
 
     //dashboard data
     Route::get('dashboard-datas',[DashboardController::class,'index']);
+    Route::get('order-vs-revenue',[DashboardController::class,'orderVsRevenue']);
+
 });
 
 

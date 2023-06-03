@@ -76,4 +76,19 @@ class DashboardService
             'monthly_pending_order'=>$monthly_pending_order,
         ]);
     }
+
+    static function orderVsRevenue(){
+         // daily
+
+         $startDate = Carbon::now()->startOfDay();
+         $endDate = Carbon::now()->endOfDay();
+
+         $salesData = Order::selectRaw('HOUR(created_at) AS hour, SUM(product_amount) AS sales')
+             ->whereDate('created_at', Carbon::today())
+             ->groupBy('hour')
+             ->orderBy('hour', 'asc')
+             ->pluck('sales', 'hour');
+
+         return response()->json($salesData);
+    }
 }
