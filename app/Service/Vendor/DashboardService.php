@@ -50,7 +50,13 @@ class DashboardService
 
         // $recent_orders = $order->where('')
 
-
+        return response([
+            'today_sell'=>$today_sell,
+            'today_order'=>$today_order,
+            'active_product'=>$active_product,
+            'pending_order'=>$pending_order,
+            'active_order'=>$active_order
+        ]);
 
 
     }

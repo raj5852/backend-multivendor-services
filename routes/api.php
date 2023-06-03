@@ -29,6 +29,7 @@ use App\Http\Controllers\API\Affiliate\PendingBalanceController;
 use App\Http\Controllers\API\Affiliate\WithdrawController;
 use App\Http\Controllers\API\Vendor\BankController as VendorBankController;
 use App\Http\Controllers\API\Vendor\BrandController as VendorBrandController;
+use App\Http\Controllers\API\Vendor\DashboardController as VendorDashboardController;
 use App\Http\Controllers\API\Vendor\OrderController as VendorOrderController;
 use App\Http\Controllers\API\Vendor\PaymentRequestController;
 use App\Http\Controllers\API\Vendor\RequestProductController;
@@ -155,6 +156,8 @@ Route::middleware(['auth:sanctum','isAPIVendor','userOnline'])->group(function (
     //vendor payment request
     Route::post('vendor/payment/submit',[PaymentRequestController::class,'store']);
     Route::get('vendor/payment/history/{status?}',[PaymentRequestController::class,'history']);
+    Route::get('dashboard-datas',[VendorDashboardController::class,'index']);
+
 });
 
 
