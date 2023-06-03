@@ -100,7 +100,8 @@ class DashboardService
 
             return $salesData;
     }
-    function recentOrder(){
+
+  static  function recentOrder(){
          $latestOrders = Order::latest()->take(10)->get();
         return response()->json([
             'staus'=>200,
