@@ -173,10 +173,12 @@ class OrderController extends Controller
 
                 if ($order->status == Status::Delivered->value) {
 
-                    $user =  User::find($balance->affiliator_id);
-                    $user->balance = ($user->balance - $balance->amount);
-                    $user->save();
 
+
+                    return response()->json([
+                            'status'=>401,
+                            'message'=>'Not possible to update'
+                        ]);
                 }
 
 
