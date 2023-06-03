@@ -21,16 +21,16 @@ class DashboardService
 
         $today_revenue = $order::whereDate('created_at', Carbon::now()->toDateString())
             ->where(function ($query) {
-                $query->where('status', Status::Pending->value )
-                    ->orWhere('status', Status::Progress->value );
+                $query->where('status', Status::Pending->value)
+                    ->orWhere('status', Status::Progress->value);
             })
             ->sum('product_amount');
 
         $today_order = $order::whereDate('created_at', Carbon::now()->toDateString())
-        ->where(function ($query) {
-            $query->where('status', Status::Pending->value )
-                ->orWhere('status', Status::Progress->value );
-        })
+            ->where(function ($query) {
+                $query->where('status', Status::Pending->value)
+                    ->orWhere('status', Status::Progress->value);
+            })
             ->count();
 
         $active_vendor = $user::where([
@@ -86,40 +86,65 @@ class DashboardService
 
     static function orderVsRevenue()
     {
-        // $startDate = Carbon::now()->startOfDay();
-        // $endDate = Carbon::now()->endOfDay();
-
-        // $today_revenue = Order::selectRaw('HOUR(created_at) AS hour, SUM(product_amount) AS sales')
-        //     ->whereDate('created_at', Carbon::today())
-        //     ->whereIn('status', [Status::Pending->value, Status::Progress->value,Status::Delivered->value])
-        //     ->groupBy('hour')
-        //     ->orderBy('hour', 'asc')
-        //     ->pluck('sales', 'hour');
-
-
-        $today_orders = Order::selectRaw('HOUR(created_at) AS hour, COUNT(*) AS order_count')
+        $today_data = Order::selectRaw('HOUR(created_at) AS hour, COUNT(*) AS order_count, SUM(product_amount) AS sales')
             ->whereDate('created_at', Carbon::today())
             ->whereIn('status', [Status::Pending->value, Status::Progress->value, Status::Delivered->value])
             ->groupBy('hour')
             ->orderBy('hour', 'asc')
-            ->pluck('order_count', 'hour');
+            ->get();
 
+        $daily_data = [
+            'label' => $today_data->pluck('hour')->toArray(),
+            'order' => $today_data->pluck('order_count')->toArray(),
+            'revenue' => $today_data->pluck('sales')->toArray(),
+        ];
+
+
+
+        $weeklyData = Order::selectRaw('DATE(created_at) AS date, COUNT(*) AS order_count, SUM(product_amount) AS sales')
+            ->whereBetween('created_at', [Carbon::now()->startOfWeek(), Carbon::now()->endOfWeek()])
+            ->whereIn('status', [Status::Pending->value, Status::Progress->value, Status::Delivered->value])
+            ->groupBy('date')
+            ->orderBy('date', 'asc')
+            ->get();
+
+            $weekly_data = [
+                'label' => $weeklyData->pluck('date')->toArray(),
+                'order' => $weeklyData->pluck('order_count')->toArray(),
+                'revenue' => $weeklyData->pluck('sales')->toArray(),
+            ];
+
+
+
+        $monthlyData = Order::selectRaw('DATE(created_at) AS date, COUNT(*) AS order_count, SUM(product_amount) AS sales')
+            ->whereBetween('created_at', [Carbon::now()->startOfMonth(), Carbon::now()->endOfMonth()])
+            ->whereIn('status', [Status::Pending->value, Status::Progress->value, Status::Delivered->value])
+            ->groupBy('date')
+            ->orderBy('date', 'asc')
+            ->get();
+
+        $monthly_data = [
+            'label' => $monthlyData->pluck('date')->toArray(),
+            'order' => $monthlyData->pluck('order_count')->toArray(),
+            'revenue' => $monthlyData->pluck('sales')->toArray(),
+        ];
 
 
         return response()->json([
-                'daily'=>[
-                    'daily_report'=>$today_orders,
-                ]
-            ]);
+            'daily'=>$daily_data,
+            'weekly'=>$weekly_data,
+            'monthly'=>$monthly_data
+        ]);
 
 
     }
 
-  static  function recentOrder(){
-         $latestOrders = Order::latest()->with(['vendor:id,name','affiliator:id,name','product:id,name,image'])->take(10)->get();
+    static  function recentOrder()
+    {
+        $latestOrders = Order::latest()->with(['vendor:id,name', 'affiliator:id,name', 'product:id,name,image'])->take(10)->get();
         return response()->json([
-            'staus'=>200,
-            'message'=>$latestOrders
+            'staus' => 200,
+            'message' => $latestOrders
         ]);
     }
 }
