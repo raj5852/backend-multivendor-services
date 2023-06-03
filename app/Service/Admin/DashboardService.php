@@ -86,22 +86,29 @@ class DashboardService
 
     static function orderVsRevenue()
     {
-        $startDate = Carbon::now()->startOfDay();
-        $endDate = Carbon::now()->endOfDay();
+        // $startDate = Carbon::now()->startOfDay();
+        // $endDate = Carbon::now()->endOfDay();
+
+        // $today_revenue = Order::selectRaw('HOUR(created_at) AS hour, SUM(product_amount) AS sales')
+        //     ->whereDate('created_at', Carbon::today())
+        //     ->whereIn('status', [Status::Pending->value, Status::Progress->value,Status::Delivered->value])
+        //     ->groupBy('hour')
+        //     ->orderBy('hour', 'asc')
+        //     ->pluck('sales', 'hour');
 
 
-        $daily_report = Order::selectRaw('HOUR(created_at) AS hour, COUNT(*) AS order_count, SUM(product_amount) AS sales')
+        $today_orders = Order::selectRaw('HOUR(created_at) AS hour, COUNT(*) AS order_count')
             ->whereDate('created_at', Carbon::today())
             ->whereIn('status', [Status::Pending->value, Status::Progress->value, Status::Delivered->value])
             ->groupBy('hour')
             ->orderBy('hour', 'asc')
-            ->pluck('sales', 'hour', 'order_count');
+            ->pluck('order_count', 'hour');
 
 
 
         return response()->json([
                 'daily'=>[
-                    'daily_report'=>$daily_report,
+                    'daily_report'=>$today_orders,
                 ]
             ]);
 
