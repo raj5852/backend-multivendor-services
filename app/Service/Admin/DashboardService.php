@@ -178,7 +178,7 @@ class DashboardService
             ->whereHas('order', function ($query) {
                 $query->where('status', 'pending');
             })
-            ->orderByDesc('total_qty')
+            ->orderByDesc('total_qty_order')
             ->take(10)
             ->get();
 
