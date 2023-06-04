@@ -178,9 +178,7 @@ class DashboardService
                     ->where('status', 'active');
                 }
             ])
-            // ->whereHas('order', function ($query) {
-            //     $query
-            // })
+
             ->orderByDesc('sold_qty')
             ->take(10)
             ->get();
@@ -189,7 +187,11 @@ class DashboardService
             $category->is_up = $category->total_qty_last_month < $category->total_qty_current_month;
 
             $total_qty = $category->sold_qty + $category->product_qty;
-            $category->sale_percentage = ($category->sold_qty/$total_qty)*100;
+            if ($total_qty != 0) {
+                $category->sale_percentage = ($category->sold_qty / $total_qty) * 100;
+            } else {
+                $category->sale_percentage = 0; // or any other value you prefer when division by zero occurs
+            }
 
             return $category;
         });
