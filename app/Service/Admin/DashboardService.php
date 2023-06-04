@@ -176,7 +176,7 @@ class DashboardService
                 }
             ])
             ->whereHas('order', function ($query) {
-                $query->where('status', 'pending');
+                $query->where('status', 'delivered');
             })
             ->orderByDesc('sold_qty')
             ->take(10)
