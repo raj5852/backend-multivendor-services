@@ -169,15 +169,21 @@ class DashboardService
                 },
                 'order as total_qty' => function ($query) {
                     $query->select(DB::raw('sum(qty)'));
+                },
+                'products as product_qty'=>function($query){
+                    $query->select(DB::raw('sum(qty)'))
+                    ->where('status', 'active');
                 }
             ])
+            ->whereHas('order', function ($query) {
+                $query->where('status', 'pending');
+            })
             ->orderByDesc('total_qty')
             ->take(3)
             ->get();
 
         $categories = $categories->map(function ($category) {
-            $category->comparison = $category->total_qty_last_month > $category->total_qty_current_month;
-            // $category->product_qty = $category->product()->sum('quantity'); // Assuming you have a `product` relationship on the Category model
+            $category->comparison = $category->total_qty_last_month < $category->total_qty_current_month;
             return $category;
         });
 

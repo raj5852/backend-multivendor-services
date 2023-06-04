@@ -26,6 +26,11 @@ class Category extends Model
     {
         return $this->hasMany('App\Models\Subcategory');
     }
+
+    function products(){
+        return $this->hasMany(Product::class,'category_id','id');
+    }
+
     function order(){
         return $this->hasMany(Order::class,'category_id','id');
     }
