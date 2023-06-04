@@ -180,7 +180,7 @@ class DashboardService
             })
             ->orderByDesc('total_qty_order')
             ->take(10)
-            ->get();
+            ->get(['name']);
 
         $categories = $categories->map(function ($category) {
             $category->is_up = $category->total_qty_last_month < $category->total_qty_current_month;
