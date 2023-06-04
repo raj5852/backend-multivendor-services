@@ -120,7 +120,7 @@ class DashboardService
 
     static function topten()
     {
-        $vendorProduct = Product::where('user_id', auth()->user()->id)
+        $vendorProduct = Product::select('id','name')->where('user_id', auth()->user()->id)
             ->withCount([
                 'orders as product_qty' => function ($query) {
                     $query->select(DB::raw('COALESCE(SUM(qty), 0)'))
@@ -129,7 +129,8 @@ class DashboardService
             ])
             ->orderByDesc('product_qty')
             ->take(10)
-            ->pluck('name', 'product_qty');
+            ->get();
+
 
             return response()->json([
                 'status'=>200,
