@@ -167,7 +167,7 @@ class DashboardService
                     $query->select(DB::raw('sum(qty)'))
                         ->whereBetween('created_at', [$currentMonthStart, $currentMonthEnd]);
                 },
-                'order as total_qty' => function ($query) {
+                'order as total_qty_order' => function ($query) {
                     $query->select(DB::raw('sum(qty)'));
                 },
                 'products as product_qty'=>function($query){
@@ -179,11 +179,15 @@ class DashboardService
                 $query->where('status', 'pending');
             })
             ->orderByDesc('total_qty')
-            ->take(3)
+            ->take(10)
             ->get();
 
         $categories = $categories->map(function ($category) {
-            $category->comparison = $category->total_qty_last_month < $category->total_qty_current_month;
+            $category->is_up = $category->total_qty_last_month < $category->total_qty_current_month;
+
+            $total_qty = $category->total_qty_order + $category->product_qty;
+            $category->sale_percentage = ($category->total_qty_order/$total_qty)*100;
+
             return $category;
         });
 
