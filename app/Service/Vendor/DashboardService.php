@@ -117,4 +117,8 @@ class DashboardService
             'monthly' => $monthly_data
         ]);
     }
+
+   static function topten(){
+
+    }
 }

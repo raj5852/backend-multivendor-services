@@ -161,6 +161,8 @@ Route::middleware(['auth:sanctum','isAPIVendor','userOnline'])->group(function (
     Route::get('vendor/dashboard-datas',[VendorDashboardController::class,'index']);
     Route::get('vendor/order-vs-revenue',[VendorDashboardController::class,'orderVsRevenue']);
 
+    // top 10 item
+    Route::get('vendor/top-ten-items',[VendorDashboardController::class,'topten']);
 });
 
 

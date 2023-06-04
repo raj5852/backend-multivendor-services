@@ -55,6 +55,8 @@ class CartController extends Controller
                 $cartitem->product_price = $product_price;
                 $cartitem->vendor_id=$vendor_id;
                 $cartitem->amount=$amount;
+                $cartitem->category_id=$request->category_id;
+
                 $cartitem->save();
                 // $cartitem->colors()->attach($request->colors);
                 // $cartitem->sizes()->attach($request->sizes);
