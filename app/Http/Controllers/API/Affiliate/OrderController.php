@@ -60,6 +60,9 @@ class OrderController extends Controller
         }
 
         $product = Product::find(request('datas')[0]['product_id']);
+        $cartId = request('datas')[0]['cart_id'];
+
+        $categoryId = Cart::find($cartId)->category_id;
 
         foreach ($request->datas as $data) {
 
@@ -138,6 +141,7 @@ class OrderController extends Controller
                 'afi_amount' => $afi_amount,
                 'product_amount' => $product->selling_price * $sumQty,
                 'status' =>  $status,
+                'category_id'=>$categoryId
             ]);
 
             PendingBalance::create([
