@@ -141,7 +141,8 @@ class OrderController extends Controller
                 'afi_amount' => $afi_amount,
                 'product_amount' => $product->selling_price * $sumQty,
                 'status' =>  $status,
-                'category_id'=>$categoryId
+                'category_id'=>$categoryId,
+                'qty'=>$sumQty
             ]);
 
             PendingBalance::create([
