@@ -123,8 +123,8 @@ class DashboardService
         $vendorProduct = Product::where('user_id', auth()->user()->id)
             ->withCount([
                 'orders as product_qty' => function ($query) {
-                    $query->select(DB::raw('sum(qty)'))
-                        ->where('status', Status::Delivered->value);
+                    $query->select(DB::raw('COALESCE(SUM(qty), 0)'))
+                    ->where('status', Status::Delivered->value);
                 }
             ])
             ->orderByDesc('product_qty')
