@@ -129,7 +129,7 @@ class DashboardService
             ])
             ->orderByDesc('product_qty')
             ->take(10)
-            ->get(['name', 'product_qty']);
+            ->pluck('name', 'product_qty');
 
             return response()->json([
                 'status'=>200,
