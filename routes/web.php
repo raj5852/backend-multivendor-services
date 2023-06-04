@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\ApiTestController;
 use App\Http\Controllers\CategoryController;
+use App\Models\Category;
 use App\Models\Product;
 use App\Models\User;
 use App\Service\Admin\DashboardService;
@@ -49,7 +50,9 @@ Route::get('demo', function () {
 
     // return $today = Carbon::now()->toDateString();
 
-return DashboardService::index();
+// return DashboardService::index();
+
+ return Category::with('order')->get();
 
 
 });

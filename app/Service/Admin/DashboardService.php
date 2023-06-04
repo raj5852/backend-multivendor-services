@@ -109,7 +109,9 @@ class DashboardService
             ->get();
 
             $weekly_data = [
-                'label' => $weeklyData->pluck('date')->toArray(),
+                'label' => $weeklyData->pluck('date')->map(function ($date) {
+                    return Carbon::parse($date)->format('d/m');
+                })->toArray(),
                 'order' => $weeklyData->pluck('order_count')->toArray(),
                 'revenue' => $weeklyData->pluck('sales')->toArray(),
             ];
