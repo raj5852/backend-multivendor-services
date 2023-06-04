@@ -120,7 +120,7 @@ class DashboardService
 
     static function topten()
     {
-        $vendorProduct = Product::select('id','name')->where('user_id', auth()->user()->id)
+        $vendorProduct = Product::select('id','name','image')->where('user_id', auth()->user()->id)
             ->withCount([
                 'orders as product_qty' => function ($query) {
                     $query->select(DB::raw('COALESCE(SUM(qty), 0)'))
