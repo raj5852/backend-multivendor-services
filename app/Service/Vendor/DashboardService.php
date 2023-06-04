@@ -118,7 +118,22 @@ class DashboardService
         ]);
     }
 
-   static function topten(){
+    static function topten()
+    {
+        $vendorProduct = Product::where('user_id', auth()->user()->id)
+            ->withCount([
+                'orders as product_qty' => function ($query) {
+                    $query->select(DB::raw('sum(qty)'))
+                        ->where('status', Status::Delivered->value);
+                }
+            ])
+            ->orderByDesc('product_qty')
+            ->take(10)
+            ->get();
 
+            return response()->json([
+                'status'=>200,
+                'message'=>$vendorProduct
+            ]);
     }
 }

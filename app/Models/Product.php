@@ -60,10 +60,16 @@ class Product extends Model
     function specifications(){
         return $this->hasMany(specification::class,'product_id','id');
     }
+
+    function orders(){
+        return $this->hasMany(Order::class,'product_id','id');
+    }
+
     protected $casts = [
         'tags'=>'array',
         'variants'=>'array',
         'meta_keyword'=>'array'
     ];
+
 
 }
