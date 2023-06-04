@@ -24,4 +24,8 @@ class DashboardController extends Controller
         return  DashboardService::recentOrder();
 
     }
+    function categoryStatus(){
+        return  DashboardService::categoryStatus();
+
+    }
 }

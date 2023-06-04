@@ -3,10 +3,11 @@
 namespace App\Service\Admin;
 
 use App\Enums\Status;
+use App\Models\Category;
 use App\Models\Order;
 use App\Models\User;
-use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
+use Carbon\Carbon;
 
 class DashboardService
 {
@@ -102,25 +103,25 @@ class DashboardService
 
 
         $weeklyData = Order::selectRaw('DATE(created_at) AS date, COUNT(*) AS order_count, SUM(product_amount) AS sales')
-        ->whereBetween('created_at', [Carbon::now()->subWeek()->startOfWeek(), Carbon::now()->subWeek()->endOfWeek()])
-        ->whereIn('status', [Status::Pending->value, Status::Progress->value, Status::Delivered->value])
+            ->whereBetween('created_at', [Carbon::now()->subWeek()->startOfWeek(), Carbon::now()->subWeek()->endOfWeek()])
+            ->whereIn('status', [Status::Pending->value, Status::Progress->value, Status::Delivered->value])
             ->groupBy('date')
             ->orderBy('date', 'asc')
             ->get();
 
-            $weekly_data = [
-                'label' => $weeklyData->pluck('date')->map(function ($date) {
-                    return Carbon::parse($date)->format('d');
-                })->toArray(),
-                'order' => $weeklyData->pluck('order_count')->toArray(),
-                'revenue' => $weeklyData->pluck('sales')->toArray(),
-            ];
+        $weekly_data = [
+            'label' => $weeklyData->pluck('date')->map(function ($date) {
+                return Carbon::parse($date)->format('d');
+            })->toArray(),
+            'order' => $weeklyData->pluck('order_count')->toArray(),
+            'revenue' => $weeklyData->pluck('sales')->toArray(),
+        ];
 
 
 
         $monthlyData = Order::selectRaw('DATE(created_at) AS date, COUNT(*) AS order_count, SUM(product_amount) AS sales')
-        ->whereBetween('created_at', [Carbon::now()->subMonth()->startOfMonth(), Carbon::now()->subMonth()->endOfMonth()])
-        ->whereIn('status', [Status::Pending->value, Status::Progress->value, Status::Delivered->value])
+            ->whereBetween('created_at', [Carbon::now()->subMonth()->startOfMonth(), Carbon::now()->subMonth()->endOfMonth()])
+            ->whereIn('status', [Status::Pending->value, Status::Progress->value, Status::Delivered->value])
             ->groupBy('date')
             ->orderBy('date', 'asc')
             ->get();
@@ -135,12 +136,10 @@ class DashboardService
 
 
         return response()->json([
-            'daily'=>$daily_data,
-            'weekly'=>$weekly_data,
-            'monthly'=>$monthly_data
+            'daily' => $daily_data,
+            'weekly' => $weekly_data,
+            'monthly' => $monthly_data
         ]);
-
-
     }
 
     static  function recentOrder()
@@ -150,5 +149,38 @@ class DashboardService
             'staus' => 200,
             'message' => $latestOrders
         ]);
+    }
+
+    static function categoryStatus()
+    {
+        $lastMonthStart = Carbon::now()->subMonth()->startOfMonth();
+        $lastMonthEnd = Carbon::now()->subMonth()->endOfMonth();
+        $currentMonthStart = Carbon::now()->startOfMonth();
+        $currentMonthEnd = Carbon::now()->endOfMonth();
+
+        $categories = Category::withCount([
+                'order as total_qty_last_month' => function ($query) use ($lastMonthStart, $lastMonthEnd) {
+                    $query->select(DB::raw('sum(qty)'))
+                        ->whereBetween('created_at', [$lastMonthStart, $lastMonthEnd]);
+                },
+                'order as total_qty_current_month' => function ($query) use ($currentMonthStart, $currentMonthEnd) {
+                    $query->select(DB::raw('sum(qty)'))
+                        ->whereBetween('created_at', [$currentMonthStart, $currentMonthEnd]);
+                },
+                'order as total_qty' => function ($query) {
+                    $query->select(DB::raw('sum(qty)'));
+                }
+            ])
+            ->orderByDesc('total_qty')
+            ->take(3)
+            ->get();
+
+        $categories = $categories->map(function ($category) {
+            $category->comparison = $category->total_qty_last_month > $category->total_qty_current_month;
+            // $category->product_qty = $category->product()->sum('quantity'); // Assuming you have a `product` relationship on the Category model
+            return $category;
+        });
+
+        return $categories;
     }
 }
