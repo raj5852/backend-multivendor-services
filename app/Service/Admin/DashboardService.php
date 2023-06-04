@@ -126,7 +126,9 @@ class DashboardService
             ->get();
 
         $monthly_data = [
-            'label' => $monthlyData->pluck('date')->toArray(),
+            'label' => $monthlyData->pluck('date')->map(function ($date) {
+                return Carbon::parse($date)->format('d');
+            })->toArray(),
             'order' => $monthlyData->pluck('order_count')->toArray(),
             'revenue' => $monthlyData->pluck('sales')->toArray(),
         ];
