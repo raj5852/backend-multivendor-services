@@ -66,7 +66,7 @@ class DashboardService
 
 
         $weeklyData = Order::selectRaw('DATE(created_at) AS date, COUNT(*) AS order_count, SUM(afi_amount) AS comission')
-        ->whereBetween('created_at', [Carbon::now()->subWeek()->startOfWeek(), Carbon::now()->subWeek()->endOfWeek()])
+        ->whereBetween('created_at', [Carbon::now()->subDays(7)->startOfDay(), Carbon::now()->endOfDay()])
         ->where('affiliator_id',auth()->user()->id)
             ->whereIn('status', [Status::Pending->value, Status::Progress->value, Status::Delivered->value])
             ->groupBy('date')
@@ -84,7 +84,7 @@ class DashboardService
 
 
         $monthlyData = Order::selectRaw('DATE(created_at) AS date, COUNT(*) AS order_count, SUM(afi_amount) AS comission')
-        ->whereBetween('created_at', [Carbon::now()->subMonth()->startOfMonth(), Carbon::now()->subMonth()->endOfMonth()])
+        ->whereBetween('created_at', [Carbon::now()->subDays(30)->startOfDay(), Carbon::now()->endOfDay()])
         ->where('affiliator_id',auth()->user()->id)
             ->whereIn('status', [Status::Pending->value, Status::Progress->value, Status::Delivered->value])
             ->groupBy('date')
