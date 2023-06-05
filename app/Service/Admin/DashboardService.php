@@ -120,7 +120,7 @@ class DashboardService
 
 
         $monthlyData = Order::selectRaw('DATE(created_at) AS date, COUNT(*) AS order_count, SUM(product_amount) AS sales')
-            ->whereBetween('created_at', [Carbon::now()->subMonth()->startOfMonth(), Carbon::now()->subMonth()->endOfMonth()])
+            ->whereBetween('created_at', [Carbon::now()->subDays(30)->startOfDay(), Carbon::now()->endOfDay()])
             ->whereIn('status', [Status::Pending->value, Status::Progress->value, Status::Delivered->value])
             ->groupBy('date')
             ->orderBy('date', 'asc')
