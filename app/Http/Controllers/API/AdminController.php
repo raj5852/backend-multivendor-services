@@ -28,8 +28,8 @@ class AdminController extends Controller
 
         $validator =  Validator::make($request->all(), [
             'name' => 'required',
-            'number' => 'required|integer',
-            'number2'=>'nullable|integer',
+            'number' => 'required',
+            'number2'=>'nullable',
             'old_password' => 'nullable',
             'new_password' => 'nullable',
         ]);
