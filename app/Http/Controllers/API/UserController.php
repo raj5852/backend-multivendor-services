@@ -181,12 +181,16 @@ class UserController extends Controller
             foreach($holdOrders as $holdOrder){
 
                 if($holdOrder->afi_amount > $vendorBalance){
-                    $holdOrd  =  Order::find($holdOrder->id);
-                    $holdOrd->status = 'pending';
-                    $holdOrd->save();
+                    // $holdOrd  =  Order::find($holdOrder->id);
+                    // $holdOrd->status = 'pending';
+                    // $holdOrd->save();
 
-                    $vendor->balance = ($vendor->balance - $holdOrder->afi_amount);
-                    $vendor->save();
+                    // $vendor->balance = ($vendor->balance - $holdOrder->afi_amount);
+                    // $vendor->save();
+
+                    $holdOrder->update(['status' => 'pending']);
+
+                    $vendor->decrement('balance', $holdOrder->afi_amount);
 
                 }
 
