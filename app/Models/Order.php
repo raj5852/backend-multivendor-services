@@ -28,4 +28,14 @@ class Order extends Model
             });
         });
     }
+
+    public static function boot()
+    {
+        parent::boot();
+
+        static::creating(function ($order) {
+            $order->order_id = 'ORD-' . str_pad($order->id, 6, '0', STR_PAD_LEFT);
+        });
+    }
+
 }
