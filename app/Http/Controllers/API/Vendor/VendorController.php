@@ -143,7 +143,7 @@ class VendorController extends Controller
                 $required_balance =  (request('selling_price')/100) * $discount_rate;
             }
 
-            if($required_balance){
+            if($required_balance != ''){
                 if ($required_balance > auth()->user()->balance) {
                     $validator->errors()->add('selling_price', 'At least one product should have  a commission balance');
                 }
