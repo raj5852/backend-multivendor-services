@@ -21,10 +21,13 @@ class Order extends Model
     function vendor(){
         return $this->belongsTo(User::class,'vendor_id','id');
     }
-  static  function searchProduct(){
+    static function searchProduct()
+    {
         return self::when(request('search'), function ($q, $search) {
-            $q->whereHas('product', function ($query) use ($search) {
-                $query->where('name', 'like', "%{$search}%");
+            $q->where(function ($query) use ($search) {
+                $query->whereHas('product', function ($subQuery) use ($search) {
+                    $subQuery->where('name', 'like', "%{$search}%");
+                })->orWhere('order_id', 'like', "%{$search}%");
             });
         });
     }
