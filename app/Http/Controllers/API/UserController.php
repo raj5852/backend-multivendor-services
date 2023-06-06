@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\API;
 
+use App\Enums\Status;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\File;
@@ -10,6 +11,7 @@ use Illuminate\Http\Request;
 use App\Models\User;
 use App\Models\Category;
 use App\Models\Brand;
+use App\Models\Order;
 
 class UserController extends Controller
 {
@@ -166,6 +168,30 @@ class UserController extends Controller
 
 
                 $vendor->update();
+
+
+               $vendorBalance = $vendor->balance;
+               $vendorId = $vendor->id;
+
+               $holdOrders = Order::where([
+                'vendor_id'=>$vendorId,
+                'status'=> 'hold'
+               ])->get();
+
+            foreach($holdOrders as $holdOrder){
+
+                if($holdOrder->afi_amount > $vendorBalance){
+                    $holdOrd  =  Order::find($holdOrder->id);
+                    $holdOrd->status = 'pending';
+                    $holdOrd->save();
+
+                    $vendor->balance = ($vendor->balance - $holdOrder->afi_amount);
+                    $vendor->save();
+
+                }
+
+            }
+
 
                 return response()->json([
                     'status' => 200,
