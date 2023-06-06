@@ -107,7 +107,7 @@ class VendorController extends Controller
 
     public function VendorProductStore(Request $request)
     {
-        Log::info($request->all());
+        // Log::info($request->all());
         $validator = Validator::make($request->all(), [
             'name' => 'required|max:255',
             'category_id' => ['required', 'integer', 'min:1', new CategoryRule],
@@ -129,6 +129,7 @@ class VendorController extends Controller
             'images.*'=>['required','mimes:jpeg,png,jpg'],
 
         ]);
+
         $validator->after(function ($validator) {
             $discount_type = request('discount_type');
             $discount_rate = request('discount_rate');
@@ -142,9 +143,12 @@ class VendorController extends Controller
                 $required_balance =  (request('selling_price')/100) * $discount_rate;
             }
 
-            if ($required_balance > auth()->user()->balance) {
-                $validator->errors()->add('selling_price', 'At least one product should have  a commission balance');
+            if($required_balance){
+                if ($required_balance > auth()->user()->balance) {
+                    $validator->errors()->add('selling_price', 'At least one product should have  a commission balance');
+                }
             }
+
 
         });
 
