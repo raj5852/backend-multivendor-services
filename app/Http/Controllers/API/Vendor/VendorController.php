@@ -133,6 +133,7 @@ class VendorController extends Controller
         $validator->after(function ($validator) {
             $discount_type = request('discount_type');
             $discount_rate = request('discount_rate');
+            $required_balance = "";
 
             if($discount_type == 'flat'){
                 $required_balance =  $discount_rate;
