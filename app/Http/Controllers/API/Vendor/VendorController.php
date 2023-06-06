@@ -107,7 +107,7 @@ class VendorController extends Controller
 
     public function VendorProductStore(Request $request)
     {
-        // Log::info($request->all());
+        Log::info($request->all());
         $validator = Validator::make($request->all(), [
             'name' => 'required|max:255',
             'category_id' => ['required', 'integer', 'min:1', new CategoryRule],
