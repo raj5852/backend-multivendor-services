@@ -34,17 +34,26 @@ class Order extends Model
         parent::boot();
 
         static::creating(function ($order) {
-            $order->order_id = self::generateUniqueOrderId();
+            $order->order_id = self::generateTransactionId();
         });
     }
 
-    public static function generateUniqueOrderId()
+
+
+    public static function generateTransactionId()
     {
-        $timestamp = time(); // Get the current timestamp
-        $randomNumber = mt_rand(1000, 9999); // Generate a random 4-digit number
+        $text = 'OR'; // Prefix for the transaction ID
+        $number = str_pad(mt_rand(1, 999999), 6, '0', STR_PAD_LEFT); // Random 6-digit number
 
-        $orderId = $timestamp . $randomNumber;
+        $transactionId = $text . $number;
 
-        return $orderId;
+        // Check if the generated transaction ID already exists in the database
+        $existingTransaction = Order::where('order_id', $transactionId)->first();
+        if ($existingTransaction) {
+            // If the transaction ID exists, regenerate it recursively until a unique one is found
+            return self::generateTransactionId();
+        }
+
+        return $transactionId;
     }
 }
