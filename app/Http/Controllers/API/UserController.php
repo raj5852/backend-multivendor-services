@@ -180,7 +180,7 @@ class UserController extends Controller
 
             foreach($holdOrders as $holdOrder){
 
-                if($holdOrder->afi_amount > $vendorBalance){
+                if($holdOrder->afi_amount < $vendorBalance){
 
 
                     $holdOrder->update(['status' => 'pending']);
