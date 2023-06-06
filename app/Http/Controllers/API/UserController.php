@@ -170,7 +170,7 @@ class UserController extends Controller
                 $vendor->update();
 
 
-               $vendorBalance = $vendor->balance;
+
                $vendorId = $vendor->id;
 
                $holdOrders = Order::where([
@@ -179,8 +179,9 @@ class UserController extends Controller
                ])->get();
 
             foreach($holdOrders as $holdOrder){
+                $vendorBalance = User::find($id);
 
-                if($holdOrder->afi_amount < $vendorBalance){
+                if($holdOrder->afi_amount <= $vendorBalance->balance){
 
 
                     $holdOrder->update(['status' => 'pending']);
