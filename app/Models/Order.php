@@ -34,8 +34,17 @@ class Order extends Model
         parent::boot();
 
         static::creating(function ($order) {
-            $order->order_id = 'ORD-' . str_pad($order->id, 6, '0', STR_PAD_LEFT);
+            $order->order_id = self::generateUniqueOrderId();
         });
     }
 
+    public static function generateUniqueOrderId()
+    {
+        $timestamp = time(); // Get the current timestamp
+        $randomNumber = mt_rand(1000, 9999); // Generate a random 4-digit number
+
+        $orderId = $timestamp . $randomNumber;
+
+        return $orderId;
+    }
 }
