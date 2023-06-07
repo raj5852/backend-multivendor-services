@@ -281,7 +281,19 @@ class OrderController extends Controller
     {
         $order  = Order::where('id', $id)->where('affiliator_id', auth()->user()->id)->first();
         if ($order) {
-            $allData =    $order->load(['product', 'vendor', 'affiliator']);
+            // $allData =    $order->load(['product', 'vendor', 'affiliator']);
+
+            $allData =    $order->load([
+                'product.specifications',
+                'product.category:id,name',
+                'product.subcategory:id,name',
+                'product.brand:id,name',
+                'vendor',
+                'affiliator'
+            ]);
+
+
+
 
             $allData->variants = json_decode($allData->variants);
 
