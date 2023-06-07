@@ -253,8 +253,8 @@ class OrderController extends Controller
         $order = Order::find($id);
 
         if ($order) {
-            //    $data =  $order->load(['product','vendor','affiliator']);
-            $allData =    $order->load(['product', 'vendor', 'affiliator']);
+
+            $allData =    $order->load(['product.specifications', 'vendor', 'affiliator']);
 
             $allData->variants = json_decode($allData->variants);
 
