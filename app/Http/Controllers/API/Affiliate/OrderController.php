@@ -93,7 +93,7 @@ class OrderController extends Controller
 
                 foreach ($databaseValue->variants as $dbItem) {
                     foreach ($data['variants'] as $userItem) {
-                        if ($dbItem['id'] === $userItem['id']) {
+                        if ($dbItem['id'] == $userItem['variant_id']) {
                             $dbItem['qty'] -= $userItem['qty'];
                             break;
                         }
