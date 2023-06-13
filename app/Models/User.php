@@ -56,4 +56,9 @@ class User extends Authenticatable
         return $this->hasMany(Brand::class,'user_id','id')->where('status','active');
 
     }
+
+    public function getBalanceAttribute($value)
+    {
+        return number_format($value, 2);
+    }
 }

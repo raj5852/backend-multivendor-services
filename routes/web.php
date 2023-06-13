@@ -48,12 +48,6 @@ Route::get('migrate', function () {
 
 Route::get('demo', function () {
 
-    // return $today = Carbon::now()->toDateString();
-
-// return DashboardService::index();
-
- return Category::with('order')->get();
-
 
 });
 
