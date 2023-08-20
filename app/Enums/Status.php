@@ -13,4 +13,5 @@ enum Status :string
     case Cancel = "cancel";
     case Hold = 'hold';
     case Success = 'success';
+    case Deactivate = "deactivate";
 }
