@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\API\Admin\BankController;
+use App\Http\Controllers\API\Admin\CouponController;
 use App\Http\Controllers\API\Admin\DashboardController;
 use App\Http\Controllers\API\Admin\OrderController as AdminOrderController;
 use App\Http\Controllers\API\Admin\PaymentHistoryController;
@@ -144,4 +145,7 @@ Route::middleware(['auth:sanctum', 'isAPIAdmin'])->group(function () {
     Route::get('admin/recent-order',[DashboardController::class,'recentOrder']);
 
     Route::get('admin/category-status',[DashboardController::class,'categoryStatus']);
+
+    Route::resource('coupon',CouponController::class);
+
 });

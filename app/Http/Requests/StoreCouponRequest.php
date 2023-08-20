@@ -1,12 +1,12 @@
 <?php
 
-namespace {{ namespace }};
+namespace App\Http\Requests;
 
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
 
-class {{ class }} extends FormRequest
+class StoreCouponRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -26,11 +26,17 @@ class {{ class }} extends FormRequest
     public function rules()
     {
         return [
-
+            'name'=>['required','max:256'],
+            'type'=>['required|in:flat,percentage'],
+            'amount'=>['required'],
+            'commission'=>['required'],
+            'expire_date'=>['required'],
+            'limitation'=>['required'],
+            'user_id'=>['required','exists:users,id']
         ];
     }
 
-    public function failedValidation(Validator $validator)
+    public function failedValidation(Validator  $validator)
     {
         throw new HttpResponseException(response()->json([
             'success'   => false,
