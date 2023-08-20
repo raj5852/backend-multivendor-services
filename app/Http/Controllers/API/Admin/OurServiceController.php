@@ -3,21 +3,21 @@
 namespace App\Http\Controllers\API\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Models\OrganizationTwo;
+use App\Models\OurService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
-class OrganizationTwoController extends Controller
+class OurServiceController extends Controller
 {
     public function index(){
-        $orgtwo = OrganizationTwo::latest()->paginate(3);
+        $services = OurService::latest()->paginate(6);
         return response()->json([
             'status' => 200,
-            'data' => $orgtwo,
+            'data' => $services,
         ]);
     }
 
-    public function storeOrganizationTwo(Request $request)
+    public function storeOurService(Request $request)
     {
         $validator = Validator::make($request->all(), [
             'title'       => 'required',
@@ -30,7 +30,7 @@ class OrganizationTwoController extends Controller
                 'errors' => $validator->messages(),
             ]);
         }else{
-            OrganizationTwo::create($request->all());
+            OurService::create($request->all());
             return response()->json([
                 'status' => 200,
                 'message' => 'Data Inserted Successfully !',
@@ -38,24 +38,23 @@ class OrganizationTwoController extends Controller
         }
     }
 
-
-    public function editOrganizationTwo($id){
-        $OrgTwo = OrganizationTwo::find($id);
-        if($OrgTwo){
+    public function editOurService($id){
+        $service = OurService::find($id);
+        if($service){
             return response()->json([
                 'status' => 200,
-                'datas' => $OrgTwo,
+                'datas' =>$service,
             ]);
         }else{
             return response()->json([
                 'status' => 404,
-                'message' => 'No Organization Two Infos Found',
+                'message' => 'No Service Two Found',
             ]);
         }
     }
 
 
-    public function updateOrganizationTwo(Request $request, $id)
+    public function updateOurService(Request $request, $id)
     {
         $validator = Validator::make($request->all(), [
             'title'       => 'required',
@@ -68,19 +67,19 @@ class OrganizationTwoController extends Controller
                 'errors' => $validator->messages(),
             ]);
         }else{
-            OrganizationTwo::find($id)->update($request->all());
+            OurService::find($id)->update($request->all());
             return response()->json([
                 'status' => 200,
-                'message' => 'Organization Two Updated Successfully !',
+                'message' => 'Service Updated Successfully !',
             ]);
         }
     }
 
-    public function deleteOrganizationTwo($id){
-        OrganizationTwo::find($id)->delete();
+    public function deleteOurService($id){
+        OurService::find($id)->delete();
         return response()->json([
             'status' => 200,
-            'message' => 'Organization Two Deleted Successfully !',
+            'message' => 'Service Deleted Successfully !',
         ]);
     }
 

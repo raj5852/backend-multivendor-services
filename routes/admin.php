@@ -1,13 +1,19 @@
 <?php
 
 use App\Http\Controllers\API\Admin\BankController;
+use App\Http\Controllers\API\Admin\CompanionController;
+use App\Http\Controllers\API\Admin\ContactController;
 use App\Http\Controllers\API\Admin\CouponController;
 use App\Http\Controllers\API\Admin\DashboardController;
+use App\Http\Controllers\API\Admin\FooterMediaController;
 use App\Http\Controllers\API\Admin\HomeController;
-use App\Http\Controllers\API\Admin\HomeSliderController;
+use App\Http\Controllers\API\Admin\HomeBannerController;
+use App\Http\Controllers\API\Admin\MembersController;
 use App\Http\Controllers\API\Admin\OrderController as AdminOrderController;
 use App\Http\Controllers\API\Admin\OrganizationController;
 use App\Http\Controllers\API\Admin\OrganizationTwoController;
+use App\Http\Controllers\API\Admin\OurServiceController;
+use App\Http\Controllers\API\Admin\PartnerController;
 use App\Http\Controllers\API\Admin\PaymentHistoryController;
 use App\Http\Controllers\Api\Admin\ProductStatusController;
 use App\Http\Controllers\Api\Admin\ProfileController;
@@ -24,7 +30,7 @@ use Illuminate\Support\Facades\Route;
 use SebastianBergmann\CodeCoverage\Report\Html\Dashboard;
 
 //admin route
-Route::middleware(['auth:sanctum', 'isAPIAdmin'])->group(function () {
+Route::prefix('admin')->middleware(['auth:sanctum', 'isAPIAdmin'])->group(function () {
 
     Route::get('/checkingAuthenticated', function () {
         return response()->json(['message' => 'You are in', 'status' => 200], 200);
@@ -148,28 +154,65 @@ Route::middleware(['auth:sanctum', 'isAPIAdmin'])->group(function () {
 
 
     // Home Page
-    Route::get('/home', [HomeSliderController::class, 'index']);
-    Route::post('/store-slider', [HomeSliderController::class, 'storeSlider']);
-    Route::get('/edit-slider/{id}', [HomeSliderController::class, 'editSlider']);
-    Route::post('/update-slider/{id}', [HomeSliderController::class, 'updateSlider']);
-    Route::get('/delete-slider/{id}', [HomeSliderController::class, 'deleteSlider']);
+    Route::get('/home-banner', [HomeBannerController::class, 'index']);
+    Route::post('/home-banner-store', [HomeBannerController::class, 'storeHomeBanner']);
+    Route::get('/home-banner-edit/{id}', [HomeBannerController::class, 'editHomeBanner']);
+    Route::post('/home-banner-update/{id}', [HomeBannerController::class, 'updateHomeBanner']);
+    Route::get('/home-banner-delete/{id}', [HomeBannerController::class, 'deleteHomeBanner']);
 
     // our Organization
     Route::get('/organization', [OrganizationController::class, 'index']);
-    Route::post('/store-organization', [OrganizationController::class, 'storeOrganization']);
-    Route::get('/edit-organization/{id}', [OrganizationController::class, 'editOrganization']);
-    Route::post('/update-organization/{id}', [OrganizationController::class, 'updateOrganization']);
-    Route::get('/delete-organization/{id}', [OrganizationController::class, 'deleteOrganization']);
+    Route::post('/organization-store', [OrganizationController::class, 'storeOrganization']);
+    Route::get('/organization-edit/{id}', [OrganizationController::class, 'editOrganization']);
+    Route::post('/organization-update/{id}', [OrganizationController::class, 'updateOrganization']);
+    Route::get('/organization-delete/{id}', [OrganizationController::class, 'deleteOrganization']);
+
     // Organization Two
-
     Route::get('/organizationTwo', [OrganizationTwoController::class, 'index']);
-    Route::post('/store-organizationTwo', [OrganizationTwoController::class, 'storeOrganizationTwo']);
-    Route::get('/edit-organizationTwo/{id}', [OrganizationTwoController::class, 'editOrganizationTwo']);
-    Route::post('/update-organizationTwo/{id}', [OrganizationTwoController::class, 'updateOrganizationTwo']);
-    Route::get('/delete-organizationTwo/{id}', [OrganizationTwoController::class, 'deleteOrganizationTwo']);
+    Route::post('/organizationTwo-store', [OrganizationTwoController::class, 'storeOrganizationTwo']);
+    Route::get('/organizationTwo-edit/{id}', [OrganizationTwoController::class, 'editOrganizationTwo']);
+    Route::post('/organizationTwo-update/{id}', [OrganizationTwoController::class, 'updateOrganizationTwo']);
+    Route::get('/organizationTwo-delete/{id}', [OrganizationTwoController::class, 'deleteOrganizationTwo']);
 
+    // Our Services
+    Route::get('/our-services', [OurServiceController::class, 'index']);
+    Route::post('/our-services-store', [OurServiceController::class, 'storeOurService']);
+    Route::get('/our-services-edit/{id}', [OurServiceController::class, 'editOurService']);
+    Route::post('/our-services-update/{id}', [OurServiceController::class, 'updateOurService']);
+    Route::get('/our-services-delete/{id}', [OurServiceController::class, 'deleteOurService']);
 
-    Route::get('admin/category-status',[DashboardController::class,'categoryStatus']);
+    // Our Partner
+    Route::get('/our-partner', [PartnerController::class, 'index']);
+    Route::post('/our-partner-store', [PartnerController::class, 'storeOurPartner']);
+    Route::get('/our-partner-edit/{id}', [PartnerController::class, 'editOurPartner']);
+    Route::post('/our-partner-update/{id}', [PartnerController::class, 'updateOurPartner']);
+    Route::get('/our-partner-delete/{id}', [PartnerController::class, 'deleteOurPartner']);
+
+    // Companion section
+    Route::get('/companion', [CompanionController::class, 'index']);
+    Route::post('/companion-store', [CompanionController::class, 'storeCompanion']);
+    Route::get('/companion-edit/{id}', [CompanionController::class, 'editCompanion']);
+    Route::post('/companion-update/{id}', [CompanionController::class, 'updateCompanion']);
+    Route::get('/companion-delete/{id}', [CompanionController::class, 'deleteCompanion']);
+
+    // Member section
+    Route::get('/member', [MembersController::class, 'index']);
+    Route::post('/member-store', [MembersController::class, 'storeMember']);
+    Route::get('/member-edit/{id}', [MembersController::class, 'editMember']);
+    Route::post('/member-update/{id}', [MembersController::class, 'updateMember']);
+    Route::get('/member-delete/{id}', [MembersController::class, 'deleteMember']);
+
+    // footer Social Icon / footer-media section
+    Route::get('/footer-media', [FooterMediaController::class, 'index']);
+    Route::post('/footer-media-store', [FooterMediaController::class, 'storeFooterMedia']);
+    Route::get('/footer-media-edit/{id}', [FooterMediaController::class, 'editFooterMedia']);
+    Route::post('/footer-media-update/{id}', [FooterMediaController::class, 'updateFooterMedia']);
+    Route::get('/footer-media-delete/{id}', [FooterMediaController::class, 'deleteFooterMedia']);
+
+    // User Contact Submitted Infos
+    Route::get('/contact-messages', [ContactController::class, 'index']);
+
+    Route::get('category-status',[DashboardController::class,'categoryStatus']);
 
     Route::resource('coupon',CouponController::class);
 
