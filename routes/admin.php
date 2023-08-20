@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\API\Admin\BankController;
+use App\Http\Controllers\API\Admin\CouponController;
 use App\Http\Controllers\API\Admin\DashboardController;
 use App\Http\Controllers\API\Admin\HomeController;
 use App\Http\Controllers\API\Admin\HomeSliderController;
@@ -166,6 +167,11 @@ Route::middleware(['auth:sanctum', 'isAPIAdmin'])->group(function () {
     Route::get('/edit-organizationTwo/{id}', [OrganizationTwoController::class, 'editOrganizationTwo']);
     Route::post('/update-organizationTwo/{id}', [OrganizationTwoController::class, 'updateOrganizationTwo']);
     Route::get('/delete-organizationTwo/{id}', [OrganizationTwoController::class, 'deleteOrganizationTwo']);
+
+
+    Route::get('admin/category-status',[DashboardController::class,'categoryStatus']);
+
+    Route::resource('coupon',CouponController::class);
 
 });
 
