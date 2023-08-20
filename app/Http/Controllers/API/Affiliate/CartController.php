@@ -161,4 +161,20 @@ class CartController extends Controller
     {
         echo"DOne";
     }
+
+
+
+    function affiliatorCart($id)
+    {
+        $cart = Cart::find($id);
+        if (!$cart) {
+            return response()->json([
+                'status' => 'Not found'
+            ]);
+        } else {
+            $data = Cart::find($id)->load(['product:id,name', 'cartDetails']);
+            return response()->json($data);
+        }
+    }
+
 }
