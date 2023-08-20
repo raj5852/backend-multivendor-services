@@ -15,7 +15,9 @@ use App\Http\Controllers\API\Vendor\DashboardController as VendorDashboardContro
 use App\Http\Controllers\Api\Vendor\ProductManageController;
 use App\Http\Controllers\Api\Vendor\ProductStatusController;
 use App\Http\Controllers\Api\Vendor\ProfileController;
+
 use App\Http\Controllers\API\Vendor\ServiceCategoryController;
+
 
 // vendor
 Route::middleware(['auth:sanctum','isAPIVendor','userOnline'])->group(function () {
@@ -114,5 +116,8 @@ Route::middleware(['auth:sanctum','isAPIVendor','userOnline'])->group(function (
 
     // top 10 item
     Route::get('vendor/top-ten-items',[VendorDashboardController::class,'topten']);
+
     Route::resource('servicecategory',ServiceCategoryController::class);
+  
+
 });

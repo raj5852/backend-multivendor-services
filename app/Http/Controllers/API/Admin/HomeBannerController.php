@@ -3,26 +3,26 @@
 namespace App\Http\Controllers\API\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Models\OrganizationTwo;
+use App\Models\Slider;
+use App\Service\Vendor\ProductService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
-class OrganizationTwoController extends Controller
+class HomeBannerController extends Controller
 {
     public function index(){
-        $orgtwo = OrganizationTwo::latest()->paginate(3);
         return response()->json([
             'status' => 200,
-            'data' => $orgtwo,
+            'data' => ProductService::showSLider(),
         ]);
     }
 
-    public function storeOrganizationTwo(Request $request)
+    public function storeHomeBanner(Request $request)
     {
         $validator = Validator::make($request->all(), [
             'title'       => 'required',
             'description' => 'required',
-            'icon'        => 'required',
+            'thumbal'     => 'required|mimes:jpeg,png,jpg',
         ]);
         if ($validator->fails()) {
             return response()->json([
@@ -30,7 +30,11 @@ class OrganizationTwoController extends Controller
                 'errors' => $validator->messages(),
             ]);
         }else{
-            OrganizationTwo::create($request->all());
+            $data = $request->all();
+            if($request->thumbal){
+                $data['thumbal'] = fileUpload($request->thumbal, 'uploads/sliders/', 9020, 405);
+            }
+            Slider::create($data);
             return response()->json([
                 'status' => 200,
                 'message' => 'Data Inserted Successfully !',
@@ -39,28 +43,29 @@ class OrganizationTwoController extends Controller
     }
 
 
-    public function editOrganizationTwo($id){
-        $OrgTwo = OrganizationTwo::find($id);
-        if($OrgTwo){
+    public function editHomeBanner($id){
+        $slider = Slider::find($id);
+
+        if($slider){
             return response()->json([
                 'status' => 200,
-                'datas' => $OrgTwo,
+                'datas' => $slider,
             ]);
         }else{
             return response()->json([
                 'status' => 404,
-                'message' => 'No Organization Two Infos Found',
+                'message' => 'No Slider Found',
             ]);
         }
     }
 
 
-    public function updateOrganizationTwo(Request $request, $id)
+    public function updateHomeBanner(Request $request, $id)
     {
         $validator = Validator::make($request->all(), [
             'title'       => 'required',
             'description' => 'required',
-            'icon'        => 'required',
+            'thumbal'     => 'mimes:jpeg,png,jpg',
         ]);
         if ($validator->fails()) {
             return response()->json([
@@ -68,21 +73,32 @@ class OrganizationTwoController extends Controller
                 'errors' => $validator->messages(),
             ]);
         }else{
-            OrganizationTwo::find($id)->update($request->all());
+            $old_image = Slider::find($id);
+            $data = $request->all();
+            if ($request->thumbal) {
+                if ($old_image->thumbal) {
+                    unlink($old_image->thumbal);
+                }
+                $data['thumbal'] = fileUpload($request->thumbal, 'uploads/sliders/', 9020, 405);
+            }
+            Slider::find($id)->update($data);
             return response()->json([
                 'status' => 200,
-                'message' => 'Organization Two Updated Successfully !',
+                'message' => 'Slider Updated Successfully !',
             ]);
         }
     }
 
-    public function deleteOrganizationTwo($id){
-        OrganizationTwo::find($id)->delete();
+    public function deleteHomeBanner($id){
+        $data = Slider::find($id);
+            if ($data->thumbal) {
+                unlink($data->thumbal);
+            }
+        $data->delete();
         return response()->json([
             'status' => 200,
-            'message' => 'Organization Two Deleted Successfully !',
+            'message' => 'Slider Deleted Successfully !',
         ]);
     }
-
 
 }

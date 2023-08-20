@@ -3,21 +3,21 @@
 namespace App\Http\Controllers\API\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Models\OrganizationTwo;
+use App\Models\Companion;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
-class OrganizationTwoController extends Controller
+class CompanionController extends Controller
 {
     public function index(){
-        $orgtwo = OrganizationTwo::latest()->paginate(3);
+        $companion = Companion::latest()->paginate(3);
         return response()->json([
             'status' => 200,
-            'data' => $orgtwo,
+            'data' => $companion,
         ]);
     }
 
-    public function storeOrganizationTwo(Request $request)
+    public function storeCompanion(Request $request)
     {
         $validator = Validator::make($request->all(), [
             'title'       => 'required',
@@ -30,32 +30,30 @@ class OrganizationTwoController extends Controller
                 'errors' => $validator->messages(),
             ]);
         }else{
-            OrganizationTwo::create($request->all());
+            Companion::create($request->all());
             return response()->json([
-                'status' => 200,
-                'message' => 'Data Inserted Successfully !',
+                'status'  => 200,
+                'message' => 'Companion Created Successfully !',
             ]);
         }
     }
 
-
-    public function editOrganizationTwo($id){
-        $OrgTwo = OrganizationTwo::find($id);
-        if($OrgTwo){
+    public function editCompanion($id){
+        $companion = Companion::find($id);
+        if($companion){
             return response()->json([
                 'status' => 200,
-                'datas' => $OrgTwo,
+                'datas'  =>$companion,
             ]);
         }else{
             return response()->json([
-                'status' => 404,
-                'message' => 'No Organization Two Infos Found',
+                'status'  => 404,
+                'message' => 'No Companion Found',
             ]);
         }
     }
 
-
-    public function updateOrganizationTwo(Request $request, $id)
+    public function updateCompanion(Request $request, $id)
     {
         $validator = Validator::make($request->all(), [
             'title'       => 'required',
@@ -68,19 +66,19 @@ class OrganizationTwoController extends Controller
                 'errors' => $validator->messages(),
             ]);
         }else{
-            OrganizationTwo::find($id)->update($request->all());
+            Companion::find($id)->update($request->all());
             return response()->json([
-                'status' => 200,
-                'message' => 'Organization Two Updated Successfully !',
+                'status'  => 200,
+                'message' => 'Companion Updated Successfully !',
             ]);
         }
     }
 
-    public function deleteOrganizationTwo($id){
-        OrganizationTwo::find($id)->delete();
+    public function deleteCompanion($id){
+        Companion::find($id)->delete();
         return response()->json([
             'status' => 200,
-            'message' => 'Organization Two Deleted Successfully !',
+            'message' => 'Companion Deleted Successfully !',
         ]);
     }
 

@@ -3,26 +3,24 @@
 namespace App\Http\Controllers\API\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Models\Slider;
-use App\Service\Vendor\ProductService;
+use App\Models\Partner;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
-class HomeSliderController extends Controller
+class PartnerController extends Controller
 {
     public function index(){
+        $pertner = Partner::latest()->paginate();
         return response()->json([
             'status' => 200,
-            'data' => ProductService::showSLider(),
+            'data' => $pertner,
         ]);
     }
 
-    public function storeSlider(Request $request)
+    public function storeOurPartner(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'title'       => 'required',
-            'description' => 'required',
-            'thumbal'     => 'required|mimes:jpeg,png,jpg',
+            'image'     => 'required|mimes:jpeg,png,jpg',
         ]);
         if ($validator->fails()) {
             return response()->json([
@@ -31,10 +29,10 @@ class HomeSliderController extends Controller
             ]);
         }else{
             $data = $request->all();
-            if($request->thumbal){
-                $data['thumbal'] = fileUpload($request->thumbal, 'uploads/sliders/', 9020, 405);
+            if($request->image){
+                $data['image'] = fileUpload($request->image, 'uploads/partners/', 101, 40);
             }
-            Slider::create($data);
+            Partner::create($data);
             return response()->json([
                 'status' => 200,
                 'message' => 'Data Inserted Successfully !',
@@ -42,30 +40,25 @@ class HomeSliderController extends Controller
         }
     }
 
-
-    public function editSlider($id){
-        $slider = Slider::find($id);
-
-        if($slider){
+    public function editOurPartner($id){
+        $partner = Partner::find($id);
+        if($partner){
             return response()->json([
                 'status' => 200,
-                'datas' => $slider,
+                'datas' => $partner,
             ]);
         }else{
             return response()->json([
                 'status' => 404,
-                'message' => 'No Slider Found',
+                'message' => 'No partner Found',
             ]);
         }
     }
 
-
-    public function updateSlider(Request $request, $id)
+    public function updateOurPartner(Request $request, $id)
     {
         $validator = Validator::make($request->all(), [
-            'title'       => 'required',
-            'description' => 'required',
-            'thumbal'     => 'mimes:jpeg,png,jpg',
+            'image'     => 'mimes:jpeg,png,jpg',
         ]);
         if ($validator->fails()) {
             return response()->json([
@@ -73,36 +66,32 @@ class HomeSliderController extends Controller
                 'errors' => $validator->messages(),
             ]);
         }else{
-            $old_image = Slider::find($id);
+            $old_image = Partner::find($id);
             $data = $request->all();
-            if ($request->thumbal) {
-                if ($old_image->thumbal) {
-                    unlink($old_image->thumbal);
+            if ($request->image) {
+                if ($old_image->image) {
+                    unlink($old_image->image);
                 }
-                $data['thumbal'] = fileUpload($request->thumbal, 'uploads/sliders/', 9020, 405);
+                $data['image'] = fileUpload($request->image, 'uploads/partners/', 101, 40);
             }
-            Slider::find($id)->update($data);
+            Partner::find($id)->update($data);
             return response()->json([
                 'status' => 200,
-                'message' => 'Slider Updated Successfully !',
+                'message' => 'Partner Updated Successfully !',
             ]);
         }
     }
 
-    public function deleteSlider($id){
-        $data = Slider::find($id);
-            if ($data->thumbal) {
-                unlink($data->thumbal);
+    public function deleteOurPartner($id){
+        $data = Partner::find($id);
+            if ($data->image) {
+                unlink($data->image);
             }
         $data->delete();
         return response()->json([
             'status' => 200,
-            'message' => 'Slider Deleted Successfully !',
+            'message' => 'Partner Deleted Successfully !',
         ]);
     }
-
-
-
-
 
 }
