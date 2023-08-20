@@ -7,6 +7,9 @@ use App\Http\Controllers\API\Affiliate\CheckoutController;
 use App\Http\Controllers\API\Affiliate\DashboardController as AffiliateDashboardController;
 use App\Http\Controllers\API\Affiliate\OrderController;
 use App\Http\Controllers\API\Affiliate\PendingBalanceController;
+use App\Http\Controllers\Api\Affiliate\ProductStatusController;
+use App\Http\Controllers\Api\Affiliate\ProfileController;
+use App\Http\Controllers\Api\Affiliate\SingleProductController;
 use App\Http\Controllers\API\Affiliate\WithdrawController;
 use Illuminate\Support\Facades\Route;
 
@@ -17,21 +20,21 @@ use Illuminate\Support\Facades\Route;
 
 Route::middleware(['auth:sanctum','isAPIaffiliator','userOnline'])->group(function () {
 
-    Route::get('affiliator/profile', [AffiliateController::class, 'AffiliatorProfile']);
-    Route::post('affiliator/update/profile', [AffiliateController::class, 'AffiliatorUpdateProfile']);
+    Route::get('affiliator/profile', [ProfileController::class, 'AffiliatorProfile']);
+    Route::post('affiliator/update/profile', [ProfileController::class, 'AffiliatorUpdateProfile']);
 
-    Route::get('affiliator/products', [AffiliateController::class, 'AffiliatorProducts']);
-    Route::get('single/product/{id}', [AffiliateController::class, 'AffiliatorProductSingle']);
-    Route::post('request/product/{id?}', [AffiliateController::class, 'AffiliatorProductRequest']);
+    Route::get('affiliator/products', [ProductStatusController::class, 'AffiliatorProducts']);
+    Route::get('single/product/{id}', [SingleProductController::class, 'AffiliatorProductSingle']);
+    Route::post('request/product/{id?}', [ProductStatusController::class, 'AffiliatorProductRequest']);
 
-    Route::get('affiliator/request/pending/product', [AffiliateController::class, 'AffiliatorProductPendingProduct']);
+    Route::get('affiliator/request/pending/product', [ProductStatusController::class, 'AffiliatorProductPendingProduct']);
 
-    Route::get('affiliator/request/active/product', [AffiliateController::class, 'AffiliatorProductActiveProduct']);
+    Route::get('affiliator/request/active/product', [ProductStatusController::class, 'AffiliatorProductActiveProduct']);
 
-    Route::get('affiliator/request/reject/product', [AffiliateController::class, 'AffiliatorProductRejct']);
-    Route::get('affiliator/cat/{id}', [AffiliateController::class, 'affiliatorCart']);
+    Route::get('affiliator/request/reject/product', [ProductStatusController::class, 'AffiliatorProductRejct']);
+    Route::get('affiliator/cart/{id}', [CartController::class, 'affiliatorCart']);
 
-    Route::get('single/page/{id}', [AffiliateController::class, 'AffiliatorProductSinglePage']);
+    Route::get('single/page/{id}', [SingleProductController::class, 'AffiliatorProductSinglePage']);
     Route::post('add-to-cart', [CartController::class, 'addtocart']);
     Route::get('cart', [CartController::class, 'viewcart']);
     Route::put('cart-updatequantity/{cart_id}/{scope}', [CartController::class, 'updatequantity']);
