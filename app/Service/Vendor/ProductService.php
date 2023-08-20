@@ -3,6 +3,7 @@
 namespace App\Service\Vendor;
 
 use App\Models\Product;
+use App\Models\Slider;
 use Illuminate\Support\Facades\Auth;
 
 class ProductService
@@ -37,9 +38,13 @@ class ProductService
             ->paginate(10)
             ->withQueryString();
 
-
-
-
         return $product;
     }
+
+    public static function showSLider()
+    {
+        $sliders = Slider::all();
+        return $sliders;
+    }
+
 }

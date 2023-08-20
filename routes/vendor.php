@@ -12,6 +12,9 @@ use App\Http\Controllers\API\Vendor\OrderController as VendorOrderController;
 use App\Http\Controllers\API\Vendor\BankController as VendorBankController;
 use App\Http\Controllers\API\Vendor\PaymentRequestController;
 use App\Http\Controllers\API\Vendor\DashboardController as VendorDashboardController;
+use App\Http\Controllers\Api\Vendor\ProductManageController;
+use App\Http\Controllers\Api\Vendor\ProductStatusController;
+use App\Http\Controllers\Api\Vendor\ProfileController;
 
 // vendor
 Route::middleware(['auth:sanctum','isAPIVendor','userOnline'])->group(function () {
@@ -19,16 +22,16 @@ Route::middleware(['auth:sanctum','isAPIVendor','userOnline'])->group(function (
         return response()->json(['message' => 'You are in', 'status' => 200], 200);
     });
 
-    Route::get('vendor/profile', [VendorController::class, 'VendorProfile']);
-    Route::post('vendor/update/profile', [VendorController::class, 'VendorUpdateProfile']);
+    Route::get('vendor/profile', [ProfileController::class, 'VendorProfile']);
+    Route::post('vendor/update/profile', [ProfileController::class, 'VendorUpdateProfile']);
 
     //vendor product
-    Route::get('vendor/product/{status?}', [VendorController::class, 'VendorProduct']);
-    Route::post('vendor-store-product', [VendorController::class, 'VendorProductStore']);
-    Route::get('vendor-edit-product/{id}', [VendorController::class, 'VendorProductEdit']);
-    Route::post('vendor-update-product/{id}', [VendorController::class, 'VendotUpdateProduct']);
-    Route::delete('vendor-delete-product/{id}', [VendorController::class, 'VendorDelete']);
-    Route::delete('vendor-delete-image/{id}', [VendorController::class, 'VendorDeleteImage']);
+    Route::get('vendor/product/{status?}', [ProductManageController::class, 'VendorProduct']);
+    Route::post('vendor-store-product', [ProductManageController::class, 'VendorProductStore']);
+    Route::get('vendor-edit-product/{id}', [ProductManageController::class, 'VendorProductEdit']);
+    Route::post('vendor-update-product/{id}', [ProductManageController::class, 'VendotUpdateProduct']);
+    Route::delete('vendor-delete-product/{id}', [ProductManageController::class, 'VendorDelete']);
+    Route::delete('vendor-delete-image/{id}', [ProductManageController::class, 'VendorDeleteImage']);
 
 
     Route::get('vendor-all-category', [VendorController::class, 'AllCategory']);
@@ -47,12 +50,12 @@ Route::middleware(['auth:sanctum','isAPIVendor','userOnline'])->group(function (
     Route::get('vendor-brand-edit/{id}',[VendorBrandController::class,'edit']);
     Route::post('vendor-brand-update/{id}',[VendorBrandController::class,'update']);
 
-    Route::get('vendor/balabrandnce/request', [VendorController::class, 'VendorBalanceRequest']);
-    Route::post('vendor/request/sent', [VendorController::class, 'VendorRequestSent']);
+    Route::get('vendor/balabrandnce/request', [ProductStatusController::class, 'VendorBalanceRequest']);
+    Route::post('vendor/request/sent', [ProductStatusController::class, 'VendorRequestSent']);
 
-    Route::get('vendor-product-approval/{id}', [VendorController::class, 'approval']);
-    Route::get('vendor-product-reject/{id}', [VendorController::class, 'reject']);
-    Route::get('vendor-all/product-accepted/{id}', [VendorController::class, 'Accepted']);
+    Route::get('vendor-product-approval/{id}', [ProductStatusController::class, 'approval']);
+    Route::get('vendor-product-reject/{id}', [ProductStatusController::class, 'reject']);
+    Route::get('vendor-all/product-accepted/{id}', [ProductStatusController::class, 'Accepted']);
 
 
     //color

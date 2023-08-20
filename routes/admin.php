@@ -2,8 +2,14 @@
 
 use App\Http\Controllers\API\Admin\BankController;
 use App\Http\Controllers\API\Admin\DashboardController;
+use App\Http\Controllers\API\Admin\HomeController;
+use App\Http\Controllers\API\Admin\HomeSliderController;
 use App\Http\Controllers\API\Admin\OrderController as AdminOrderController;
+use App\Http\Controllers\API\Admin\OrganizationController;
+use App\Http\Controllers\API\Admin\OrganizationTwoController;
 use App\Http\Controllers\API\Admin\PaymentHistoryController;
+use App\Http\Controllers\Api\Admin\ProductStatusController;
+use App\Http\Controllers\Api\Admin\ProfileController;
 use App\Http\Controllers\API\Admin\WithdrawController as AdminWithdrawController;
 use App\Http\Controllers\API\AuthController;
 use App\Http\Controllers\API\CategoryController;
@@ -11,12 +17,10 @@ use App\Http\Controllers\API\SubCategoryController;
 use App\Http\Controllers\API\BrandController;
 use App\Http\Controllers\API\ProductController;
 use App\Http\Controllers\API\UserController;
-use App\Http\Controllers\API\AdminController;
+use App\Models\OrganizationTwo;
+// use App\Http\Controllers\HomeController;
 use Illuminate\Support\Facades\Route;
-
-
-
-
+use SebastianBergmann\CodeCoverage\Report\Html\Dashboard;
 
 //admin route
 Route::middleware(['auth:sanctum', 'isAPIAdmin'])->group(function () {
@@ -24,26 +28,26 @@ Route::middleware(['auth:sanctum', 'isAPIAdmin'])->group(function () {
     Route::get('/checkingAuthenticated', function () {
         return response()->json(['message' => 'You are in', 'status' => 200], 200);
     });
-    Route::get('admin/profile', [AdminController::class, 'AdminProfile']);
-    Route::post('admin/update/profile', [AdminController::class, 'AdminUpdateProfile']);
+    Route::get('/profile', [ProfileController::class, 'AdminProfile']);
+    Route::post('/update/profile', [ProfileController::class, 'AdminUpdateProfile']);
 
-    Route::get('admin/request/product/pending', [AdminController::class, 'AdminRequestPending']);
-    Route::get('admin/request/product/active', [AdminController::class, 'AdminRequestActive']);
-    Route::get('admin/request/product/all', [AdminController::class, 'AdminRequestAll']);
+    Route::get('/request/product/pending', [ProductStatusController::class, 'AdminRequestPending']);
+    Route::get('/request/product/active', [ProductStatusController::class, 'AdminRequestActive']);
+    Route::get('/request/product/all', [ProductStatusController::class, 'AdminRequestAll']);
 
-    Route::get('admin/request/product/rejected', [AdminController::class, 'RequestRejected']);
+    Route::get('/request/product/rejected', [ProductStatusController::class, 'RequestRejected']);
     // Route::get('admin/request/product/view/{id}',[AdminController::class,'RequestView']);
-    Route::post('admin/request/product-update/{id}', [AdminController::class, 'RequestUpdate']);
+    Route::post('/request/product-update/{id}', [ProductStatusController::class, 'RequestUpdate']);
 
 
-    Route::get('admin/request/product/view/{id}', [AdminController::class, 'AdminRequestView']);
+    Route::get('/request/product/view/{id}', [ProductStatusController::class, 'AdminRequestView']);
 
+    Route::get('/request/balances', [ProductStatusController::class, 'AdminRequestBalances']);
+    Route::get('/request/balance/active', [ProductStatusController::class, 'AdminRequestBalanceActive']);
 
     Route::get('product-approval/{id}', [ProductController::class, 'approval']);
     Route::get('product-reject/{id}', [ProductController::class, 'reject']);
     Route::get('all/product-accepted/{id}', [ProductController::class, 'Accepted']);
-    Route::get('admin/request/balances', [AdminController::class, 'AdminRequestBalances']);
-    Route::get('admin/request/balance/active', [AdminController::class, 'AdminRequestBalanceActive']);
 
 
 
@@ -76,9 +80,6 @@ Route::middleware(['auth:sanctum', 'isAPIAdmin'])->group(function () {
     Route::delete('delete-brand/{id}', [BrandController::class, 'destroy']);
 
 
-
-
-
     Route::get('all-category', [ProductController::class, 'AllCategory']);
     Route::get('all/brand', [ProductController::class, 'AllBrand']);
 
@@ -106,7 +107,6 @@ Route::middleware(['auth:sanctum', 'isAPIAdmin'])->group(function () {
     Route::delete('delete-affiliator/{id}', [UserController::class, 'AffiliatorDelete']);
 
 
-
     Route::post('user/status/update/{id}',[UserController::class,'updateStatus']);
 
     //colors
@@ -115,33 +115,57 @@ Route::middleware(['auth:sanctum', 'isAPIAdmin'])->group(function () {
     //size
     // Route::apiResource('admin-size',AdminSizeController::class);
 
-    Route::get('admin/all-orders',[AdminOrderController::class,'allOrders']);
-    Route::get('admin/pending-orders',[AdminOrderController::class,'pendingOrders']);
-    Route::get('admin/progress-orders',[AdminOrderController::class,'ProgressOrders']);
-    Route::get('admin/delivered-orders',[AdminOrderController::class,'DeliveredOrders']);
-    Route::get('admin/cancel-orders',[AdminOrderController::class,'CanceldOrders']);
-    Route::get('admin/hold-orders',[AdminOrderController::class,'HoldOrders']);
+    Route::get('/all-orders',[AdminOrderController::class,'allOrders']);
+    Route::get('/pending-orders',[AdminOrderController::class,'pendingOrders']);
+    Route::get('/progress-orders',[AdminOrderController::class,'ProgressOrders']);
+    Route::get('/delivered-orders',[AdminOrderController::class,'DeliveredOrders']);
+    Route::get('/cancel-orders',[AdminOrderController::class,'CanceldOrders']);
+    Route::get('/hold-orders',[AdminOrderController::class,'HoldOrders']);
 
-    Route::post('admin/order/update/{id}',[AdminOrderController::class,'updateStatus']);
-    Route::get('admin/order/view/{id}',[AdminOrderController::class,'orderView']);
+    Route::post('/order/update/{id}',[AdminOrderController::class,'updateStatus']);
+    Route::get('/order/view/{id}',[AdminOrderController::class,'orderView']);
 
     //bank
-    Route::get('admin/bank/all',[BankController::class,'index']);
-    Route::post('admin/bank/store',[BankController::class,'store']);
-    Route::delete('admin/bank/delete/{id}',[BankController::class,'destroy']);
+    Route::get('/bank/all',[BankController::class,'index']);
+    Route::post('/bank/store',[BankController::class,'store']);
+    Route::delete('/bank/delete/{id}',[BankController::class,'destroy']);
 
     //all payment request
-    Route::get('admin/deposit-history/{status?}',[PaymentHistoryController::class,'history']);
-    Route::post('admin/deposit-history/{id}',[PaymentHistoryController::class,'statusUpdate']);
+    Route::get('/deposit-history/{status?}',[PaymentHistoryController::class,'history']);
+    Route::post('/deposit-history/{id}',[PaymentHistoryController::class,'statusUpdate']);
 
     //all withdraw request
-    Route::get('admin/all-withdraw/{status?}',[AdminWithdrawController::class,'index']);
-    Route::post('admin/withdraw-paid/{id}',[AdminWithdrawController::class,'paid']);
+    Route::get('/all-withdraw/{status?}',[AdminWithdrawController::class,'index']);
+    Route::post('/withdraw-paid/{id}',[AdminWithdrawController::class,'paid']);
 
     //dashboard data
     Route::get('dashboard-datas',[DashboardController::class,'index']);
-    Route::get('admin/order-vs-revenue',[DashboardController::class,'orderVsRevenue']);
-    Route::get('admin/recent-order',[DashboardController::class,'recentOrder']);
+    Route::get('/order-vs-revenue',[DashboardController::class,'orderVsRevenue']);
+    Route::get('/recent-order',[DashboardController::class,'recentOrder']);
 
-    Route::get('admin/category-status',[DashboardController::class,'categoryStatus']);
+    Route::get('/category-status',[DashboardController::class,'categoryStatus']);
+
+
+    // Home Page
+    Route::get('/home', [HomeSliderController::class, 'index']);
+    Route::post('/store-slider', [HomeSliderController::class, 'storeSlider']);
+    Route::get('/edit-slider/{id}', [HomeSliderController::class, 'editSlider']);
+    Route::post('/update-slider/{id}', [HomeSliderController::class, 'updateSlider']);
+    Route::get('/delete-slider/{id}', [HomeSliderController::class, 'deleteSlider']);
+
+    // our Organization
+    Route::get('/organization', [OrganizationController::class, 'index']);
+    Route::post('/store-organization', [OrganizationController::class, 'storeOrganization']);
+    Route::get('/edit-organization/{id}', [OrganizationController::class, 'editOrganization']);
+    Route::post('/update-organization/{id}', [OrganizationController::class, 'updateOrganization']);
+    Route::get('/delete-organization/{id}', [OrganizationController::class, 'deleteOrganization']);
+    // Organization Two
+
+    Route::get('/organizationTwo', [OrganizationTwoController::class, 'index']);
+    Route::post('/store-organizationTwo', [OrganizationTwoController::class, 'storeOrganizationTwo']);
+    Route::get('/edit-organizationTwo/{id}', [OrganizationTwoController::class, 'editOrganizationTwo']);
+    Route::post('/update-organizationTwo/{id}', [OrganizationTwoController::class, 'updateOrganizationTwo']);
+    Route::get('/delete-organizationTwo/{id}', [OrganizationTwoController::class, 'deleteOrganizationTwo']);
+
 });
+
