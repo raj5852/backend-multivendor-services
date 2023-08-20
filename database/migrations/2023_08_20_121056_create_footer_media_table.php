@@ -13,11 +13,10 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('organization_twos', function (Blueprint $table) {
+        Schema::create('footer_media', function (Blueprint $table) {
             $table->id();
-            $table->string('icon');
-            $table->string('title');
-            $table->longText('description');
+            $table->string('icon_class');
+            $table->string('media_link');
             $table->timestamps();
         });
     }
@@ -29,6 +28,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('organization_twos');
+        Schema::dropIfExists('footer_media');
     }
 };

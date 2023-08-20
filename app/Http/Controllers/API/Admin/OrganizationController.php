@@ -11,8 +11,7 @@ use Illuminate\Support\Facades\Validator;
 class OrganizationController extends Controller
 {
     public function index(){
-
-        $organizations = Organization::latest()->paginate(8);
+        $organizations = Organization::latest()->paginate(4);
         return response()->json([
             'status' => 200,
             'data' =>  $organizations,
@@ -30,8 +29,7 @@ class OrganizationController extends Controller
                 'errors' => $validator->messages(),
             ]);
         }else{
-            $data = $request->all();
-            $creaedData = Organization::create($data);
+            $creaedData = Organization::create($request->all());
             return response()->json([
                 'status' => 200,
                 'message' => 'Data Inserted Successfully !',
@@ -67,17 +65,14 @@ class OrganizationController extends Controller
                 'errors' => $validator->messages(),
             ]);
         }else{
-            $data = $request->all();
-            Organization::find($id)->update($data);
+            Organization::find($id)->update($request->all());
             return response()->json([
                 'status' => 200,
                 'message' => 'Organization Updated Successfully !',
             ]);
         }
-
-
     }
-    
+
     public function deleteOrganization($id){
         Organization::find($id)->delete();
         return response()->json([

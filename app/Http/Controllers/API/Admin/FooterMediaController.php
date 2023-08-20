@@ -3,26 +3,25 @@
 namespace App\Http\Controllers\API\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Models\OrganizationTwo;
+use App\Models\FooterMedia;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
-class OrganizationTwoController extends Controller
+class FooterMediaController extends Controller
 {
     public function index(){
-        $orgtwo = OrganizationTwo::latest()->paginate(3);
+        $footermedia = FooterMedia::latest()->paginate(8);
         return response()->json([
             'status' => 200,
-            'data' => $orgtwo,
+            'data' => $footermedia,
         ]);
     }
 
-    public function storeOrganizationTwo(Request $request)
+    public function storeFooterMedia(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'title'       => 'required',
-            'description' => 'required',
-            'icon'        => 'required',
+            'icon_class'    => 'required',
+            'media_link'    => 'required',
         ]);
         if ($validator->fails()) {
             return response()->json([
@@ -30,7 +29,7 @@ class OrganizationTwoController extends Controller
                 'errors' => $validator->messages(),
             ]);
         }else{
-            OrganizationTwo::create($request->all());
+            FooterMedia::create($request->all());
             return response()->json([
                 'status' => 200,
                 'message' => 'Data Inserted Successfully !',
@@ -38,29 +37,27 @@ class OrganizationTwoController extends Controller
         }
     }
 
-
-    public function editOrganizationTwo($id){
-        $OrgTwo = OrganizationTwo::find($id);
-        if($OrgTwo){
+    public function editFooterMedia($id){
+        $footermedia = FooterMedia::find($id);
+        if($footermedia){
             return response()->json([
                 'status' => 200,
-                'datas' => $OrgTwo,
+                'datas' => $footermedia,
             ]);
         }else{
             return response()->json([
                 'status' => 404,
-                'message' => 'No Organization Two Infos Found',
+                'message' => 'No footer media Info Found',
             ]);
         }
     }
 
 
-    public function updateOrganizationTwo(Request $request, $id)
+    public function updateFooterMedia(Request $request, $id)
     {
         $validator = Validator::make($request->all(), [
-            'title'       => 'required',
-            'description' => 'required',
-            'icon'        => 'required',
+            'icon_class'    => 'required',
+            'media_link'    => 'required',
         ]);
         if ($validator->fails()) {
             return response()->json([
@@ -68,19 +65,19 @@ class OrganizationTwoController extends Controller
                 'errors' => $validator->messages(),
             ]);
         }else{
-            OrganizationTwo::find($id)->update($request->all());
+            FooterMedia::find($id)->update($request->all());
             return response()->json([
                 'status' => 200,
-                'message' => 'Organization Two Updated Successfully !',
+                'message' => 'Footer Media Updated Successfully !',
             ]);
         }
     }
 
-    public function deleteOrganizationTwo($id){
-        OrganizationTwo::find($id)->delete();
+    public function deleteFooterMedia($id){
+        FooterMedia::find($id)->delete();
         return response()->json([
             'status' => 200,
-            'message' => 'Organization Two Deleted Successfully !',
+            'message' => 'Footer Media Deleted Successfully !',
         ]);
     }
 
