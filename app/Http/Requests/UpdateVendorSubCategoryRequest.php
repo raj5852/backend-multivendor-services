@@ -6,7 +6,7 @@ use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
 
-class StoreServiceSubCategoryRequest extends FormRequest
+class UpdateVendorSubCategoryRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -26,9 +26,9 @@ class StoreServiceSubCategoryRequest extends FormRequest
     public function rules()
     {
         return [
-            'vendor_category_id' => 'required',
-            'name' => 'required',
-            'status'  => 'required|in:active,deactivate',
+            // 'vendor_category_id'  => 'required',
+            // 'name'                => 'required',
+            // 'status'  => 'required|in:active,deactivate',
         ];
     }
 

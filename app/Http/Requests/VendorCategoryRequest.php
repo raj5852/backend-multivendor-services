@@ -5,8 +5,9 @@ namespace App\Http\Requests;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
-
-class StoreServiceSubCategoryRequest extends FormRequest
+use Illuminate\Validation\Rule;
+use Str;
+class VendorCategoryRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -26,10 +27,16 @@ class StoreServiceSubCategoryRequest extends FormRequest
     public function rules()
     {
         return [
-            'vendor_category_id' => 'required',
-            'name' => 'required',
+                'name'   => ['required',Rule::unique('vendor_categories', 'slug')->ignore(auth())],
             'status'  => 'required|in:active,deactivate',
         ];
+    }
+
+    public function prepareForValidate()
+    {
+         request()->merge([
+            'slug' => Str::slug(request('name'))
+        ]);
     }
 
     public function failedValidation(Validator $validator)
