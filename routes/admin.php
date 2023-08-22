@@ -5,10 +5,12 @@ use App\Http\Controllers\API\Admin\CompanionController;
 use App\Http\Controllers\API\Admin\ContactController;
 use App\Http\Controllers\API\Admin\CouponController;
 use App\Http\Controllers\API\Admin\DashboardController;
+use App\Http\Controllers\API\Admin\FaqController;
 use App\Http\Controllers\API\Admin\FooterMediaController;
 use App\Http\Controllers\API\Admin\HomeController;
 use App\Http\Controllers\API\Admin\HomeBannerController;
 use App\Http\Controllers\API\Admin\MembersController;
+use App\Http\Controllers\API\Admin\MissionController;
 use App\Http\Controllers\API\Admin\OrderController as AdminOrderController;
 use App\Http\Controllers\API\Admin\OrganizationController;
 use App\Http\Controllers\API\Admin\OrganizationTwoController;
@@ -17,6 +19,8 @@ use App\Http\Controllers\API\Admin\PartnerController;
 use App\Http\Controllers\API\Admin\PaymentHistoryController;
 use App\Http\Controllers\Api\Admin\ProductStatusController;
 use App\Http\Controllers\Api\Admin\ProfileController;
+use App\Http\Controllers\API\Admin\SettingsController;
+use App\Http\Controllers\API\Admin\TestimonialController;
 use App\Http\Controllers\API\Admin\WithdrawController as AdminWithdrawController;
 use App\Http\Controllers\API\AuthController;
 use App\Http\Controllers\API\CategoryController;
@@ -163,6 +167,7 @@ Route::prefix('admin')->middleware(['auth:sanctum', 'isAPIAdmin'])->group(functi
     // our Organization
     Route::get('/organization', [OrganizationController::class, 'index']);
     Route::post('/organization-store', [OrganizationController::class, 'storeOrganization']);
+    Route::get('/organization-show/{id}', [OrganizationController::class, 'showOrganization']);
     Route::get('/organization-edit/{id}', [OrganizationController::class, 'editOrganization']);
     Route::post('/organization-update/{id}', [OrganizationController::class, 'updateOrganization']);
     Route::get('/organization-delete/{id}', [OrganizationController::class, 'deleteOrganization']);
@@ -170,6 +175,7 @@ Route::prefix('admin')->middleware(['auth:sanctum', 'isAPIAdmin'])->group(functi
     // Organization Two
     Route::get('/organizationTwo', [OrganizationTwoController::class, 'index']);
     Route::post('/organizationTwo-store', [OrganizationTwoController::class, 'storeOrganizationTwo']);
+    Route::get('/organizationTwo-show/{id}', [OrganizationTwoController::class, 'showOrganizationTwo']);
     Route::get('/organizationTwo-edit/{id}', [OrganizationTwoController::class, 'editOrganizationTwo']);
     Route::post('/organizationTwo-update/{id}', [OrganizationTwoController::class, 'updateOrganizationTwo']);
     Route::get('/organizationTwo-delete/{id}', [OrganizationTwoController::class, 'deleteOrganizationTwo']);
@@ -177,6 +183,7 @@ Route::prefix('admin')->middleware(['auth:sanctum', 'isAPIAdmin'])->group(functi
     // Our Services
     Route::get('/our-services', [OurServiceController::class, 'index']);
     Route::post('/our-services-store', [OurServiceController::class, 'storeOurService']);
+    Route::get('/our-services-show/{id}', [OurServiceController::class, 'showOurService']);
     Route::get('/our-services-edit/{id}', [OurServiceController::class, 'editOurService']);
     Route::post('/our-services-update/{id}', [OurServiceController::class, 'updateOurService']);
     Route::get('/our-services-delete/{id}', [OurServiceController::class, 'deleteOurService']);
@@ -184,6 +191,7 @@ Route::prefix('admin')->middleware(['auth:sanctum', 'isAPIAdmin'])->group(functi
     // Our Partner
     Route::get('/our-partner', [PartnerController::class, 'index']);
     Route::post('/our-partner-store', [PartnerController::class, 'storeOurPartner']);
+    Route::get('/our-partner-show/{id}', [PartnerController::class, 'showOurPartner']);
     Route::get('/our-partner-edit/{id}', [PartnerController::class, 'editOurPartner']);
     Route::post('/our-partner-update/{id}', [PartnerController::class, 'updateOurPartner']);
     Route::get('/our-partner-delete/{id}', [PartnerController::class, 'deleteOurPartner']);
@@ -191,6 +199,7 @@ Route::prefix('admin')->middleware(['auth:sanctum', 'isAPIAdmin'])->group(functi
     // Companion section
     Route::get('/companion', [CompanionController::class, 'index']);
     Route::post('/companion-store', [CompanionController::class, 'storeCompanion']);
+    Route::get('/companion-show/{id}', [CompanionController::class, 'showCompanion']);
     Route::get('/companion-edit/{id}', [CompanionController::class, 'editCompanion']);
     Route::post('/companion-update/{id}', [CompanionController::class, 'updateCompanion']);
     Route::get('/companion-delete/{id}', [CompanionController::class, 'deleteCompanion']);
@@ -198,6 +207,7 @@ Route::prefix('admin')->middleware(['auth:sanctum', 'isAPIAdmin'])->group(functi
     // Member section
     Route::get('/member', [MembersController::class, 'index']);
     Route::post('/member-store', [MembersController::class, 'storeMember']);
+    Route::get('/member-show/{id}', [MembersController::class, 'showMember']);
     Route::get('/member-edit/{id}', [MembersController::class, 'editMember']);
     Route::post('/member-update/{id}', [MembersController::class, 'updateMember']);
     Route::get('/member-delete/{id}', [MembersController::class, 'deleteMember']);
@@ -209,6 +219,11 @@ Route::prefix('admin')->middleware(['auth:sanctum', 'isAPIAdmin'])->group(functi
     Route::post('/footer-media-update/{id}', [FooterMediaController::class, 'updateFooterMedia']);
     Route::get('/footer-media-delete/{id}', [FooterMediaController::class, 'deleteFooterMedia']);
 
+    // front end settings update
+    Route::get('/settings', [SettingsController::class, 'index']);
+    Route::post('/settings-update/{id}', [SettingsController::class, 'update']);
+
+
     // User Contact Submitted Infos
     Route::get('/contact-messages', [ContactController::class, 'index']);
 
@@ -216,5 +231,75 @@ Route::prefix('admin')->middleware(['auth:sanctum', 'isAPIAdmin'])->group(functi
 
     Route::resource('coupon',CouponController::class);
 
+    Route::resource('faq', FaqController::class);
+
+    Route::resource('mission', MissionController::class);
+
+    Route::resource('testimonial', TestimonialController::class);
+
+
+
+
+
 });
 
+
+//     $table->id();
+        //     $table->string('price_title')->nullable();
+        //     $table->string('price_heading')->nullable();
+        //     $table->string('vendor_one_money_icon')->nullable();
+        //     $table->string('vendor_one_amount')->nullable();
+        //     $table->string('vendor_one_time')->nullable();
+        //     $table->string('vendor_one_heading')->nullable();
+        //     $table->string('vendor_one_feature')->nullable();
+        //     $table->string('vendor_one_facilities_icon')->nullable();
+        //     $table->string('vendor_one_facilities_description')->nullable();
+        //     $table->string('vendor_two_money_icon')->nullable();
+        //     $table->string('vendor_two_amount')->nullable();
+        //     $table->string('vendor_two_time')->nullable();
+        //     $table->string('vendor_two_heading')->nullable();
+        //     $table->string('vendor_two_feature')->nullable();
+        //     $table->string('vendor_two_facilities_icon')->nullable();
+        //     $table->string('vendor_two_facilities_description')->nullable();
+        //     $table->string('vendor_three_money_icon')->nullable();
+        //     $table->string('vendor_three_amount')->nullable();
+        //     $table->string('vendor_three_time')->nullable();
+        //     $table->string('vendor_three_heading')->nullable();
+        //     $table->string('vendor_three_feature')->nullable();
+        //     $table->string('vendor_three_facilities_icon')->nullable();
+        //     $table->string('vendor_three_facilities_icon')->nullable();
+        //     $table->string('vendor_four_money_icon')->nullable();
+        //     $table->string('vendor_four_amount')->nullable();
+        //     $table->string('vendor_four_time')->nullable();
+        //     $table->string('vendor_four_heading')->nullable();
+        //     $table->string('vendor_four_feature')->nullable();
+        //     $table->string('vendor_four_facilities_icon')->nullable();
+        //     $table->string('vendor_four_facilities_description')->nullable();
+        //     $table->string('affiliate_one_money_icon')->nullable();
+        //     $table->string('affiliate_one_amount')->nullable();
+        //     $table->string('affiliate_one_time')->nullable();
+        //     $table->string('affiliate_one_heading')->nullable();
+        //     $table->string('affiliate_one_feature')->nullable();
+        //     $table->string('affiliate_one_facilities_icon')->nullable();
+        //     $table->string('affiliate_one_facilities_description')->nullable();
+        //     $table->string('affiliate_two_money_icon')->nullable();
+        //     $table->string('affiliate_two_amount')->nullable();
+        //     $table->string('affiliate_two_time')->nullable();
+        //     $table->string('affiliate_two_heading')->nullable();
+        //     $table->string('affiliate_two_feature')->nullable();
+        //     $table->string('affiliate_two_facilities_icon')->nullable();
+        //     $table->string('affiliate_two_facilities_description')->nullable();
+        //     $table->string('affiliate_three_money_icon')->nullable();
+        //     $table->string('affiliate_three_amount')->nullable();
+        //     $table->string('affiliate_three_time')->nullable();
+        //     $table->string('affiliate_three_heading')->nullable();
+        //     $table->string('affiliate_three_feature')->nullable();
+        //     $table->string('affiliate_three_facilities_icon')->nullable();
+        //     $table->string('affiliate_three_facilities_description')->nullable();
+        //     $table->string('affiliate_four_money_icon')->nullable();
+        //     $table->string('affiliate_four_amount')->nullable();
+        //     $table->string('affiliate_four_time')->nullable();
+        //     $table->string('affiliate_four_time')->nullable();
+        //     $table->string('affiliate_four_feature')->nullable();
+        //     $table->string('affiliate_four_facilities_icon')->nullable();
+        //     $table->string('affiliate_four_facilities_description')->nullable();
