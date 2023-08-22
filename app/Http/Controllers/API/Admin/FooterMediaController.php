@@ -21,7 +21,7 @@ class FooterMediaController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'icon_class'    => 'required',
-            'media_link'    => 'required',
+            'media_link'    => 'required|url',
         ]);
         if ($validator->fails()) {
             return response()->json([
@@ -37,6 +37,7 @@ class FooterMediaController extends Controller
         }
     }
 
+    
     public function editFooterMedia($id){
         $footermedia = FooterMedia::find($id);
         if($footermedia){
@@ -83,3 +84,6 @@ class FooterMediaController extends Controller
 
 
 }
+
+
+

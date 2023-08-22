@@ -17,6 +17,7 @@ use App\Http\Controllers\Api\Vendor\ProductStatusController;
 use App\Http\Controllers\Api\Vendor\ProfileController;
 
 use App\Http\Controllers\API\Vendor\ServiceCategoryController;
+use App\Http\Controllers\API\Vendor\TestController;
 use App\Http\Controllers\API\Vendor\VendorCategoryController;
 use App\Http\Controllers\API\Vendor\VendorSubCategoryController;
 
@@ -128,6 +129,13 @@ Route::prefix('vendor')->middleware(['auth:sanctum','isAPIVendor','userOnline'])
 
     // vendor-Sub-category
     Route::resource('vendor-sub-category', VendorSubCategoryController::class);
+
+
+
+
+    Route::resource('test', TestController::class);
+
+
 
 
 });

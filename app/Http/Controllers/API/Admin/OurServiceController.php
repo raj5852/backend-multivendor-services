@@ -38,6 +38,21 @@ class OurServiceController extends Controller
         }
     }
 
+    public function showOurService($id){
+        $service = OurService::find($id);
+        if($service){
+            return response()->json([
+                'status' => 200,
+                'datas' =>$service,
+            ]);
+        }else{
+            return response()->json([
+                'status' => 404,
+                'message' => 'No Service Data Found',
+            ]);
+        }
+    }
+
     public function editOurService($id){
         $service = OurService::find($id);
         if($service){

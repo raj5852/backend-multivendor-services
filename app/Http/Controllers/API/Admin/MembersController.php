@@ -23,7 +23,6 @@ class MembersController extends Controller
             'photo'          => 'required|mimes:jpeg,png,jpg',
             'name'           => 'required',
             'designation'    => 'required',
-            'facebook_link'  => 'required',
         ]);
         if ($validator->fails()) {
             return response()->json([
@@ -39,6 +38,22 @@ class MembersController extends Controller
             return response()->json([
                 'status'  => 200,
                 'message' => 'Member Infos Saved Successfully !',
+            ]);
+        }
+    }
+
+    public function showMember($id)
+    {
+        $member = Member::find($id);
+        if($member){
+            return response()->json([
+                'status' => 200,
+                'datas'  => $member,
+            ]);
+        }else{
+            return response()->json([
+                'status'  => 404,
+                'message' => 'No Member Found',
             ]);
         }
     }

@@ -38,7 +38,9 @@ class CompanionController extends Controller
         }
     }
 
-    public function editCompanion($id){
+
+    public function showCompanion($id)
+    {
         $companion = Companion::find($id);
         if($companion){
             return response()->json([
@@ -49,6 +51,21 @@ class CompanionController extends Controller
             return response()->json([
                 'status'  => 404,
                 'message' => 'No Companion Found',
+            ]);
+        }
+    }
+
+    public function editCompanion($id){
+        $companion = Companion::find($id);
+        if($companion){
+            return response()->json([
+                'status' => 200,
+                'datas'  =>$companion,
+            ]);
+        }else{
+            return response()->json([
+                'status'  => 404,
+                'message' => 'No Companion data Found',
             ]);
         }
     }

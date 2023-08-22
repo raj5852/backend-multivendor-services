@@ -38,6 +38,21 @@ class OrganizationTwoController extends Controller
         }
     }
 
+    public function showOrganizationTwo($id)
+    {
+        $OrgTwo = OrganizationTwo::find($id);
+        if($OrgTwo){
+            return response()->json([
+                'status' => 200,
+                'datas' => $OrgTwo,
+            ]);
+        }else{
+            return response()->json([
+                'status' => 404,
+                'message' => 'No Organization Two Infos Found',
+            ]);
+        }
+    }
 
     public function editOrganizationTwo($id){
         $OrgTwo = OrganizationTwo::find($id);

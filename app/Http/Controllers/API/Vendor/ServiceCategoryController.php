@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\API\Vendor;
 
+use App\Enums\Status;
 use App\Models\ServiceCategory;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreServiceCategoryRequest;
@@ -16,7 +17,7 @@ class ServiceCategoryController extends Controller
      */
     public function index()
     {
-        //
+
     }
 
     /**
@@ -27,7 +28,7 @@ class ServiceCategoryController extends Controller
      */
     public function store(StoreServiceCategoryRequest $request)
     {
-
+        $request->validated();
     }
 
     /**

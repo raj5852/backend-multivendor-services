@@ -114,6 +114,7 @@ class SubCategoryController extends Controller
             ]);
         }
     }
+    
     function status(Request $request, $id)
     {
 
@@ -136,8 +137,5 @@ class SubCategoryController extends Controller
             'status'=>200,
             'message'=>'Subcategory updated successfully!'
         ]);
-
-
-
     }
 }
