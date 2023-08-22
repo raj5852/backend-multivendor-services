@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\Validator;
 class OrganizationTwoController extends Controller
 {
     public function index(){
-        $orgtwo = OrganizationTwo::latest()->paginate(3);
+        $orgtwo = OrganizationTwo::latest()->get();
         return response()->json([
             'status' => 200,
             'data' => $orgtwo,

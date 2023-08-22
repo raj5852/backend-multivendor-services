@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\Validator;
 class PartnerController extends Controller
 {
     public function index(){
-        $pertner = Partner::latest()->paginate();
+        $pertner = Partner::latest()->get();
         return response()->json([
             'status' => 200,
             'data' => $pertner,

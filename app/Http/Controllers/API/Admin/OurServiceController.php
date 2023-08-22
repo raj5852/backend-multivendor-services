@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\Validator;
 class OurServiceController extends Controller
 {
     public function index(){
-        $services = OurService::latest()->paginate(6);
+        $services = OurService::latest()->get();
         return response()->json([
             'status' => 200,
             'data' => $services,

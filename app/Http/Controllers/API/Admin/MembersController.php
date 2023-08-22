@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\Validator;
 class MembersController extends Controller
 {
     public function index(){
-        $member = Member::latest()->paginate(4);
+        $member = Member::latest()->get();
         return response()->json([
             'status' => 200,
             'data' => $member,

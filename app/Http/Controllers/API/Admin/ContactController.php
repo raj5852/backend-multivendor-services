@@ -11,7 +11,7 @@ class ContactController extends Controller
 {
     public function index()
     {
-        $contact = Contact::latest()->paginate(8);
+        $contact = Contact::latest()->get();
         return response()->json([
             'status' => 200,
             'data' => $contact,

@@ -11,7 +11,7 @@ use Illuminate\Support\Facades\Validator;
 class OrganizationController extends Controller
 {
     public function index(){
-        $organizations = Organization::latest()->paginate(4);
+        $organizations = Organization::latest()->get();
         return response()->json([
             'status' => 200,
             'data' =>  $organizations,
