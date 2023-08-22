@@ -2,9 +2,12 @@
 
 namespace App\Http\Requests;
 
+use App\Enums\Status;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
+use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 
 class UpdateServiceCategoryRequest extends FormRequest
 {
@@ -25,7 +28,13 @@ class UpdateServiceCategoryRequest extends FormRequest
      */
     public function rules()
     {
+        $id = $this->route('servicecategory');
         return [
+            'name' => ['required', Rule::unique('service_categories', 'slug')->ignore($id)->where(function ($query) {
+                return $query->where('user_id', auth()->user()->id);
+            })],
+
+            'status' => ['required', Rule::in(Status::Active->value, Status::Deactivate->value)]
 
         ];
     }

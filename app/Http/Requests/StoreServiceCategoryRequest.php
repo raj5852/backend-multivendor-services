@@ -5,6 +5,7 @@ namespace App\Http\Requests;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
+use Illuminate\Validation\Rule;
 
 class StoreServiceCategoryRequest extends FormRequest
 {
@@ -26,7 +27,9 @@ class StoreServiceCategoryRequest extends FormRequest
     public function rules()
     {
         return [
-            'name'=>'required',
+            'name'=>['required',Rule::unique('service_categories')->where(function ($query) {
+                return $query->where('user_id', auth()->user()->id);
+            })]
         ];
     }
 

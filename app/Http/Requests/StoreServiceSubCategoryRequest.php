@@ -26,9 +26,8 @@ class StoreServiceSubCategoryRequest extends FormRequest
     public function rules()
     {
         return [
-            'vendor_category_id' => 'required',
+            'vendor_category_id' => 'required|exists:service_categories,id',
             'name' => 'required',
-            'status'  => 'required|in:active,deactivate',
         ];
     }
 

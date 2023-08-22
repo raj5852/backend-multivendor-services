@@ -1,5 +1,4 @@
 <?php
-use App\Http\Controllers\API\Affiliate\AffiliateController;
 use App\Http\Controllers\API\Affiliate\BalanceController;
 use App\Http\Controllers\API\Affiliate\BankController as AffiliateBankController;
 use App\Http\Controllers\API\Affiliate\CartController;

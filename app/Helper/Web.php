@@ -39,6 +39,19 @@ function orderId(){
     return $timestamp . $randomString;
 }
 
+function responsejson($message,$data = "success"){
+    return response()->json(
+        [
+            'data' => $data,
+            'message' => $message
+        ]
+    );
+}
+
+function userid(){
+    return auth()->user()->id;
+}
+
 
 
 
@@ -66,15 +79,3 @@ function orderId(){
         return $name;
     }
 
-    function convertToBanglaNumber($number) {
-        $english = array('0','1','2','3','4','5','6','7','8','9');
-        $bangla = array('০','১','২','৩','৪','৫','৬','৭','৮','৯');
-
-        $banglaNumber = str_replace($english, $bangla, $number);
-        return $banglaNumber;
-    }
-
-
-//    function setting() {
-//         return Setting::first();
-//     }
