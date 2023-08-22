@@ -18,8 +18,10 @@ class ServiceCategoryController extends Controller
      */
     public function index()
     {
+
         $serviceCategory = VendorServiceCategory::index();
         return $this->response($serviceCategory);
+
     }
 
     /**
@@ -30,9 +32,11 @@ class ServiceCategoryController extends Controller
      */
     public function store(StoreServiceCategoryRequest $request)
     {
+
         $validatedData = $request->validated();
         VendorServiceCategory::create($validatedData);
         return $this->response('Service Category created successfulll');
+
     }
 
     /**

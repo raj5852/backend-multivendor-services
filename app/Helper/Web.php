@@ -51,3 +51,31 @@ function responsejson($message,$data = "success"){
 function userid(){
     return auth()->user()->id;
 }
+
+
+
+
+     function upload_image($filename, $width, $height,)
+    {
+        $imagename = uniqid().'.'.$filename->getClientOriginalExtension();
+        $new_webp = preg_replace('"\.(jpg|jpeg|png|webp)$"', '.webp', $imagename);
+
+        Image::make($filename)->encode('webp', 90)->fit($width, $height)->save('assets/images/'.$new_webp);
+        $image_upload = 'assets/images/'.$new_webp;
+        return $image_upload;
+    }
+
+
+    function handleUpdatedUploadedImage($file, $path, $data, $delete_path, $field)
+    {
+        $name = time() . $file->getClientOriginalName();
+
+        $file->move(base_path('public/') . $path, $name);
+        if ($data[$field] != null) {
+            if (file_exists(base_path('public/') . $delete_path . $data[$field])) {
+                unlink(base_path('public/') . $delete_path . $data[$field]);
+            }
+        }
+        return $name;
+    }
+
