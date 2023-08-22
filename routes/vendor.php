@@ -127,10 +127,7 @@ Route::middleware(['auth:sanctum','isAPIVendor','userOnline'])->group(function (
     Route::prefix('vendor')->group(function(){
         Route::resource('servicecategory',ServiceCategoryController::class);
         Route::resource('test', TestController::class);
-      
     });
-
-    
 
 
 
