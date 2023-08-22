@@ -5,5 +5,4 @@ enum Coupon :string
 {
     case Flat = "flat";
     case Percentage = "percentage";
-
 }

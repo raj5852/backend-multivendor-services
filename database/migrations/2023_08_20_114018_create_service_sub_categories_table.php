@@ -16,10 +16,13 @@ return new class extends Migration
     {
         Schema::create('service_sub_categories', function (Blueprint $table) {
             $table->id();
+            $table->unsignedBigInteger('user_id');
             $table->foreignIdFor(ServiceCategory::class);
             $table->string('name');
             $table->string('slug');
             $table->enum('status', ['active', 'deactivate']);
+            $table->softDeletes();
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->timestamps();
         });
     }

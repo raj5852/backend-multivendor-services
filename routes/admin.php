@@ -6,7 +6,6 @@ use App\Http\Controllers\API\Admin\ContactController;
 use App\Http\Controllers\API\Admin\CouponController;
 use App\Http\Controllers\API\Admin\DashboardController;
 use App\Http\Controllers\API\Admin\FooterMediaController;
-use App\Http\Controllers\API\Admin\HomeController;
 use App\Http\Controllers\API\Admin\HomeBannerController;
 use App\Http\Controllers\API\Admin\MembersController;
 use App\Http\Controllers\API\Admin\OrderController as AdminOrderController;
@@ -27,7 +26,6 @@ use App\Http\Controllers\API\UserController;
 use App\Models\OrganizationTwo;
 // use App\Http\Controllers\HomeController;
 use Illuminate\Support\Facades\Route;
-use SebastianBergmann\CodeCoverage\Report\Html\Dashboard;
 
 //admin route
 Route::prefix('admin')->middleware(['auth:sanctum', 'isAPIAdmin'])->group(function () {

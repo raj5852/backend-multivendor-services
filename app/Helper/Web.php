@@ -38,3 +38,16 @@ function orderId(){
     $randomString = Str::random(6);
     return $timestamp . $randomString;
 }
+
+function responsejson($message,$data = "success"){
+    return response()->json(
+        [
+            'data' => $data,
+            'message' => $message
+        ]
+    );
+}
+
+function userid(){
+    return auth()->user()->id;
+}

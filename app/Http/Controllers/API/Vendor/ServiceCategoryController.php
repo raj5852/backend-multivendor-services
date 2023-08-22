@@ -2,10 +2,12 @@
 
 namespace App\Http\Controllers\API\Vendor;
 
+use App\Enums\Status;
 use App\Models\ServiceCategory;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreServiceCategoryRequest;
 use App\Http\Requests\UpdateServiceCategoryRequest;
+use App\Services\Vendor\ServiceCategory as VendorServiceCategory;
 
 class ServiceCategoryController extends Controller
 {
@@ -16,7 +18,8 @@ class ServiceCategoryController extends Controller
      */
     public function index()
     {
-        //
+        $serviceCategory = VendorServiceCategory::index();
+        return $this->response($serviceCategory);
     }
 
     /**
@@ -27,7 +30,9 @@ class ServiceCategoryController extends Controller
      */
     public function store(StoreServiceCategoryRequest $request)
     {
-
+        $validatedData = $request->validated();
+        VendorServiceCategory::create($validatedData);
+        return $this->response('Service Category created successfulll');
     }
 
     /**
@@ -36,9 +41,11 @@ class ServiceCategoryController extends Controller
      * @param  \App\Models\ServiceCategory  $serviceCategory
      * @return \Illuminate\Http\Response
      */
-    public function show(ServiceCategory $serviceCategory)
+    public function show($slug)
     {
-        //
+        // return $this->response($serviceCategoryslug);
+        $vendorServicetegory =  VendorServiceCategory::show($slug);
+        return $vendorServicetegory;
     }
 
     /**
@@ -48,9 +55,10 @@ class ServiceCategoryController extends Controller
      * @param  \App\Models\ServiceCategory  $serviceCategory
      * @return \Illuminate\Http\Response
      */
-    public function update(UpdateServiceCategoryRequest $request, ServiceCategory $serviceCategory)
+    public function update(UpdateServiceCategoryRequest $request, $id)
     {
-        //
+        $validatedData = $request->validated();
+        return  VendorServiceCategory::update($validatedData, $id);
     }
 
     /**
@@ -59,8 +67,9 @@ class ServiceCategoryController extends Controller
      * @param  \App\Models\ServiceCategory  $serviceCategory
      * @return \Illuminate\Http\Response
      */
-    public function destroy(ServiceCategory $serviceCategory)
+    public function destroy(int $id)
     {
-        //
+        return  VendorServiceCategory::delete($id);
+
     }
 }

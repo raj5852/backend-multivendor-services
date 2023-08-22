@@ -5,7 +5,6 @@ use Illuminate\Support\Facades\Route;
 
 Route::prefix('user')->group(function(){
 
-    // User Contact Submite infos
     Route::post('/contact-store', [ContactController::class, 'store']);
 
 });

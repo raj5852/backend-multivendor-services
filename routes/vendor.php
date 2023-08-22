@@ -17,11 +17,10 @@ use App\Http\Controllers\Api\Vendor\ProductStatusController;
 use App\Http\Controllers\Api\Vendor\ProfileController;
 
 use App\Http\Controllers\API\Vendor\ServiceCategoryController;
-use App\Http\Controllers\API\Vendor\VendorCategoryController;
-use App\Http\Controllers\API\Vendor\VendorSubCategoryController;
+use App\Http\Controllers\API\Vendor\ServiceSubCategoryController;
 
 // vendor
-Route::prefix('vendor')->middleware(['auth:sanctum','isAPIVendor','userOnline'])->group(function () {
+Route::middleware(['auth:sanctum','isAPIVendor','userOnline'])->group(function () {
     Route::get('/checkingAuthenticatedVendor', function () {
         return response()->json(['message' => 'You are in', 'status' => 200], 200);
     });
@@ -118,16 +117,8 @@ Route::prefix('vendor')->middleware(['auth:sanctum','isAPIVendor','userOnline'])
     // top 10 item
     Route::get('vendor/top-ten-items',[VendorDashboardController::class,'topten']);
 
-    Route::resource('servicecategory',ServiceCategoryController::class);
-
-    // vendor-category
-    Route::post('vendor-category-create', [VendorCategoryController::class, 'create']);
-    Route::get('vendor-category-edit/{id}', [VendorCategoryController::class, 'edit']);
-    Route::post('vendor-category-update/{id}', [VendorCategoryController::class, 'update']);
-    Route::get('vendor-category-delete/{id}', [VendorCategoryController::class, 'delete']);
-
-    // vendor-Sub-category
-    Route::resource('vendor-sub-category', VendorSubCategoryController::class);
-
-
+    Route::prefix('vendor')->group(function(){
+        Route::resource('servicecategory',ServiceCategoryController::class);
+        Route::resource('service-sub-category',ServiceSubCategoryController::class);
+    });
 });

@@ -1,10 +1,11 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\API\Vendor;
 
+use App\Models\ServiceSubCategory;
+use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreServiceSubCategoryRequest;
 use App\Http\Requests\UpdateServiceSubCategoryRequest;
-use App\Models\ServiceSubCategory;
 
 class ServiceSubCategoryController extends Controller
 {
@@ -15,7 +16,7 @@ class ServiceSubCategoryController extends Controller
      */
     public function index()
     {
-        //
+
     }
 
     /**
@@ -26,7 +27,7 @@ class ServiceSubCategoryController extends Controller
      */
     public function store(StoreServiceSubCategoryRequest $request)
     {
-        //
+        return $request->validated();
     }
 
     /**
