@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\Validator;
 class CompanionController extends Controller
 {
     public function index(){
-        $companion = Companion::latest()->paginate(3);
+        $companion = Companion::latest()->get();
         return response()->json([
             'status' => 200,
             'data' => $companion,

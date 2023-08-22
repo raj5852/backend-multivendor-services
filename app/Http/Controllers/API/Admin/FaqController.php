@@ -16,7 +16,7 @@ class FaqController extends Controller
      */
     public function index()
     {
-        $faqs = Faq::latest()->paginate();
+        $faqs = Faq::latest()->get();
         if($faqs){
             return response()->json([
                 'status' => 200,

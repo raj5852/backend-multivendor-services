@@ -16,7 +16,7 @@ class MissionController extends Controller
      */
     public function index()
     {
-        $missions = Mission::latest()->paginate();
+        $missions = Mission::latest()->get();
         if($missions){
             return response()->json([
                 'status' => 200,

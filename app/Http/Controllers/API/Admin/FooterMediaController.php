@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\Validator;
 class FooterMediaController extends Controller
 {
     public function index(){
-        $footermedia = FooterMedia::latest()->paginate(8);
+        $footermedia = FooterMedia::latest()->get();
         return response()->json([
             'status' => 200,
             'data' => $footermedia,
@@ -37,7 +37,7 @@ class FooterMediaController extends Controller
         }
     }
 
-    
+
     public function editFooterMedia($id){
         $footermedia = FooterMedia::find($id);
         if($footermedia){
