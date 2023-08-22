@@ -19,6 +19,9 @@ use App\Http\Controllers\API\Admin\PaymentHistoryController;
 use App\Http\Controllers\Api\Admin\ProductStatusController;
 use App\Http\Controllers\Api\Admin\ProfileController;
 use App\Http\Controllers\API\Admin\SettingsController;
+use App\Http\Controllers\API\Admin\SupportBoxCategoryController;
+use App\Http\Controllers\API\Admin\SupportBoxController;
+use App\Http\Controllers\API\Admin\SupportProblemTopicController;
 use App\Http\Controllers\API\Admin\TestimonialController;
 use App\Http\Controllers\API\Admin\WithdrawController as AdminWithdrawController;
 use App\Http\Controllers\API\AuthController;
@@ -235,69 +238,9 @@ Route::prefix('admin')->middleware(['auth:sanctum', 'isAPIAdmin'])->group(functi
 
     Route::resource('testimonial', TestimonialController::class);
 
-
-
-
+    Route::resource('supportboxcategory',SupportBoxCategoryController::class);
+    Route::resource('supportproblem-topic',SupportProblemTopicController::class);
+    Route::resource('supportbox',SupportBoxController::class);
 
 });
 
-
-//     $table->id();
-        //     $table->string('price_title')->nullable();
-        //     $table->string('price_heading')->nullable();
-        //     $table->string('vendor_one_money_icon')->nullable();
-        //     $table->string('vendor_one_amount')->nullable();
-        //     $table->string('vendor_one_time')->nullable();
-        //     $table->string('vendor_one_heading')->nullable();
-        //     $table->string('vendor_one_feature')->nullable();
-        //     $table->string('vendor_one_facilities_icon')->nullable();
-        //     $table->string('vendor_one_facilities_description')->nullable();
-        //     $table->string('vendor_two_money_icon')->nullable();
-        //     $table->string('vendor_two_amount')->nullable();
-        //     $table->string('vendor_two_time')->nullable();
-        //     $table->string('vendor_two_heading')->nullable();
-        //     $table->string('vendor_two_feature')->nullable();
-        //     $table->string('vendor_two_facilities_icon')->nullable();
-        //     $table->string('vendor_two_facilities_description')->nullable();
-        //     $table->string('vendor_three_money_icon')->nullable();
-        //     $table->string('vendor_three_amount')->nullable();
-        //     $table->string('vendor_three_time')->nullable();
-        //     $table->string('vendor_three_heading')->nullable();
-        //     $table->string('vendor_three_feature')->nullable();
-        //     $table->string('vendor_three_facilities_icon')->nullable();
-        //     $table->string('vendor_three_facilities_icon')->nullable();
-        //     $table->string('vendor_four_money_icon')->nullable();
-        //     $table->string('vendor_four_amount')->nullable();
-        //     $table->string('vendor_four_time')->nullable();
-        //     $table->string('vendor_four_heading')->nullable();
-        //     $table->string('vendor_four_feature')->nullable();
-        //     $table->string('vendor_four_facilities_icon')->nullable();
-        //     $table->string('vendor_four_facilities_description')->nullable();
-        //     $table->string('affiliate_one_money_icon')->nullable();
-        //     $table->string('affiliate_one_amount')->nullable();
-        //     $table->string('affiliate_one_time')->nullable();
-        //     $table->string('affiliate_one_heading')->nullable();
-        //     $table->string('affiliate_one_feature')->nullable();
-        //     $table->string('affiliate_one_facilities_icon')->nullable();
-        //     $table->string('affiliate_one_facilities_description')->nullable();
-        //     $table->string('affiliate_two_money_icon')->nullable();
-        //     $table->string('affiliate_two_amount')->nullable();
-        //     $table->string('affiliate_two_time')->nullable();
-        //     $table->string('affiliate_two_heading')->nullable();
-        //     $table->string('affiliate_two_feature')->nullable();
-        //     $table->string('affiliate_two_facilities_icon')->nullable();
-        //     $table->string('affiliate_two_facilities_description')->nullable();
-        //     $table->string('affiliate_three_money_icon')->nullable();
-        //     $table->string('affiliate_three_amount')->nullable();
-        //     $table->string('affiliate_three_time')->nullable();
-        //     $table->string('affiliate_three_heading')->nullable();
-        //     $table->string('affiliate_three_feature')->nullable();
-        //     $table->string('affiliate_three_facilities_icon')->nullable();
-        //     $table->string('affiliate_three_facilities_description')->nullable();
-        //     $table->string('affiliate_four_money_icon')->nullable();
-        //     $table->string('affiliate_four_amount')->nullable();
-        //     $table->string('affiliate_four_time')->nullable();
-        //     $table->string('affiliate_four_time')->nullable();
-        //     $table->string('affiliate_four_feature')->nullable();
-        //     $table->string('affiliate_four_facilities_icon')->nullable();
-        //     $table->string('affiliate_four_facilities_description')->nullable();
