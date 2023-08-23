@@ -1,10 +1,12 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\API\Admin;
 
+use App\Models\VendorService;
+use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreVendorServiceRequest;
 use App\Http\Requests\UpdateVendorServiceRequest;
-use App\Models\VendorService;
+use App\Services\Vendor\ProductService;
 
 class VendorServiceController extends Controller
 {
@@ -15,7 +17,9 @@ class VendorServiceController extends Controller
      */
     public function index()
     {
-        //
+        $vendorService =  VendorService::where(['user_id'=>userid()])->paginate(10);
+        return $this->response($vendorService);
+
     }
 
     /**
@@ -26,7 +30,7 @@ class VendorServiceController extends Controller
      */
     public function store(StoreVendorServiceRequest $request)
     {
-        //
+        ProductService::store();
     }
 
     /**

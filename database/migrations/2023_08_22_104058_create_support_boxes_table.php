@@ -24,7 +24,7 @@ return new class extends Migration
             $table->foreignIdFor(SupportProblemTopic::class);
             $table->enum('status',[Status::Pending->value,Status::Progress->value ,Status::Delivered->value]);
             $table->text('description');
-            $table->string('file');
+            $table->string('file')->nullable();
             $table->softDeletes();
             $table->timestamps();
         });

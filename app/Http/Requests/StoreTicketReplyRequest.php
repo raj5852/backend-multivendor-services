@@ -26,7 +26,8 @@ class StoreTicketReplyRequest extends FormRequest
     public function rules()
     {
         return [
-
+            'support_box_id'=>'required|exists:support_boxes,id',
+            'description'=>'required'
         ];
     }
 

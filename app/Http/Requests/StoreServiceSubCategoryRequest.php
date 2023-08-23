@@ -5,6 +5,7 @@ namespace App\Http\Requests;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
+use Illuminate\Validation\Rule;
 
 class StoreServiceSubCategoryRequest extends FormRequest
 {
@@ -26,7 +27,12 @@ class StoreServiceSubCategoryRequest extends FormRequest
     public function rules()
     {
         return [
-            'vendor_category_id' => 'required|exists:service_categories,id',
+            'service_category_id' => [
+                'required',
+                Rule::exists('service_categories', 'id')->where(function ($query) {
+                    $query->where(['user_id' => userid(), 'deleted_at' => null]);
+                })
+            ],
             'name' => 'required',
         ];
     }

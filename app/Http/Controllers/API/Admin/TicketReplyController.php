@@ -1,10 +1,11 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\API\Admin;
 
+use App\Models\TicketReply;
+use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreTicketReplyRequest;
 use App\Http\Requests\UpdateTicketReplyRequest;
-use App\Models\TicketReply;
 
 class TicketReplyController extends Controller
 {
@@ -26,7 +27,9 @@ class TicketReplyController extends Controller
      */
     public function store(StoreTicketReplyRequest $request)
     {
-        //
+        $data =  $request->validated();
+        TicketReply::create($data);
+        return $this->response('Successfull');
     }
 
     /**

@@ -16,23 +16,24 @@ return new class extends Migration
         Schema::create('vendor_services', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('user_id');
-            $table->unsignedBigInteger('category_id');
-            $table->unsignedBigInteger('subcategory_id');
-            $table->float('rating',1,1)->default(0.0);
+            $table->unsignedBigInteger('service_category_id');
+            $table->unsignedBigInteger('service_sub_category_id');
+            $table->float('rating')->default(0.00);
             $table->string('title');
             $table->text('description');
             $table->text('tags');
             $table->string('contract');
-            $table->enum('status',['active','pending','rejected']);
+            $table->enum('status',['active','pending','rejected'])->default('pending');
             $table->float('commission');
             $table->enum('commission_type',['flat','percentage']);
-
+            $table->string('image');
             $table->timestamps();
+            $table->softDeletes();
             $table->foreign('user_id')->references('id')->on('users')
                 ->onDelete('cascade');
-            $table->foreign('category_id')->references('id')->on('categories')
+            $table->foreign('service_category_id')->references('id')->on('service_categories')
                 ->onDelete('cascade');
-            $table->foreign('subcategory_id')->references('id')->on('subcategories')
+            $table->foreign('service_sub_category_id')->references('id')->on('service_sub_categories')
                 ->onDelete('cascade');
         });
     }
