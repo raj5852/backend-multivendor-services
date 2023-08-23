@@ -18,17 +18,33 @@ class SettingsController extends Controller
 
     public function update(SettingsRequest $request, $id)
     {
-        $data = Settings::find($id);
-        $input = $request->all();
-        $image_files = ['logo', 'org_one_photo', 'org_photo', 'footer_image', 'advertise_banner_image', 'about_banner_image', 'vision_image_one', 'vision_image_two', 'vision_image_three'];
+        $data = Settings::first();
+        if(!$data){
+            $input = $request->all();
+            $image_files = ['logo', 'org_one_photo', 'org_photo', 'footer_image', 'advertise_banner_image', 'about_banner_image', 'vision_image_one', 'vision_image_two', 'vision_image_three'];
 
-        foreach($image_files as $image_file){
-            if ($file = $request->file($image_file)) {
-                $input[$image_file] = handleUpdatedUploadedImage($file,'/uploads/setting_images/',$data,'/uploads/setting_images/',$image_file);
+            foreach($image_files as $image_file){
+                if ($file = $request->file($image_file)) {
+                    $input[$image_file] = handleUpdatedUploadedImage($file,'/uploads/setting_images/',$data,'/uploads/setting_images/',$image_file);
+                }
             }
+            $data->create($input);
+            return $this->response('Settings Created Successfuly');
+
+        }else{
+            $data = Settings::find($id);
+            $input = $request->all();
+            $image_files = ['logo', 'org_one_photo', 'org_photo', 'footer_image', 'advertise_banner_image', 'about_banner_image', 'vision_image_one', 'vision_image_two', 'vision_image_three'];
+
+            foreach($image_files as $image_file){
+                if ($file = $request->file($image_file)) {
+                    $input[$image_file] = handleUpdatedUploadedImage($file,'/uploads/setting_images/',$data,'/uploads/setting_images/',$image_file);
+                }
+            }
+            $data->update($input);
+            return $this->response('Settings Updated Successfuly');
         }
-        $data->update($input);
-        return $this->response('Settings Updated Successfuly');
+
     }
 
 

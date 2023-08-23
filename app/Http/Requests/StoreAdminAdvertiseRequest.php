@@ -27,14 +27,13 @@ class StoreAdminAdvertiseRequest extends FormRequest
     {
         return [
             'campaign_objective'  => ['required'],
-            'user_id'             =>   ['required','exists:users,id'],
             'campaign_name'  => ['required', 'max:256'],
             'conversion_location'  => ['required'],
             'performance_goal'  => ['required'],
             'platforms'  => ['required'],
             'budget_amount'  => ['required'],
-            'end_date'  => ['required'],
             'start_date'  => ['required'],
+            'end_date'  => ['required'],
             'age'  => ['required', 'numeric'],
             'gender'  => ['required'],
             'detail_targeting'  => ['required'],

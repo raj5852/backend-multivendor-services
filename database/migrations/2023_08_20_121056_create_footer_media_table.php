@@ -17,6 +17,7 @@ return new class extends Migration
             $table->id();
             $table->string('icon_class');
             $table->string('media_link');
+            $table->softDeletes();
             $table->timestamps();
         });
     }
