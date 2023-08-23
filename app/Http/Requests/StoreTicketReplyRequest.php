@@ -6,7 +6,7 @@ use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
 
-class StoreSupportBoxRequest extends FormRequest
+class StoreTicketReplyRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -26,10 +26,7 @@ class StoreSupportBoxRequest extends FormRequest
     public function rules()
     {
         return [
-            'description'=>'required',
-            'support_box_category_id'=>'required|exists:support_box_categories,id',
-            'support_problem_topic_id'=>'required|exists:support_problem_topics,id',
-            'file' => 'required|mimes:jpg,png,pdf'
+
         ];
     }
 

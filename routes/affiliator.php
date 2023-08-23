@@ -6,9 +6,9 @@ use App\Http\Controllers\API\Affiliate\CheckoutController;
 use App\Http\Controllers\API\Affiliate\DashboardController as AffiliateDashboardController;
 use App\Http\Controllers\API\Affiliate\OrderController;
 use App\Http\Controllers\API\Affiliate\PendingBalanceController;
-use App\Http\Controllers\Api\Affiliate\ProductStatusController;
-use App\Http\Controllers\Api\Affiliate\ProfileController;
-use App\Http\Controllers\Api\Affiliate\SingleProductController;
+use App\Http\Controllers\API\Affiliate\ProductStatusController;
+use App\Http\Controllers\API\Affiliate\ProfileController;
+use App\Http\Controllers\API\Affiliate\SingleProductController;
 use App\Http\Controllers\API\Affiliate\WithdrawController;
 use Illuminate\Support\Facades\Route;
 

@@ -12,9 +12,9 @@ use App\Http\Controllers\API\Vendor\OrderController as VendorOrderController;
 use App\Http\Controllers\API\Vendor\BankController as VendorBankController;
 use App\Http\Controllers\API\Vendor\PaymentRequestController;
 use App\Http\Controllers\API\Vendor\DashboardController as VendorDashboardController;
-use App\Http\Controllers\Api\Vendor\ProductManageController;
-use App\Http\Controllers\Api\Vendor\ProductStatusController;
-use App\Http\Controllers\Api\Vendor\ProfileController;
+use App\Http\Controllers\API\Vendor\ProductManageController;
+use App\Http\Controllers\API\Vendor\ProductStatusController;
+use App\Http\Controllers\API\Vendor\ProfileController;
 
 use App\Http\Controllers\API\Vendor\ServiceCategoryController;
 

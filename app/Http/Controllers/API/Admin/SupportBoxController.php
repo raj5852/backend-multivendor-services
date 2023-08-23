@@ -6,6 +6,8 @@ use App\Models\SupportBox;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreSupportBoxRequest;
 use App\Http\Requests\UpdateSupportBoxRequest;
+use App\Services\SosService;
+use Illuminate\Support\Facades\File;
 
 class SupportBoxController extends Controller
 {
@@ -16,7 +18,8 @@ class SupportBoxController extends Controller
      */
     public function index()
     {
-
+        $supportData = SupportBox::latest()->paginate(10);
+        return $this->response($supportData);
     }
 
     /**
@@ -27,7 +30,8 @@ class SupportBoxController extends Controller
      */
     public function store(StoreSupportBoxRequest $request)
     {
-        //
+        // $data = $request->all();
+        // SosService::ticketcreate($data);
     }
 
     /**
@@ -36,9 +40,16 @@ class SupportBoxController extends Controller
      * @param  \App\Models\SupportBox  $supportBox
      * @return \Illuminate\Http\Response
      */
-    public function show(SupportBox $supportBox)
+    public function show($id)
     {
-        //
+        $supportBox = SupportBox::find($id);
+        if (!$supportBox) {
+            return responsejson('Not found','fail');
+        }
+
+        $data =  $supportBox;
+
+        return $this->response($data);
     }
 
     /**
@@ -59,8 +70,14 @@ class SupportBoxController extends Controller
      * @param  \App\Models\SupportBox  $supportBox
      * @return \Illuminate\Http\Response
      */
-    public function destroy(SupportBox $supportBox)
+    public function destroy($id)
     {
-        //
+        $support = SupportBox::find($id);
+        if(File::exists($support->file)){
+            File::delete($support->file);
+        }
+        $support->delete();
+
+        return $this->response('Deleted successfull');
     }
 }
