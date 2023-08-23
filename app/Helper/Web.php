@@ -48,11 +48,9 @@ function responsejson($message,$data = "success"){
     );
 }
 
-function userid(){
-    return auth()->user()->id;
-}
-
-
+    function userid(){
+        return auth()->user()->id;
+    }
 
 
      function upload_image($filename, $width, $height,)
