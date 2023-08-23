@@ -55,20 +55,6 @@ class CompanionController extends Controller
         }
     }
 
-    public function editCompanion($id){
-        $companion = Companion::find($id);
-        if($companion){
-            return response()->json([
-                'status' => 200,
-                'datas'  =>$companion,
-            ]);
-        }else{
-            return response()->json([
-                'status'  => 404,
-                'message' => 'No Companion data Found',
-            ]);
-        }
-    }
 
     public function updateCompanion(Request $request, $id)
     {

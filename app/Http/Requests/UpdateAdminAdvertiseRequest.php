@@ -26,6 +26,44 @@ class UpdateAdminAdvertiseRequest extends FormRequest
     public function rules()
     {
         return [
+            'campaign_objective'  => ['required'],
+            'campaign_name'  => ['required', 'max:256'],
+            'conversion_location'  => ['required'],
+            'performance_goal'  => ['required'],
+            'platforms'  => ['required'],
+            'budget_amount'  => ['required'],
+            'start_date'  => ['required'],
+            'end_date'  => ['required'],
+            'age'  => ['required', 'numeric'],
+            'gender'  => ['required'],
+            'detail_targeting'  => ['required'],
+            'country'  => ['required'],
+            'city'  => ['required'],
+            'device'  => ['required'],
+            'platform'  => ['required'],
+            'inventory'  => ['required'],
+            'format'  => ['required'],
+            'primary_text'  => ['required'],
+            'media'  => ['required', 'url'],
+            'heading'  => ['required'],
+            'description'  => ['required'],
+            'call_to_action'  => ['required'],
+            'destination'  => ['required'],
+            'tracking'  => ['required'],
+            'url_perimeter'  => ['required', 'url'],
+            'number'  => ['required','numeric'],
+            'last_description'  => ['required'],
+            'status'  => ['required','in:pending,progress,cancel,complited'],
+
+            'advertise_audience_files' => 'nullable',
+            'location_files'   => 'nullable',
+
+            'feeds' => 'nullable',
+            'story_reels' => 'nullable',
+            'adds_video_and_reels' => 'nullable',
+            'search_result' => 'nullable',
+            'messages' => 'nullable',
+            'apps_and_sites' => 'nullable',
 
         ];
     }

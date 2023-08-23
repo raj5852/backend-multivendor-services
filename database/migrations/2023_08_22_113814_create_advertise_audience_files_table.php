@@ -17,6 +17,7 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('advertise_id');
             $table->text('file');
+            $table->foreign('advertise_id')->references('id')->on('admin_advertises')->onDelete('cascade');
             $table->softDeletes();
             $table->timestamps();
         });

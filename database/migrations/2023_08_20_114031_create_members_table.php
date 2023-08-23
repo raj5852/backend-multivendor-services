@@ -21,6 +21,7 @@ return new class extends Migration
             $table->string('facebook_link')->nullable();
             $table->string('instagram_link')->nullable();
             $table->string('twitter_link')->nullable();
+            $table->softDeletes();
             $table->timestamps();
         });
     }

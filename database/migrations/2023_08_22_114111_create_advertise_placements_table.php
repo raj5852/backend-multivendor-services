@@ -22,6 +22,7 @@ return new class extends Migration
             $table->string('search_result')->nullable();
             $table->longText('messages')->nullable();
             $table->longText('apps_and_sites')->nullable();
+            $table->foreign('advertise_id')->references('id')->on('admin_advertises')->onDelete('cascade');
             $table->softDeletes();
             $table->timestamps();
         });

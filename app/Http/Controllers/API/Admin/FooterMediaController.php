@@ -38,7 +38,7 @@ class FooterMediaController extends Controller
     }
 
 
-    public function editFooterMedia($id){
+    public function shoFooterMedia($id){
         $footermedia = FooterMedia::find($id);
         if($footermedia){
             return response()->json([

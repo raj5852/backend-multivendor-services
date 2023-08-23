@@ -103,6 +103,8 @@ class SettingsRequest extends FormRequest
             'mission_title'   => 'nullable',
             'mission_heading'   => 'nullable',
             'mission_description'   => 'nullable',
+            'subscription_heading' => 'nullable',
+            'subscription_title' => 'nullable',
         ];
     }
 
