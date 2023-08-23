@@ -18,6 +18,7 @@ return new class extends Migration
             $table->string('icon');
             $table->string('title');
             $table->longText('description');
+            $table->softDeletes();
             $table->timestamps();
         });
     }

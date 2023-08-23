@@ -19,6 +19,7 @@ return new class extends Migration
             $table->string('slug');
             $table->enum('status', ['active', 'deactivate']);
             $table->tinyInteger('user_id');
+            $table->softDeletes();
             $table->timestamps();
         });
     }

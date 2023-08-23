@@ -41,7 +41,7 @@ class SubscriptionController extends Controller
      * @param  \App\Http\Requests\StoreSubscriptionRequest  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(StoreSubscriptionRequest $request)
+    public function store()
     {
 
     }
@@ -52,9 +52,13 @@ class SubscriptionController extends Controller
      * @param  \App\Models\Subscription  $subscription
      * @return \Illuminate\Http\Response
      */
-    public function show(Subscription $subscription)
+    public function show($id)
     {
-        //
+        $data = Subscription::find($id);
+        return response()->json([
+            'status' => 200,
+            'data' => $data,
+        ]);
     }
 
     /**
@@ -63,14 +67,6 @@ class SubscriptionController extends Controller
      * @param  \App\Models\Subscription  $subscription
      * @return \Illuminate\Http\Response
      */
-    public function edit(Subscription $subscription)
-    {
-        $data = Subscription::find($subscription->id);
-        return response()->json([
-            'status' => 200,
-            'data' => $data,
-        ]);
-    }
 
     /**
      * Update the specified resource in storage.
@@ -79,14 +75,15 @@ class SubscriptionController extends Controller
      * @param  \App\Models\Subscription  $subscription
      * @return \Illuminate\Http\Response
      */
-    public function update(StoreSubscriptionRequest $request, Subscription $subscription)
+    public function update(StoreSubscriptionRequest $request, $id)
     {
-        $id = $subscription->id;
+
         $validateData = $request->validated();
         SubscriptionService::update($validateData, $id);
         return $this->response('Subsciption Updated Successfuly');
 
     }
+
 
     /**
      * Remove the specified resource from storage.

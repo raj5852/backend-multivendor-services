@@ -92,7 +92,9 @@ return new class extends Migration
             $table->string('mission_title')->nullable();
             $table->string('mission_heading')->nullable();
             $table->longText('mission_description')->nullable();
-
+            $table->longText('subscription_heading')->nullable();
+            $table->longText('subscription_title')->nullable();
+            $table->softDeletes();
             $table->timestamps();
         });
     }

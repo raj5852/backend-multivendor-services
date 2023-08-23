@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreAdminAdvertiseRequest;
 use App\Http\Requests\UpdateAdminAdvertiseRequest;
 use App\Services\Admin\AdminAdvertiseService;
+use Illuminate\Support\Facades\DB;
 
 class AdminAdvertiseController extends Controller
 {
@@ -17,7 +18,7 @@ class AdminAdvertiseController extends Controller
      */
     public function index()
     {
-        $data = AdminAdvertise::with('AdvertiseAudienceFile', 'advertisePlacement', 'advertiseLocationFiles')->orderBy('id', 'DESC')->get();
+        $data = AdminAdvertise::with('AdvertiseAudienceFile', 'advertisePlacement', 'advertiseLocationFiles')->latest()->paginate(10);
         return $this->response($data);
     }
 
@@ -76,15 +77,7 @@ class AdminAdvertiseController extends Controller
      * @param  \App\Models\AdminAdvertise  $adminAdvertise
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
-    {
-        $userID = userid();
-        $adminAdvertise = AdminAdvertise::with('AdvertiseAudienceFile', 'advertisePlacement', 'advertiseLocationFiles')->find($id);
-        return response()->json([
-            'status' => 200,
-            'product' => $adminAdvertise,
-        ]);
-    }
+
 
     /**
      * Update the specified resource in storage.
@@ -93,9 +86,11 @@ class AdminAdvertiseController extends Controller
      * @param  \App\Models\AdminAdvertise  $adminAdvertise
      * @return \Illuminate\Http\Response
      */
-    public function update(UpdateAdminAdvertiseRequest $request, AdminAdvertise $adminAdvertise)
+    public function update(UpdateAdminAdvertiseRequest $request,  $id)
     {
-        //
+        $validatData = $request->validated();
+        AdminAdvertiseService::update($validatData, $id);
+        return $this->response('Advertise Updated Successfully');
     }
 
     /**
@@ -104,8 +99,9 @@ class AdminAdvertiseController extends Controller
      * @param  \App\Models\AdminAdvertise  $adminAdvertise
      * @return \Illuminate\Http\Response
      */
-    public function destroy(AdminAdvertise $adminAdvertise)
+    public function destroy($id)
     {
-        //
+        AdminAdvertise::find($id)->delete();
+        return $this->response('Item Deleted Successfully !');
     }
 }

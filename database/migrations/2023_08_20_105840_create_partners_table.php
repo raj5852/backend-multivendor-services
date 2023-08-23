@@ -16,6 +16,7 @@ return new class extends Migration
         Schema::create('partners', function (Blueprint $table) {
             $table->id();
             $table->text('image');
+            $table->softDeletes();
             $table->timestamps();
         });
     }

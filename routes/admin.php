@@ -171,7 +171,6 @@ Route::prefix('admin')->middleware(['auth:sanctum', 'isAPIAdmin'])->group(functi
     Route::get('/organization', [OrganizationController::class, 'index']);
     Route::post('/organization-store', [OrganizationController::class, 'storeOrganization']);
     Route::get('/organization-show/{id}', [OrganizationController::class, 'showOrganization']);
-    Route::get('/organization-edit/{id}', [OrganizationController::class, 'editOrganization']);
     Route::post('/organization-update/{id}', [OrganizationController::class, 'updateOrganization']);
     Route::get('/organization-delete/{id}', [OrganizationController::class, 'deleteOrganization']);
 
@@ -179,31 +178,27 @@ Route::prefix('admin')->middleware(['auth:sanctum', 'isAPIAdmin'])->group(functi
     Route::get('/organizationTwo', [OrganizationTwoController::class, 'index']);
     Route::post('/organizationTwo-store', [OrganizationTwoController::class, 'storeOrganizationTwo']);
     Route::get('/organizationTwo-show/{id}', [OrganizationTwoController::class, 'showOrganizationTwo']);
-    Route::get('/organizationTwo-edit/{id}', [OrganizationTwoController::class, 'editOrganizationTwo']);
     Route::post('/organizationTwo-update/{id}', [OrganizationTwoController::class, 'updateOrganizationTwo']);
     Route::get('/organizationTwo-delete/{id}', [OrganizationTwoController::class, 'deleteOrganizationTwo']);
 
     // Our Services
-    Route::get('/our-services', [OurServiceController::class, 'index']);
-    Route::post('/our-services-store', [OurServiceController::class, 'storeOurService']);
-    Route::get('/our-services-show/{id}', [OurServiceController::class, 'showOurService']);
-    Route::get('/our-services-edit/{id}', [OurServiceController::class, 'editOurService']);
-    Route::post('/our-services-update/{id}', [OurServiceController::class, 'updateOurService']);
-    Route::get('/our-services-delete/{id}', [OurServiceController::class, 'deleteOurService']);
+    Route::get('/services', [OurServiceController::class, 'index']);
+    Route::post('/services-store', [OurServiceController::class, 'storeOurService']);
+    Route::get('/services-show/{id}', [OurServiceController::class, 'showOurService']);
+    Route::post('/services-update/{id}', [OurServiceController::class, 'updateOurService']);
+    Route::get('/services-delete/{id}', [OurServiceController::class, 'deleteOurService']);
 
     // Our Partner
-    Route::get('/our-partner', [PartnerController::class, 'index']);
-    Route::post('/our-partner-store', [PartnerController::class, 'storeOurPartner']);
-    Route::get('/our-partner-show/{id}', [PartnerController::class, 'showOurPartner']);
-    Route::get('/our-partner-edit/{id}', [PartnerController::class, 'editOurPartner']);
-    Route::post('/our-partner-update/{id}', [PartnerController::class, 'updateOurPartner']);
-    Route::get('/our-partner-delete/{id}', [PartnerController::class, 'deleteOurPartner']);
+    Route::get('/partner', [PartnerController::class, 'index']);
+    Route::post('/partner-store', [PartnerController::class, 'storeOurPartner']);
+    Route::get('/partner-show/{id}', [PartnerController::class, 'showOurPartner']);
+    Route::post('/partner-update/{id}', [PartnerController::class, 'updateOurPartner']);
+    Route::get('/partner-delete/{id}', [PartnerController::class, 'deleteOurPartner']);
 
     // Companion section
     Route::get('/companion', [CompanionController::class, 'index']);
     Route::post('/companion-store', [CompanionController::class, 'storeCompanion']);
     Route::get('/companion-show/{id}', [CompanionController::class, 'showCompanion']);
-    Route::get('/companion-edit/{id}', [CompanionController::class, 'editCompanion']);
     Route::post('/companion-update/{id}', [CompanionController::class, 'updateCompanion']);
     Route::get('/companion-delete/{id}', [CompanionController::class, 'deleteCompanion']);
 
@@ -211,14 +206,13 @@ Route::prefix('admin')->middleware(['auth:sanctum', 'isAPIAdmin'])->group(functi
     Route::get('/member', [MembersController::class, 'index']);
     Route::post('/member-store', [MembersController::class, 'storeMember']);
     Route::get('/member-show/{id}', [MembersController::class, 'showMember']);
-    Route::get('/member-edit/{id}', [MembersController::class, 'editMember']);
     Route::post('/member-update/{id}', [MembersController::class, 'updateMember']);
     Route::get('/member-delete/{id}', [MembersController::class, 'deleteMember']);
 
     // footer Social Icon / footer-media section
     Route::get('/footer-media', [FooterMediaController::class, 'index']);
     Route::post('/footer-media-store', [FooterMediaController::class, 'storeFooterMedia']);
-    Route::get('/footer-media-edit/{id}', [FooterMediaController::class, 'editFooterMedia']);
+    Route::get('/footer-media-show/{id}', [FooterMediaController::class, 'shoFooterMedia']);
     Route::post('/footer-media-update/{id}', [FooterMediaController::class, 'updateFooterMedia']);
     Route::get('/footer-media-delete/{id}', [FooterMediaController::class, 'deleteFooterMedia']);
 
@@ -248,6 +242,7 @@ Route::prefix('admin')->middleware(['auth:sanctum', 'isAPIAdmin'])->group(functi
 
     // addvertise section
     Route::resource('advertise', AdminAdvertiseController::class);
+
 
 
 });

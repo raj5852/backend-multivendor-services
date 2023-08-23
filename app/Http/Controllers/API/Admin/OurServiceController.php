@@ -53,20 +53,6 @@ class OurServiceController extends Controller
         }
     }
 
-    public function editOurService($id){
-        $service = OurService::find($id);
-        if($service){
-            return response()->json([
-                'status' => 200,
-                'datas' =>$service,
-            ]);
-        }else{
-            return response()->json([
-                'status' => 404,
-                'message' => 'No Service Two Found',
-            ]);
-        }
-    }
 
 
     public function updateOurService(Request $request, $id)

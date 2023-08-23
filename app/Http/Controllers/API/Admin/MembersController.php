@@ -59,22 +59,7 @@ class MembersController extends Controller
     }
 
 
-    public function editMember($id){
-        $member = Member::find($id);
-
-        if($member){
-            return response()->json([
-                'status' => 200,
-                'datas'  => $member,
-            ]);
-        }else{
-            return response()->json([
-                'status'  => 404,
-                'message' => 'No Member Found',
-            ]);
-        }
-    }
-
+    
     public function updateMember(Request $request, $id)
     {
         $validator = Validator::make($request->all(), [

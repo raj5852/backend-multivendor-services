@@ -56,21 +56,7 @@ class PartnerController extends Controller
         }
     }
 
-    public function editOurPartner($id){
-        $partner = Partner::find($id);
-        if($partner){
-            return response()->json([
-                'status' => 200,
-                'datas' => $partner,
-            ]);
-        }else{
-            return response()->json([
-                'status' => 404,
-                'message' => 'No partner Found',
-            ]);
-        }
-    }
-
+    
     public function updateOurPartner(Request $request, $id)
     {
         $validator = Validator::make($request->all(), [

@@ -20,6 +20,7 @@ return new class extends Migration
             $table->string('name');
             $table->string('designation');
             $table->string('rating');
+            $table->softDeletes();
             $table->timestamps();
         });
     }

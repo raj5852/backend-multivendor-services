@@ -27,7 +27,7 @@ class ContactController extends Controller
             Contact::create($request->all());
             return response()->json([
                 'status' => 200,
-                'message' => 'Thank you for share your Valuable Openion With Us !!',
+                'message' => 'Thank you for share your Valuable Opinion With Us !!',
             ]);
         }
     }
