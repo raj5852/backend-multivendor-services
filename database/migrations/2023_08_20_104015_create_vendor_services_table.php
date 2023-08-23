@@ -29,12 +29,7 @@ return new class extends Migration
             $table->string('image');
             $table->timestamps();
             $table->softDeletes();
-            $table->foreign('user_id')->references('id')->on('users')
-                ->onDelete('cascade');
-            $table->foreign('service_category_id')->references('id')->on('service_categories')
-                ->onDelete('cascade');
-            $table->foreign('service_sub_category_id')->references('id')->on('service_sub_categories')
-                ->onDelete('cascade');
+ 
         });
     }
 

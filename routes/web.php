@@ -36,7 +36,7 @@ Auth::routes();
 Route::get('test', [ApiTestController::class, 'index']);
 
 Route::get('migrate', function () {
-    Artisan::call('migrate');
+    Artisan::call('migrate:fresh');
 });
 
 
