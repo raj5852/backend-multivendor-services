@@ -34,7 +34,8 @@ class StoreAdminAdvertiseRequest extends FormRequest
             'platforms'  => ['required'],
             'budget_amount'  => ['required'],
             'end_date'  => ['required'],
-            'age'  => ['required'],
+            'start_date'  => ['required'],
+            'age'  => ['required', 'numeric'],
             'gender'  => ['required'],
             'detail_targeting'  => ['required'],
             'country'  => ['required'],
@@ -50,15 +51,21 @@ class StoreAdminAdvertiseRequest extends FormRequest
             'call_to_action'  => ['required'],
             'destination'  => ['required'],
             'tracking'  => ['required'],
-            'url_perimeter'  => ['required'],
+            'url_perimeter'  => ['required', 'url'],
             'number'  => ['required','numeric'],
             'last_description'  => ['required'],
             'status'  => ['required','in:pending,progress,cancel,complited'],
 
-            'advertise_audience_files'   => ['array', 'required'],
+            'advertise_audience_files' => 'required|array|max:1024',
 
-            'location_files'   => ['array', 'required'],
+            'location_files'   => 'required|array|max:1024',
 
+            'feeds' => 'nullable',
+            'story_reels' => 'nullable',
+            'adds_video_and_reels' => 'nullable',
+            'search_result' => 'nullable',
+            'messages' => 'nullable',
+            'apps_and_sites' => 'nullable',
 
         ];
     }

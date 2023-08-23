@@ -11,4 +11,9 @@ class AdvertiseAudienceFile extends Model
     use HasFactory,SoftDeletes;
 
     protected $guarded = [];
+
+    public function adminAdvertise()
+    {
+        return $this->belongsTo(AdminAdvertise::class);
+    }
 }

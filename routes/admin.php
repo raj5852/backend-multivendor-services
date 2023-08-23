@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\API\Admin\AdminAdvertiseController;
 use App\Http\Controllers\API\Admin\BankController;
 use App\Http\Controllers\API\Admin\CompanionController;
 use App\Http\Controllers\API\Admin\ContactController;
@@ -19,6 +20,7 @@ use App\Http\Controllers\API\Admin\PaymentHistoryController;
 use App\Http\Controllers\Api\Admin\ProductStatusController;
 use App\Http\Controllers\Api\Admin\ProfileController;
 use App\Http\Controllers\API\Admin\SettingsController;
+use App\Http\Controllers\API\Admin\SubscriptionController;
 use App\Http\Controllers\API\Admin\SupportBoxCategoryController;
 use App\Http\Controllers\API\Admin\SupportBoxController;
 use App\Http\Controllers\API\Admin\SupportProblemTopicController;
@@ -238,9 +240,15 @@ Route::prefix('admin')->middleware(['auth:sanctum', 'isAPIAdmin'])->group(functi
 
     Route::resource('testimonial', TestimonialController::class);
 
+    Route::resource('subscription', SubscriptionController::class);
+
     Route::resource('supportboxcategory',SupportBoxCategoryController::class);
     Route::resource('supportproblem-topic',SupportProblemTopicController::class);
     Route::resource('supportbox',SupportBoxController::class);
+
+    // addvertise section
+    Route::resource('advertise', AdminAdvertiseController::class);
+
 
 });
 

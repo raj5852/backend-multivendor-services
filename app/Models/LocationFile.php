@@ -11,4 +11,10 @@ class LocationFile extends Model
     use HasFactory,SoftDeletes;
 
     protected $guarded = [];
+
+
+    public function adminAdvertise()
+    {
+        return $this->hasMany(AdminAdvertise::class);
+    }
 }

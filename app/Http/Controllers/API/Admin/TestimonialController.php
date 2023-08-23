@@ -18,7 +18,7 @@ class TestimonialController extends Controller
      */
     public function index()
     {
-        $testimonial = Testimonial::latest()->paginate(4);
+        $testimonial = Testimonial::latest()->get();
         return response()->json([
             'status' => 200,
             'data' => $testimonial,
