@@ -20,7 +20,7 @@ return new class extends Migration
             $table->text('story_reels')->nullable();
             $table->text('adds_video_and_reels')->nullable();
             $table->string('search_result')->nullable();
-            $table->longText('messages=')->nullable();
+            $table->longText('messages')->nullable();
             $table->longText('apps_and_sites')->nullable();
             $table->softDeletes();
             $table->timestamps();

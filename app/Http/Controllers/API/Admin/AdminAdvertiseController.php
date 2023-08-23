@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\API\Admin;
 
 use App\Models\AdminAdvertise;
 use App\Http\Controllers\Controller;
@@ -17,7 +17,8 @@ class AdminAdvertiseController extends Controller
      */
     public function index()
     {
-        //
+        $data = AdminAdvertise::with('AdvertiseAudienceFile', 'advertisePlacement', 'advertiseLocationFiles')->orderBy('id', 'DESC')->get();
+        return $this->response($data);
     }
 
     /**
@@ -50,9 +51,23 @@ class AdminAdvertiseController extends Controller
      * @param  \App\Models\AdminAdvertise  $adminAdvertise
      * @return \Illuminate\Http\Response
      */
-    public function show(AdminAdvertise $adminAdvertise)
+    public function show($id)
     {
-        //
+        // $userID = userid();
+
+        $userID = userid();
+        $adminAdvertise = AdminAdvertise::with('AdvertiseAudienceFile', 'advertisePlacement', 'advertiseLocationFiles')->find($id);
+        if ($adminAdvertise) {
+            return response()->json([
+                'status' => 200,
+                'product' => $adminAdvertise,
+            ]);
+        } else {
+            return response()->json([
+                'status' => 404,
+                'message' => 'No adminAdvertise data Found'
+            ]);
+        }
     }
 
     /**
@@ -61,9 +76,14 @@ class AdminAdvertiseController extends Controller
      * @param  \App\Models\AdminAdvertise  $adminAdvertise
      * @return \Illuminate\Http\Response
      */
-    public function edit(AdminAdvertise $adminAdvertise)
+    public function edit($id)
     {
-        //
+        $userID = userid();
+        $adminAdvertise = AdminAdvertise::with('AdvertiseAudienceFile', 'advertisePlacement', 'advertiseLocationFiles')->find($id);
+        return response()->json([
+            'status' => 200,
+            'product' => $adminAdvertise,
+        ]);
     }
 
     /**

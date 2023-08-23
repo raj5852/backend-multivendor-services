@@ -132,5 +132,4 @@ Route::middleware(['auth:sanctum','isAPIVendor','userOnline'])->group(function (
 
 
 
-
 });

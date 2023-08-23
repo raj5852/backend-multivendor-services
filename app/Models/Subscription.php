@@ -6,14 +6,13 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class AdvertisePlacement extends Model
+class Subscription extends Model
 {
     use HasFactory,SoftDeletes;
 
     protected $guarded = [];
 
-    public function adminAdvertise()
-    {
-        return $this->hasMany(AdminAdvertise::class);
-    }
+    protected $casts = [
+        'card_facilities_title' => 'json',
+    ];
 }
