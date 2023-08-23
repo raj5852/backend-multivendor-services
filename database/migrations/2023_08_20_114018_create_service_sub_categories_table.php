@@ -19,8 +19,7 @@ return new class extends Migration
             $table->unsignedBigInteger('user_id');
             $table->foreignIdFor(ServiceCategory::class);
             $table->string('name');
-            $table->string('slug');
-            $table->enum('status', ['active', 'deactivate']);
+            $table->enum('status', ['active', 'deactivate'])->default('active');
             $table->softDeletes();
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->timestamps();

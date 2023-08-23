@@ -1,6 +1,5 @@
 <?php
 
-use App\Models\SupportBox;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -14,11 +13,11 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('ticket_replies', function (Blueprint $table) {
+        Schema::create('service_ratings', function (Blueprint $table) {
             $table->id();
-            $table->foreignIdFor(SupportBox::class);
-            $table->text('description');
-            $table->float('rating')->nullable();
+            $table->unsignedBigInteger('user_id');
+            $table->unsignedBigInteger('vendor_service_id');
+            $table->float('rating');
             $table->softDeletes();
             $table->timestamps();
         });
@@ -31,6 +30,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('ticket_replies');
+        Schema::dropIfExists('service_ratings');
     }
 };

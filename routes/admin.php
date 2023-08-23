@@ -25,6 +25,7 @@ use App\Http\Controllers\API\Admin\SupportBoxCategoryController;
 use App\Http\Controllers\API\Admin\SupportBoxController;
 use App\Http\Controllers\API\Admin\SupportProblemTopicController;
 use App\Http\Controllers\API\Admin\TestimonialController;
+use App\Http\Controllers\API\Admin\TicketReplyController;
 use App\Http\Controllers\API\Admin\WithdrawController as AdminWithdrawController;
 use App\Http\Controllers\API\AuthController;
 use App\Http\Controllers\API\CategoryController;
@@ -245,6 +246,7 @@ Route::prefix('admin')->middleware(['auth:sanctum', 'isAPIAdmin'])->group(functi
     Route::resource('supportboxcategory',SupportBoxCategoryController::class);
     Route::resource('supportproblem-topic',SupportProblemTopicController::class);
     Route::resource('supportbox',SupportBoxController::class);
+    Route::resource('supportbox-replay',TicketReplyController::class);
 
     // addvertise section
     Route::resource('advertise', AdminAdvertiseController::class);

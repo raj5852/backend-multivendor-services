@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\API\Admin\VendorServiceController;
 use App\Http\Controllers\API\ColorController;
 use App\Http\Controllers\API\ProductController;
 use App\Http\Controllers\API\SizeController;
@@ -125,7 +126,11 @@ Route::middleware(['auth:sanctum','isAPIVendor','userOnline'])->group(function (
 
 
     Route::prefix('vendor')->group(function(){
+
         Route::resource('servicecategory',ServiceCategoryController::class);
+        Route::resource('service-sub-category',ServiceSubCategoryController::class);
+        Route::resource('services',VendorServiceController::class);
+
         Route::resource('test', TestController::class);
     });
 

@@ -16,7 +16,8 @@ class ServiceSubCategoryController extends Controller
      */
     public function index()
     {
-
+        $data = ServiceSubCategory::where('user_id',auth()->user()->id)->get();
+        return $this->response($data);
     }
 
     /**
@@ -27,7 +28,15 @@ class ServiceSubCategoryController extends Controller
      */
     public function store(StoreServiceSubCategoryRequest $request)
     {
-        return $request->validated();
+        $validatedData =  $request->validated();
+
+        ServiceSubCategory::create([
+            'user_id'=>userid(),
+            'service_category_id' => $validatedData['service_category_id'],
+            'name'=>$validatedData['name'],
+        ]);
+
+        return $this->response('Created successfull');
     }
 
     /**
@@ -36,9 +45,13 @@ class ServiceSubCategoryController extends Controller
      * @param  \App\Models\ServiceSubCategory  $serviceSubCategory
      * @return \Illuminate\Http\Response
      */
-    public function show(ServiceSubCategory $serviceSubCategory)
+    public function show($id)
     {
-        //
+        $data = ServiceSubCategory::where(['user_id'=>userid(),'id'=>$id])->first();
+        if(!$data){
+            return responsejson('Not found','fail');
+        }
+        return $this->response($data);
     }
 
     /**
@@ -48,9 +61,15 @@ class ServiceSubCategoryController extends Controller
      * @param  \App\Models\ServiceSubCategory  $serviceSubCategory
      * @return \Illuminate\Http\Response
      */
-    public function update(UpdateServiceSubCategoryRequest $request, ServiceSubCategory $serviceSubCategory)
+    public function update(UpdateServiceSubCategoryRequest $request, $id)
     {
-        //
+        $validateData =  $request->validated();
+        $subcategory = ServiceSubCategory::where(['user_id'=>userid(),'id'=>$id])->first();
+        if(!$subcategory){
+            return responsejson('Not found','fail');
+        }
+        $subcategory->update($validateData);
+        return $this->response('Updated successfull');
     }
 
     /**
@@ -59,8 +78,13 @@ class ServiceSubCategoryController extends Controller
      * @param  \App\Models\ServiceSubCategory  $serviceSubCategory
      * @return \Illuminate\Http\Response
      */
-    public function destroy(ServiceSubCategory $serviceSubCategory)
+    public function destroy($id)
     {
-        //
+        $serviceSubCategory = ServiceSubCategory::where(['user_id'=>userid(),'id'=>$id]);
+        if(!$serviceSubCategory){
+            return $this->response('Not found','fail');
+        }
+        $serviceSubCategory->delete();
+        return $this->response('Deleted successfull');
     }
 }

@@ -1,12 +1,14 @@
 <?php
 
-namespace App\Http\Controllers\API\Admin;
+namespace App\Http\Controllers\API;
 
-use App\Models\SupportBox;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreSupportBoxRequest;
-use App\Http\Requests\UpdateSupportBoxRequest;
+use App\Http\Requests\TIcketReviewRequest;
+use App\Models\SupportBox;
+use App\Models\TicketReply;
 use App\Services\SosService;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\File;
 
 class SupportBoxController extends Controller
@@ -18,31 +20,32 @@ class SupportBoxController extends Controller
      */
     public function index()
     {
-        $supportData = SupportBox::with('user')->latest()->paginate(10);
-        return $this->response($supportData);
+        $data = SupportBox::where('user_id',auth()->user()->id)->latest()->paginate(10);
+        return $this->response($data);
     }
 
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \App\Http\Requests\StoreSupportBoxRequest  $request
+     * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
     public function store(StoreSupportBoxRequest $request)
     {
-        // $data = $request->all();
-        // SosService::ticketcreate($data);
+        $data = $request->all();
+        SosService::ticketcreate($data);
+        return $this->response('Created successfull');
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\SupportBox  $supportBox
+     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
     public function show($id)
     {
-        $supportBox = SupportBox::find($id);
+        $supportBox = SupportBox::where(['id'=>$id,'user_id'=>auth()->user()->id])->first();
         if (!$supportBox) {
             return responsejson('Not found','fail');
         }
@@ -55,29 +58,42 @@ class SupportBoxController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \App\Http\Requests\UpdateSupportBoxRequest  $request
-     * @param  \App\Models\SupportBox  $supportBox
+     * @param  \Illuminate\Http\Request  $request
+     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(UpdateSupportBoxRequest $request, SupportBox $supportBox)
+    public function update(Request $request, $id)
     {
-        //
+
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\SupportBox  $supportBox
+     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
     public function destroy($id)
     {
-        $support = SupportBox::find($id);
+        $support = SupportBox::where(['id'=>$id,'user_id'=>auth()->user()->id])->first();
         if(File::exists($support->file)){
             File::delete($support->file);
         }
         $support->delete();
 
         return $this->response('Deleted successfull');
+    }
+
+    function review(TIcketReviewRequest $request){
+        $data =  $request->validated();
+        $ticketReply =  TicketReply::where(['id'=>$data['ticket_replie_id']])->first();
+
+        if(!$ticketReply){
+            return responsejson('Not fond','fail');
+        }
+        $ticketReply->rating = $data['rating'];
+        $ticketReply->save();
+
+        return $this->response('Rating successfull');
     }
 }

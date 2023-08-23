@@ -5,9 +5,8 @@ namespace App\Http\Requests;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
-use Illuminate\Validation\Rule;
 
-class UpdateServiceSubCategoryRequest extends FormRequest
+class TIcketReviewRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -27,15 +26,8 @@ class UpdateServiceSubCategoryRequest extends FormRequest
     public function rules()
     {
         return [
-            'service_category_id' => [
-                'required',
-                'exists:service_categories,id',
-                Rule::exists('service_categories', 'id')->where(function ($query) {
-                    $query->where(['user_id' => userid(), 'deleted_at' => null]);
-                })
-            ],
-            'name' => 'required',
-            'status'=>['required',Rule::in(['active','deactivate'])]
+            'ticket_replie_id'=>'required|exists:ticket_replies,id',
+            'rating' => 'required|numeric|min:1|max:5'
         ];
     }
 
