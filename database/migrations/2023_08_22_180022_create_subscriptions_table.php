@@ -15,10 +15,8 @@ return new class extends Migration
     {
         Schema::create('subscriptions', function (Blueprint $table) {
             $table->id();
-            $table->string('subscription_heading');
-            $table->string('subscription_title');
-            $table->integer('subscription_user_type');
-            $table->integer('subscription_package_type');
+            $table->string('subscription_user_type');
+            $table->string('subscription_package_type');
             $table->string('card_symbol_icon');
             $table->string('subscription_amount');
             $table->string('card_time');

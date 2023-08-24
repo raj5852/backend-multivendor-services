@@ -26,17 +26,12 @@ class StoreSubscriptionRequest extends FormRequest
     public function rules()
     {
         return [
-            'subscription_heading'   => 'required|max:256',
-            'subscription_title'   => 'required|max:256',
-            // 'subscription_user_type'   => 'required|in:vendor,affiliate',
-            // 'subscription_package_type'   => 'required|in:monthly,half_yearly,yearly',
             'card_symbol_icon'   => 'required',
             'subscription_amount'   => 'required|numeric',
             'card_time'   => 'required|max:256',
             'card_heading'   => 'required|max:256',
             'card_feature_title'   => 'required|max:256',
             'card_facilities_title' => 'required',
-
         ];
     }
 

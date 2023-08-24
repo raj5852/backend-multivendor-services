@@ -8,7 +8,7 @@ use App\Http\Controllers\API\Admin\CouponController;
 use App\Http\Controllers\API\Admin\DashboardController;
 use App\Http\Controllers\API\Admin\FaqController;
 use App\Http\Controllers\API\Admin\FooterMediaController;
-use App\Http\Controllers\API\Admin\HomeBannerController;
+use App\Http\Controllers\API\Admin\ItServiceController;
 use App\Http\Controllers\API\Admin\MembersController;
 use App\Http\Controllers\API\Admin\MissionController;
 use App\Http\Controllers\API\Admin\OrderController as AdminOrderController;
@@ -162,11 +162,11 @@ Route::prefix('admin')->middleware(['auth:sanctum', 'isAPIAdmin'])->group(functi
 
 
     // Home Page
-    Route::get('/home-banner', [HomeBannerController::class, 'index']);
-    Route::post('/home-banner-store', [HomeBannerController::class, 'storeHomeBanner']);
-    Route::get('/home-banner-edit/{id}', [HomeBannerController::class, 'editHomeBanner']);
-    Route::post('/home-banner-update/{id}', [HomeBannerController::class, 'updateHomeBanner']);
-    Route::get('/home-banner-delete/{id}', [HomeBannerController::class, 'deleteHomeBanner']);
+    Route::get('/it-services', [ItServiceController::class, 'index']);
+    Route::post('/it-services-store', [ItServiceController::class, 'storeItService']);
+    Route::get('/it-services-show/{id}', [ItServiceController::class, 'showtService']);
+    Route::post('/it-services-update/{id}', [ItServiceController::class, 'updateItService']);
+    Route::get('/it-services-delete/{id}', [ItServiceController::class, 'deleteItService']);
 
     // our Organization
     Route::get('/organization', [OrganizationController::class, 'index']);
