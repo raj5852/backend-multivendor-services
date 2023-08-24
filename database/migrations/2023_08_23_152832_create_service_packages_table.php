@@ -17,8 +17,9 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('vendor_service_id');
             $table->string('time');
-            $table->string('title');
-            $table->text('description');
+            $table->string('package_title');
+            $table->text('package_description');
+            $table->float('price');
             $table->softDeletes();
             $table->timestamps();
         });

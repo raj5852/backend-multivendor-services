@@ -39,12 +39,21 @@ class StoreVendorServiceRequest extends FormRequest
                     $query->where('user_id',userid());
                 })
             ],
-
             'title'=>'required',
             'description'=>'required',
             'tags'=>'required',
+            'contract'=>'required',
+            'commission'=>['required','numeric'],
+            'commission_type'=>['required',Rule::in(['flat','percentage'])],
+            'image'=> ['required', 'image', 'mimes:png,jpg,jpeg'],
 
+            'time'=>'required|array',
+            'package_title'=>'required|array',
+            'package_description'=>'required|array',
+            'price'=>'required|array',
 
+            'images' => 'required|array',
+            'images.*' => 'image|mimes:jpeg,png,jpg,gif',
         ];
     }
 

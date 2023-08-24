@@ -19,7 +19,6 @@ class VendorServiceController extends Controller
     {
         $vendorService =  VendorService::where(['user_id'=>userid()])->paginate(10);
         return $this->response($vendorService);
-
     }
 
     /**
@@ -30,7 +29,9 @@ class VendorServiceController extends Controller
      */
     public function store(StoreVendorServiceRequest $request)
     {
-        ProductService::store();
+      return  $data =  $request->validated()['package_title'][0];
+        ProductService::store($data);
+        return $this->response('Success');
     }
 
     /**
