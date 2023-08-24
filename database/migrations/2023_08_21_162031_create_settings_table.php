@@ -69,8 +69,8 @@ return new class extends Migration
             $table->string('advertise_banner_heading')->nullable();
             $table->longText('advertise_banner_description')->nullable();
             $table->text('advertise_banner_image')->nullable();
-            $table->string('overtiew_title')->nullable();
-            $table->longText('overtiew_description')->nullable();
+            $table->string('overview_title')->nullable();
+            $table->longText('overview_description')->nullable();
             $table->string('get_sarted_title')->nullable();
             $table->longText('get_sarted_description')->nullable();
             $table->string('about_banner_title')->nullable();

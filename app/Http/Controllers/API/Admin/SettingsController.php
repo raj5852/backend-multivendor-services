@@ -21,7 +21,7 @@ class SettingsController extends Controller
         $data = Settings::first();
         if(!$data){
             $input = $request->all();
-            $image_files = ['logo', 'org_one_photo', 'org_photo', 'footer_image', 'advertise_banner_image', 'about_banner_image', 'vision_image_one', 'vision_image_two', 'vision_image_three'];
+            $image_files = ['logo', 'org_one_photo', 'org_photo', 'footer_image', 'advertise_banner_image', 'about_banner_image', 'vision_image_one', 'vision_image_two', 'vision_image_three', 'mission_image'];
 
             foreach($image_files as $image_file){
                 if ($file = $request->file($image_file)) {
@@ -34,7 +34,7 @@ class SettingsController extends Controller
         }else{
             $data = Settings::find($id);
             $input = $request->all();
-            $image_files = ['logo', 'org_one_photo', 'org_photo', 'footer_image', 'advertise_banner_image', 'about_banner_image', 'vision_image_one', 'vision_image_two', 'vision_image_three'];
+            $image_files = ['logo', 'org_one_photo', 'org_photo', 'footer_image', 'advertise_banner_image', 'about_banner_image', 'vision_image_one', 'vision_image_two', 'vision_image_three', 'mission_image'];
 
             foreach($image_files as $image_file){
                 if ($file = $request->file($image_file)) {

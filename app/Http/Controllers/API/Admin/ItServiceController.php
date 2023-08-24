@@ -3,27 +3,28 @@
 namespace App\Http\Controllers\API\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Models\Slider;
-use App\Service\Vendor\ProductService;
+use App\Models\Itservice;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
 class ItServiceController extends Controller
 {
+
     public function index(){
-        $data ='';
+        $data = Itservice::latest()->paginate(8);
         return response()->json([
             'status' => 200,
             'data' => $data,
         ]);
     }
 
+
     public function storeItService(Request $request)
     {
         $validator = Validator::make($request->all(), [
+            'icon'       => 'required',
             'title'       => 'required',
             'description' => 'required',
-            'thumbal'     => 'required|mimes:jpeg,png,jpg',
         ]);
         if ($validator->fails()) {
             return response()->json([
@@ -32,20 +33,17 @@ class ItServiceController extends Controller
             ]);
         }else{
             $data = $request->all();
-            if($request->thumbal){
-                $data['thumbal'] = fileUpload($request->thumbal, 'uploads/sliders/', 9020, 405);
-            }
-            Slider::create($data);
+            Itservice::create($data);
             return response()->json([
                 'status' => 200,
-                'message' => 'Data Inserted Successfully !',
+                'message' => 'Data services Successfully !',
             ]);
         }
     }
 
 
     public function showtService($id){
-        $slider = Slider::find($id);
+        $slider = Itservice::find($id);
 
         if($slider){
             return response()->json([
@@ -55,7 +53,7 @@ class ItServiceController extends Controller
         }else{
             return response()->json([
                 'status' => 404,
-                'message' => 'No Slider Found',
+                'message' => 'No services Found',
             ]);
         }
     }
@@ -64,9 +62,9 @@ class ItServiceController extends Controller
     public function updateItService(Request $request, $id)
     {
         $validator = Validator::make($request->all(), [
+            'icon'       => 'required',
             'title'       => 'required',
             'description' => 'required',
-            'thumbal'     => 'mimes:jpeg,png,jpg',
         ]);
         if ($validator->fails()) {
             return response()->json([
@@ -74,31 +72,21 @@ class ItServiceController extends Controller
                 'errors' => $validator->messages(),
             ]);
         }else{
-            $old_image = Slider::find($id);
             $data = $request->all();
-            if ($request->thumbal) {
-                if ($old_image->thumbal) {
-                    unlink($old_image->thumbal);
-                }
-                $data['thumbal'] = fileUpload($request->thumbal, 'uploads/sliders/', 9020, 405);
-            }
-            Slider::find($id)->update($data);
+            Itservice::find($id)->update($data);
             return response()->json([
                 'status' => 200,
-                'message' => 'Slider Updated Successfully !',
+                'message' => 'It services Updated Successfully !',
             ]);
         }
     }
 
     public function deleteItService($id){
-        $data = Slider::find($id);
-            if ($data->thumbal) {
-                unlink($data->thumbal);
-            }
+        $data = Itservice::find($id);
         $data->delete();
         return response()->json([
             'status' => 200,
-            'message' => 'Slider Deleted Successfully !',
+            'message' => 'services Deleted Successfully !',
         ]);
     }
 

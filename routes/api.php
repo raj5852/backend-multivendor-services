@@ -45,6 +45,8 @@ Route::get('/org-one', [SettingsController::class, 'orgOne']);
 Route::get('/org-two', [SettingsController::class, 'orgTwo']);
 // getting service infos
 Route::get('/services', [SettingsController::class, 'service']);
+// getting IT service infos
+Route::get('/it-services', [SettingsController::class, 'Itservice']);
 // getting partner infos
 Route::get('/partners', [SettingsController::class, 'partner']);
 // getting partner infos
