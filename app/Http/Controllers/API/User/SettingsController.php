@@ -17,7 +17,7 @@ class SettingsController extends Controller
 
     public function companion()
     {
-        $companions = DB::table('companions')->get();
+        $companions = DB::table('companions')->take(3)->get();
         return $this->response($companions);
     }
 
@@ -29,37 +29,37 @@ class SettingsController extends Controller
 
     public function fottermedia()
     {
-        $footermedia = DB::table('footer_media')->get();
+        $footermedia = DB::table('footer_media')->take(8)->get();
         return $this->response($footermedia);
     }
 
     public function members()
     {
-        $members = DB::table('members')->get();
+        $members = DB::table('members')->take(8)->get();
         return $this->response($members);
     }
 
     public function mission()
     {
-        $mission = DB::table('missions')->get();
+        $mission = DB::table('missions')->take(4)->get();
         return $this->response($mission);
     }
 
     public function orgOne()
     {
-        $organizations = DB::table('organizations')->get();
+        $organizations = DB::table('organizations')->take(4)->get();
         return $this->response($organizations);
     }
 
     public function orgTwo()
     {
-        $organizationtwos = DB::table('organization_twos')->get();
+        $organizationtwos = DB::table('organization_twos')->take(4)->get();
         return $this->response($organizationtwos);
     }
 
     public function service()
     {
-        $service = DB::table('our_services')->get();
+        $service = DB::table('our_services')->take(6)->get();
         return $this->response($service);
     }
 

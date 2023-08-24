@@ -8,16 +8,17 @@ use App\Service\Vendor\ProductService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
-class HomeBannerController extends Controller
+class ItServiceController extends Controller
 {
     public function index(){
+        $data ='';
         return response()->json([
             'status' => 200,
-            'data' => ProductService::showSLider(),
+            'data' => $data,
         ]);
     }
 
-    public function storeHomeBanner(Request $request)
+    public function storeItService(Request $request)
     {
         $validator = Validator::make($request->all(), [
             'title'       => 'required',
@@ -43,7 +44,7 @@ class HomeBannerController extends Controller
     }
 
 
-    public function editHomeBanner($id){
+    public function showtService($id){
         $slider = Slider::find($id);
 
         if($slider){
@@ -60,7 +61,7 @@ class HomeBannerController extends Controller
     }
 
 
-    public function updateHomeBanner(Request $request, $id)
+    public function updateItService(Request $request, $id)
     {
         $validator = Validator::make($request->all(), [
             'title'       => 'required',
@@ -89,7 +90,7 @@ class HomeBannerController extends Controller
         }
     }
 
-    public function deleteHomeBanner($id){
+    public function deleteItService($id){
         $data = Slider::find($id);
             if ($data->thumbal) {
                 unlink($data->thumbal);

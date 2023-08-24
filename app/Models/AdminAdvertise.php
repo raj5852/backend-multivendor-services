@@ -24,4 +24,15 @@ class AdminAdvertise extends Model
     {
         return $this->hasMany(LocationFile::class,'advertise_id');
     }
+
+
+    protected static function boot() {
+        parent::boot();
+
+        static::deleted(function ($query) {
+          $query->AdvertiseAudienceFile()->delete();
+          $query->advertisePlacement()->delete();
+          $query->advertiseLocationFiles()->delete();
+        });
+      }
 }
