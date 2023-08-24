@@ -17,7 +17,9 @@ class VendorServiceController extends Controller
      */
     public function index()
     {
-        $vendorService =  VendorService::where(['user_id'=>userid()])->paginate(10);
+        $vendorService =  VendorService::where(['user_id' => userid()])
+            ->with(['servicepackages', 'serviceimages'])
+            ->paginate(10);
         return $this->response($vendorService);
     }
 
@@ -29,7 +31,7 @@ class VendorServiceController extends Controller
      */
     public function store(StoreVendorServiceRequest $request)
     {
-      return  $data =  $request->validated()['package_title'][0];
+        $data =  $request->validated();
         ProductService::store($data);
         return $this->response('Success');
     }
@@ -40,9 +42,17 @@ class VendorServiceController extends Controller
      * @param  \App\Models\VendorService  $vendorService
      * @return \Illuminate\Http\Response
      */
-    public function show(VendorService $vendorService)
+    public function show($id)
     {
-        //
+        $vendorService = VendorService::where(['user_id' => userid(), 'id' => $id])
+            ->with(['servicepackages', 'serviceimages'])
+            ->first();
+
+        if (!$vendorService) {
+            return responsejson('Not found', 'fail');
+        }
+
+        return $this->response($vendorService);
     }
 
     /**
@@ -52,9 +62,11 @@ class VendorServiceController extends Controller
      * @param  \App\Models\VendorService  $vendorService
      * @return \Illuminate\Http\Response
      */
-    public function update(UpdateVendorServiceRequest $request, VendorService $vendorService)
+    public function update(UpdateVendorServiceRequest $request,$id)
     {
-        //
+        $data = $request->validated();
+        ProductService::update($data,$id);
+        return $this->response('Updated successfull!');
     }
 
     /**
@@ -63,8 +75,14 @@ class VendorServiceController extends Controller
      * @param  \App\Models\VendorService  $vendorService
      * @return \Illuminate\Http\Response
      */
-    public function destroy(VendorService $vendorService)
+    public function destroy($id)
     {
-        //
+        $data =  VendorService::where(['user_id'=>userid(),'id'=>$id])->first();
+        if(!$data){
+            return responsejson('Not found','fail');
+        }
+        $data->delete();
+
+        return $this->response('Deleted successfull!');
     }
 }
