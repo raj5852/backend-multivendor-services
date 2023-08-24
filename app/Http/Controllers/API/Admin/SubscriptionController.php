@@ -20,9 +20,9 @@ class SubscriptionController extends Controller
     {
        $data =  Subscription::all();
        return response()->json([
-        'status' => 200,
-        'data' => $data,
-    ]);
+            'status' => 200,
+            'data' => $data,
+        ]);
     }
 
     /**

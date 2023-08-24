@@ -101,7 +101,13 @@ class AdminAdvertiseController extends Controller
      */
     public function destroy($id)
     {
-        AdminAdvertise::find($id)->delete();
-        return $this->response('Item Deleted Successfully !');
+        $data = AdminAdvertise::find($id);
+        if($data){
+            $data->delete();
+            return $this->response('Item Deleted Successfully !');
+        }else{
+            return $this->response('Item Not found!');
+        }
+
     }
 }

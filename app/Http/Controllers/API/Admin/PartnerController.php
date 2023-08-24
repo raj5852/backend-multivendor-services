@@ -20,7 +20,7 @@ class PartnerController extends Controller
     public function storeOurPartner(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'image'     => 'required|mimes:jpeg,png,jpg',
+            'image'     => 'required|mimes:jpeg,png,jpg,svg',
         ]);
         if ($validator->fails()) {
             return response()->json([
@@ -56,7 +56,7 @@ class PartnerController extends Controller
         }
     }
 
-    
+
     public function updateOurPartner(Request $request, $id)
     {
         $validator = Validator::make($request->all(), [
