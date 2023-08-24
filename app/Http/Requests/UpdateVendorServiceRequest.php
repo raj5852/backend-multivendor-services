@@ -5,6 +5,7 @@ namespace App\Http\Requests;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
+use Illuminate\Validation\Rule;
 
 class UpdateVendorServiceRequest extends FormRequest
 {
@@ -26,7 +27,33 @@ class UpdateVendorServiceRequest extends FormRequest
     public function rules()
     {
         return [
+            'service_category_id' => [
+                'required',
+                Rule::exists('service_categories', 'id')->where(function ($query) {
+                    $query->where(['user_id' => userid()]);
+                })
+            ],
+            'service_sub_category_id' => [
+                'required',
+                Rule::exists('service_sub_categories','id')->where(function($query){
+                    $query->where('user_id',userid());
+                })
+            ],
+            'title'=>'required',
+            'description'=>'required',
+            'tags'=>'required',
+            'contract'=>'required',
+            'commission'=>['required','numeric'],
+            'commission_type'=>['required',Rule::in(['flat','percentage'])],
+            'image'=> ['nullable', 'image', 'mimes:png,jpg,jpeg'],
 
+            'time'=>'required|array|size:3',
+            'package_title'=>'required|array|size:3',
+            'package_description'=>'required|array|size:3',
+            'price'=>'required|array|size:3',
+
+            'images' => 'nullable|array',
+            'images.*' => 'image|mimes:jpeg,png,jpg,gif',
         ];
     }
 

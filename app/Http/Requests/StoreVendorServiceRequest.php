@@ -47,10 +47,10 @@ class StoreVendorServiceRequest extends FormRequest
             'commission_type'=>['required',Rule::in(['flat','percentage'])],
             'image'=> ['required', 'image', 'mimes:png,jpg,jpeg'],
 
-            'time'=>'required|array',
-            'package_title'=>'required|array',
-            'package_description'=>'required|array',
-            'price'=>'required|array',
+            'time'=>'required|array|size:3',
+            'package_title'=>'required|array|size:3',
+            'package_description'=>'required|array|size:3',
+            'price'=>'required|array|size:3',
 
             'images' => 'required|array',
             'images.*' => 'image|mimes:jpeg,png,jpg,gif',
