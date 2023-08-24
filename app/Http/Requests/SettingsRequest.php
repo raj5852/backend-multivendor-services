@@ -80,8 +80,8 @@ class SettingsRequest extends FormRequest
             'advertise_banner_heading'   => 'nullable',
             'advertise_banner_description'   => 'nullable',
             'advertise_banner_image'   => ['nullable', 'image', 'mimes:png,jpg,jpeg'],
-            'overtiew_title'   => 'nullable',
-            'overtiew_description'   => 'nullable',
+            'overview_title'   => 'nullable',
+            'overview_description'   => 'nullable',
             'get_sarted_title'   => 'nullable',
             'get_sarted_description'   => 'nullable',
             'about_banner_title'   => 'nullable',
@@ -103,6 +103,7 @@ class SettingsRequest extends FormRequest
             'mission_title'   => 'nullable',
             'mission_heading'   => 'nullable',
             'mission_description'   => 'nullable',
+            'mission_image'   => 'nullable', 'image', 'mimes:png,jpg,jpeg',
             'subscription_heading' => 'nullable',
             'subscription_title' => 'nullable',
         ];

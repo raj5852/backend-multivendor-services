@@ -59,7 +59,12 @@ class SettingsController extends Controller
 
     public function service()
     {
-        $service = DB::table('our_services')->take(6)->get();
+        $service = DB::table('our_services')->take(3)->get();
+        return $this->response($service);
+    }
+    public function Itservice()
+    {
+        $service = DB::table('itservices')->take(6)->get();
         return $this->response($service);
     }
 
