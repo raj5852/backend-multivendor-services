@@ -83,6 +83,6 @@ class VendorServiceController extends Controller
         }
         $data->delete();
 
-        return $this->response('Deleted successfull');
+        return $this->response('Deleted successfull!');
     }
 }
