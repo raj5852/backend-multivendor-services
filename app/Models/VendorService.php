@@ -33,4 +33,9 @@ class VendorService extends Model
             $query->serviceimages()->delete();
         });
     }
+
+    function user(){
+        return $this->belongsTo(User::class);
+    }
+
 }

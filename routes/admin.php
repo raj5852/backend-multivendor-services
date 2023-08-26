@@ -26,6 +26,7 @@ use App\Http\Controllers\API\Admin\SupportBoxController;
 use App\Http\Controllers\API\Admin\SupportProblemTopicController;
 use App\Http\Controllers\API\Admin\TestimonialController;
 use App\Http\Controllers\API\Admin\TicketReplyController;
+use App\Http\Controllers\API\Admin\VendorServiceController;
 use App\Http\Controllers\API\Admin\WithdrawController as AdminWithdrawController;
 use App\Http\Controllers\API\AuthController;
 use App\Http\Controllers\API\CategoryController;
@@ -228,6 +229,7 @@ Route::prefix('admin')->middleware(['auth:sanctum', 'isAPIAdmin'])->group(functi
     Route::get('category-status',[DashboardController::class,'categoryStatus']);
 
     Route::resource('coupon',CouponController::class);
+    Route::get('coupon-users',[CouponController::class,'couponusers']);
 
     Route::resource('faq', FaqController::class);
 
@@ -244,6 +246,7 @@ Route::prefix('admin')->middleware(['auth:sanctum', 'isAPIAdmin'])->group(functi
 
     // addvertise section
     Route::resource('advertise', AdminAdvertiseController::class);
+    Route::resource('vendor-services',VendorServiceController::class);
 
 
 

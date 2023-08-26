@@ -1,10 +1,9 @@
 <?php
 
-namespace App\Http\Controllers\API\Admin;
+namespace App\Http\Controllers\API\Vendor;
 
 use App\Models\VendorService;
 use App\Http\Controllers\Controller;
-use App\Http\Requests\AdminVendorServiceRequest;
 use App\Http\Requests\StoreVendorServiceRequest;
 use App\Http\Requests\UpdateVendorServiceRequest;
 use App\Services\Vendor\ProductService;
@@ -18,8 +17,10 @@ class VendorServiceController extends Controller
      */
     public function index()
     {
-        $data = VendorService::with('servicepackages', 'serviceimages', 'user')->latest()->paginate(10);
-        return $this->response($data);
+        $vendorService =  VendorService::where(['user_id' => userid()])
+            ->with(['servicepackages', 'serviceimages'])
+            ->paginate(10);
+        return $this->response($vendorService);
     }
 
     /**
@@ -28,8 +29,11 @@ class VendorServiceController extends Controller
      * @param  \App\Http\Requests\StoreVendorServiceRequest  $request
      * @return \Illuminate\Http\Response
      */
-    public function store()
+    public function store(StoreVendorServiceRequest $request)
     {
+        $data =  $request->validated();
+        ProductService::store($data);
+        return $this->response('Success');
     }
 
     /**
@@ -40,7 +44,7 @@ class VendorServiceController extends Controller
      */
     public function show($id)
     {
-        $vendorService = VendorService::where(['id' => $id])
+        $vendorService = VendorService::where(['user_id' => userid(), 'id' => $id])
             ->with(['servicepackages', 'serviceimages'])
             ->first();
 
@@ -58,14 +62,11 @@ class VendorServiceController extends Controller
      * @param  \App\Models\VendorService  $vendorService
      * @return \Illuminate\Http\Response
      */
-    public function update(AdminVendorServiceRequest $request, VendorService $vendorService)
+    public function update(UpdateVendorServiceRequest $request,$id)
     {
-        $validateData = $request->validated();
-
-        $vendorService->commission = $validateData['commission'];
-        $vendorService->status = $validateData['status'];
-        $vendorService->save();
-        return $this->response('Updated successfull');
+        $data = $request->validated();
+        ProductService::update($data,$id);
+        return $this->response('Updated successfull!');
     }
 
     /**
@@ -74,9 +75,14 @@ class VendorServiceController extends Controller
      * @param  \App\Models\VendorService  $vendorService
      * @return \Illuminate\Http\Response
      */
-    public function destroy(VendorService $vendorService)
+    public function destroy($id)
     {
-        $vendorService->delete();
-        return $this->response('Deleted successfull');
+        $data =  VendorService::where(['user_id'=>userid(),'id'=>$id])->first();
+        if(!$data){
+            return responsejson('Not found','fail');
+        }
+        $data->delete();
+
+        return $this->response('Deleted successfull!');
     }
 }

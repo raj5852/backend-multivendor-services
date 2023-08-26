@@ -1,6 +1,6 @@
 <?php
 
-use App\Http\Controllers\API\Admin\VendorServiceController;
+use App\Http\Controllers\API\Vendor\VendorServiceController;
 use App\Http\Controllers\API\ColorController;
 use App\Http\Controllers\API\ProductController;
 use App\Http\Controllers\API\SizeController;
