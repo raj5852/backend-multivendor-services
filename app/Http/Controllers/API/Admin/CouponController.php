@@ -17,7 +17,7 @@ class CouponController extends Controller
      */
     public function index()
     {
-
+        $data = Coupon::latest()->paginate();
     }
 
     /**
@@ -31,7 +31,6 @@ class CouponController extends Controller
         $validatedData = $request->validated();
 
         CouponService::create($validatedData);
-
 
         return $this->response('Coupon created successfull!');
     }
