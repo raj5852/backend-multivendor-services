@@ -6,7 +6,9 @@ use App\Models\Coupon;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreCouponRequest;
 use App\Http\Requests\UpdateCouponRequest;
+use App\Models\User;
 use App\Services\Admin\CouponService;
+use Illuminate\Support\Facades\DB;
 
 class CouponController extends Controller
 {
@@ -17,7 +19,8 @@ class CouponController extends Controller
      */
     public function index()
     {
-        $data = Coupon::latest()->paginate();
+        $data =  Coupon::latest()->with('user:id,name,email')->paginate();
+        return $this->response($data);
     }
 
     /**
@@ -43,7 +46,7 @@ class CouponController extends Controller
      */
     public function show(Coupon $coupon)
     {
-        //
+        return $this->response($coupon);
     }
 
     /**
@@ -55,7 +58,13 @@ class CouponController extends Controller
      */
     public function update(UpdateCouponRequest $request, Coupon $coupon)
     {
-        //
+        if (!$coupon) {
+            return responsejson('Not found', 'fail');
+        }
+        $validatedData = $request->validated();
+        $coupon->update($validatedData);
+
+        return $this->response('Updated Successfull');
     }
 
     /**
@@ -66,6 +75,19 @@ class CouponController extends Controller
      */
     public function destroy(Coupon $coupon)
     {
-        //
+        if (!$coupon) {
+            return responsejson('Not found', 'fail');
+        }
+        $coupon->delete();
+
+        return $this->response('Coupon deleted successfull');
+    }
+
+    function couponusers()
+    {
+        $data =  DB::table('users')->whereIn('role_as', [2, 3])->where('deleted_at', null)
+            ->select('id', 'email')
+            ->get();
+        return $this->response($data);
     }
 }

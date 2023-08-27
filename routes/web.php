@@ -44,13 +44,7 @@ Route::get('migrate', function () {
 
 Route::get('demo', function () {
 
-    $user = new User();
-    $user->name = 'admin';
-    $user->email = 'admin@gmail.com';
-    $user->password = bcrypt('admin@gmail.com');
-    $user->role = 1;
-    $user->number =1234567890;
-    $user->save();
+
 
 
 });

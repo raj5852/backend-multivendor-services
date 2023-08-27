@@ -228,7 +228,7 @@ Route::prefix('admin')->middleware(['auth:sanctum', 'isAPIAdmin'])->group(functi
 
     Route::get('category-status',[DashboardController::class,'categoryStatus']);
 
-    Route::resource('coupon',CouponController::class);
+    Route::resource('coupons',CouponController::class);
     Route::get('coupon-users',[CouponController::class,'couponusers']);
 
     Route::resource('faq', FaqController::class);
