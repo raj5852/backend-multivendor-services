@@ -7,6 +7,7 @@ use App\Http\Requests\SettingsRequest;
 use App\Models\Settings;
 use App\Services\Admin\SettingsService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\File;
 
 class SettingsController extends Controller
 {
@@ -20,12 +21,13 @@ class SettingsController extends Controller
     {
         $data = Settings::first();
         if(!$data){
+            $data  = new Settings();
             $input = $request->all();
             $image_files = ['logo', 'org_one_photo', 'org_photo', 'footer_image', 'advertise_banner_image', 'about_banner_image', 'vision_image_one', 'vision_image_two', 'vision_image_three', 'mission_image'];
 
             foreach($image_files as $image_file){
                 if ($file = $request->file($image_file)) {
-                    $input[$image_file] = handleUpdatedUploadedImage($file,'/uploads/setting_images/',$data,'/uploads/setting_images/',$image_file);
+                    $input[$image_file] = fileUpload($file,'/uploads/setting_images/', 300, 300);
                 }
             }
             $data->create($input);
@@ -38,7 +40,8 @@ class SettingsController extends Controller
 
             foreach($image_files as $image_file){
                 if ($file = $request->file($image_file)) {
-                    $input[$image_file] = handleUpdatedUploadedImage($file,'/uploads/setting_images/',$data,'/uploads/setting_images/',$image_file);
+
+                    $input[$image_file] = fileUpload($file,'uploads/setting_images', 300, 300);
                 }
             }
             $data->update($input);
