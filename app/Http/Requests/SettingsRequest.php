@@ -37,6 +37,7 @@ class SettingsRequest extends FormRequest
             'org_one_video_link'        => ['nullable', 'url'],
             'count_one'                 => ['nullable'],
             'one_title'                 => ['nullable'],
+            'count_two'                 => ['nullable'],
             'count_two_title'           => ['nullable'],
             'count_three'               => ['nullable'],
             'count_three_title'         => ['nullable'],
