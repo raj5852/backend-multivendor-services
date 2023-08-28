@@ -1,8 +1,8 @@
 <?php
 
-use Illuminate\Http\Request;
+use App\Http\Controllers\AamarpayController;
 use App\Http\Controllers\API\AuthController;
-
+use App\Http\Controllers\API\ServiceOrderController;
 use App\Http\Controllers\API\SupportBoxController;
 
 use App\Http\Controllers\API\User\ContactController;
@@ -22,7 +22,14 @@ Route::post('logout', [AuthController::class, 'logout']);
 
 Route::middleware('auth:sanctum')->group(function () {
     Route::resource('supportbox', SupportBoxController::class);
-    Route::post('ticket-review', [SupportBoxController::class,'review']);
+    Route::post('ticket-review', [SupportBoxController::class, 'review']);
+    Route::apiResource('service/order', ServiceOrderController::class);
+});
+
+Route::prefix('aaparpay')->group(function () {
+    Route::post('success', [AamarpayController::class, 'success']);
+    Route::post('fail', [AamarpayController::class, 'fail']);
+    Route::post('cancel', [AamarpayController::class, 'cancel']);
 });
 
 Route::post('/contact-store', [ContactController::class, 'store']);
@@ -55,10 +62,8 @@ Route::get('/testimonials', [SettingsController::class, 'testimonial']);
 Route::get('/subscriptions', [SubscriptionController::class, 'index']);
 
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-
+Route::middleware('auth:sanctum')->get('/user', function () {
+    return auth()->user();
 });
 
 
-Route::get('test', function (Request $request) {
-});
