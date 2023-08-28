@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\ApiTestController;
+use App\Models\ServicePackage;
 use App\Models\User;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Auth;
@@ -46,6 +47,4 @@ Route::get('demo', function () {
 
 
 
-
 });
-
