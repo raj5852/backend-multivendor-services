@@ -59,7 +59,7 @@ class MembersController extends Controller
     }
 
 
-    
+
     public function updateMember(Request $request, $id)
     {
         $validator = Validator::make($request->all(), [

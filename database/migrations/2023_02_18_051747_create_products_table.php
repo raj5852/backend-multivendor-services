@@ -14,11 +14,11 @@ return new class extends Migration
     public function up()
     {
         Schema::create('products', function (Blueprint $table) {
-            $table->id();
+             $table->id();
              $table->integer('category_id');
              $table->integer('subcategory_id')->nullable();
              $table->integer('brand_id')->nullable();
-              $table->integer('user_id');
+             $table->integer('user_id');
              $table->string('slug');
              $table->string('name');
              $table->text('short_description')->nullable();
@@ -39,8 +39,8 @@ return new class extends Migration
              $table->string('user_type')->nullable();
              $table->string('discount_type')->nullable();
              $table->string('discount_rate')->nullable();
-            $table->timestamps();
-            $table->softDeletes();
+             $table->timestamps();
+             $table->softDeletes();
         });
     }
 
