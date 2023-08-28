@@ -27,7 +27,7 @@ class SettingsController extends Controller
 
             foreach($image_files as $image_file){
                 if ($file = $request->file($image_file)) {
-                    $input[$image_file] = fileUpload($file,'/uploads/setting_images/', 300, 300);
+                    $input[$image_file] = fileUpload($file,'uploads/setting_images/', 300, 300);
                 }
             }
             $data->create($input);

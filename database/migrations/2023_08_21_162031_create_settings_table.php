@@ -41,6 +41,16 @@ return new class extends Migration
             $table->string('chose_description')->nullable();
             $table->string('progress_title')->nullable();
             $table->string('progress_value')->nullable();
+            $table->string('progres_two_title')->nullable();
+            $table->string('progres_two_value')->nullable();
+            $table->string('progres_three_title')->nullable();
+            $table->string('progres_three_value')->nullable();
+            $table->string('progres_four_title')->nullable();
+            $table->string('progres_four_value')->nullable();
+            $table->string('chose_us_two_title')->nullable();
+            $table->string('chose_us_two_heading')->nullable();
+            $table->string('testimonial_title')->nullable();
+            $table->string('testimonial_heading')->nullable();
             $table->string('chose_card_one_icon')->nullable();
             $table->string('chose_card_one_title')->nullable();
             $table->string('chose_card_one_description')->nullable();
