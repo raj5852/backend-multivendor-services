@@ -7,6 +7,7 @@ use App\Http\Controllers\API\SupportBoxController;
 
 use App\Http\Controllers\API\User\ContactController;
 use App\Http\Controllers\API\User\SettingsController;
+use App\Http\Controllers\CouponUsedController;
 use App\Http\Controllers\SubscriptionController;
 use Illuminate\Support\Facades\Route;
 
@@ -62,8 +63,15 @@ Route::get('/testimonials', [SettingsController::class, 'testimonial']);
 Route::get('/subscriptions', [SubscriptionController::class, 'index']);
 
 
+
 Route::middleware('auth:sanctum')->get('/user', function () {
     return auth()->user();
+
+Route::apiResource('coupon-apply',CouponUsedController::class);
+
+Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
+
+
 });
 
 
