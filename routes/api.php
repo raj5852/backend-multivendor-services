@@ -25,6 +25,8 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::resource('supportbox', SupportBoxController::class);
     Route::post('ticket-review', [SupportBoxController::class, 'review']);
     Route::apiResource('service/order', ServiceOrderController::class);
+    Route::apiResource('coupon-apply', CouponUsedController::class);
+
 });
 
 Route::prefix('aaparpay')->group(function () {
@@ -64,14 +66,7 @@ Route::get('/subscriptions', [SubscriptionController::class, 'index']);
 
 
 
+
 Route::middleware('auth:sanctum')->get('/user', function () {
     return auth()->user();
-
-Route::apiResource('coupon-apply',CouponUsedController::class);
-
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-
-
 });
-
-

@@ -130,6 +130,8 @@ Route::middleware(['auth:sanctum','isAPIVendor','userOnline'])->group(function (
         Route::resource('servicecategory',ServiceCategoryController::class);
         Route::resource('service-sub-category',ServiceSubCategoryController::class);
         Route::resource('services',VendorServiceController::class);
+        Route::get('service/orders',[VendorServiceController::class,'serviceorders']);
+        Route::post('service/status',[VendorServiceController::class,'statusChange']);
         // Route::resour
 
 

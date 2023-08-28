@@ -11,4 +11,16 @@ class ServiceOrder extends Model
     use HasFactory,SoftDeletes;
 
     protected $guarded = [];
+
+    function customerdetails(){
+        return $this->belongsTo(User::class,'user_id');
+    }
+
+    function servicedetails(){
+        return $this->belongsTo(VendorService::class,'vendor_service_id');
+    }
+
+    function packagedetails(){
+        return $this->belongsTo(ServicePackage::class,'service_package_id');
+    }
 }

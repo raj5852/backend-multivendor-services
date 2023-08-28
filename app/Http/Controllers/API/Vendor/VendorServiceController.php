@@ -6,6 +6,8 @@ use App\Models\VendorService;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreVendorServiceRequest;
 use App\Http\Requests\UpdateVendorServiceRequest;
+use App\Http\Requests\VendorOrderStatusRequest;
+use App\Models\ServiceOrder;
 use App\Services\Vendor\ProductService;
 
 class VendorServiceController extends Controller
@@ -62,10 +64,10 @@ class VendorServiceController extends Controller
      * @param  \App\Models\VendorService  $vendorService
      * @return \Illuminate\Http\Response
      */
-    public function update(UpdateVendorServiceRequest $request,$id)
+    public function update(UpdateVendorServiceRequest $request, $id)
     {
         $data = $request->validated();
-        ProductService::update($data,$id);
+        ProductService::update($data, $id);
         return $this->response('Updated successfull!');
     }
 
@@ -77,12 +79,27 @@ class VendorServiceController extends Controller
      */
     public function destroy($id)
     {
-        $data =  VendorService::where(['user_id'=>userid(),'id'=>$id])->first();
-        if(!$data){
-            return responsejson('Not found','fail');
+        $data =  VendorService::where(['user_id' => userid(), 'id' => $id])->first();
+        if (!$data) {
+            return responsejson('Not found', 'fail');
         }
         $data->delete();
 
         return $this->response('Deleted successfull!');
+    }
+
+    function serviceorders()
+    {
+        $order = ServiceOrder::where('user_id', userid())
+            ->with(['customerdetails', 'servicedetails', 'packagedetails'])
+            ->latest()
+            ->paginate(10);
+        return $this->response($order);
+    }
+
+    function statusChange(VendorOrderStatusRequest $request, $id)
+    {
+        // return $id;
+        return $request->validated();
     }
 }

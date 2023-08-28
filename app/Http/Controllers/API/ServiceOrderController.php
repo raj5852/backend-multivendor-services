@@ -29,7 +29,7 @@ class ServiceOrderController extends Controller
      */
     public function store(StoreServiceOrderRequest $request)
     {
-        $validateData = $request->validated();
+       return $validateData = $request->validated();
         $validateData['user_id'] = userid();
 
         $price = ServicePackage::find($validateData['service_package_id'])->price;

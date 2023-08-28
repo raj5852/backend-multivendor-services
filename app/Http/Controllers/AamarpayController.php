@@ -17,7 +17,7 @@ class AamarpayController extends Controller
         }
         ServiceOrder::create([
             'user_id' => $data['info']['user_id'],
-            'vendor_service_id' => $data['info']['user_id'],
+            'vendor_service_id' => $data['info']['vendor_service_id'],
             'service_package_id' => $data['info']['service_package_id'],
         ]);
 
