@@ -7,7 +7,7 @@ use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Validation\Rule;
 
-class StoreServiceOrderRequest extends FormRequest
+class StoreOrderDeliveryRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -27,12 +27,10 @@ class StoreServiceOrderRequest extends FormRequest
     public function rules()
     {
         return [
-            // 'user_id'=>'required|exists:users,id',
-            'vendor_service_id' => ['required', 'integer', Rule::exists('vendor_services', 'id')->where('status', 'active')->whereNull('deleted_at')],
-            'service_package_id' => ['required', 'integer', Rule::exists('service_packages', 'id')->where('vendor_service_id', request('vendor_service_id'))],
+            'description' => 'required',
             'files' => 'required|array',
             'files.*' => 'file|max:102400',
-            'details'=>'required'
+            'service_order_id'=>['required',Rule::exists('service_orders','id')->where('vendor_id',userid())->whereIn('status',['progress','delivered','revision'])],
         ];
     }
 

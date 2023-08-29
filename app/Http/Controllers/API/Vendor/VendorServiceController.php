@@ -4,11 +4,13 @@ namespace App\Http\Controllers\API\Vendor;
 
 use App\Models\VendorService;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\ServiceDeliveryRequest;
 use App\Http\Requests\StoreVendorServiceRequest;
 use App\Http\Requests\UpdateVendorServiceRequest;
 use App\Http\Requests\VendorOrderStatusRequest;
 use App\Models\ServiceOrder;
 use App\Services\Vendor\ProductService;
+use Carbon\Carbon;
 
 class VendorServiceController extends Controller
 {
@@ -90,16 +92,32 @@ class VendorServiceController extends Controller
 
     function serviceorders()
     {
-        $order = ServiceOrder::where('user_id', userid())
+        $order = ServiceOrder::where('vendor_id', userid())
             ->with(['customerdetails', 'servicedetails', 'packagedetails'])
             ->latest()
             ->paginate(10);
+
         return $this->response($order);
     }
 
-    function statusChange(VendorOrderStatusRequest $request, $id)
+    function statusChange(VendorOrderStatusRequest $request)
     {
-        // return $id;
-        return $request->validated();
+        $validateData = $request->validated();
+        $serviceOrder = ServiceOrder::find($validateData['service_order_id']);
+        $serviceOrder->status = $validateData['status'];
+        $time = $serviceOrder->packagedetails->time;
+
+        $timer = Carbon::now()->addDay($time);
+
+        $serviceOrder->timer = $timer;
+        $serviceOrder->save();
+
+        return $this->response('Updated successfull');
+    }
+
+    function deliverytocustomer(ServiceDeliveryRequest $request)
+    {
+        $validateData = $request->validated();
+        // $validateData
     }
 }

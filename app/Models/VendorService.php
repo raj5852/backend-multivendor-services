@@ -38,4 +38,5 @@ class VendorService extends Model
         return $this->belongsTo(User::class);
     }
 
+    // function customer()
 }

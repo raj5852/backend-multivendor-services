@@ -1,8 +1,9 @@
 <?php
+
 use Illuminate\Support\Str;
 use Intervention\Image\Facades\Image;
 
-function slugCreate($modelName, $slug_text,$slugColumn='slug')
+function slugCreate($modelName, $slug_text, $slugColumn = 'slug')
 {
     $slug = Str::slug($slug_text, '-');
     $i = 1;
@@ -12,7 +13,7 @@ function slugCreate($modelName, $slug_text,$slugColumn='slug')
     return $slug;
 }
 
-function slugUpdate($modelName, $slug_text, $modelId,$slugColumn='slug')
+function slugUpdate($modelName, $slug_text, $modelId, $slugColumn = 'slug')
 {
     $slug = Str::slug($slug_text, '-');
     $i = 1;
@@ -22,9 +23,9 @@ function slugUpdate($modelName, $slug_text, $modelId,$slugColumn='slug')
     return $slug;
 }
 
-function fileUpload($file, $path,$withd = 400,$height=400)
+function fileUpload($file, $path, $withd = 400, $height = 400)
 {
-    $image_name = uniqid() .'-'. time() . '.' . $file->getClientOriginalExtension();
+    $image_name = uniqid() . '-' . time() . '.' . $file->getClientOriginalExtension();
     $imagePath = $path . '/' . $image_name;
     Image::make($file)->resize($withd, $height, function ($constraint) {
         $constraint->aspectRatio();
@@ -33,13 +34,15 @@ function fileUpload($file, $path,$withd = 400,$height=400)
     return $imagePath;
 }
 
-function orderId(){
+function orderId()
+{
     $timestamp = now()->format('YmdHis');
     $randomString = Str::random(6);
     return $timestamp . $randomString;
 }
 
-function responsejson($message,$data = "success"){
+function responsejson($message, $data = "success")
+{
     return response()->json(
         [
             'data' => $data,
@@ -48,32 +51,34 @@ function responsejson($message,$data = "success"){
     );
 }
 
-    function userid(){
-        return auth()->user()->id;
-    }
+function userid()
+{
+    return auth()->user()->id;
+}
 
 
-     function upload_image($filename, $width, $height,)
-    {
-        $imagename = uniqid().'.'.$filename->getClientOriginalExtension();
-        $new_webp = preg_replace('"\.(jpg|jpeg|png|webp)$"', '.webp', $imagename);
+function upload_image($filename, $width, $height,)
+{
+    $imagename = uniqid() . '.' . $filename->getClientOriginalExtension();
+    $new_webp = preg_replace('"\.(jpg|jpeg|png|webp)$"', '.webp', $imagename);
 
-        Image::make($filename)->encode('webp', 90)->fit($width, $height)->save('assets/images/'.$new_webp);
-        $image_upload = 'assets/images/'.$new_webp;
-        return $image_upload;
-    }
+    Image::make($filename)->encode('webp', 90)->fit($width, $height)->save('assets/images/' . $new_webp);
+    $image_upload = 'assets/images/' . $new_webp;
+    return $image_upload;
+}
 
 
-    function handleUpdatedUploadedImage($file, $path, $data, $delete_path, $field)
-    {
-        $name = time() . $file->getClientOriginalName();
+function handleUpdatedUploadedImage($file, $path, $data, $delete_path, $field)
+{
+    $name = time() . $file->getClientOriginalName();
 
-        $file->move(base_path('public/') . $path, $name);
-        if ($data[$field] != null) {
-            if (file_exists(base_path('public/') . $delete_path . $data[$field])) {
-                unlink(base_path('public/') . $delete_path . $data[$field]);
-            }
+    $file->move(base_path('public/') . $path, $name);
+    if ($data[$field] != null) {
+        if (file_exists(base_path('public/') . $delete_path . $data[$field])) {
+            unlink(base_path('public/') . $delete_path . $data[$field]);
         }
-        return $name;
     }
+    return $name;
+}
+
 

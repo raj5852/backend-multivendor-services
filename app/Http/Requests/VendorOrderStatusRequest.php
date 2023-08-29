@@ -28,7 +28,8 @@ class VendorOrderStatusRequest extends FormRequest
     public function rules()
     {
         return [
-            'status'=>['required',Rule::in(['pending',new VendorOrderStatus()])]
+            'service_order_id'=>['required','integer',Rule::exists('service_orders','id')->where('vendor_id',userid()),],
+            'status'=>['required',Rule::in(['progress']), new VendorOrderStatus() ]
         ];
     }
 
