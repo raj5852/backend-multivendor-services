@@ -18,9 +18,9 @@ class MissionController extends Controller
     {
         $missions = Mission::latest()->get();
         if($missions){
-            return response()->json([
+           return response()->json([
                 'status' => 200,
-                'datas' => $missions,
+                'data' => $missions,
             ]);
         }else{
             return response()->json([

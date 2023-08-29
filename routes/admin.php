@@ -34,6 +34,7 @@ use App\Http\Controllers\API\CategoryController;
 use App\Http\Controllers\API\SubCategoryController;
 use App\Http\Controllers\API\BrandController;
 use App\Http\Controllers\API\ProductController;
+use App\Http\Controllers\API\User\MemberController;
 use App\Http\Controllers\API\UserController;
 use App\Models\OrganizationTwo;
 // use App\Http\Controllers\HomeController;
@@ -157,6 +158,7 @@ Route::middleware(['auth:sanctum', 'isAPIAdmin'])->group(function () {
     Route::post('admin/withdraw-paid/{id}', [AdminWithdrawController::class, 'paid']);
 
     //dashboard data
+
     Route::get('dashboard-datas', [DashboardController::class, 'index']);
     Route::get('admin/order-vs-revenue', [DashboardController::class, 'orderVsRevenue']);
     Route::get('admin/recent-order', [DashboardController::class, 'recentOrder']);
@@ -253,4 +255,7 @@ Route::middleware(['auth:sanctum', 'isAPIAdmin'])->group(function () {
         //service order
         Route::resource('customer-orders', ServiceOrderShowController::class);
     });
+
+ 
+
 });

@@ -17,7 +17,7 @@ class OurServiceController extends Controller
         ]);
     }
 
-    public function storeOurService(Request $request)
+    public function store(Request $request)
     {
         $validator = Validator::make($request->all(), [
             'title'       => 'required',
@@ -38,7 +38,7 @@ class OurServiceController extends Controller
         }
     }
 
-    public function showOurService($id){
+    public function show($id){
         $service = OurService::find($id);
         if($service){
             return response()->json([
@@ -54,8 +54,7 @@ class OurServiceController extends Controller
     }
 
 
-
-    public function updateOurService(Request $request, $id)
+    public function update(Request $request, $id)
     {
         $validator = Validator::make($request->all(), [
             'title'       => 'required',
@@ -76,13 +75,12 @@ class OurServiceController extends Controller
         }
     }
 
-    public function deleteOurService($id){
+    public function destroy($id){
         OurService::find($id)->delete();
         return response()->json([
             'status' => 200,
             'message' => 'Service Deleted Successfully !',
         ]);
     }
-
 
 }
