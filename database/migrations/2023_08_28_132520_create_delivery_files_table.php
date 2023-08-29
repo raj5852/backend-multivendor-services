@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\OrderDelivery;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -13,14 +14,10 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('payment_stores', function (Blueprint $table) {
+        Schema::create('delivery_files', function (Blueprint $table) {
             $table->id();
-            $table->string('payment_gateway');
-            $table->string('trxid');
-            $table->string('status')->default('pending');
-            $table->string('payment_type');
-            $table->text('info');
-            $table->string('customer_requirement_id')->nullable();
+            $table->foreignIdFor(OrderDelivery::class);
+            $table->string('files');
             $table->softDeletes();
             $table->timestamps();
         });
@@ -33,6 +30,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('payment_stores');
+        Schema::dropIfExists('delivery_files');
     }
 };

@@ -26,7 +26,6 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('ticket-review', [SupportBoxController::class, 'review']);
     Route::apiResource('service/order', ServiceOrderController::class);
     Route::apiResource('coupon-apply', CouponUsedController::class);
-
 });
 
 Route::prefix('aaparpay')->group(function () {

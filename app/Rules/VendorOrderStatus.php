@@ -2,6 +2,7 @@
 
 namespace App\Rules;
 
+use App\Models\ServiceOrder;
 use Illuminate\Contracts\Validation\Rule;
 
 class VendorOrderStatus implements Rule
@@ -25,7 +26,10 @@ class VendorOrderStatus implements Rule
      */
     public function passes($attribute, $value)
     {
-        dd($attribute);
+        $serviceOrder = ServiceOrder::find(request('service_order_id'));
+        if ($serviceOrder->status == "pending") {
+            return true;
+        }
     }
 
     /**
@@ -35,6 +39,6 @@ class VendorOrderStatus implements Rule
      */
     public function message()
     {
-        return 'The validation error message.';
+        return 'You have no access to change this status.';
     }
 }

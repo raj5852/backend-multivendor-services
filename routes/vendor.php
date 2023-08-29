@@ -13,6 +13,7 @@ use App\Http\Controllers\API\Vendor\OrderController as VendorOrderController;
 use App\Http\Controllers\API\Vendor\BankController as VendorBankController;
 use App\Http\Controllers\API\Vendor\PaymentRequestController;
 use App\Http\Controllers\API\Vendor\DashboardController as VendorDashboardController;
+use App\Http\Controllers\API\Vendor\OrderDeliveryController;
 use App\Http\Controllers\API\Vendor\ProductManageController;
 use App\Http\Controllers\API\Vendor\ProductStatusController;
 use App\Http\Controllers\API\Vendor\ProfileController;
@@ -132,7 +133,9 @@ Route::middleware(['auth:sanctum','isAPIVendor','userOnline'])->group(function (
         Route::resource('services',VendorServiceController::class);
         Route::get('service/orders',[VendorServiceController::class,'serviceorders']);
         Route::post('service/status',[VendorServiceController::class,'statusChange']);
-        // Route::resour
+        // Route::post('service/delivery-to-customer',[VendorServiceController::class,'deliverytocustomer']);
+        Route::resource('service/delivery-to-customer',OrderDeliveryController::class);
+
 
 
         // Route::resource('test', TestController::class);

@@ -21,8 +21,10 @@ return new class extends Migration
             $table->foreignIdFor(User::class)->comment('service purchase user');
             $table->foreignIdFor(VendorService::class);
             $table->foreignIdFor(ServicePackage::class);
-            $table->enum('status',['progress','pending','success','hold','expire','delivered'])->default('pending');
+            $table->unsignedBigInteger('vendor_id');
+            $table->enum('status',['progress','pending','success','hold','expire','delivered','revision'])->default('pending');
             $table->string('timer')->nullable();
+            $table->text('details')->nullable();
             $table->softDeletes();
             $table->timestamps();
         });

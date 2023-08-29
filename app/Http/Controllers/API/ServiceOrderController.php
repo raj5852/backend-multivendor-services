@@ -18,7 +18,8 @@ class ServiceOrderController extends Controller
      */
     public function index()
     {
-        //
+        $serviceOrder = ServiceOrder::where('user_id',userid())->with(['servicedetails','packagedetails'])->latest()->paginate(10);
+        return $this->response($serviceOrder);
     }
 
     /**
@@ -29,10 +30,13 @@ class ServiceOrderController extends Controller
      */
     public function store(StoreServiceOrderRequest $request)
     {
-       return $validateData = $request->validated();
+        $validateData = $request->validated();
         $validateData['user_id'] = userid();
 
         $price = ServicePackage::find($validateData['service_package_id'])->price;
+
+
+
        return SosService::aamarpay($price,$validateData);
     }
 
