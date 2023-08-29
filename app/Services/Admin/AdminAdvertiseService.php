@@ -124,54 +124,16 @@ class AdminAdvertiseService
 
        $adminadvaertise->save();
 
-
-
-        // $data = AdvertiseAudienceFile::where('advertise_id', $id)->first();
-        // $input = array();
-        // $image_files = request('advertise_audience_files');
-        // foreach($image_files as $image_file){
-        //     if ($file = request()->file($image_file)) {
-        //         if(File::exists(request()->file($image_file))){
-        //             File::delete(request()->file($image_file));
-        //         }
-        //         $input['advertise_id'] = $adminadvaertise->id;
-        //         $input['advertise_audience_files'] = handleUpdatedUploadedImage($file,'/uploads/advertise_audience_files/',$data,'/uploads/advertise_audience_files/',$image_file);
-
-        //     }
-        // }
-        // $data->update($input);
-
-
-        // $dataTwo = LocationFile::where('advertise_id', $id)->first();
-        // $inputTwo = array();
-        // $image_files = request('advertise_audience_files');
-        // foreach($image_files as $image_file){
-        //     if ($file = request()->file($image_file)) {
-        //         if(File::exists(request()->file($image_file))){
-        //             File::delete(request()->file($image_file));
-        //         }
-        //         $inputTwo['advertise_id'] = $adminadvaertise->id;
-        //         $inputTwo['advertise_audience_files'] = handleUpdatedUploadedImage($file,'/uploads/location_files/',$data,'/uploads/location_files/',$image_file);
-
-        //     }
-        // }
-        // $dataTwo->update($inputTwo);
-
-
-
-
-
-       $data = DB::table('advertise_audience_files')->where('advertise_id', $id)->delete();
+        $data = DB::table('advertise_audience_files')->where('advertise_id', $id)->delete();
 
         if($locaFiles = $validatData['advertise_audience_files']){
             foreach ($locaFiles as $file) {
                 // if(File::exists($file)){
-                //     unlink($file);
+                //     File::delete($file);
                 // }
-                $data = fileUpload($file, 'uploads/advertise_audience_files/', 500, 405);
                 $adaufile =  new AdvertiseAudienceFile();
                 $adaufile->advertise_id  = $adminadvaertise->id;
-                $adaufile->file    =  $data;
+                $adaufile->file    =  fileUpload($file, 'uploads/advertise_audience_files/', 500, 405);
                 $adaufile->save();
             }
         }
@@ -181,17 +143,14 @@ class AdminAdvertiseService
         if($locaFiles = $validatData['location_files']){
             foreach ($locaFiles as $file) {
                 // if(File::exists($file)){
-                //     unlink($file);
+                //     File::delete($file);
                 // }
-                $data = fileUpload($file, 'uploads/location_files/', 500, 405);
                 $locatFile =  new LocationFile();
                 $locatFile->advertise_id  = $adminadvaertise->id;
-                $locatFile->file    =  $data;
+                $locatFile->file    =  fileUpload($file, 'uploads/location_files/', 500, 405);
                 $locatFile->save();
             }
         }
-
-
 
       $data = DB::table('advertise_placements')->where('advertise_id', $id)->delete();
       $advertisePlace = new AdvertisePlacement();

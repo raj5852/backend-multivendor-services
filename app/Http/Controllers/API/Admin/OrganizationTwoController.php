@@ -9,7 +9,13 @@ use Illuminate\Support\Facades\Validator;
 
 class OrganizationTwoController extends Controller
 {
-    public function index(){
+    /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function index()
+    {
         $orgtwo = OrganizationTwo::latest()->get();
         return response()->json([
             'status' => 200,
@@ -17,7 +23,13 @@ class OrganizationTwoController extends Controller
         ]);
     }
 
-    public function storeOrganizationTwo(Request $request)
+    /**
+     * Store a newly created resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function store(Request $request)
     {
         $validator = Validator::make($request->all(), [
             'title'       => 'required',
@@ -38,7 +50,13 @@ class OrganizationTwoController extends Controller
         }
     }
 
-    public function showOrganizationTwo($id)
+    /**
+     * Display the specified resource.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function show($id)
     {
         $OrgTwo = OrganizationTwo::find($id);
         if($OrgTwo){
@@ -54,9 +72,15 @@ class OrganizationTwoController extends Controller
         }
     }
 
-    
 
-    public function updateOrganizationTwo(Request $request, $id)
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function update(Request $request, $id)
     {
         $validator = Validator::make($request->all(), [
             'title'       => 'required',
@@ -77,13 +101,18 @@ class OrganizationTwoController extends Controller
         }
     }
 
-    public function deleteOrganizationTwo($id){
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function destroy($id)
+    {
         OrganizationTwo::find($id)->delete();
         return response()->json([
             'status' => 200,
             'message' => 'Organization Two Deleted Successfully !',
         ]);
     }
-
-
 }

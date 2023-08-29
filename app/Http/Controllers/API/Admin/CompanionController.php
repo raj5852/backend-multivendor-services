@@ -9,7 +9,8 @@ use Illuminate\Support\Facades\Validator;
 
 class CompanionController extends Controller
 {
-    public function index(){
+    public function index()
+    {
         $companion = Companion::latest()->get();
         return response()->json([
             'status' => 200,
@@ -17,7 +18,7 @@ class CompanionController extends Controller
         ]);
     }
 
-    public function storeCompanion(Request $request)
+    public function store(Request $request)
     {
         $validator = Validator::make($request->all(), [
             'title'       => 'required',
@@ -39,7 +40,7 @@ class CompanionController extends Controller
     }
 
 
-    public function showCompanion($id)
+    public function show($id)
     {
         $companion = Companion::find($id);
         if($companion){
@@ -56,7 +57,7 @@ class CompanionController extends Controller
     }
 
 
-    public function updateCompanion(Request $request, $id)
+    public function update(Request $request, $id)
     {
         $validator = Validator::make($request->all(), [
             'title'       => 'required',
@@ -77,13 +78,12 @@ class CompanionController extends Controller
         }
     }
 
-    public function deleteCompanion($id){
+    public function destroy($id)
+    {
         Companion::find($id)->delete();
         return response()->json([
             'status' => 200,
             'message' => 'Companion Deleted Successfully !',
         ]);
     }
-
-
 }

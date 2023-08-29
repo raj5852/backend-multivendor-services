@@ -11,13 +11,13 @@ class SettingsController extends Controller
 {
     public function index()
     {
-        $users = DB::table('settings')->first();
+        $users = DB::table('settings')->where('deleted_at', null)->first();
         return $this->response($users);
     }
 
     public function companion()
     {
-        $companions = DB::table('companions')->take(3)->get();
+        $companions = DB::table('companions')->where('deleted_at', null)->take(3)->get();
         return $this->response($companions);
     }
 
@@ -29,54 +29,55 @@ class SettingsController extends Controller
 
     public function fottermedia()
     {
-        $footermedia = DB::table('footer_media')->take(8)->get();
+        $footermedia = DB::table('footer_media')->where('deleted_at', null)->take(8)->get();
         return $this->response($footermedia);
     }
 
     public function members()
     {
-        $members = DB::table('members')->take(8)->get();
+        $members = DB::table('members')->take(8)->where('deleted_at', null)->get();
         return $this->response($members);
     }
 
     public function mission()
     {
-        $mission = DB::table('missions')->take(4)->get();
+        $mission = DB::table('missions')->where('deleted_at', null)->take(4)->get();
+
         return $this->response($mission);
     }
 
     public function orgOne()
     {
-        $organizations = DB::table('organizations')->take(4)->get();
+        $organizations = DB::table('organizations')->where('deleted_at', null)->take(4)->get();
         return $this->response($organizations);
     }
 
     public function orgTwo()
     {
-        $organizationtwos = DB::table('organization_twos')->take(4)->get();
+        $organizationtwos = DB::table('organization_twos')->where('deleted_at', null)->take(4)->get();
         return $this->response($organizationtwos);
     }
 
     public function service()
     {
-        $service = DB::table('our_services')->take(3)->get();
+        $service = DB::table('our_services')->take(3)->where('deleted_at', null)->get();
         return $this->response($service);
     }
     public function Itservice()
     {
-        $service = DB::table('itservices')->take(6)->get();
+        $service = DB::table('itservices')->take(6)->where('deleted_at', null)->get();
         return $this->response($service);
     }
 
     public function partner()
     {
-        $partners = DB::table('partners')->get();
+        $partners = DB::table('partners')->where('deleted_at', null)->get();
         return $this->response($partners);
     }
 
     public function testimonial()
     {
-        $testimonial = DB::table('testimonials')->get();
+        $testimonial = DB::table('testimonials')->where('deleted_at', null)->get();
         return $this->response($testimonial);
     }
 

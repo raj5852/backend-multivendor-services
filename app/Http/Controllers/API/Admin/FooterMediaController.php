@@ -9,7 +9,8 @@ use Illuminate\Support\Facades\Validator;
 
 class FooterMediaController extends Controller
 {
-    public function index(){
+    public function index()
+    {
         $footermedia = FooterMedia::latest()->get();
         return response()->json([
             'status' => 200,
@@ -17,7 +18,7 @@ class FooterMediaController extends Controller
         ]);
     }
 
-    public function storeFooterMedia(Request $request)
+    public function store(Request $request)
     {
         $validator = Validator::make($request->all(), [
             'icon_class'    => 'required',
@@ -38,7 +39,7 @@ class FooterMediaController extends Controller
     }
 
 
-    public function shoFooterMedia($id){
+    public function show($id){
         $footermedia = FooterMedia::find($id);
         if($footermedia){
             return response()->json([
@@ -54,7 +55,7 @@ class FooterMediaController extends Controller
     }
 
 
-    public function updateFooterMedia(Request $request, $id)
+    public function update(Request $request, $id)
     {
         $validator = Validator::make($request->all(), [
             'icon_class'    => 'required',
@@ -74,7 +75,7 @@ class FooterMediaController extends Controller
         }
     }
 
-    public function deleteFooterMedia($id){
+    public function destroy($id){
         FooterMedia::find($id)->delete();
         return response()->json([
             'status' => 200,
@@ -84,6 +85,5 @@ class FooterMediaController extends Controller
 
 
 }
-
 
 
