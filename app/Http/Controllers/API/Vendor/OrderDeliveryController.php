@@ -33,6 +33,10 @@ class OrderDeliveryController extends Controller
 
         $order =  ServiceOrder::find($validateData['service_order_id']);
 
+        OrderDelivery::where('service_order_id',$order->id)->update([
+            'type'=>'inactive'
+        ]);
+
         $orderDelivery = OrderDelivery::create([
             'description'=>$validateData['description'],
             'vendor_id'=>userid(),

@@ -19,6 +19,8 @@ return new class extends Migration
             $table->unsignedBigInteger('customer_id');
             $table->unsignedBigInteger('service_order_id');
             $table->text('description');
+            $table->enum('status',['success','delivered','revision']);
+            $table->enum('type',['active','inactive'])->default('active');
             $table->softDeletes();
             $table->timestamps();
         });
