@@ -9,8 +9,13 @@ use Illuminate\Support\Facades\Validator;
 
 class ItServiceController extends Controller
 {
-
-    public function index(){
+    /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function index()
+    {
         $data = Itservice::latest()->paginate(8);
         return response()->json([
             'status' => 200,
@@ -18,8 +23,13 @@ class ItServiceController extends Controller
         ]);
     }
 
-
-    public function storeItService(Request $request)
+    /**
+     * Store a newly created resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function store(Request $request)
     {
         $validator = Validator::make($request->all(), [
             'icon'       => 'required',
@@ -41,14 +51,20 @@ class ItServiceController extends Controller
         }
     }
 
+    /**
+     * Display the specified resource.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function show($id)
+    {
+        $itservice = Itservice::find($id);
 
-    public function showtService($id){
-        $slider = Itservice::find($id);
-
-        if($slider){
+        if($itservice){
             return response()->json([
                 'status' => 200,
-                'datas' => $slider,
+                'datas' => $itservice,
             ]);
         }else{
             return response()->json([
@@ -58,8 +74,14 @@ class ItServiceController extends Controller
         }
     }
 
-
-    public function updateItService(Request $request, $id)
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function update(Request $request, $id)
     {
         $validator = Validator::make($request->all(), [
             'icon'       => 'required',
@@ -81,7 +103,14 @@ class ItServiceController extends Controller
         }
     }
 
-    public function deleteItService($id){
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function destroy($id)
+    {
         $data = Itservice::find($id);
         $data->delete();
         return response()->json([
@@ -89,5 +118,4 @@ class ItServiceController extends Controller
             'message' => 'services Deleted Successfully !',
         ]);
     }
-
 }

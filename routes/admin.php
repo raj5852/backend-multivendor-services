@@ -33,6 +33,7 @@ use App\Http\Controllers\API\CategoryController;
 use App\Http\Controllers\API\SubCategoryController;
 use App\Http\Controllers\API\BrandController;
 use App\Http\Controllers\API\ProductController;
+use App\Http\Controllers\API\User\MemberController;
 use App\Http\Controllers\API\UserController;
 use App\Models\OrganizationTwo;
 // use App\Http\Controllers\HomeController;
@@ -161,62 +162,14 @@ Route::prefix('admin')->middleware(['auth:sanctum', 'isAPIAdmin'])->group(functi
 
     Route::get('/category-status',[DashboardController::class,'categoryStatus']);
 
-
-    // Home Page
-    Route::get('/it-services', [ItServiceController::class, 'index']);
-    Route::post('/it-services-store', [ItServiceController::class, 'storeItService']);
-    Route::get('/it-services-show/{id}', [ItServiceController::class, 'showtService']);
-    Route::post('/it-services-update/{id}', [ItServiceController::class, 'updateItService']);
-    Route::get('/it-services-delete/{id}', [ItServiceController::class, 'deleteItService']);
-
-    // our Organization
-    Route::get('/organization', [OrganizationController::class, 'index']);
-    Route::post('/organization-store', [OrganizationController::class, 'storeOrganization']);
-    Route::get('/organization-show/{id}', [OrganizationController::class, 'showOrganization']);
-    Route::post('/organization-update/{id}', [OrganizationController::class, 'updateOrganization']);
-    Route::get('/organization-delete/{id}', [OrganizationController::class, 'deleteOrganization']);
-
-    // Organization Two
-    Route::get('/organizationTwo', [OrganizationTwoController::class, 'index']);
-    Route::post('/organizationTwo-store', [OrganizationTwoController::class, 'storeOrganizationTwo']);
-    Route::get('/organizationTwo-show/{id}', [OrganizationTwoController::class, 'showOrganizationTwo']);
-    Route::post('/organizationTwo-update/{id}', [OrganizationTwoController::class, 'updateOrganizationTwo']);
-    Route::get('/organizationTwo-delete/{id}', [OrganizationTwoController::class, 'deleteOrganizationTwo']);
-
-    // Our Services
-    Route::get('/services', [OurServiceController::class, 'index']);
-    Route::post('/services-store', [OurServiceController::class, 'storeOurService']);
-    Route::get('/services-show/{id}', [OurServiceController::class, 'showOurService']);
-    Route::post('/services-update/{id}', [OurServiceController::class, 'updateOurService']);
-    Route::get('/services-delete/{id}', [OurServiceController::class, 'deleteOurService']);
-
-    // Our Partner
-    Route::get('/partner', [PartnerController::class, 'index']);
-    Route::post('/partner-store', [PartnerController::class, 'storeOurPartner']);
-    Route::get('/partner-show/{id}', [PartnerController::class, 'showOurPartner']);
-    Route::post('/partner-update/{id}', [PartnerController::class, 'updateOurPartner']);
-    Route::get('/partner-delete/{id}', [PartnerController::class, 'deleteOurPartner']);
-
-    // Companion section
-    Route::get('/companion', [CompanionController::class, 'index']);
-    Route::post('/companion-store', [CompanionController::class, 'storeCompanion']);
-    Route::get('/companion-show/{id}', [CompanionController::class, 'showCompanion']);
-    Route::post('/companion-update/{id}', [CompanionController::class, 'updateCompanion']);
-    Route::get('/companion-delete/{id}', [CompanionController::class, 'deleteCompanion']);
-
-    // Member section
-    Route::get('/member', [MembersController::class, 'index']);
-    Route::post('/member-store', [MembersController::class, 'storeMember']);
-    Route::get('/member-show/{id}', [MembersController::class, 'showMember']);
-    Route::post('/member-update/{id}', [MembersController::class, 'updateMember']);
-    Route::get('/member-delete/{id}', [MembersController::class, 'deleteMember']);
-
-    // footer Social Icon / footer-media section
-    Route::get('/footer-media', [FooterMediaController::class, 'index']);
-    Route::post('/footer-media-store', [FooterMediaController::class, 'storeFooterMedia']);
-    Route::get('/footer-media-show/{id}', [FooterMediaController::class, 'shoFooterMedia']);
-    Route::post('/footer-media-update/{id}', [FooterMediaController::class, 'updateFooterMedia']);
-    Route::get('/footer-media-delete/{id}', [FooterMediaController::class, 'deleteFooterMedia']);
+    Route::resource('it-service', ItServiceController::class);
+    Route::resource('organization', OrganizationController::class);
+    Route::resource('organizationTwo', OrganizationTwoController::class);
+    Route::resource('service', OurServiceController::class);
+    Route::resource('partner', PartnerController::class);
+    Route::resource('companion', CompanionController::class);
+    Route::resource('member', MembersController::class);
+    Route::resource('footer-media', FooterMediaController::class);
 
     // front end settings update
     Route::get('/settings', [SettingsController::class, 'index']);

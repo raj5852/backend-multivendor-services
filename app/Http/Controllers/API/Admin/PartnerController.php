@@ -9,7 +9,8 @@ use Illuminate\Support\Facades\Validator;
 
 class PartnerController extends Controller
 {
-    public function index(){
+    public function index()
+    {
         $pertner = Partner::latest()->get();
         return response()->json([
             'status' => 200,
@@ -17,7 +18,7 @@ class PartnerController extends Controller
         ]);
     }
 
-    public function storeOurPartner(Request $request)
+    public function store(Request $request)
     {
         $validator = Validator::make($request->all(), [
             'image'     => 'required|mimes:jpeg,png,jpg,svg',
@@ -40,7 +41,7 @@ class PartnerController extends Controller
         }
     }
 
-    public function showOurPartner($id)
+    public function show($id)
     {
         $partner = Partner::find($id);
         if($partner){
@@ -57,7 +58,7 @@ class PartnerController extends Controller
     }
 
 
-    public function updateOurPartner(Request $request, $id)
+    public function update(Request $request, $id)
     {
         $validator = Validator::make($request->all(), [
             'image'     => 'mimes:jpeg,png,jpg',
@@ -84,7 +85,8 @@ class PartnerController extends Controller
         }
     }
 
-    public function deleteOurPartner($id){
+    public function destroy($id)
+    {
         $data = Partner::find($id);
             if ($data->image) {
                 unlink($data->image);

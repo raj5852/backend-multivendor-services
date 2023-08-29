@@ -5,12 +5,17 @@ namespace App\Http\Controllers\API\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Organization;
 use Illuminate\Http\Request;
-use App\Service\Vendor\Frontend;
 use Illuminate\Support\Facades\Validator;
 
 class OrganizationController extends Controller
 {
-    public function index(){
+    /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function index()
+    {
         $organizations = Organization::latest()->get();
         return response()->json([
             'status' => 200,
@@ -18,7 +23,13 @@ class OrganizationController extends Controller
         ]);
     }
 
-    public function storeOrganization(Request $request)
+    /**
+     * Store a newly created resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function store(Request $request)
     {
         $validator = Validator::make($request->all(), [
             'description' => 'required',
@@ -37,7 +48,13 @@ class OrganizationController extends Controller
         }
     }
 
-    public function showOrganization($id)
+    /**
+     * Display the specified resource.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function show($id)
     {
         $organization = Organization::find($id);
         if($organization){
@@ -52,11 +69,14 @@ class OrganizationController extends Controller
             ]);
         }
     }
-
-
-
-
-    public function updateOrganization(Request $request, $id)
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function update(Request $request, $id)
     {
         $validator = Validator::make($request->all(), [
             'description'   => 'required',
@@ -75,13 +95,18 @@ class OrganizationController extends Controller
         }
     }
 
-    public function deleteOrganization($id){
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function destroy($id)
+    {
         Organization::find($id)->delete();
         return response()->json([
             'status' => 200,
             'message' => 'Organization Deleted Successfully !',
         ]);
     }
-
-
 }

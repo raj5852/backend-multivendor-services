@@ -9,7 +9,8 @@ use Illuminate\Support\Facades\Validator;
 
 class MembersController extends Controller
 {
-    public function index(){
+    public function index()
+    {
         $member = Member::latest()->get();
         return response()->json([
             'status' => 200,
@@ -17,7 +18,7 @@ class MembersController extends Controller
         ]);
     }
 
-    public function storeMember(Request $request)
+    public function store(Request $request)
     {
         $validator = Validator::make($request->all(), [
             'photo'          => 'required|mimes:jpeg,png,jpg',
@@ -42,7 +43,7 @@ class MembersController extends Controller
         }
     }
 
-    public function showMember($id)
+    public function show($id)
     {
         $member = Member::find($id);
         if($member){
@@ -60,7 +61,7 @@ class MembersController extends Controller
 
 
 
-    public function updateMember(Request $request, $id)
+    public function update(Request $request, $id)
     {
         $validator = Validator::make($request->all(), [
             'photo'          => 'mimes:jpeg,png,jpg',
@@ -89,7 +90,8 @@ class MembersController extends Controller
         }
     }
 
-    public function deleteMember($id){
+    public function destroy($id)
+    {
         $data = Member::find($id);
             if ($data->photo) {
                 unlink($data->photo);
