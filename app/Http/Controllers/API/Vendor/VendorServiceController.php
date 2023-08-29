@@ -117,7 +117,22 @@ class VendorServiceController extends Controller
 
     function deliverytocustomer(ServiceDeliveryRequest $request)
     {
-        $validateData = $request->validated();
+        // $validateData = $request->validated();
         // $validateData
+    }
+
+    function ordersview($id)
+    {
+        $data =  ServiceOrder::where(['vendor_id' => userid(), 'id' => $id])->first();
+        if (!$data) {
+            return responsejson('Not found', 'fail');
+        }
+
+        $order = ServiceOrder::where('vendor_id', userid())
+            ->with(['customerdetails', 'servicedetails', 'packagedetails', 'requirementsfiles', 'orderdelivery' => function ($query) {
+                $query->with('deliveryfiles');
+            }])
+            ->find($id);
+        return $this->response($order);
     }
 }

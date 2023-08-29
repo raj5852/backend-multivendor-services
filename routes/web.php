@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\ApiTestController;
+use App\Models\ServiceOrder;
 use App\Models\ServicePackage;
 use App\Models\User;
 use Illuminate\Support\Facades\Artisan;
@@ -44,7 +45,6 @@ Route::get('migrate', function () {
 
 
 Route::get('demo', function () {
-
 
 
 });

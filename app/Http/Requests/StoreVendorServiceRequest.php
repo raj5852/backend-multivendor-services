@@ -54,6 +54,7 @@ class StoreVendorServiceRequest extends FormRequest
 
             'images' => 'required|array',
             'images.*' => 'image|mimes:jpeg,png,jpg,gif',
+            'revision_max_time'=>'required|array|size:3'
         ];
     }
 

@@ -20,6 +20,7 @@ return new class extends Migration
             $table->string('package_title');
             $table->text('package_description');
             $table->float('price');
+            $table->integer('revision_max_time');
             $table->softDeletes();
             $table->timestamps();
         });

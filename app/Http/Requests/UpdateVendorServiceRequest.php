@@ -51,7 +51,7 @@ class UpdateVendorServiceRequest extends FormRequest
             'package_title'=>'required|array|size:3',
             'package_description'=>'required|array|size:3',
             'price'=>'required|array|size:3',
-
+            'revision_max_time'=>'required|array|size:3',
             'images' => 'nullable|array',
             'images.*' => 'image|mimes:jpeg,png,jpg,gif',
         ];

@@ -40,6 +40,7 @@ class ProductService
             $servicepackages->time =  request('time')[$key];
             $servicepackages->package_title = $value;
             $servicepackages->package_description = request('package_description')[$key];
+            $servicepackages->revision_max_time = request('revision_max_time')[$key];
             $servicepackages->price =  request('price')[$key];
             $servicepackages->save();
         }
@@ -85,6 +86,7 @@ class ProductService
             $servicepackages = ServicePackage::find($value->id);
             $servicepackages->vendor_service_id = $vendorService->id;
             $servicepackages->time =  request('time')[$key];
+            $servicepackages->revision_max_time =  request('revision_max_time')[$key];
             $servicepackages->package_title = request('package_title')[$key];
             $servicepackages->package_description = request('package_description')[$key];
             $servicepackages->price =  request('price')[$key];

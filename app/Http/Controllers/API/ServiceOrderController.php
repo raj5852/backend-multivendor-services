@@ -4,9 +4,11 @@ namespace App\Http\Controllers\API;
 
 use App\Models\ServiceOrder;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\CustomerServiceStatus;
 use App\Http\Requests\StoreServiceOrderRequest;
 use App\Http\Requests\UpdateServiceOrderRequest;
 use App\Models\ServicePackage;
+use App\Services\CustomerService;
 use App\Services\SosService;
 
 class ServiceOrderController extends Controller
@@ -18,7 +20,7 @@ class ServiceOrderController extends Controller
      */
     public function index()
     {
-        $serviceOrder = ServiceOrder::where('user_id',userid())->with(['servicedetails','packagedetails'])->latest()->paginate(10);
+        $serviceOrder = ServiceOrder::where('user_id', userid())->with(['servicedetails', 'packagedetails', 'vendor'])->latest()->paginate(10);
         return $this->response($serviceOrder);
     }
 
@@ -37,7 +39,7 @@ class ServiceOrderController extends Controller
 
 
 
-       return SosService::aamarpay($price,$validateData);
+        return SosService::aamarpay($price, $validateData);
     }
 
     /**
@@ -46,9 +48,17 @@ class ServiceOrderController extends Controller
      * @param  \App\Models\ServiceOrder  $serviceOrder
      * @return \Illuminate\Http\Response
      */
-    public function show(ServiceOrder $serviceOrder)
+    public function show($id)
     {
-        //
+        $data = ServiceOrder::where(['user_id' => userid(), 'id' => $id])->first();
+        if (!$data) {
+            return responsejson('Not found', 'fail');
+        }
+
+        $serviceOrder = ServiceOrder::where('user_id', userid())->with(['servicedetails', 'packagedetails', 'requirementsfiles', 'vendor:id,name,email', 'orderdelivery' => function ($query) {
+            $query->with('deliveryfiles');
+        }])->find($id);
+        return $this->response($serviceOrder);
     }
 
     /**
@@ -72,5 +82,10 @@ class ServiceOrderController extends Controller
     public function destroy(ServiceOrder $serviceOrder)
     {
         //
+    }
+    function status(CustomerServiceStatus $request)
+    {
+        $validateData = $request->validated();
+        return  CustomerService::service($validateData);
     }
 }

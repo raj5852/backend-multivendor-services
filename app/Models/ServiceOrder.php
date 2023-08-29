@@ -23,4 +23,14 @@ class ServiceOrder extends Model
     function packagedetails(){
         return $this->belongsTo(ServicePackage::class,'service_package_id');
     }
+    function requirementsfiles(){
+        return $this->hasMany(CustomerRequiremnt::class,'vendor_service_id');
+    }
+
+    function orderdelivery(){
+        return $this->hasMany(OrderDelivery::class,'service_order_id');
+    }
+    function vendor(){
+        return $this->belongsTo(User::class,'vendor_id');
+    }
 }

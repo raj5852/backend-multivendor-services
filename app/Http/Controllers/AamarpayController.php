@@ -2,10 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\CustomerRequiremnt;
 use App\Models\PaymentStore;
 use App\Models\ServiceOrder;
 use App\Models\VendorService;
+use App\Models\CustomerRequiremnt;
+use App\Models\ServicePackage;
 
 class AamarpayController extends Controller
 {
@@ -13,7 +14,11 @@ class AamarpayController extends Controller
     function success()
     {
         $response = request()->all();
+
         $data = PaymentStore::where(['trxid' => $response['mer_txnid'], 'status' => 'pending'])->first();
+
+
+
         if (!$data) {
             return false;
         }
@@ -24,6 +29,9 @@ class AamarpayController extends Controller
             'vendor_id' => $vendorService->user_id,
             'vendor_service_id' => $data['info']['vendor_service_id'],
             'service_package_id' => $data['info']['service_package_id'],
+            'amount'=> $response['amount'],
+            'commission_amount'=>  $vendorService->commission,
+            'commission_type'=> $vendorService->commission_type
         ]);
 
         $requirement =  CustomerRequiremnt::where('uniquid', $data['info']['customer_requirement_id'])->exists();

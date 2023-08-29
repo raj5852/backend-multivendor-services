@@ -19,6 +19,7 @@ use App\Http\Controllers\API\Admin\PartnerController;
 use App\Http\Controllers\API\Admin\PaymentHistoryController;
 use App\Http\Controllers\API\Admin\ProductStatusController;
 use App\Http\Controllers\API\Admin\ProfileController;
+use App\Http\Controllers\API\Admin\ServiceOrderShowController;
 use App\Http\Controllers\API\Admin\SettingsController;
 use App\Http\Controllers\API\Admin\SubscriptionController;
 use App\Http\Controllers\API\Admin\SupportBoxCategoryController;
@@ -40,27 +41,28 @@ use App\Models\OrganizationTwo;
 use Illuminate\Support\Facades\Route;
 
 //admin route
-Route::prefix('admin')->middleware(['auth:sanctum', 'isAPIAdmin'])->group(function () {
+Route::middleware(['auth:sanctum', 'isAPIAdmin'])->group(function () {
 
     Route::get('/checkingAuthenticated', function () {
         return response()->json(['message' => 'You are in', 'status' => 200], 200);
     });
-    Route::get('/profile', [ProfileController::class, 'AdminProfile']);
-    Route::post('/update/profile', [ProfileController::class, 'AdminUpdateProfile']);
 
-    Route::get('/request/product/pending', [ProductStatusController::class, 'AdminRequestPending']);
-    Route::get('/request/product/active', [ProductStatusController::class, 'AdminRequestActive']);
-    Route::get('/request/product/all', [ProductStatusController::class, 'AdminRequestAll']);
+    Route::get('admin/profile', [ProfileController::class, 'AdminProfile']);
+    Route::post('admin/update/profile', [ProfileController::class, 'AdminUpdateProfile']);
 
-    Route::get('/request/product/rejected', [ProductStatusController::class, 'RequestRejected']);
+    Route::get('admin/request/product/pending', [ProductStatusController::class, 'AdminRequestPending']);
+    Route::get('admin/request/product/active', [ProductStatusController::class, 'AdminRequestActive']);
+    Route::get('admin/request/product/all', [ProductStatusController::class, 'AdminRequestAll']);
+
+    Route::get('admin/request/product/rejected', [ProductStatusController::class, 'RequestRejected']);
     // Route::get('admin/request/product/view/{id}',[AdminController::class,'RequestView']);
-    Route::post('/request/product-update/{id}', [ProductStatusController::class, 'RequestUpdate']);
+    Route::post('admin/request/product-update/{id}', [ProductStatusController::class, 'RequestUpdate']);
 
 
-    Route::get('/request/product/view/{id}', [ProductStatusController::class, 'AdminRequestView']);
+    Route::get('admin/request/product/view/{id}', [ProductStatusController::class, 'AdminRequestView']);
 
-    Route::get('/request/balances', [ProductStatusController::class, 'AdminRequestBalances']);
-    Route::get('/request/balance/active', [ProductStatusController::class, 'AdminRequestBalanceActive']);
+    Route::get('admin/request/balances', [ProductStatusController::class, 'AdminRequestBalances']);
+    Route::get('admin/request/balance/active', [ProductStatusController::class, 'AdminRequestBalanceActive']);
 
     Route::get('product-approval/{id}', [ProductController::class, 'approval']);
     Route::get('product-reject/{id}', [ProductController::class, 'reject']);
@@ -74,7 +76,7 @@ Route::prefix('admin')->middleware(['auth:sanctum', 'isAPIAdmin'])->group(functi
     Route::post('update-category/{id}', [CategoryController::class, 'UpdateCategory']);
     Route::delete('delete-category/{id}', [CategoryController::class, 'destroy']);
 
-    Route::post('category-status/{id}',[CategoryController::class,'status']);
+    Route::post('category-status/{id}', [CategoryController::class, 'status']);
 
     // Route::get('all/category', [CategoryController::class, 'AllCategory']);
 
@@ -86,7 +88,7 @@ Route::prefix('admin')->middleware(['auth:sanctum', 'isAPIAdmin'])->group(functi
     Route::post('update-subcategory/{id}', [SubCategoryController::class, 'UpdateSubCategory']);
     Route::delete('delete-subcategory/{id}', [SubCategoryController::class, 'destroy']);
 
-    Route::post('subcategory-status/{id}',[SubCategoryController::class,'status']);
+    Route::post('subcategory-status/{id}', [SubCategoryController::class, 'status']);
 
 
     Route::post('store-brand', [BrandController::class, 'BrandStore']);
@@ -105,7 +107,7 @@ Route::prefix('admin')->middleware(['auth:sanctum', 'isAPIAdmin'])->group(functi
     Route::get('edit-product/{id}', [ProductController::class, 'ProductEdit']);
     Route::put('update-product/{id}', [ProductController::class, 'UpdateProduct']);
     Route::delete('delete-product/{id}', [ProductController::class, 'destroy']);
-    Route::post('admin-product-status-update/{id}',[ProductController::class,'updateStatus']);
+    Route::post('admin-product-status-update/{id}', [ProductController::class, 'updateStatus']);
 
 
     // vendor
@@ -124,7 +126,7 @@ Route::prefix('admin')->middleware(['auth:sanctum', 'isAPIAdmin'])->group(functi
     Route::delete('delete-affiliator/{id}', [UserController::class, 'AffiliatorDelete']);
 
 
-    Route::post('user/status/update/{id}',[UserController::class,'updateStatus']);
+    Route::post('user/status/update/{id}', [UserController::class, 'updateStatus']);
 
     //colors
     // Route::apiResource('admin-colors',AdminColorController::class);
@@ -132,76 +134,128 @@ Route::prefix('admin')->middleware(['auth:sanctum', 'isAPIAdmin'])->group(functi
     //size
     // Route::apiResource('admin-size',AdminSizeController::class);
 
-    Route::get('/all-orders',[AdminOrderController::class,'allOrders']);
-    Route::get('/pending-orders',[AdminOrderController::class,'pendingOrders']);
-    Route::get('/progress-orders',[AdminOrderController::class,'ProgressOrders']);
-    Route::get('/delivered-orders',[AdminOrderController::class,'DeliveredOrders']);
-    Route::get('/cancel-orders',[AdminOrderController::class,'CanceldOrders']);
-    Route::get('/hold-orders',[AdminOrderController::class,'HoldOrders']);
+    Route::get('admin/all-orders', [AdminOrderController::class, 'allOrders']);
+    Route::get('admin/pending-orders', [AdminOrderController::class, 'pendingOrders']);
+    Route::get('admin/progress-orders', [AdminOrderController::class, 'ProgressOrders']);
+    Route::get('admin/delivered-orders', [AdminOrderController::class, 'DeliveredOrders']);
+    Route::get('admin/cancel-orders', [AdminOrderController::class, 'CanceldOrders']);
+    Route::get('admin/hold-orders', [AdminOrderController::class, 'HoldOrders']);
 
-    Route::post('/order/update/{id}',[AdminOrderController::class,'updateStatus']);
-    Route::get('/order/view/{id}',[AdminOrderController::class,'orderView']);
+    Route::post('admin/order/update/{id}', [AdminOrderController::class, 'updateStatus']);
+    Route::get('admin/order/view/{id}', [AdminOrderController::class, 'orderView']);
 
     //bank
-    Route::get('/bank/all',[BankController::class,'index']);
-    Route::post('/bank/store',[BankController::class,'store']);
-    Route::delete('/bank/delete/{id}',[BankController::class,'destroy']);
+    Route::get('admin/bank/all', [BankController::class, 'index']);
+    Route::post('admin/bank/store', [BankController::class, 'store']);
+    Route::delete('admin/bank/delete/{id}', [BankController::class, 'destroy']);
 
     //all payment request
-    Route::get('/deposit-history/{status?}',[PaymentHistoryController::class,'history']);
-    Route::post('/deposit-history/{id}',[PaymentHistoryController::class,'statusUpdate']);
+    Route::get('admin/deposit-history/{status?}', [PaymentHistoryController::class, 'history']);
+    Route::post('admin/deposit-history/{id}', [PaymentHistoryController::class, 'statusUpdate']);
 
     //all withdraw request
-    Route::get('/all-withdraw/{status?}',[AdminWithdrawController::class,'index']);
-    Route::post('/withdraw-paid/{id}',[AdminWithdrawController::class,'paid']);
+    Route::get('admin/all-withdraw/{status?}', [AdminWithdrawController::class, 'index']);
+    Route::post('admin/withdraw-paid/{id}', [AdminWithdrawController::class, 'paid']);
 
     //dashboard data
-    Route::get('dashboard-datas',[DashboardController::class,'index']);
-    Route::get('/order-vs-revenue',[DashboardController::class,'orderVsRevenue']);
-    Route::get('/recent-order',[DashboardController::class,'recentOrder']);
 
-    Route::get('/category-status',[DashboardController::class,'categoryStatus']);
+    Route::get('dashboard-datas', [DashboardController::class, 'index']);
+    Route::get('admin/order-vs-revenue', [DashboardController::class, 'orderVsRevenue']);
+    Route::get('admin/recent-order', [DashboardController::class, 'recentOrder']);
 
-    Route::resource('it-service', ItServiceController::class);
-    Route::resource('organization', OrganizationController::class);
-    Route::resource('organizationTwo', OrganizationTwoController::class);
-    Route::resource('service', OurServiceController::class);
-    Route::resource('partner', PartnerController::class);
-    Route::resource('companion', CompanionController::class);
-    Route::resource('member', MembersController::class);
-    Route::resource('footer-media', FooterMediaController::class);
+    Route::get('admin/category-status', [DashboardController::class, 'categoryStatus']);
 
-    // front end settings update
-    Route::get('/settings', [SettingsController::class, 'index']);
-    Route::post('/settings-update/{id}', [SettingsController::class, 'update']);
+    Route::prefix('admin')->group(function () {
+        // Home Page
+        Route::get('/it-services', [ItServiceController::class, 'index']);
+        Route::post('/it-services-store', [ItServiceController::class, 'storeItService']);
+        Route::get('/it-services-show/{id}', [ItServiceController::class, 'showtService']);
+        Route::post('/it-services-update/{id}', [ItServiceController::class, 'updateItService']);
+        Route::get('/it-services-delete/{id}', [ItServiceController::class, 'deleteItService']);
+
+        // our Organization
+        Route::get('/organization', [OrganizationController::class, 'index']);
+        Route::post('/organization-store', [OrganizationController::class, 'storeOrganization']);
+        Route::get('/organization-show/{id}', [OrganizationController::class, 'showOrganization']);
+        Route::post('/organization-update/{id}', [OrganizationController::class, 'updateOrganization']);
+        Route::get('/organization-delete/{id}', [OrganizationController::class, 'deleteOrganization']);
+
+        // Organization Two
+        Route::get('/organizationTwo', [OrganizationTwoController::class, 'index']);
+        Route::post('/organizationTwo-store', [OrganizationTwoController::class, 'storeOrganizationTwo']);
+        Route::get('/organizationTwo-show/{id}', [OrganizationTwoController::class, 'showOrganizationTwo']);
+        Route::post('/organizationTwo-update/{id}', [OrganizationTwoController::class, 'updateOrganizationTwo']);
+        Route::get('/organizationTwo-delete/{id}', [OrganizationTwoController::class, 'deleteOrganizationTwo']);
+
+        // Our Services
+        Route::get('/services', [OurServiceController::class, 'index']);
+        Route::post('/services-store', [OurServiceController::class, 'storeOurService']);
+        Route::get('/services-show/{id}', [OurServiceController::class, 'showOurService']);
+        Route::post('/services-update/{id}', [OurServiceController::class, 'updateOurService']);
+        Route::get('/services-delete/{id}', [OurServiceController::class, 'deleteOurService']);
+
+        // Our Partner
+        Route::get('/partner', [PartnerController::class, 'index']);
+        Route::post('/partner-store', [PartnerController::class, 'storeOurPartner']);
+        Route::get('/partner-show/{id}', [PartnerController::class, 'showOurPartner']);
+        Route::post('/partner-update/{id}', [PartnerController::class, 'updateOurPartner']);
+        Route::get('/partner-delete/{id}', [PartnerController::class, 'deleteOurPartner']);
+
+        // Companion section
+        Route::get('/companion', [CompanionController::class, 'index']);
+        Route::post('/companion-store', [CompanionController::class, 'storeCompanion']);
+        Route::get('/companion-show/{id}', [CompanionController::class, 'showCompanion']);
+        Route::post('/companion-update/{id}', [CompanionController::class, 'updateCompanion']);
+        Route::get('/companion-delete/{id}', [CompanionController::class, 'deleteCompanion']);
+
+        // Member section
+        Route::get('/member', [MembersController::class, 'index']);
+        Route::post('/member-store', [MembersController::class, 'storeMember']);
+        Route::get('/member-show/{id}', [MembersController::class, 'showMember']);
+        Route::post('/member-update/{id}', [MembersController::class, 'updateMember']);
+        Route::get('/member-delete/{id}', [MembersController::class, 'deleteMember']);
+
+        // footer Social Icon / footer-media section
+        Route::get('/footer-media', [FooterMediaController::class, 'index']);
+        Route::post('/footer-media-store', [FooterMediaController::class, 'storeFooterMedia']);
+        Route::get('/footer-media-show/{id}', [FooterMediaController::class, 'shoFooterMedia']);
+        Route::post('/footer-media-update/{id}', [FooterMediaController::class, 'updateFooterMedia']);
+        Route::get('/footer-media-delete/{id}', [FooterMediaController::class, 'deleteFooterMedia']);
+
+        // front end settings update
+        Route::get('/settings', [SettingsController::class, 'index']);
+        Route::post('/settings-update/{id}', [SettingsController::class, 'update']);
 
 
-    // User Contact Submitted Infos
-    Route::get('/contact-messages', [ContactController::class, 'index']);
+        // User Contact Submitted Infos
+        Route::get('/contact-messages', [ContactController::class, 'index']);
 
-    Route::get('category-status',[DashboardController::class,'categoryStatus']);
+        Route::get('category-status', [DashboardController::class, 'categoryStatus']);
 
-    Route::resource('coupons',CouponController::class);
-    Route::get('coupon-users',[CouponController::class,'couponusers']);
+        Route::resource('coupons', CouponController::class);
+        Route::get('coupon-users', [CouponController::class, 'couponusers']);
 
-    Route::resource('faq', FaqController::class);
+        Route::resource('faq', FaqController::class);
 
-    Route::resource('mission', MissionController::class);
+        Route::resource('mission', MissionController::class);
 
-    Route::resource('testimonial', TestimonialController::class);
+        Route::resource('testimonial', TestimonialController::class);
 
-    Route::resource('subscription', SubscriptionController::class);
+        Route::resource('subscription', SubscriptionController::class);
 
-    Route::resource('supportboxcategory',SupportBoxCategoryController::class);
-    Route::resource('supportproblem-topic',SupportProblemTopicController::class);
-    Route::resource('supportbox',SupportBoxController::class);
-    Route::resource('supportbox-replay',TicketReplyController::class);
+        Route::resource('supportboxcategory', SupportBoxCategoryController::class);
+        Route::resource('supportproblem-topic', SupportProblemTopicController::class);
+        Route::resource('supportbox', SupportBoxController::class);
+        Route::resource('supportbox-replay', TicketReplyController::class);
 
-    // addvertise section
-    Route::resource('advertise', AdminAdvertiseController::class);
-    Route::resource('vendor-services',VendorServiceController::class);
+        // addvertise section
+        Route::resource('advertise', AdminAdvertiseController::class);
+        Route::resource('vendor-services', VendorServiceController::class);
 
+        //service order
+        Route::resource('customer-orders', ServiceOrderShowController::class);
+    });
 
+ 
 
 });
-

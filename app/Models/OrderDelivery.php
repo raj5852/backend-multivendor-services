@@ -11,4 +11,8 @@ class OrderDelivery extends Model
     use HasFactory,SoftDeletes;
 
     protected $guarded = [];
+
+    function deliveryfiles(){
+        return $this->hasMany(DeliveryFile::class);
+    }
 }

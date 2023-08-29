@@ -25,6 +25,9 @@ return new class extends Migration
             $table->enum('status',['progress','pending','success','hold','expire','delivered','revision'])->default('pending');
             $table->string('timer')->nullable();
             $table->text('details')->nullable();
+            $table->float('amount');
+            $table->string('commission_type');
+            $table->string('commission_amount');
             $table->softDeletes();
             $table->timestamps();
         });
