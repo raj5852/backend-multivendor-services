@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AamarpayController;
+use App\Http\Controllers\API\Admin\SupportBoxCategoryController;
 use App\Http\Controllers\API\AuthController;
 use App\Http\Controllers\API\ServiceOrderController;
 use App\Http\Controllers\API\SupportBoxController;
@@ -27,6 +28,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::apiResource('service/order', ServiceOrderController::class);
     Route::post('service/order/status', [ServiceOrderController::class,'status']);
     Route::apiResource('coupon-apply', CouponUsedController::class);
+    Route::get('all-ticket-category',[SupportBoxCategoryController::class,'index']);
 });
 
 Route::prefix('aaparpay')->group(function () {

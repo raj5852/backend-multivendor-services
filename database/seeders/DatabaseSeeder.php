@@ -17,6 +17,8 @@ class DatabaseSeeder extends Seeder
         SubscriptionSedder::run();
         // \App\Models\User::factory(10)->create();
 
+        $this->call(UserSeeder::class);
+        $this->call(SubscriptionSedder::class);
         // \App\Models\User::factory()->create([
         //     'name' => 'Test User',
         //     'email' => 'test@example.com',
