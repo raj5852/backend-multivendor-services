@@ -14,7 +14,7 @@ class ServiceCategory
     static function index()
     {
         return  ModelsServiceCategory::where(['status' => Status::Active->value, 'user_id' => auth()->user()->id])
-            ->select('id', 'name', 'slug')->get();
+            ->select('id', 'name', 'slug','status')->get();
     }
 
     static  function create($serviceCategory)
