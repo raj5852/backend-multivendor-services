@@ -81,4 +81,17 @@ function handleUpdatedUploadedImage($file, $path, $data, $delete_path, $field)
     return $name;
 }
 
+if (!function_exists('uploadany_file')) {
+    function uploadany_file($filename, $path = 'uploads/support/')
+    {
+        $uploadPath = $path;
+        $i = 1;
+
+        $extension = $filename->getClientOriginalExtension();
+        $name =  uniqid() . $i++ . '.' . $extension;
+        $filename->move($uploadPath, $name);
+
+        return $uploadPath . $name;
+    }
+}
 

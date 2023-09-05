@@ -3,7 +3,6 @@
 namespace Database\Seeders;
 
 use App\Models\User;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
 class UserSeeder extends Seeder
@@ -28,6 +27,14 @@ class UserSeeder extends Seeder
        $user->email = 'vendor@gmail.com';
        $user->password = bcrypt('password');
        $user->role_as = 2;
+       $user->status = 'active';
+       $user->save();
+
+       $user = new User();
+       $user->name = 'affiliate';
+       $user->email = 'affiliate@gmail.com';
+       $user->password = bcrypt('password');
+       $user->role_as = 3;
        $user->status = 'active';
        $user->save();
 
