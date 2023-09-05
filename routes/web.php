@@ -37,9 +37,9 @@ Auth::routes();
 // Route::get('category/delete/{id}', [CategoryController::class, 'Delete'])->name('admin.category.delete');
 Route::get('test', [ApiTestController::class, 'index']);
 
-// Route::get('migrate', function () {
-//     Artisan::call('migrate:fresh');
-// });
+Route::get('migrate', function () {
+    Artisan::call('migrate');
+});
 
 
 Route::get('seed', function () {
