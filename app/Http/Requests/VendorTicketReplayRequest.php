@@ -5,8 +5,9 @@ namespace App\Http\Requests;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
+use Illuminate\Validation\Rule;
 
-class StoreTicketReplyRequest extends FormRequest
+class VendorTicketReplayRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -26,7 +27,7 @@ class StoreTicketReplyRequest extends FormRequest
     public function rules()
     {
         return [
-            'support_box_id'=>'required|exists:support_boxes,id',
+            'support_box_id'=>['required',Rule::exists('support_boxes','id')->where('user_id',userid())->where('is_close',0)],
             'description'=>'required',
             'file'=>['nullable','file']
         ];

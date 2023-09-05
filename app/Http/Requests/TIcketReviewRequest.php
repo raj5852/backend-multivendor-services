@@ -5,6 +5,7 @@ namespace App\Http\Requests;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
+use Illuminate\Validation\Rule;
 
 class TIcketReviewRequest extends FormRequest
 {
@@ -26,7 +27,7 @@ class TIcketReviewRequest extends FormRequest
     public function rules()
     {
         return [
-            'ticket_replie_id'=>'required|exists:ticket_replies,id',
+            'support_box_id'=>['required',Rule::exists('support_boxes','id')->where('user_id',userid())->where('is_close',1)],
             'rating' => 'required|numeric|min:1|max:5'
         ];
     }

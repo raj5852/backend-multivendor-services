@@ -19,10 +19,11 @@ class SosService
         $supportBox->user_id = $user->id;
         $supportBox->support_box_category_id = $data['support_box_category_id'];
         $supportBox->support_problem_topic_id = $data['support_problem_topic_id'];
-        if ($data['file']) {
+        if (request()->hasFile('file')) {
             $supportBox->file = uploadany_file($data['file'],'uploads/support');
         }
         $supportBox->description = $data['description'];
+        $supportBox->subject = $data['subject'];
         $supportBox->save();
         return true;
     }

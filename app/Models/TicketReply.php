@@ -10,5 +10,14 @@ class TicketReply extends Model
 {
     use HasFactory,SoftDeletes;
 
-    protected $guarded = [];
+    protected $fillable = ['support_box_id','description','user_id'];
+
+    function file(){
+        return $this->morphOne(File::class,'filetable');
+    }
+
+    function user(){
+        return $this->belongsTo(User::class,'user_id');
+
+    }
 }

@@ -87,4 +87,9 @@ class SupportBoxCategoryController extends Controller
         $category->delete();
         return $this->response('Deleted successfull');
     }
+    function ticketcategorytoproblem($id){
+
+        $data = SupportBoxCategory::find($id)->load('problems');
+        return $this->response($data);
+    }
 }
