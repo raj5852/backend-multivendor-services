@@ -4,7 +4,9 @@ namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreSupportBoxRequest;
+use App\Http\Requests\StoreTicketReplyRequest;
 use App\Http\Requests\TIcketReviewRequest;
+use App\Http\Requests\VendorTicketReplayRequest;
 use App\Models\SupportBox;
 use App\Models\TicketReply;
 use App\Services\SosService;
@@ -20,7 +22,7 @@ class SupportBoxController extends Controller
      */
     public function index()
     {
-        $data = SupportBox::where('user_id',auth()->user()->id)->latest()->paginate(10);
+        $data = SupportBox::where('user_id', auth()->user()->id)->latest()->paginate(10);
         return $this->response($data);
     }
 
@@ -45,12 +47,12 @@ class SupportBoxController extends Controller
      */
     public function show($id)
     {
-        $supportBox = SupportBox::where(['id'=>$id,'user_id'=>auth()->user()->id])->first();
+        $supportBox = SupportBox::where(['id' => $id, 'user_id' => auth()->user()->id])->first();
         if (!$supportBox) {
-            return responsejson('Not found','fail');
+            return responsejson('Not found', 'fail');
         }
 
-        $data =  $supportBox->load('ticketreplay');
+        $data =  $supportBox->load('ticketreplay.user');
 
         return $this->response($data);
     }
@@ -64,7 +66,6 @@ class SupportBoxController extends Controller
      */
     public function update(Request $request, $id)
     {
-
     }
 
     /**
@@ -75,8 +76,8 @@ class SupportBoxController extends Controller
      */
     public function destroy($id)
     {
-        $support = SupportBox::where(['id'=>$id,'user_id'=>auth()->user()->id])->first();
-        if(File::exists($support->file)){
+        $support = SupportBox::where(['id' => $id, 'user_id' => auth()->user()->id])->first();
+        if (File::exists($support->file)) {
             File::delete($support->file);
         }
         $support->delete();
@@ -84,16 +85,36 @@ class SupportBoxController extends Controller
         return $this->response('Deleted successfull');
     }
 
-    function review(TIcketReviewRequest $request){
-        $data =  $request->validated();
-        $ticketReply =  TicketReply::where(['id'=>$data['ticket_replie_id']])->first();
+    function review(TIcketReviewRequest $request)
+    {
+             $data =  $request->validated();
+        $ticketReply =  SupportBox::find($data['support_box_id']);
 
-        if(!$ticketReply){
-            return responsejson('Not fond','fail');
+        if (!$ticketReply) {
+            return responsejson('Not fond', 'fail');
         }
         $ticketReply->rating = $data['rating'];
         $ticketReply->save();
 
         return $this->response('Rating successfull');
+    }
+
+    function supportreplay(VendorTicketReplayRequest $request)
+    {
+
+        $validateData =  $request->validated();
+        $validateData['user_id'] = userid();
+
+        $ticketreplay = TicketReply::create($validateData);
+
+        if (request()->hasFile('file')) {
+            $filename = uploadany_file(request('file'));
+            $ticketreplay->file()->create([
+                'name' => $filename
+            ]);
+        }
+
+
+        return $this->response('Successfull');
     }
 }

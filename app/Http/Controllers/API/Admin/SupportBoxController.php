@@ -47,7 +47,7 @@ class SupportBoxController extends Controller
             return responsejson('Not found','fail');
         }
 
-        $data =  $supportBox->load('ticketreplay');
+        $data =  $supportBox->load('ticketreplay.file');
 
         return $this->response($data);
     }

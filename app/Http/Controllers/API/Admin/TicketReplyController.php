@@ -6,6 +6,7 @@ use App\Models\TicketReply;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreTicketReplyRequest;
 use App\Http\Requests\UpdateTicketReplyRequest;
+use App\Models\SupportBox;
 
 class TicketReplyController extends Controller
 {
@@ -27,8 +28,20 @@ class TicketReplyController extends Controller
      */
     public function store(StoreTicketReplyRequest $request)
     {
-        $data =  $request->validated();
-        TicketReply::create($data);
+        $validateData =  $request->validated();
+        $validateData['user_id'] = userid();
+
+
+        $ticketreplay = TicketReply::create($validateData);
+
+        if(request()->hasFile('file')){
+            $filename = uploadany_file(request('file'));
+            $ticketreplay->file()->create([
+                'name'=>$filename
+            ]);
+        }
+
+
         return $this->response('Successfull');
     }
 
@@ -64,5 +77,13 @@ class TicketReplyController extends Controller
     public function destroy(TicketReply $ticketReply)
     {
         //
+    }
+
+    function closesupportbox($id){
+        $supportbox = SupportBox::find($id);
+        $supportbox->is_close = 1;
+        $supportbox->save();
+
+        return $this->response('Ticket colse successfull!');
     }
 }

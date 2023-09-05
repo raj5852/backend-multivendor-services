@@ -201,6 +201,7 @@ Route::middleware(['auth:sanctum', 'isAPIAdmin'])->group(function () {
         Route::resource('supportproblem-topic', SupportProblemTopicController::class);
         Route::resource('supportbox', SupportBoxController::class);
         Route::resource('supportbox-replay', TicketReplyController::class);
+        Route::post('close-support-box/{id}', [TicketReplyController::class,'closesupportbox']);
 
         // addvertise section
         Route::resource('advertise', AdminAdvertiseController::class);

@@ -25,10 +25,14 @@ Route::post('logout', [AuthController::class, 'logout']);
 Route::middleware('auth:sanctum')->group(function () {
     Route::resource('supportbox', SupportBoxController::class);
     Route::post('ticket-review', [SupportBoxController::class, 'review']);
+
+    Route::post('ticket-replay', [SupportBoxController::class, 'supportreplay']);
+
     Route::apiResource('service/order', ServiceOrderController::class);
     Route::post('service/order/status', [ServiceOrderController::class,'status']);
     Route::apiResource('coupon-apply', CouponUsedController::class);
     Route::get('all-ticket-category',[SupportBoxCategoryController::class,'index']);
+    Route::get('ticket-category-to-problem/{id}',[SupportBoxCategoryController::class,'ticketcategorytoproblem']);
 });
 
 Route::prefix('aaparpay')->group(function () {
