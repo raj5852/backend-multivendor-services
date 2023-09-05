@@ -52,7 +52,9 @@ class SupportBoxController extends Controller
             return responsejson('Not found', 'fail');
         }
 
-        $data =  $supportBox->load('ticketreplay.user');
+        $data =  $supportBox->load(['ticketreplay'=>function($query){
+            $query->with(['file','user']);
+        }]);
 
         return $this->response($data);
     }
