@@ -38,11 +38,14 @@ class AdminAdvertiseService
         $adminadvaertise->platform   =  $validatData['platform'];
         $adminadvaertise->inventory   =  $validatData['inventory'];
         $adminadvaertise->format   =  $validatData['format'];
-        $adminadvaertise->primary_text   =  $validatData['primary_text'];
-        $adminadvaertise->media   =  $validatData['media'];
-        $adminadvaertise->heading   =  $validatData['heading'];
-        $adminadvaertise->description   =  $validatData['description'];
-        $adminadvaertise->call_to_action   =  $validatData['call_to_action'];
+        $adminadvaertise->ad_creative   =  $validatData['ad_creative'];
+        $adminadvaertise->budget   =  $validatData['budget'];
+
+        // $adminadvaertise->primary_text   =  $validatData['primary_text'];
+        // $adminadvaertise->media   =  $validatData['media'];
+        // $adminadvaertise->heading   =  $validatData['heading'];
+        // $adminadvaertise->description   =  $validatData['description'];
+        // $adminadvaertise->call_to_action   =  $validatData['call_to_action'];
         $adminadvaertise->destination   =  $validatData['destination'];
         $adminadvaertise->tracking   =  $validatData['tracking'];
         $adminadvaertise->url_perimeter   =  $validatData['url_perimeter'];

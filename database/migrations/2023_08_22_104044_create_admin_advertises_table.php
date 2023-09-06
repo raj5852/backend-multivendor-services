@@ -21,6 +21,7 @@ return new class extends Migration
             $table->string('conversion_location');
             $table->string('performance_goal');
             $table->string('platforms');
+            $table->string('budget');
             $table->string('budget_amount');
             $table->string('start_date');
             $table->string('end_date');
@@ -33,11 +34,14 @@ return new class extends Migration
             $table->string('platform');
             $table->string('inventory');
             $table->string('format');
-            $table->longText('primary_text');
-            $table->string('media');
-            $table->string('heading');
-            $table->longText('description');
-            $table->string('call_to_action');
+
+            // $table->longText('primary_text');
+            // $table->string('media');
+            // $table->string('heading');
+            // $table->longText('description');
+            // $table->string('call_to_action');
+            $table->text('ad_creative');
+
             $table->string('destination');
             $table->string('tracking');
             $table->string('url_perimeter');
