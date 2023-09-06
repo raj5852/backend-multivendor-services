@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\ApiTestController;
+use App\Models\AdminAdvertise;
 use App\Models\ServiceOrder;
 use App\Models\ServicePackage;
 use App\Models\User;
@@ -49,6 +50,9 @@ Route::get('seed', function () {
 
 
 Route::get('demo', function () {
+
+
+   return   AdminAdvertise::first();
 
 
 });

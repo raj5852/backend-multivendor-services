@@ -196,6 +196,7 @@ Route::middleware(['auth:sanctum', 'isAPIAdmin'])->group(function () {
         Route::resource('testimonial', TestimonialController::class);
 
         Route::resource('subscription', SubscriptionController::class);
+        Route::post('subscription/requirement/{id}',[SubscriptionController::class,'requirement']);
 
         Route::resource('supportboxcategory', SupportBoxCategoryController::class);
         Route::resource('supportproblem-topic', SupportProblemTopicController::class);
@@ -204,7 +205,7 @@ Route::middleware(['auth:sanctum', 'isAPIAdmin'])->group(function () {
         Route::post('close-support-box/{id}', [TicketReplyController::class,'closesupportbox']);
 
         // addvertise section
-        Route::resource('advertise', AdminAdvertiseController::class);
+        // Route::resource('advertise', AdminAdvertiseController::class);
         Route::resource('vendor-services', VendorServiceController::class);
 
         //service order

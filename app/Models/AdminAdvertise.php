@@ -12,6 +12,8 @@ class AdminAdvertise extends Model
 
     protected $guarded = [];
 
+    protected $casts = ['ad_creative'=>'json'];
+
     public function AdvertiseAudienceFile()
     {
         return $this->hasMany(AdvertiseAudienceFile::class, 'advertise_id');

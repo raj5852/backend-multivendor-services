@@ -38,11 +38,14 @@ class AdminAdvertiseService
         $adminadvaertise->platform   =  $validatData['platform'];
         $adminadvaertise->inventory   =  $validatData['inventory'];
         $adminadvaertise->format   =  $validatData['format'];
-        $adminadvaertise->primary_text   =  $validatData['primary_text'];
-        $adminadvaertise->media   =  $validatData['media'];
-        $adminadvaertise->heading   =  $validatData['heading'];
-        $adminadvaertise->description   =  $validatData['description'];
-        $adminadvaertise->call_to_action   =  $validatData['call_to_action'];
+        $adminadvaertise->ad_creative   =  $validatData['ad_creative'];
+        $adminadvaertise->budget   =  $validatData['budget'];
+
+        // $adminadvaertise->primary_text   =  $validatData['primary_text'];
+        // $adminadvaertise->media   =  $validatData['media'];
+        // $adminadvaertise->heading   =  $validatData['heading'];
+        // $adminadvaertise->description   =  $validatData['description'];
+        // $adminadvaertise->call_to_action   =  $validatData['call_to_action'];
         $adminadvaertise->destination   =  $validatData['destination'];
         $adminadvaertise->tracking   =  $validatData['tracking'];
         $adminadvaertise->url_perimeter   =  $validatData['url_perimeter'];
@@ -52,10 +55,11 @@ class AdminAdvertiseService
 
         $adminadvaertise->save();
 
-       if($adfiles = $validatData['advertise_audience_files']){
-        foreach ($adfiles as $file) {
 
-            $data = fileUpload($file, 'uploads/advertise_audience_files/', 500, 405);
+       if(request()->hasFile('advertise_audience_files')){
+        foreach (request('advertise_audience_files') as $file) {
+
+            $data = uploadany_file($file, 'uploads/advertise_audience_files/');
             $AdvertiseAudienceFile =  new AdvertiseAudienceFile();
             $AdvertiseAudienceFile->advertise_id  = $adminadvaertise->id;
             $AdvertiseAudienceFile->file    =  $data;
@@ -63,10 +67,11 @@ class AdminAdvertiseService
         }
        }
 
-       if($locaFiles = $validatData['location_files']){
-        foreach ($locaFiles as $file) {
 
-            $data = fileUpload($file, 'uploads/location_files/', 500, 405);
+       if(request()->hasFile('location_files')){
+        foreach (request('location_files') as $file) {
+
+            $data = uploadany_file($file, 'uploads/location_files/');
             $locatFile =  new LocationFile();
             $locatFile->advertise_id  = $adminadvaertise->id;
             $locatFile->file    =  $data;

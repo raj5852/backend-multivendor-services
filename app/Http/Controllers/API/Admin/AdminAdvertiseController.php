@@ -43,7 +43,6 @@ class AdminAdvertiseController extends Controller
         $validatData = $request->validated();
         AdminAdvertiseService::create($validatData);
         return $this->response('Advertise Added Successfully');
-
     }
 
     /**

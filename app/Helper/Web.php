@@ -95,3 +95,29 @@ if (!function_exists('uploadany_file')) {
     }
 }
 
+
+function userrole($roleid)
+{
+    if ($roleid == 2) {
+        return "vendor";
+    }
+    if ($roleid == 3) {
+        return "affiliate";
+    }
+}
+
+function convertfloat($originalNumber)
+{
+    return str_replace(',', '', $originalNumber);
+}
+
+function membershipexpiredate($value)
+{
+    if ($value == 'monthly') {
+        return now()->addMonth(1);
+    } elseif ($value == 'half_yearly') {
+        return now()->addMonth(6);
+    } elseif ($value == 'yearly') {
+        return now()->addYear(1);
+    }
+}
