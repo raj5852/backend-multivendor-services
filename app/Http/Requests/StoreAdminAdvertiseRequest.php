@@ -55,9 +55,9 @@ class StoreAdminAdvertiseRequest extends FormRequest
             'last_description'  => ['required'],
             'status'  => ['required','in:pending,progress,cancel,complited'],
 
-            'advertise_audience_files' => 'required|array|max:1024',
+            'advertise_audience_files' => 'required|array',
 
-            'location_files'   => 'required|array|max:1024',
+            'location_files'   => 'required|array',
 
             'feeds' => 'nullable',
             'story_reels' => 'nullable',

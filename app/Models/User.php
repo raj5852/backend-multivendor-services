@@ -61,4 +61,8 @@ class User extends Authenticatable
     {
         return number_format($value, 2);
     }
+
+    function usersubscription(){
+        return $this->hasOne(usersubscription::class,'user_id');
+    }
 }

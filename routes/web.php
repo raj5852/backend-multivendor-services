@@ -50,5 +50,6 @@ Route::get('seed', function () {
 
 Route::get('demo', function () {
 
+    return now()->format('Y-m-d H:i:s');
 
 });

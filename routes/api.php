@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AamarpayController;
+use App\Http\Controllers\API\Admin\AdminAdvertiseController;
 use App\Http\Controllers\API\Admin\SupportBoxCategoryController;
 use App\Http\Controllers\API\AuthController;
 use App\Http\Controllers\API\ServiceOrderController;
@@ -8,6 +9,7 @@ use App\Http\Controllers\API\SupportBoxController;
 
 use App\Http\Controllers\API\User\ContactController;
 use App\Http\Controllers\API\User\SettingsController;
+use App\Http\Controllers\BuySubscription;
 use App\Http\Controllers\CouponUsedController;
 use App\Http\Controllers\SubscriptionController;
 use Illuminate\Support\Facades\Route;
@@ -23,6 +25,7 @@ Route::post('logout', [AuthController::class, 'logout']);
 
 
 Route::middleware('auth:sanctum')->group(function () {
+
     Route::resource('supportbox', SupportBoxController::class);
     Route::post('ticket-review', [SupportBoxController::class, 'review']);
 
@@ -30,9 +33,15 @@ Route::middleware('auth:sanctum')->group(function () {
 
     Route::apiResource('service/order', ServiceOrderController::class);
     Route::post('service/order/status', [ServiceOrderController::class,'status']);
-    Route::apiResource('coupon-apply', CouponUsedController::class);
+    // Route::apiResource('coupon-apply', CouponUsedController::class);
     Route::get('all-ticket-category',[SupportBoxCategoryController::class,'index']);
     Route::get('ticket-category-to-problem/{id}',[SupportBoxCategoryController::class,'ticketcategorytoproblem']);
+
+    Route::get('buy/subscription/{id}',[BuySubscription::class,'buy']);
+    Route::post('apply/coupon',[BuySubscription::class,'coupon']);
+    Route::post('buy-subscription',[BuySubscription::class,'buysubscription']);
+    Route::post('create-advertise', [AdminAdvertiseController ::class,'store']);
+
 });
 
 Route::prefix('aaparpay')->group(function () {
