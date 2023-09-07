@@ -52,7 +52,12 @@ Route::get('seed', function () {
 Route::get('demo', function () {
 
 
-   return   AdminAdvertise::first();
+//    return   AdminAdvertise::first();
 
+// $user =  User::find(2);
+// $user->balance = (convertfloat($user->balance) - 2);
+// $user->save();
+
+// return $user;
 
 });

@@ -9,6 +9,7 @@ use App\Models\Subscription;
 use App\Models\User;
 use App\Models\UserSubscription;
 use App\Services\SosService;
+use App\Services\SubscriptionService;
 use Illuminate\Http\Request;
 
 class BuySubscription extends Controller
@@ -48,6 +49,7 @@ class BuySubscription extends Controller
                 ->where('status', 'active')
                 ->whereDate('expire_date', '>', now())
                 ->first();
+
             if (!$coupon) {
                 return responsejson('Something is wrong', 'fail');
             }
@@ -69,13 +71,10 @@ class BuySubscription extends Controller
 
             if (convertfloat($balance) > $amount) {
 
+                SubscriptionService::store($subscription,$user);
 
-                $userSubscription = new UserSubscription();
-                $subscription->user_id = userid();
-                $subscription->subscription_id = $subscription->id;
-                // $subscription->expire_date = monthly();
-                // $subscription->id
-
+                $user->balance = (convertfloat($user->balance) - $amount);
+                $user->save();
 
             } else {
                 return responsejson('Not enough balance', 'fail');
