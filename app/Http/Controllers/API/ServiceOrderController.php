@@ -39,7 +39,7 @@ class ServiceOrderController extends Controller
 
 
 
-        return SosService::aamarpay($price, $validateData);
+        return SosService::aamarpayService($price, $validateData);
     }
 
     /**

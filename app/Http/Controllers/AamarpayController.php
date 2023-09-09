@@ -15,13 +15,28 @@ class AamarpayController extends Controller
     {
         $response = request()->all();
 
-        $data = PaymentStore::where(['trxid' => $response['mer_txnid'], 'status' => 'pending'])->first();
-
-
+      return  $data = PaymentStore::where(['trxid' => $response['mer_txnid'], 'status' => 'pending'])->first();
 
         if (!$data) {
             return false;
         }
+
+        if ($response['opt_a'] == 'service') {
+            $this->service($data,$response);
+        }
+
+        if ($response['opt_a'] == 'subscription') {
+            $this->subscription($data,$response);
+        }
+    }
+
+    function subscription($data,$response){
+
+    }
+
+    function service($data,$response)
+    {
+
         $vendorService = VendorService::find($data['info']['vendor_service_id']);
 
         $serviceOrder =  ServiceOrder::create([
@@ -29,9 +44,9 @@ class AamarpayController extends Controller
             'vendor_id' => $vendorService->user_id,
             'vendor_service_id' => $data['info']['vendor_service_id'],
             'service_package_id' => $data['info']['service_package_id'],
-            'amount'=> $response['amount'],
-            'commission_amount'=>  $vendorService->commission,
-            'commission_type'=> $vendorService->commission_type
+            'amount' => $response['amount'],
+            'commission_amount' =>  $vendorService->commission,
+            'commission_type' => $vendorService->commission_type
         ]);
 
         $requirement =  CustomerRequiremnt::where('uniquid', $data['info']['customer_requirement_id'])->exists();
@@ -44,7 +59,6 @@ class AamarpayController extends Controller
 
         return 'it will redirect';
     }
-
     function fail()
     {
         return response()->json('fai');
