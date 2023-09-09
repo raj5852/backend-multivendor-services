@@ -67,5 +67,6 @@ class Kernel extends HttpKernel
         'isAPIVendor'=> \App\Http\Middleware\ApiVendorMiddleware::class,
         'isAPIaffiliator'=> \App\Http\Middleware\ApiAffiliatorMiddleware::class,
         'userOnline'=> \App\Http\Middleware\UserOnlineMiddleware::class,
+        'isUser'=> \App\Http\Middleware\UserMiddleware::class,
     ];
 }

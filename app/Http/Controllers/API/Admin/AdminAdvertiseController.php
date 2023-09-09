@@ -4,8 +4,11 @@ namespace App\Http\Controllers\API\Admin;
 
 use App\Models\AdminAdvertise;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\AdminAdminStatusProgress;
+use App\Http\Requests\AdvertiseDeliveryRequest;
 use App\Http\Requests\StoreAdminAdvertiseRequest;
 use App\Http\Requests\UpdateAdminAdvertiseRequest;
+use App\Models\User;
 use App\Services\Admin\AdminAdvertiseService;
 use Illuminate\Support\Facades\DB;
 
@@ -18,7 +21,7 @@ class AdminAdvertiseController extends Controller
      */
     public function index()
     {
-        $data = AdminAdvertise::with('AdvertiseAudienceFile', 'advertisePlacement', 'advertiseLocationFiles')->latest()->paginate(10);
+        $data = AdminAdvertise::with('AdvertiseAudienceFile', 'advertisePlacement', 'advertiseLocationFiles','files')->latest()->paginate(10);
         return $this->response($data);
     }
 
@@ -38,9 +41,20 @@ class AdminAdvertiseController extends Controller
      * @param  \App\Http\Requests\StoreAdminAdvertiseRequest  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(StoreAdminAdvertiseRequest $request )
+    public function store(StoreAdminAdvertiseRequest $request)
     {
-        $validatData = $request->validated();
+      return  $validatData = $request->validated();
+
+        // if($validatData['paymethod'] == 'my-wallet'){
+        //     $user = User::find(userid());
+        //     if($user->balance >= $validatData['budget_amount']){
+        //         $user->decrement('balance',$validatData['budget_amount']);
+        //     }else{
+        //         return responsejson('You do not have enough balance.');
+        //     }
+        // }
+        // return 1;
+
         AdminAdvertiseService::create($validatData);
         return $this->response('Advertise Added Successfully');
     }
@@ -101,12 +115,41 @@ class AdminAdvertiseController extends Controller
     public function destroy($id)
     {
         $data = AdminAdvertise::find($id);
-        if($data){
+        if ($data) {
             $data->delete();
             return $this->response('Item Deleted Successfully !');
-        }else{
+        } else {
             return $this->response('Item Not found!');
         }
+    }
+
+    function status(AdminAdminStatusProgress $request)
+    {
+        $validateData = $request->validated();
+        $advertise = AdminAdvertise::find($validateData['advertise_id']);
+        $advertise->status = "progress";
+        $advertise->save();
+    }
+
+    function delivery(AdvertiseDeliveryRequest $request)
+    {
+
+        DB::transaction(function () {
+            $advertise = AdminAdvertise::find(request('advertise_id'));
+            $advertise->status = "delivered";
+            $advertise->save();
+
+            if (request()->hasFile('files')) {
+                foreach (request('files') as $file) {
+                    $filename = uploadany_file($file);
+
+                    $advertise->files()->create([
+                        'name' => $filename
+                    ]);
+                }
+            }
+        });
+
 
     }
 }

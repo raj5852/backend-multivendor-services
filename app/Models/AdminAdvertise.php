@@ -27,6 +27,9 @@ class AdminAdvertise extends Model
         return $this->hasMany(LocationFile::class,'advertise_id');
     }
 
+    function files(){
+        return $this->morphMany(File::class,'filetable');
+    }
 
     protected static function boot() {
         parent::boot();

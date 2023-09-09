@@ -2,9 +2,11 @@
 
 namespace App\Http\Requests;
 
+use App\Rules\AdvertiseBudgetRule;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
+use Illuminate\Validation\Rule;
 
 class StoreAdminAdvertiseRequest extends FormRequest
 {
@@ -31,10 +33,10 @@ class StoreAdminAdvertiseRequest extends FormRequest
             'conversion_location'  => ['required'],
             'performance_goal'  => ['required'],
             'platforms'  => ['required'],
-            'ad_creative'=>'required|array',
-            'budget'=>'required',
+            'ad_creative' => 'required|array',
+            'budget' => ['required'],
 
-            'budget_amount'  => ['required'],
+            'budget_amount' => ['required', 'numeric', 'min:1',new AdvertiseBudgetRule()],
             'start_date'  => ['required'],
             'end_date'  => ['required'],
             'age'  => ['required', 'numeric'],
@@ -46,17 +48,13 @@ class StoreAdminAdvertiseRequest extends FormRequest
             'platform'  => ['required'],
             'inventory'  => ['required'],
             'format'  => ['required'],
-            // 'primary_text'  => ['required'],
-            // 'media'  => ['required', 'url'],
-            // 'heading'  => ['required'],
-            // 'description'  => ['required'],
-            // 'call_to_action'  => ['required'],
+
             'destination'  => ['required'],
             'tracking'  => ['required'],
             'url_perimeter'  => ['required', 'url'],
-            'number'  => ['required','numeric'],
+            'number'  => ['required', 'numeric'],
             'last_description'  => ['required'],
-            'status'  => ['required','in:pending,progress,cancel,complited'],
+            'status'  => ['required', 'in:pending,progress,cancel,complited'],
 
             'advertise_audience_files' => 'required|array',
 
@@ -68,6 +66,7 @@ class StoreAdminAdvertiseRequest extends FormRequest
             'search_result' => 'nullable',
             'messages' => 'nullable',
             'apps_and_sites' => 'nullable',
+            'paymethod' => ['required', Rule::in(['aamarpay', 'my-wallet'])]
 
         ];
     }
