@@ -46,6 +46,7 @@ class AdminAdvertiseService
         // $adminadvaertise->heading   =  $validatData['heading'];
         // $adminadvaertise->description   =  $validatData['description'];
         // $adminadvaertise->call_to_action   =  $validatData['call_to_action'];
+
         $adminadvaertise->destination   =  $validatData['destination'];
         $adminadvaertise->tracking   =  $validatData['tracking'];
         $adminadvaertise->url_perimeter   =  $validatData['url_perimeter'];
@@ -69,14 +70,13 @@ class AdminAdvertiseService
 
 
        if(request()->hasFile('location_files')){
-        foreach (request('location_files') as $file) {
-
-            $data = uploadany_file($file, 'uploads/location_files/');
-            $locatFile =  new LocationFile();
-            $locatFile->advertise_id  = $adminadvaertise->id;
-            $locatFile->file    =  $data;
-            $locatFile->save();
-        }
+            foreach (request('location_files') as $file) {
+                $data = uploadany_file($file, 'uploads/location_files/');
+                $locatFile =  new LocationFile();
+                $locatFile->advertise_id  = $adminadvaertise->id;
+                $locatFile->file    =  $data;
+                $locatFile->save();
+            }
        }
 
       $advertisePlace = new AdvertisePlacement();

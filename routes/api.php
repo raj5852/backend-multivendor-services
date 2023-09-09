@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AamarpayController;
+use App\Http\Controllers\AdvertiseController;
 use App\Http\Controllers\API\Admin\AdminAdvertiseController;
 use App\Http\Controllers\API\Admin\SupportBoxCategoryController;
 use App\Http\Controllers\API\AuthController;
@@ -40,7 +41,10 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('buy/subscription/{id}',[BuySubscription::class,'buy']);
     Route::post('apply/coupon',[BuySubscription::class,'coupon']);
     Route::post('buy-subscription',[BuySubscription::class,'buysubscription']);
+
     Route::post('create-advertise', [AdminAdvertiseController ::class,'store']);
+    Route::get('all-advertise', [AdvertiseController ::class,'index']);
+    Route::get('advertise/{id}', [AdvertiseController ::class,'show']);
 
 });
 

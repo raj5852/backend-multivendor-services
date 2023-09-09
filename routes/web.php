@@ -36,7 +36,7 @@ Auth::routes();
 // Route::get('category/edit/{id}', [CategoryController::class, 'Edit'])->name('admin.category.edit');
 // Route::post('category/update/{id}', [CategoryController::class, 'Update'])->name('admin.category.update');
 // Route::get('category/delete/{id}', [CategoryController::class, 'Delete'])->name('admin.category.delete');
-Route::get('test', [ApiTestController::class, 'index']);
+// Route::get('test', [ApiTestController::class, 'index']);
 
 Route::get('migrate', function () {
     Artisan::call('migrate');
@@ -49,15 +49,7 @@ Route::get('seed', function () {
 
 
 
-Route::get('demo', function () {
+// Route::get('demo', function () {
+//  return date('Y');
 
-
-//    return   AdminAdvertise::first();
-
-// $user =  User::find(2);
-// $user->balance = (convertfloat($user->balance) - 2);
-// $user->save();
-
-// return $user;
-
-});
+// });

@@ -38,5 +38,14 @@ class UserSeeder extends Seeder
        $user->status = 'active';
        $user->save();
 
+
+       $user = new User();
+       $user->name = 'User';
+       $user->email = 'user@gmail.com';
+       $user->password = bcrypt('password');
+       $user->role_as = 4;
+       $user->status = 'active';
+       $user->save();
+
     }
 }
