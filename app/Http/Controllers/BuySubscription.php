@@ -38,6 +38,13 @@ class BuySubscription extends Controller
     function buysubscription(BuysubscriptionRequest $request)
     {
         $validateData = $request->validated();
+
+        $user = User::find(userid());
+
+        if($user->usersubscription){
+            return responsejson('You have a subscription. You can not buy again.','fail');
+        }
+
         $subscription = Subscription::find($validateData['subscription_id']);
         $amount = $subscription->subscription_amount;
 
@@ -64,9 +71,8 @@ class BuySubscription extends Controller
 
 
         if ($validateData['payment_type'] == 'aamarpay') {
-            return  SosService::aamarpay($amount, $validateData);
+            return  SosService::aamarpaysubscription($amount, $validateData);
         } else {
-            $user = User::find(userid());
             $balance = $user->balance;
 
             if (convertfloat($balance) > $amount) {

@@ -28,10 +28,58 @@ class SosService
         return true;
     }
 
-    static function aamarpay($price, $info)
+
+
+    static function aamarpayService($price, $info)
+    {
+        $uniqueId = uniqid();
+        $result = self::aamarpayGatewaya($price, $uniqueId,'service');
+
+        if (request()->has('files')) {
+            foreach (request('files') as $file) {
+                $customerRequrement = new CustomerRequiremnt();
+                $customerRequrement->uniquid = $uniqueId;
+                $customerRequrement->user_id = userid();
+                $customerRequrement->file = fileUpload($file, 'uploads/requirement');
+                $customerRequrement->save();
+            }
+        }
+
+        $info['customer_requirement_id'] =  $uniqueId;
+
+        PaymentStore::create([
+            'payment_gateway' => 'aamarpay',
+            'trxid' => $uniqueId,
+            'payment_type' => 'vendor_service',
+            'info' => $info,
+            'customer_requirement_id' => $uniqueId,
+        ]);
+
+
+        return response()->json($result);
+    }
+
+
+
+    static function aamarpaysubscription($price, $info)
     {
 
-        $traxId = uniqid();
+        $uniqueId = uniqid();
+        $result = self::aamarpayGatewaya($price, $uniqueId,'subscription');
+
+        PaymentStore::create([
+            'payment_gateway' => 'aamarpay',
+            'trxid' => $uniqueId,
+            'payment_type' => 'subscription',
+            'info' => $info,
+            'customer_requirement_id' => $uniqueId,
+        ]);
+
+        return response()->json($result);
+    }
+
+    static function  aamarpayGatewaya($price, $traxId,$type)
+    {
         $success = url('api/aaparpay/success');
         $cancel = url('api/aaparpay/cancel');
         $fail = url('api/aaparpay/fail');
@@ -56,43 +104,18 @@ class SosService
                 'amount' => $price,
                 'currency' => 'BDT',
                 'tran_id' => $traxId,
-                'desc' => 'test transaction',
+                'desc' => $type,
                 'success_url' => $success,
                 'fail_url' => $fail,
                 'cancel_url' => $cancel,
-                'type' => 'json'
+                'type' => 'json',
+                'opt_a'=>$type
             ],
         ));
 
         $response = curl_exec($curl);
 
         curl_close($curl);
-        $result = json_decode($response);
-
-        $uniqueId = uniqid();
-
-        if (request()->has('files')) {
-            foreach (request('files') as $file) {
-                $customerRequrement = new CustomerRequiremnt();
-                $customerRequrement->uniquid = $uniqueId;
-                $customerRequrement->user_id = userid();
-                $customerRequrement->file = fileUpload($file, 'uploads/requirement');
-                $customerRequrement->save();
-            }
-        }
-
-        $info['customer_requirement_id'] =  $uniqueId;
-
-        PaymentStore::create([
-            'payment_gateway' => 'aamarpay',
-            'trxid' => $traxId,
-            'payment_type' => 'vendor_service',
-            'info' => $info,
-            'customer_requirement_id' => $uniqueId,
-        ]);
-
-
-
-        return response()->json($result);
+        return  $result = json_decode($response);
     }
 }

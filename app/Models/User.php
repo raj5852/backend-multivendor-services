@@ -63,6 +63,10 @@ class User extends Authenticatable
     }
 
     function usersubscription(){
-        return $this->hasOne(usersubscription::class,'user_id');
+        return $this->hasOne(UserSubscription::class,'user_id');
+    }
+
+    function paymenthistories(){
+        return $this->hasMany(PaymentHistory::class,'user_id');
     }
 }
