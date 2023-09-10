@@ -28,7 +28,7 @@ class AdminAdvertiseObserver
                 'is_paid'=>1
             ]);
 
-            PaymentHistoryService::store($adminAdvertise->trxid,$adminAdvertise->budget_amount,'My Wallet','Advertise','-','',$adminAdvertise->user_id);
+            PaymentHistoryService::store($adminAdvertise->trxid,($adminAdvertise->budget_amount * $dollerRate),'My Wallet','Advertise','-','',$adminAdvertise->user_id);
         }
     }
 

@@ -7,6 +7,7 @@ use App\Models\PaymentStore;
 use App\Models\ServiceOrder;
 use App\Models\VendorService;
 use App\Models\CustomerRequiremnt;
+use App\Models\DollerRate;
 use App\Models\ServicePackage;
 use App\Services\PaymentHistoryService;
 
@@ -20,8 +21,9 @@ class AamarpayController extends Controller
         $adminAdvertise->update([
             'is_paid'=>1
         ]);
+        $dollerRate  =  DollerRate::first()?->amount;
 
-        PaymentHistoryService::store($adminAdvertise->trxid,$adminAdvertise->budget_amount,'Ammarpay','Advertise','-','',$adminAdvertise->user_id);
+        PaymentHistoryService::store($adminAdvertise->trxid,($adminAdvertise->budget_amount * $dollerRate),'Ammarpay','Advertise','-','',$adminAdvertise->user_id);
 
 
         return 'redirect';

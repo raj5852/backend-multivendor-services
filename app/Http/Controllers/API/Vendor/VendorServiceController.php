@@ -8,6 +8,8 @@ use App\Http\Requests\ServiceDeliveryRequest;
 use App\Http\Requests\StoreVendorServiceRequest;
 use App\Http\Requests\UpdateVendorServiceRequest;
 use App\Http\Requests\VendorOrderStatusRequest;
+use App\Models\Category;
+use App\Models\ServiceCategory;
 use App\Models\ServiceOrder;
 use App\Services\Vendor\ProductService;
 use Carbon\Carbon;
@@ -135,5 +137,10 @@ class VendorServiceController extends Controller
             }])
             ->find($id);
         return $this->response($order);
+    }
+
+    function categorysubcategory(){
+        $data = ServiceCategory::query()->with('servicesubCategories')->get();
+        return $this->response($data);
     }
 }
