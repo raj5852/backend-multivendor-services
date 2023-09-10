@@ -36,7 +36,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('service/orders/view/{id}',[VendorServiceController::class,'ordersview']);
     // Route::post('service/delivery-to-customer',[VendorServiceController::class,'deliverytocustomer']);
     Route::resource('service/delivery-to-customer',OrderDeliveryController::class);
-
+    Route::get('service-category-subcategory',[VendorServiceController::class,'categorysubcategory']);
 
     Route::resource('supportbox', SupportBoxController::class);
     Route::post('ticket-review', [SupportBoxController::class, 'review']);

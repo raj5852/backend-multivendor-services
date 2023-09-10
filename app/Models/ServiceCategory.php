@@ -11,4 +11,7 @@ class ServiceCategory extends Model
     use HasFactory,SoftDeletes;
 
     protected $guarded = [];
+    function servicesubCategories(){
+        return $this->hasMany(ServiceSubCategory::class,'service_category_id');
+    }
 }
