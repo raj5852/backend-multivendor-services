@@ -16,7 +16,7 @@ return [
     */
 
     'name' => env('APP_NAME', 'Laravel'),
-
+    'aamarpay'=>'https://sandbox.aamarpay.com/index.php',
     /*
     |--------------------------------------------------------------------------
     | Application Environment

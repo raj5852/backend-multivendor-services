@@ -11,9 +11,10 @@ use App\Http\Controllers\API\SupportBoxController;
 use App\Http\Controllers\API\User\ContactController;
 use App\Http\Controllers\API\User\SettingsController;
 use App\Http\Controllers\BuySubscription;
-use App\Http\Controllers\CouponUsedController;
 use App\Http\Controllers\SubscriptionController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\API\Vendor\VendorServiceController;
+use App\Http\Controllers\API\Vendor\OrderDeliveryController;
 
 
 
@@ -26,6 +27,16 @@ Route::post('logout', [AuthController::class, 'logout']);
 
 
 Route::middleware('auth:sanctum')->group(function () {
+
+    // service create
+
+    Route::resource('main-services',VendorServiceController::class);
+    Route::get('service/orders',[VendorServiceController::class,'serviceorders']);
+    Route::post('service/status',[VendorServiceController::class,'statusChange']);
+    Route::get('service/orders/view/{id}',[VendorServiceController::class,'ordersview']);
+    // Route::post('service/delivery-to-customer',[VendorServiceController::class,'deliverytocustomer']);
+    Route::resource('service/delivery-to-customer',OrderDeliveryController::class);
+
 
     Route::resource('supportbox', SupportBoxController::class);
     Route::post('ticket-review', [SupportBoxController::class, 'review']);
@@ -43,12 +54,18 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('buy-subscription',[BuySubscription::class,'buysubscription']);
 
     Route::post('create-advertise', [AdminAdvertiseController ::class,'store']);
+    // advertise-success
+
     Route::get('all-advertise', [AdvertiseController ::class,'index']);
     Route::get('advertise/{id}', [AdvertiseController ::class,'show']);
 
 });
 
 Route::prefix('aaparpay')->group(function () {
+
+    Route::post('advertise-success',[AamarpayController::class, 'advertisesuccess']);
+
+
     Route::post('success', [AamarpayController::class, 'success']);
     Route::post('fail', [AamarpayController::class, 'fail']);
     Route::post('cancel', [AamarpayController::class, 'cancel']);

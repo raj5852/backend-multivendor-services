@@ -21,7 +21,7 @@ class AdminAdvertiseController extends Controller
      */
     public function index()
     {
-        $data = AdminAdvertise::with('AdvertiseAudienceFile', 'advertisePlacement', 'advertiseLocationFiles','files')->latest()->paginate(10);
+        $data = AdminAdvertise::with('AdvertiseAudienceFile', 'advertisePlacement', 'advertiseLocationFiles', 'files')->latest()->paginate(10);
         return $this->response($data);
     }
 
@@ -43,20 +43,10 @@ class AdminAdvertiseController extends Controller
      */
     public function store(StoreAdminAdvertiseRequest $request)
     {
-      return  $validatData = $request->validated();
 
-        // if($validatData['paymethod'] == 'my-wallet'){
-        //     $user = User::find(userid());
-        //     if($user->balance >= $validatData['budget_amount']){
-        //         $user->decrement('balance',$validatData['budget_amount']);
-        //     }else{
-        //         return responsejson('You do not have enough balance.');
-        //     }
-        // }
-        // return 1;
+        $advertise =  AdminAdvertiseService::create($request->validated());
 
-        AdminAdvertiseService::create($validatData);
-        return $this->response('Advertise Added Successfully');
+        return $this->response($advertise);
     }
 
     /**
@@ -101,9 +91,9 @@ class AdminAdvertiseController extends Controller
      */
     public function update(UpdateAdminAdvertiseRequest $request,  $id)
     {
-        $validatData = $request->validated();
-        AdminAdvertiseService::update($validatData, $id);
-        return $this->response('Advertise Updated Successfully');
+        // $validatData = $request->validated();
+        // AdminAdvertiseService::update($validatData, $id);
+        // return $this->response('Advertise Updated Successfully');
     }
 
     /**
@@ -149,7 +139,5 @@ class AdminAdvertiseController extends Controller
                 }
             }
         });
-
-
     }
 }

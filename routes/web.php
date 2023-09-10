@@ -49,7 +49,5 @@ Route::get('seed', function () {
 
 
 
-// Route::get('demo', function () {
-//  return date('Y');
-
-// });
+Route::get('demo', function () {
+});

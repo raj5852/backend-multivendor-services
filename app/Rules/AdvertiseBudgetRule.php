@@ -2,6 +2,7 @@
 
 namespace App\Rules;
 
+use App\Models\DollerRate;
 use App\Models\User;
 use Illuminate\Contracts\Validation\Rule;
 
@@ -27,14 +28,16 @@ class AdvertiseBudgetRule implements Rule
     {
 
         $user = User::find(userid());
+        $adminDalance  =  DollerRate::first()?->amount;
 
         if (request('paymethod') == 'my-wallet') {
-            if ($user->balance >= $value) {
+            if ($user->balance >= ($value * $adminDalance) ) {
                 return true;
             } else {
                 return false;
             }
         }
+        return true;
     }
 
     /**
