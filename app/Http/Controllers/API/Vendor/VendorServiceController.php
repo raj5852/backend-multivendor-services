@@ -25,6 +25,7 @@ class VendorServiceController extends Controller
             ->with(['servicepackages', 'serviceimages'])
             ->paginate(10);
         return $this->response($vendorService);
+
     }
 
     /**

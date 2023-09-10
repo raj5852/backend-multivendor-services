@@ -6,6 +6,7 @@ use App\Http\Controllers\API\Admin\CompanionController;
 use App\Http\Controllers\API\Admin\ContactController;
 use App\Http\Controllers\API\Admin\CouponController;
 use App\Http\Controllers\API\Admin\DashboardController;
+use App\Http\Controllers\API\Admin\DollerPriceController;
 use App\Http\Controllers\API\Admin\FaqController;
 use App\Http\Controllers\API\Admin\FooterMediaController;
 use App\Http\Controllers\API\Admin\ItServiceController;
@@ -36,6 +37,8 @@ use App\Http\Controllers\API\BrandController;
 use App\Http\Controllers\API\ProductController;
 use App\Http\Controllers\API\User\MemberController;
 use App\Http\Controllers\API\UserController;
+use App\Http\Controllers\API\Vendor\ServiceCategoryController;
+use App\Http\Controllers\API\Vendor\ServiceSubCategoryController;
 use App\Models\OrganizationTwo;
 // use App\Http\Controllers\HomeController;
 use Illuminate\Support\Facades\Route;
@@ -166,6 +169,9 @@ Route::middleware(['auth:sanctum', 'isAPIAdmin'])->group(function () {
     Route::get('admin/category-status', [DashboardController::class, 'categoryStatus']);
 
     Route::prefix('admin')->group(function () {
+        //service category subcategory
+        Route::resource('servicecategory',ServiceCategoryController::class);
+        Route::resource('service-sub-category',ServiceSubCategoryController::class);
 
        // Home Page
         Route::resource('service', OurServiceController::class);
@@ -213,6 +219,10 @@ Route::middleware(['auth:sanctum', 'isAPIAdmin'])->group(function () {
 
         //service order
         Route::resource('customer-orders', ServiceOrderShowController::class);
+
+        Route::get('doller-price',[DollerPriceController::class,'index']);
+        Route::post('doller-price-store',[DollerPriceController::class,'store']);
+
     });
 
 

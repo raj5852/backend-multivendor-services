@@ -2,14 +2,30 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\AdminAdvertise;
 use App\Models\PaymentStore;
 use App\Models\ServiceOrder;
 use App\Models\VendorService;
 use App\Models\CustomerRequiremnt;
 use App\Models\ServicePackage;
+use App\Services\PaymentHistoryService;
 
 class AamarpayController extends Controller
 {
+
+    function advertisesuccess(){
+        $response = request()->all();
+        $adminAdvertise = AdminAdvertise::where('trxid',$response['mer_txnid'])->first();
+
+        $adminAdvertise->update([
+            'is_paid'=>1
+        ]);
+
+        PaymentHistoryService::store($adminAdvertise->trxid,$adminAdvertise->budget_amount,'Ammarpay','Advertise','-','',$adminAdvertise->user_id);
+
+
+        return 'redirect';
+    }
 
     function success()
     {

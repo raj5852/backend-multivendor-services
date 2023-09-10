@@ -2,13 +2,11 @@
 
 namespace App\Http\Requests;
 
-use App\Enums\Status;
+use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
-use Illuminate\Contracts\Validation\Validator;
-use Illuminate\Validation\Rule;
 
-class UpdateCouponRequest extends FormRequest
+class DollerRateRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -28,14 +26,7 @@ class UpdateCouponRequest extends FormRequest
     public function rules()
     {
         return [
-            'name' => ['required', 'max:256'],
-            'type' => ['required|in:flat,percentage'],
-            'amount' => ['required'],
-            'commission' => ['required'],
-            'expire_date' => ['required'],
-            'limitation' => ['required'],
-            'user_id' => ['required', 'integer', Rule::exists('users', 'id')->whereIn('role_as', [2, 3,4])],
-            'status'=>['required',Rule::in([Status::Active->value,Status::Deactivate->value])]
+            'amount'=>['required', 'nullable','min:1']
         ];
     }
 

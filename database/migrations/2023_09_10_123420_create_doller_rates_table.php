@@ -13,9 +13,11 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::table('admin_advertises', function (Blueprint $table) {
-            $table->integer('is_paid')->default(0)->nullable()->comment('0 = unpain, 1 = paind');
-            $table->string('trxid')->nullable();
+        Schema::create('doller_rates', function (Blueprint $table) {
+            $table->id();
+            $table->float('amount');
+            $table->softDeletes();
+            $table->timestamps();
         });
     }
 
@@ -26,8 +28,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::table('admin_advertises', function (Blueprint $table) {
-            $table->dropColumn(['is_paid','trxid']);
-        });
+        Schema::dropIfExists('doller_rates');
     }
 };

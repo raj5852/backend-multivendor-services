@@ -30,13 +30,11 @@ class StoreVendorServiceRequest extends FormRequest
             'service_category_id' => [
                 'required',
                 Rule::exists('service_categories', 'id')->where(function ($query) {
-                    $query->where(['user_id' => userid()]);
                 })
             ],
             'service_sub_category_id' => [
                 'required',
                 Rule::exists('service_sub_categories','id')->where(function($query){
-                    $query->where('user_id',userid());
                 })
             ],
             'title'=>'required',

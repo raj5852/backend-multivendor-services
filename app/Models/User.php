@@ -69,4 +69,5 @@ class User extends Authenticatable
     function paymenthistories(){
         return $this->hasMany(PaymentHistory::class,'user_id');
     }
+
 }

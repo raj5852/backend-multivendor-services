@@ -1,6 +1,5 @@
 <?php
 
-use App\Http\Controllers\API\Vendor\VendorServiceController;
 use App\Http\Controllers\API\ColorController;
 use App\Http\Controllers\API\ProductController;
 use App\Http\Controllers\API\SizeController;
@@ -13,7 +12,6 @@ use App\Http\Controllers\API\Vendor\OrderController as VendorOrderController;
 use App\Http\Controllers\API\Vendor\BankController as VendorBankController;
 use App\Http\Controllers\API\Vendor\PaymentRequestController;
 use App\Http\Controllers\API\Vendor\DashboardController as VendorDashboardController;
-use App\Http\Controllers\API\Vendor\OrderDeliveryController;
 use App\Http\Controllers\API\Vendor\ProductManageController;
 use App\Http\Controllers\API\Vendor\ProductStatusController;
 use App\Http\Controllers\API\Vendor\ProfileController;
@@ -21,10 +19,6 @@ use App\Http\Controllers\API\Vendor\ProfileController;
 use App\Http\Controllers\API\Vendor\ServiceCategoryController;
 
 use App\Http\Controllers\API\Vendor\ServiceSubCategoryController;
-
-use App\Http\Controllers\API\Vendor\TestController;
-use App\Http\Controllers\API\Vendor\VendorCategoryController;
-use App\Http\Controllers\API\Vendor\VendorSubCategoryController;
 
 
 // vendor
@@ -128,14 +122,6 @@ Route::middleware(['auth:sanctum','isAPIVendor','userOnline'])->group(function (
 
     Route::prefix('vendor')->group(function(){
 
-        Route::resource('servicecategory',ServiceCategoryController::class);
-        Route::resource('service-sub-category',ServiceSubCategoryController::class);
-        Route::resource('services',VendorServiceController::class);
-        Route::get('service/orders',[VendorServiceController::class,'serviceorders']);
-        Route::post('service/status',[VendorServiceController::class,'statusChange']);
-        Route::get('service/orders/view/{id}',[VendorServiceController::class,'ordersview']);
-        // Route::post('service/delivery-to-customer',[VendorServiceController::class,'deliverytocustomer']);
-        Route::resource('service/delivery-to-customer',OrderDeliveryController::class);
 
 
 
