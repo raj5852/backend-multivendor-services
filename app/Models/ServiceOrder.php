@@ -33,4 +33,8 @@ class ServiceOrder extends Model
     function vendor(){
         return $this->belongsTo(User::class,'vendor_id');
     }
+
+    function files(){
+        return $this->morphMany(File::class,'filetable');
+    }
 }

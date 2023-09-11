@@ -126,16 +126,17 @@ class VendorServiceController extends Controller
 
     function ordersview($id)
     {
-        $data =  ServiceOrder::where(['vendor_id' => userid(), 'id' => $id])->first();
+        $data =  ServiceOrder::where(['vendor_id' => userid(), 'id' => $id,'is_paid'=>1])->first();
         if (!$data) {
             return responsejson('Not found', 'fail');
         }
 
-        $order = ServiceOrder::where('vendor_id', userid())
-            ->with(['customerdetails', 'servicedetails', 'packagedetails', 'requirementsfiles', 'orderdelivery' => function ($query) {
+        $order = ServiceOrder::where(['vendor_id'=> userid(),'is_paid'=>1])
+            ->with(['customerdetails', 'servicedetails', 'packagedetails', 'files', 'orderdelivery' => function ($query) {
                 $query->with('deliveryfiles');
             }])
             ->find($id);
+
         return $this->response($order);
     }
 

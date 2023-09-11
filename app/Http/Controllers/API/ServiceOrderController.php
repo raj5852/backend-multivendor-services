@@ -9,6 +9,7 @@ use App\Http\Requests\StoreServiceOrderRequest;
 use App\Http\Requests\UpdateServiceOrderRequest;
 use App\Models\ServicePackage;
 use App\Services\CustomerService;
+use App\Services\ServiceService;
 use App\Services\SosService;
 
 class ServiceOrderController extends Controller
@@ -20,7 +21,7 @@ class ServiceOrderController extends Controller
      */
     public function index()
     {
-        $serviceOrder = ServiceOrder::where('user_id', userid())->with(['servicedetails', 'packagedetails', 'vendor'])->latest()->paginate(10);
+        $serviceOrder = ServiceOrder::where(['user_id'=> userid(),'is_paid'=>1])->with(['servicedetails', 'packagedetails', 'vendor'])->latest()->paginate(10);
         return $this->response($serviceOrder);
     }
 
@@ -33,13 +34,7 @@ class ServiceOrderController extends Controller
     public function store(StoreServiceOrderRequest $request)
     {
         $validateData = $request->validated();
-        $validateData['user_id'] = userid();
-
-        $price = ServicePackage::find($validateData['service_package_id'])->price;
-
-
-
-        return SosService::aamarpayService($price, $validateData);
+        return    ServiceService::store($validateData);
     }
 
     /**
