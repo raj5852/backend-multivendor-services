@@ -30,7 +30,7 @@ class ServiceCategory
 
     static function show($slug)
     {
-        $serviceCategory = ModelsServiceCategory::where(['user_id' => auth()->user()->id, 'slug' => $slug,'status'=>Status::Active->value])->first();
+        $serviceCategory = ModelsServiceCategory::where(['user_id' => auth()->user()->id, 'slug' => $slug])->first();
 
         if ($serviceCategory) {
             $response = responsejson($serviceCategory);
