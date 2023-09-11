@@ -14,16 +14,30 @@ use App\Services\PaymentHistoryService;
 class AamarpayController extends Controller
 {
 
-    function advertisesuccess(){
+    function servicesuccess()
+    {
         $response = request()->all();
-        $adminAdvertise = AdminAdvertise::where('trxid',$response['mer_txnid'])->first();
+        $vendorservice = ServiceOrder::where('trxid', $response['mer_txnid'])->first();
+        $vendorservice->update([
+            'is_paid' => 1
+        ]);
+        PaymentHistoryService::store($vendorservice->trxid, $vendorservice->amount, 'Ammarpay', 'Service', '-', '', $vendorservice->user_id);
+
+
+
+    }
+
+    function advertisesuccess()
+    {
+        $response = request()->all();
+        $adminAdvertise = AdminAdvertise::where('trxid', $response['mer_txnid'])->first();
 
         $adminAdvertise->update([
-            'is_paid'=>1
+            'is_paid' => 1
         ]);
         $dollerRate  =  DollerRate::first()?->amount;
 
-        PaymentHistoryService::store($adminAdvertise->trxid,($adminAdvertise->budget_amount * $dollerRate),'Ammarpay','Advertise','-','',$adminAdvertise->user_id);
+        PaymentHistoryService::store($adminAdvertise->trxid, ($adminAdvertise->budget_amount * $dollerRate), 'Ammarpay', 'Advertise', '-', '', $adminAdvertise->user_id);
 
 
         return 'redirect';
@@ -33,26 +47,26 @@ class AamarpayController extends Controller
     {
         $response = request()->all();
 
-      return  $data = PaymentStore::where(['trxid' => $response['mer_txnid'], 'status' => 'pending'])->first();
+        return  $data = PaymentStore::where(['trxid' => $response['mer_txnid'], 'status' => 'pending'])->first();
 
         if (!$data) {
             return false;
         }
 
         if ($response['opt_a'] == 'service') {
-            $this->service($data,$response);
+            $this->service($data, $response);
         }
 
         if ($response['opt_a'] == 'subscription') {
-            $this->subscription($data,$response);
+            $this->subscription($data, $response);
         }
     }
 
-    function subscription($data,$response){
-
+    function subscription($data, $response)
+    {
     }
 
-    function service($data,$response)
+    function service($data, $response)
     {
 
         $vendorService = VendorService::find($data['info']['vendor_service_id']);

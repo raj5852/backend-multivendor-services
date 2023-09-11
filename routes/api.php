@@ -34,6 +34,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('service/orders',[VendorServiceController::class,'serviceorders']);
     Route::post('service/status',[VendorServiceController::class,'statusChange']);
     Route::get('service/orders/view/{id}',[VendorServiceController::class,'ordersview']);
+
     // Route::post('service/delivery-to-customer',[VendorServiceController::class,'deliverytocustomer']);
     Route::resource('service/delivery-to-customer',OrderDeliveryController::class);
     Route::get('service-category-subcategory',[VendorServiceController::class,'categorysubcategory']);
@@ -64,6 +65,7 @@ Route::middleware('auth:sanctum')->group(function () {
 Route::prefix('aaparpay')->group(function () {
 
     Route::post('advertise-success',[AamarpayController::class, 'advertisesuccess']);
+    Route::post('service-success',[AamarpayController::class, 'servicesuccess']);
 
 
     Route::post('success', [AamarpayController::class, 'success']);

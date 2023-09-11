@@ -2,6 +2,8 @@
 
 namespace App\Http\Requests;
 
+use App\Models\User;
+use App\Rules\ServicePaymentType;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
@@ -32,7 +34,8 @@ class StoreServiceOrderRequest extends FormRequest
             'service_package_id' => ['required', 'integer', Rule::exists('service_packages', 'id')->where('vendor_service_id', request('vendor_service_id'))],
             'files' => 'required|array',
             'files.*' => 'file|max:102400',
-            'details'=>'required'
+            'details'=>'required',
+            'payment_type'=>['required',Rule::in('my-wallet','aamarpay'), new ServicePaymentType()]
         ];
     }
 

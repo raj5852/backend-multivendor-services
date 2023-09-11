@@ -13,7 +13,7 @@ class ServiceCategory
 {
     static function index()
     {
-        return  ModelsServiceCategory::where(['status' => Status::Active->value, 'user_id' => auth()->user()->id])
+        return  ModelsServiceCategory::where(['user_id' => auth()->user()->id])
             ->select('id', 'name', 'slug','status')->get();
     }
 
@@ -51,10 +51,11 @@ class ServiceCategory
         }
         $serviceCategory->name = $validateData['name'];
         $serviceCategory->slug = slugUpdate(ModelsServiceCategory::class, $validateData['name'], $id);
-        $serviceCategory->status = $validateData['status'];
-        $serviceCategory->save();
+        $serviceCategory->status = request('status');
+        $serviceCategory->update();
         return responsejson('Service category updated!');
     }
+
     static function delete($id)
     {
         $data =  ModelsServiceCategory::where(['user_id' => userid(), 'id'=>$id])->first();
