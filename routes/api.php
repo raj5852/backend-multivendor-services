@@ -16,8 +16,7 @@ use App\Http\Controllers\SubscriptionController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\API\Vendor\VendorServiceController;
 use App\Http\Controllers\API\Vendor\OrderDeliveryController;
-
-
+use App\Http\Controllers\RenewController;
 
 //register
 Route::post('register', [AuthController::class, 'Register']);
@@ -62,6 +61,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('advertise/{id}', [AdvertiseController ::class,'show']);
 
     Route::get('coupon-lists',[CouponListController::class,'index']);
+    Route::post('renew-subscription',[RenewController::class,'store']);
 
 });
 
