@@ -13,8 +13,7 @@ class ServiceCategory
 {
     static function index()
     {
-        return  ModelsServiceCategory::where(['user_id' => auth()->user()->id])
-            ->select('id', 'name', 'slug','status')->get();
+        return  ModelsServiceCategory::select('id', 'name', 'slug','status')->get();
     }
 
     static  function create($serviceCategory)
@@ -30,7 +29,7 @@ class ServiceCategory
 
     static function show($slug)
     {
-        $serviceCategory = ModelsServiceCategory::where(['user_id' => auth()->user()->id, 'slug' => $slug])->first();
+        $serviceCategory = ModelsServiceCategory::where(['slug' => $slug])->first();
 
         if ($serviceCategory) {
             $response = responsejson($serviceCategory);
@@ -45,7 +44,7 @@ class ServiceCategory
     static function update($validateData, $id)
     {
 
-        $serviceCategory = ModelsServiceCategory::where(['user_id' => auth()->user()->id, 'id' => $id])->first();
+        $serviceCategory = ModelsServiceCategory::where(['id' => $id])->first();
         if (!$serviceCategory) {
             return  $response = responsejson('Not found', 'fail');
         }
@@ -58,7 +57,7 @@ class ServiceCategory
 
     static function delete($id)
     {
-        $data =  ModelsServiceCategory::where(['user_id' => userid(), 'id'=>$id])->first();
+        $data =  ModelsServiceCategory::where(['id'=>$id])->first();
         if (!$data) {
             return   responsejson('Not found', 'fail');
         }

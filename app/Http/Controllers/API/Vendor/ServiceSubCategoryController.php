@@ -16,7 +16,7 @@ class ServiceSubCategoryController extends Controller
      */
     public function index()
     {
-        $data = ServiceSubCategory::where('user_id',auth()->user()->id)->get();
+        $data = ServiceSubCategory::query()->get();
         return $this->response($data);
     }
 
@@ -47,7 +47,7 @@ class ServiceSubCategoryController extends Controller
      */
     public function show($id)
     {
-        $data = ServiceSubCategory::where(['user_id'=>userid(),'id'=>$id])->first();
+        $data = ServiceSubCategory::find($id);
         if(!$data){
             return responsejson('Not found','fail');
         }
@@ -64,7 +64,7 @@ class ServiceSubCategoryController extends Controller
     public function update(UpdateServiceSubCategoryRequest $request, $id)
     {
         $validateData =  $request->validated();
-        $subcategory = ServiceSubCategory::where(['user_id'=>userid(),'id'=>$id])->first();
+        $subcategory = ServiceSubCategory::find($id);
         if(!$subcategory){
             return responsejson('Not found','fail');
         }
@@ -80,7 +80,7 @@ class ServiceSubCategoryController extends Controller
      */
     public function destroy($id)
     {
-        $serviceSubCategory = ServiceSubCategory::where(['user_id'=>userid(),'id'=>$id]);
+        $serviceSubCategory = ServiceSubCategory::find($id);
         if(!$serviceSubCategory){
             return $this->response('Not found','fail');
         }

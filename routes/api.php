@@ -5,6 +5,7 @@ use App\Http\Controllers\AdvertiseController;
 use App\Http\Controllers\API\Admin\AdminAdvertiseController;
 use App\Http\Controllers\API\Admin\SupportBoxCategoryController;
 use App\Http\Controllers\API\AuthController;
+use App\Http\Controllers\API\CouponListController;
 use App\Http\Controllers\API\ServiceOrderController;
 use App\Http\Controllers\API\SupportBoxController;
 
@@ -46,7 +47,7 @@ Route::middleware('auth:sanctum')->group(function () {
 
     Route::apiResource('service/order', ServiceOrderController::class);
     Route::post('service/order/status', [ServiceOrderController::class,'status']);
-    // Route::apiResource('coupon-apply', CouponUsedController::class);
+    // Route::apiResource('coupon-list', CouponUsedController::class);
     Route::get('all-ticket-category',[SupportBoxCategoryController::class,'index']);
     Route::get('ticket-category-to-problem/{id}',[SupportBoxCategoryController::class,'ticketcategorytoproblem']);
 
@@ -60,6 +61,8 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('all-advertise', [AdvertiseController ::class,'index']);
     Route::get('advertise/{id}', [AdvertiseController ::class,'show']);
 
+    Route::get('coupon-lists',[CouponListController::class,'index']);
+
 });
 
 Route::prefix('aaparpay')->group(function () {
@@ -67,8 +70,9 @@ Route::prefix('aaparpay')->group(function () {
     Route::post('advertise-success',[AamarpayController::class, 'advertisesuccess']);
     Route::post('service-success',[AamarpayController::class, 'servicesuccess']);
 
+    Route::post('subscription-success', [AamarpayController::class, 'subscriptionsuccess']);
 
-    Route::post('success', [AamarpayController::class, 'success']);
+
     Route::post('fail', [AamarpayController::class, 'fail']);
     Route::post('cancel', [AamarpayController::class, 'cancel']);
 });

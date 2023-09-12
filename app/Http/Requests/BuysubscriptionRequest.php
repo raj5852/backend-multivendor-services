@@ -28,7 +28,7 @@ class BuysubscriptionRequest extends FormRequest
     {
         return [
             'subscription_id'=>['required',Rule::exists('subscriptions','id')],
-            'coupon_name'=>['nullable',Rule::exists('coupons','name')],
+            'coupon_id'=>['nullable',Rule::exists('coupons','id')],
             'payment_type'=>['required',Rule::in(['my-wallet','aamarpay'])],
         ];
     }
