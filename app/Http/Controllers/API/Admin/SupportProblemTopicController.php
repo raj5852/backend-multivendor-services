@@ -56,10 +56,10 @@ class SupportProblemTopicController extends Controller
      * @param  \App\Models\SupportProblemTopic  $supportProblemTopic
      * @return \Illuminate\Http\Response
      */
-    public function update(UpdateSupportProblemTopicRequest $request, SupportProblemTopic $supportProblemTopic)
+    public function update(UpdateSupportProblemTopicRequest $request,  $id)
     {
         $validatedData =  $request->validated();
-        $data =  SupportProblemTopic::find($validatedData['support_box_category_id']);
+        $data =  SupportProblemTopic::find($id);
         $data->update($validatedData);
 
         return $this->response('Updated successfull');
