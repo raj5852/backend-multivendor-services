@@ -9,7 +9,10 @@ use App\Models\VendorService;
 use App\Models\CustomerRequiremnt;
 use App\Models\DollerRate;
 use App\Models\ServicePackage;
+use App\Models\Subscription;
+use App\Models\User;
 use App\Services\PaymentHistoryService;
+use App\Services\SubscriptionService;
 
 class AamarpayController extends Controller
 {
@@ -22,9 +25,6 @@ class AamarpayController extends Controller
             'is_paid' => 1
         ]);
         PaymentHistoryService::store($vendorservice->trxid, $vendorservice->amount, 'Ammarpay', 'Service', '-', '', $vendorservice->user_id);
-
-
-
     }
 
     function advertisesuccess()
@@ -43,54 +43,30 @@ class AamarpayController extends Controller
         return 'redirect';
     }
 
-    function success()
+    function subscriptionsuccess()
     {
-        $response = request()->all();
+         $response = request()->all();
 
-        return  $data = PaymentStore::where(['trxid' => $response['mer_txnid'], 'status' => 'pending'])->first();
+        $data = PaymentStore::where(['trxid' => $response['mer_txnid'], 'status' => 'pending'])->first();
+        $validatedData  =  $data['info'];
+        $subscription = Subscription::find($validatedData['subscription_id']);
+        $user = User::find($validatedData['user_id']);
+        $couponid = $validatedData['coupon_id'];
 
         if (!$data) {
             return false;
         }
 
-        if ($response['opt_a'] == 'service') {
-            $this->service($data, $response);
-        }
-
         if ($response['opt_a'] == 'subscription') {
-            $this->subscription($data, $response);
+            $amount = $response['amount_original'];
+            SubscriptionService::store($subscription,$user,$amount,$couponid,'Aamarpay');
+
         }
+        "success";
     }
 
-    function subscription($data, $response)
-    {
-    }
 
-    function service($data, $response)
-    {
 
-        $vendorService = VendorService::find($data['info']['vendor_service_id']);
-
-        $serviceOrder =  ServiceOrder::create([
-            'user_id' => $data['info']['user_id'],
-            'vendor_id' => $vendorService->user_id,
-            'vendor_service_id' => $data['info']['vendor_service_id'],
-            'service_package_id' => $data['info']['service_package_id'],
-            'amount' => $response['amount'],
-            'commission_amount' =>  $vendorService->commission,
-            'commission_type' => $vendorService->commission_type
-        ]);
-
-        $requirement =  CustomerRequiremnt::where('uniquid', $data['info']['customer_requirement_id'])->exists();
-
-        if ($requirement) {
-            CustomerRequiremnt::where('uniquid', $data['info']['customer_requirement_id'])->update([
-                'vendor_service_id' => $serviceOrder->id
-            ]);
-        }
-
-        return 'it will redirect';
-    }
     function fail()
     {
         return response()->json('fai');

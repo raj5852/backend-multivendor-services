@@ -2,6 +2,8 @@
 
 namespace App\Services;
 
+use App\Models\Coupon;
+use App\Models\User;
 use App\Models\UserSubscription;
 
 /**
@@ -9,10 +11,13 @@ use App\Models\UserSubscription;
  */
 class SubscriptionService
 {
-    static function store($subscription,$user)
+    static function store($subscription,$user,$totalamount,$coupon,$paymentmethod)
     {
+        $trxid = uniqid();
+
         $userSubscription = new UserSubscription();
-        $userSubscription->user_id = userid();
+        $userSubscription->user_id = $user->id;
+        $userSubscription->trxid = $trxid;
         $userSubscription->subscription_id = $subscription->id;
         $userSubscription->expire_date = membershipexpiredate($subscription->subscription_package_type);
 
@@ -29,5 +34,16 @@ class SubscriptionService
         }
 
         $userSubscription->save();
+        PaymentHistoryService::store($trxid,$totalamount,$paymentmethod,'Subscription','-',$coupon,$user->id);
+        if($coupon != ''){
+            $getcoupon = Coupon::find($coupon);
+
+            $couponUser = User::find($getcoupon->user_id);
+            $couponUser->increment('balance',$getcoupon->commission);
+
+
+            PaymentHistoryService::store($trxid,$getcoupon->commission,'My wallet','Referral bonus','+',$coupon,$couponUser->id);
+
+        }
     }
 }

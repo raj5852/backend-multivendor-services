@@ -8,6 +8,7 @@ use App\Models\Coupon as ModelsCoupon;
 use App\Models\Subscription;
 use App\Models\User;
 use App\Models\UserSubscription;
+use App\Services\PaymentHistoryService;
 use App\Services\SosService;
 use App\Services\SubscriptionService;
 use Illuminate\Http\Request;
@@ -49,16 +50,19 @@ class BuySubscription extends Controller
         $amount = $subscription->subscription_amount;
 
 
+        $coupon = null;
+        if (request()->has('coupon_id')) {
+            $couponUsed = ModelsCoupon::withCount('couponused')->find(request('coupon_id'));
 
-        if (request()->has('coupon_name')) {
             $coupon = ModelsCoupon::query()
-                ->where('name', request('coupon_name'))
+                ->where('id', request('coupon_id'))
                 ->where('status', 'active')
+                ->where('limitation','>',$couponUsed->couponused_count)
                 ->whereDate('expire_date', '>', now())
                 ->first();
 
             if (!$coupon) {
-                return responsejson('Something is wrong', 'fail');
+                return responsejson('Coupon not available', 'fail');
             }
 
             if ($coupon->type == 'flat') {
@@ -71,16 +75,18 @@ class BuySubscription extends Controller
 
 
         if ($validateData['payment_type'] == 'aamarpay') {
-            return  SosService::aamarpaysubscription($amount, $validateData);
+            return  SosService::aamarpaysubscription($amount, $validateData,$coupon?->id);
         } else {
             $balance = $user->balance;
 
             if (convertfloat($balance) > $amount) {
 
-                SubscriptionService::store($subscription,$user);
+                SubscriptionService::store($subscription,$user,$amount,$coupon->id,'My wallet');
 
                 $user->balance = (convertfloat($user->balance) - $amount);
                 $user->save();
+
+                return $this->response('Success');
 
             } else {
                 return responsejson('Not enough balance', 'fail');

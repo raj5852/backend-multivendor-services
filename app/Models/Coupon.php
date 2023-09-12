@@ -16,4 +16,8 @@ class Coupon extends Model
         return $this->belongsTo(User::class);
 
     }
+
+    function couponused(){
+        return $this->hasMany(PaymentHistory::class,'coupon');
+    }
 }
