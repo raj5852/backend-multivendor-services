@@ -17,7 +17,7 @@ class SupportProblemTopicController extends Controller
      */
     public function index()
     {
-        $data = DB::table('support_problem_topics')->where('deleted_at',null)->get();
+        $data = DB::table('support_problem_topics')->where('deleted_at', null)->get();
         return responsejson($data);
     }
 
@@ -43,8 +43,8 @@ class SupportProblemTopicController extends Controller
     public function show($id)
     {
         $supportProblemTopic = SupportProblemTopic::find($id);
-        if(!$supportProblemTopic){
-            return responsejson('Not found','fail');
+        if (!$supportProblemTopic) {
+            return responsejson('Not found', 'fail');
         }
         return $this->response($supportProblemTopic);
     }
@@ -59,7 +59,8 @@ class SupportProblemTopicController extends Controller
     public function update(UpdateSupportProblemTopicRequest $request, SupportProblemTopic $supportProblemTopic)
     {
         $validatedData =  $request->validated();
-        SupportProblemTopic::create($validatedData);
+        $data =  SupportProblemTopic::find($validatedData['support_box_category_id']);
+        $data->update($validatedData);
 
         return $this->response('Updated successfull');
     }
@@ -73,8 +74,8 @@ class SupportProblemTopicController extends Controller
     public function destroy($id)
     {
         $data = SupportProblemTopic::find($id);
-        if(!$data){
-            return responsejson('Not found','fail');
+        if (!$data) {
+            return responsejson('Not found', 'fail');
         }
         $data->delete();
         return $this->response('Deleted successfull');

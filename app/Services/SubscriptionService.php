@@ -11,7 +11,7 @@ use App\Models\UserSubscription;
  */
 class SubscriptionService
 {
-    static function store($subscription,$user,$totalamount,$coupon,$paymentmethod)
+    static function store($subscription, $user, $totalamount = null, $coupon = null, $paymentmethod = null)
     {
         $trxid = uniqid();
 
@@ -34,16 +34,21 @@ class SubscriptionService
         }
 
         $userSubscription->save();
-        PaymentHistoryService::store($trxid,$totalamount,$paymentmethod,'Subscription','-',$coupon,$user->id);
-        if($coupon != ''){
+
+        if (!$totalamount) {
+            false;
+        }
+
+        PaymentHistoryService::store($trxid, $totalamount, $paymentmethod, 'Subscription', '-', $coupon, $user->id);
+
+        if ($coupon != '') {
             $getcoupon = Coupon::find($coupon);
 
             $couponUser = User::find($getcoupon->user_id);
-            $couponUser->increment('balance',$getcoupon->commission);
+            $couponUser->increment('balance', $getcoupon->commission);
 
 
-            PaymentHistoryService::store($trxid,$getcoupon->commission,'My wallet','Referral bonus','+',$coupon,$couponUser->id);
-
+            PaymentHistoryService::store($trxid, $getcoupon->commission, 'My wallet', 'Referral bonus', '+', $coupon, $couponUser->id);
         }
     }
 }

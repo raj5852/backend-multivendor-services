@@ -11,6 +11,7 @@ use App\Http\Requests\VendorOrderStatusRequest;
 use App\Models\Category;
 use App\Models\ServiceCategory;
 use App\Models\ServiceOrder;
+use App\Models\User;
 use App\Services\Vendor\ProductService;
 use Carbon\Carbon;
 
@@ -39,6 +40,8 @@ class VendorServiceController extends Controller
     public function store(StoreVendorServiceRequest $request)
     {
         $data =  $request->validated();
+        // $user = User::find(userid())->usersubscription;
+        // return $user;
         ProductService::store($data);
         return $this->response('Success');
     }
