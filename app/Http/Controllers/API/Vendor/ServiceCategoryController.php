@@ -45,10 +45,10 @@ class ServiceCategoryController extends Controller
      * @param  \App\Models\ServiceCategory  $serviceCategory
      * @return \Illuminate\Http\Response
      */
-    public function show($slug)
+    public function show($id)
     {
         // return $this->response($serviceCategoryslug);
-        $vendorServicetegory =  VendorServiceCategory::show($slug);
+        $vendorServicetegory =  VendorServiceCategory::show($id);
         return $vendorServicetegory;
     }
 

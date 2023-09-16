@@ -40,8 +40,8 @@ class VendorServiceController extends Controller
     public function store(StoreVendorServiceRequest $request)
     {
         $data =  $request->validated();
-        // $user = User::find(userid())->usersubscription;
-        // return $user;
+        $usersubscription = User::find(userid())->usersubscription;
+        // return $usersubscription-> ;
         ProductService::store($data);
         return $this->response('Success');
     }
