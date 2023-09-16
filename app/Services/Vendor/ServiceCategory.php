@@ -27,9 +27,9 @@ class ServiceCategory
         return true;
     }
 
-    static function show($slug)
+    static function show($id)
     {
-        $serviceCategory = ModelsServiceCategory::where(['slug' => $slug])->first();
+        $serviceCategory = ModelsServiceCategory::where(['slug' => $id])->first();
 
         if ($serviceCategory) {
             $response = responsejson($serviceCategory);
