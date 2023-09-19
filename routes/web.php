@@ -47,10 +47,15 @@ Route::get('seed', function () {
     Artisan::call('db:seed');
 });
 
+Route::get('composer-install', function () {
+    $command = "composer install";
+    $path = base_path();
+    exec("cd {$path} && {$command}");
+});
 
 
 Route::get('demo', function () {
 
-
+    // return
 
 });
