@@ -2,6 +2,7 @@
 
 namespace App\Rules;
 
+use App\Models\Subscription;
 use App\Models\User;
 use Illuminate\Contracts\Validation\Rule;
 
@@ -26,13 +27,24 @@ class RenewPaymentRule implements Rule
      */
     public function passes($attribute, $value)
     {
-        if($value){
-            if($value == 'my-wallet'){
-                $user = User::find(userid());
-                $balance = $user->balance;
-                // if($balance >= )
+
+        if ($value == 'my-wallet') {
+            $user = User::find(userid());
+            $userbalance = $user->balance;
+            if (request('package_id')) {
+                $subscriptionamount =  Subscription::find(request('package_id'))->subscription_amount;
+
+
+                if (convertfloat($userbalance) > $subscriptionamount) {
+                    $user->balance = convertfloat($user->balance) - $subscriptionamount;
+                    $user->save();
+                    return true;
+                } else {
+                    return false;
+                }
             }
         }
+        return true;
     }
 
     /**
@@ -42,6 +54,6 @@ class RenewPaymentRule implements Rule
      */
     public function message()
     {
-        return 'The validation error message.';
+        return 'Not enough balance.';
     }
 }

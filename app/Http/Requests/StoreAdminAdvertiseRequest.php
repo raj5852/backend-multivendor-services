@@ -32,10 +32,10 @@ class StoreAdminAdvertiseRequest extends FormRequest
             'campaign_name'  => ['required', 'max:256'],
             'conversion_location'  => ['required'],
             'performance_goal'  => ['required'],
-            'platforms'  => ['required'],
+            // 'platforms'  => ['required'],
             'ad_creative' => 'required|array',
             'budget' => ['required'],
-
+            'platforms'=>['required'],
             'budget_amount' => ['required', 'numeric', 'min:1',new AdvertiseBudgetRule()],
             'start_date'  => ['required'],
             'end_date'  => ['required'],

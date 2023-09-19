@@ -2,6 +2,8 @@
 
 namespace App\Rules;
 
+use App\Models\Subscription;
+use App\Models\User;
 use Illuminate\Contracts\Validation\Rule;
 
 class RenewPackageId implements Rule
@@ -25,7 +27,19 @@ class RenewPackageId implements Rule
      */
     public function passes($attribute, $value)
     {
-        //
+        $user = User::find(auth()->id());
+        $userrole =  userrole($user->role_as);
+
+        $subscription =   Subscription::query()
+            ->where('id', $value)
+            ->where('subscription_user_type', $userrole)
+            ->where('subscription_amount', '!=', 0)
+            ->first();
+        if ($subscription) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
     /**
@@ -35,6 +49,6 @@ class RenewPackageId implements Rule
      */
     public function message()
     {
-        return 'The validation error message.';
+        return 'You have no access this package.';
     }
 }
