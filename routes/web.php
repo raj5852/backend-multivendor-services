@@ -48,7 +48,7 @@ Route::get('seed', function () {
 });
 
 Route::get('composer-install', function () {
-    $command = "composer install";
+    $command = "composer require doctrine/dbal";
     $path = base_path();
     exec("cd {$path} && {$command}");
 });
