@@ -89,13 +89,14 @@ class SupportBoxController extends Controller
 
     function review(TIcketReviewRequest $request)
     {
-             $data =  $request->validated();
+        $data =  $request->validated();
         $ticketReply =  SupportBox::find($data['support_box_id']);
 
         if (!$ticketReply) {
             return responsejson('Not fond', 'fail');
         }
         $ticketReply->rating = $data['rating'];
+        $ticketReply->rating_comment = request('rating_comment');
         $ticketReply->save();
 
         return $this->response('Rating successfull');

@@ -119,6 +119,8 @@ class AdminAdvertiseController extends Controller
         $advertise = AdminAdvertise::find($validateData['advertise_id']);
         $advertise->status = "progress";
         $advertise->save();
+
+        return $this->response('Progress successfully!');
     }
 
     function delivery(AdvertiseDeliveryRequest $request)

@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\Rules\RenewPackageId;
 use App\Rules\RenewPaymentRule;
 use App\Rules\SubscriptionTypeRule;
 use Illuminate\Contracts\Validation\Validator;
@@ -31,7 +32,7 @@ class RenewRequest extends FormRequest
         return [
             'renew_time'=>['required',Rule::in(['monthly','half_yearly','yearly'])],
             // 'subscription_type'=>['required',Rule::in(['vendor','affiliate']), new SubscriptionTypeRule() ],
-
+            'package_id'=>['required', new RenewPackageId()],
             'payment_method'=>['required',Rule::in('my-wallet','aamarpay'),new RenewPaymentRule()]
         ];
     }
