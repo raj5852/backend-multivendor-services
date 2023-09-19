@@ -28,7 +28,8 @@ class TIcketReviewRequest extends FormRequest
     {
         return [
             'support_box_id'=>['required',Rule::exists('support_boxes','id')->where('user_id',userid())->where('is_close',1)],
-            'rating' => 'required|numeric|min:1|max:5'
+            'rating' => 'required|numeric|min:1|max:5',
+            'rating_comment'=>'nullable'
         ];
     }
 

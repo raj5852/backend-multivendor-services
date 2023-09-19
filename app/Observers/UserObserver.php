@@ -16,14 +16,14 @@ class UserObserver
      */
     public function created(User $user)
     {
-        if($user->role_as == 2){
-            $vendorsubscription = Subscription::find(1);
-            SubscriptionService::store($vendorsubscription,$user);
-        }
-        if($user->role_as == 3){
-            $affiliatesubscription = Subscription::find(13);
-            SubscriptionService::store($affiliatesubscription,$user);
-        }
+        // if($user->role_as == 2){
+        //     $vendorsubscription = Subscription::find(1);
+        //     SubscriptionService::store($vendorsubscription,$user);
+        // }
+        // if($user->role_as == 3){
+        //     $affiliatesubscription = Subscription::find(13);
+        //     SubscriptionService::store($affiliatesubscription,$user);
+        // }
     }
 
     /**
