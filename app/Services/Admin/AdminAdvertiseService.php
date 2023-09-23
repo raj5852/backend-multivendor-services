@@ -45,6 +45,7 @@ class AdminAdvertiseService
         $adminadvaertise->format   =  $validatData['format'];
         $adminadvaertise->ad_creative   =  $validatData['ad_creative'];
         $adminadvaertise->budget   =  $validatData['budget'];
+        $adminadvaertise->placements   =  $validatData['placements'];
 
 
         $adminadvaertise->destination   =  $validatData['destination'];

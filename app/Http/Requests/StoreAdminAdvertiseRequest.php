@@ -59,7 +59,7 @@ class StoreAdminAdvertiseRequest extends FormRequest
             'advertise_audience_files' => 'required|array',
 
             'location_files'   => 'required|array',
-
+            'placements'=>'required',
             'feeds' => 'nullable',
             'story_reels' => 'nullable',
             'adds_video_and_reels' => 'nullable',
