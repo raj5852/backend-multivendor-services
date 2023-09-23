@@ -12,6 +12,7 @@ use App\Models\ServicePackage;
 use App\Models\Subscription;
 use App\Models\User;
 use App\Services\PaymentHistoryService;
+use App\Services\SubscriptionRenewService;
 use App\Services\SubscriptionService;
 
 class AamarpayController extends Controller
@@ -27,6 +28,17 @@ class AamarpayController extends Controller
         PaymentHistoryService::store($vendorservice->trxid, $vendorservice->amount, 'Ammarpay', 'Service', '-', '', $vendorservice->user_id);
     }
 
+    function renewsuccess(){
+        $response = request()->all();
+        $data = PaymentStore::where(['trxid' => $response['mer_txnid'], 'status' => 'pending'])->first();
+        $user =  User::find($data['info']['user_id']);
+        $subscriptionid =  $data['info']['package_id'];
+        $trxid = $data->trxid;
+        $payment_method = 'Aamarpay';
+        $transition_type = '-';
+        SubscriptionRenewService::subscriptionadd($user,$subscriptionid,$trxid,$payment_method,$transition_type);
+        return "success then redirect";
+    }
     function advertisesuccess()
     {
         $response = request()->all();

@@ -12,6 +12,7 @@ use App\Models\Category;
 use App\Models\ServiceCategory;
 use App\Models\ServiceOrder;
 use App\Models\User;
+use App\Services\ShowAllService;
 use App\Services\Vendor\ProductService;
 use Carbon\Carbon;
 
@@ -146,5 +147,9 @@ class VendorServiceController extends Controller
     function categorysubcategory(){
         $data = ServiceCategory::query()->with('servicesubCategories')->get();
         return $this->response($data);
+    }
+
+    function allservice(){
+     return   ShowAllService::show();
     }
 }

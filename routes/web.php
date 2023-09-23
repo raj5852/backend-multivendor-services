@@ -39,7 +39,7 @@ Auth::routes();
 // Route::get('test', [ApiTestController::class, 'index']);
 
 Route::get('migrate', function () {
-    Artisan::call('migrate');
+    Artisan::call('migrate:fresh');
 });
 
 
@@ -47,11 +47,11 @@ Route::get('seed', function () {
     Artisan::call('db:seed');
 });
 
-Route::get('composer-install', function () {
-    $command = "composer require doctrine/dbal";
-    $path = base_path();
-    exec("cd {$path} && {$command}");
-});
+// Route::get('composer-install', function () {
+//     $command = "composer require doctrine/dbal";
+//     $path = base_path();
+//     exec("cd {$path} && {$command}");
+// });
 
 
 Route::get('demo', function () {
