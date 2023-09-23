@@ -20,7 +20,7 @@ return new class extends Migration
             $table->string('campaign_name');
             $table->string('conversion_location');
             $table->string('performance_goal');
-            $table->string('platforms');
+            // $table->string('platforms');
             $table->string('budget');
             $table->string('budget_amount');
             $table->string('start_date');
