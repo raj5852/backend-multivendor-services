@@ -15,7 +15,7 @@ return new class extends Migration
     {
         Schema::table('admin_advertises', function (Blueprint $table) {
             $table->text('placements');
-            $table->string('platforms')->nullable()->change();
+            // $table->string('platforms')->nullable()->change();
         });
     }
 

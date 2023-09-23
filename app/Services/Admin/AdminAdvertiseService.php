@@ -24,13 +24,11 @@ class AdminAdvertiseService
         $trxid = uniqid();
         $adminadvaertise = new AdminAdvertise();
         $adminadvaertise->trxid = $trxid;
-        $adminadvaertise->platforms = $validatData['platforms'];
         $adminadvaertise->campaign_objective   =  $validatData['campaign_objective'];
         $adminadvaertise->user_id  =  userid();
         $adminadvaertise->campaign_name   =  $validatData['campaign_name'];
         $adminadvaertise->conversion_location   =  $validatData['conversion_location'];
         $adminadvaertise->performance_goal   =  $validatData['performance_goal'];
-        // $adminadvaertise->platforms   =  $validatData['platforms'];
         $adminadvaertise->budget_amount   =  $validatData['budget_amount'];
         $adminadvaertise->start_date   =  $validatData['start_date'];
         $adminadvaertise->end_date   =  $validatData['end_date'];
