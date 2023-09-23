@@ -39,6 +39,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::resource('service/delivery-to-customer',OrderDeliveryController::class);
     Route::get('service-category-subcategory',[VendorServiceController::class,'categorysubcategory']);
 
+
     Route::resource('supportbox', SupportBoxController::class);
     Route::post('ticket-review', [SupportBoxController::class, 'review']);
 
@@ -69,6 +70,7 @@ Route::prefix('aaparpay')->group(function () {
 
     Route::post('advertise-success',[AamarpayController::class, 'advertisesuccess']);
     Route::post('service-success',[AamarpayController::class, 'servicesuccess']);
+    Route::post('renew-success',[AamarpayController::class, 'renewsuccess']);
 
     Route::post('subscription-success', [AamarpayController::class, 'subscriptionsuccess']);
 
@@ -78,6 +80,7 @@ Route::prefix('aaparpay')->group(function () {
 });
 
 Route::post('/contact-store', [ContactController::class, 'store']);
+Route::get('all-services',[VendorServiceController::class,'allservice']);
 
 
 Route::get('/settings', [SettingsController::class, 'index']);

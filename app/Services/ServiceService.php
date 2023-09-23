@@ -49,7 +49,7 @@ class ServiceService
         }else{
 
             $successurl = url('api/aaparpay/service-success');
-          return  AamarPayService::gateway($package->price,$trxid,'Service',$successurl);
+            return  AamarPayService::gateway($package->price,$trxid,'Service',$successurl);
 
         }
 

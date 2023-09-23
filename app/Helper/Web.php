@@ -121,3 +121,14 @@ function membershipexpiredate($value)
         return now()->addYear(1);
     }
 }
+
+function getmonth($monthname)
+{
+    if ($monthname == 'monthy') {
+        return 1;
+    } elseif ($monthname == 'half_yearly') {
+        return 6;
+    } elseif ($monthname == 'yearly') {
+        return 12;
+    }
+}
