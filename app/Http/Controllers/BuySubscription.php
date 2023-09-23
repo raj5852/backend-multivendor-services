@@ -51,7 +51,7 @@ class BuySubscription extends Controller
 
 
         $coupon = null;
-        if (request()->has('coupon_id')) {
+        if (request('coupon_id') != '') {
             $couponUsed = ModelsCoupon::withCount('couponused')->find(request('coupon_id'));
 
             $coupon = ModelsCoupon::query()
