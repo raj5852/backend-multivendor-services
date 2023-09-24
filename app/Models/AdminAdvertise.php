@@ -12,7 +12,7 @@ class AdminAdvertise extends Model
 
     protected $guarded = [];
 
-    protected $casts = ['ad_creative'=>'json','platforms'=>'json'];
+    // protected $casts = ['ad_creative'=>'json',];
 
     public function AdvertiseAudienceFile()
     {
