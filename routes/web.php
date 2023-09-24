@@ -38,56 +38,6 @@ Route::get('seed', function () {
 
 Route::get('demo', function () {
 
-    return AdminAdvertise::all();
 
-
-    $adminadvaertise = new AdminAdvertise();
-    $adminadvaertise->trxid = 1;
-    $adminadvaertise->campaign_objective   =  'test';
-    $adminadvaertise->user_id  =  2;
-    $adminadvaertise->campaign_name   =  'test';
-    $adminadvaertise->conversion_location   =  'test';
-    $adminadvaertise->performance_goal   =  'test';
-    $adminadvaertise->budget_amount   =  'test';
-    $adminadvaertise->start_date   =  'test';
-    $adminadvaertise->end_date   =  'test';
-    $adminadvaertise->age   = 'test';
-    $adminadvaertise->gender   =  'test';
-    $adminadvaertise->detail_targeting   =  'test';
-    $adminadvaertise->country   =  'test';
-    $adminadvaertise->city   =  'test';
-    $adminadvaertise->device   =  'test';
-    $adminadvaertise->platform   =  [
-        [
-            'asdf'=>'fasd',
-
-        ],
-        [
-            'fasd'=>'fasd'
-        ]
-
-    ];
-    $adminadvaertise->inventory   =  'test';
-    $adminadvaertise->format   =  'test';
-    $adminadvaertise->ad_creative   =  [
-       [
-        'name'=>'1'
-       ],
-       [
-        'fas'=>'fasd'
-       ]
-    ];
-    $adminadvaertise->budget   =  'test';
-    $adminadvaertise->placements   =  'test';
-
-
-    $adminadvaertise->destination   =  'test';
-    $adminadvaertise->tracking   =  'test';
-    $adminadvaertise->url_perimeter   =  'test';
-    $adminadvaertise->number   =  'test';
-    $adminadvaertise->last_description   =  'test';
-    $adminadvaertise->status   =  Status::Pending->value;
-
-    $adminadvaertise->save();
 
 });

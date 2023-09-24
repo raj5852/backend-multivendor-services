@@ -16,7 +16,10 @@ class AdvertiseController extends Controller
     function show($id){
         $data =  AdminAdvertise::where(['user_id'=>userid()])
         ->where('is_paid',1)
-        ->with('AdvertiseAudienceFile', 'advertisePlacement', 'advertiseLocationFiles','files')->find($id);
+        ->with('AdvertiseAudienceFile', 'advertiseLocationFiles')->find($id);
+
+        // all-advertise
+        // files
 
         return $this->response($data);
     }
