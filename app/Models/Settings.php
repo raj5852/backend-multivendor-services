@@ -102,5 +102,12 @@ class Settings extends Model
         'mission_description',
         'subscription_heading',
         'subscription_title',
+        'count_two',
+        'member_title',
+        'member_heading',
+        'home_banner_description',
+        'chose_card_one_description',
+        'chose_card_two_description',
+        'chose_card_three_description',
     ];
 }
