@@ -23,7 +23,7 @@ class SettingsController extends Controller
 
     public function faq()
     {
-        $faqs = DB::table('faqs')->whereNotNull('deleted_at')->get();
+        $faqs = DB::table('faqs')->whereNull('deleted_at')->get();
         return $this->response($faqs);
     }
 
