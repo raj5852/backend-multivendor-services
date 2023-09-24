@@ -8,7 +8,9 @@ use App\Models\AdvertiseAudienceFile;
 use App\Models\AdvertisePlacement;
 use App\Models\DollerRate;
 use App\Models\LocationFile;
+use App\Models\User;
 use App\Services\AamarPayService;
+use App\Services\PaymentHistoryService;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\File;
 
@@ -57,26 +59,26 @@ class AdminAdvertiseService
         $adminadvaertise->save();
 
 
-        // if (request()->hasFile('advertise_audience_files')) {
-        //     foreach (request('advertise_audience_files') as $file) {
-        //         $data = uploadany_file($file, 'uploads/advertise_audience_files/');
-        //         $AdvertiseAudienceFile =  new AdvertiseAudienceFile();
-        //         $AdvertiseAudienceFile->advertise_id  = $adminadvaertise->id;
-        //         $AdvertiseAudienceFile->file    =  $data;
-        //         $AdvertiseAudienceFile->save();
-        //     }
-        // }
+        if (request()->hasFile('advertise_audience_files')) {
+            foreach (request('advertise_audience_files') as $file) {
+                $data = uploadany_file($file, 'uploads/advertise_audience_files/');
+                $AdvertiseAudienceFile =  new AdvertiseAudienceFile();
+                $AdvertiseAudienceFile->advertise_id  = $adminadvaertise->id;
+                $AdvertiseAudienceFile->file    =  $data;
+                $AdvertiseAudienceFile->save();
+            }
+        }
 
 
-        // if (request()->hasFile('location_files')) {
-        //     foreach (request('location_files') as $file) {
-        //         $data = uploadany_file($file, 'uploads/location_files/');
-        //         $locatFile =  new LocationFile();
-        //         $locatFile->advertise_id  = $adminadvaertise->id;
-        //         $locatFile->file    =  $data;
-        //         $locatFile->save();
-        //     }
-        // }
+        if (request()->hasFile('location_files')) {
+            foreach (request('location_files') as $file) {
+                $data = uploadany_file($file, 'uploads/location_files/');
+                $locatFile =  new LocationFile();
+                $locatFile->advertise_id  = $adminadvaertise->id;
+                $locatFile->file    =  $data;
+                $locatFile->save();
+            }
+        }
 
         // $advertisePlace = new AdvertisePlacement();
         // $advertisePlace->advertise_id  = $adminadvaertise->id;
@@ -88,13 +90,21 @@ class AdminAdvertiseService
         // $advertisePlace->apps_and_sites  = request('apps_and_sites') ? request('apps_and_sites') : '';
         // $advertisePlace->save();
 
+        $dollerRate  =  DollerRate::first()?->amount;
+        $totalprice = ($validatData['budget_amount'] * $dollerRate);
         if (request('paymethod') == 'my-wallet') {
-            return "Successfull!";
+            $user = User::find(userid());
+            $user->balance = convertfloat($user->balance) - $totalprice;
+            $user->save();
+
+            PaymentHistoryService::store($trxid, $totalprice, 'My wallet', 'Advertise', '-', '', userid());
+            return responsejson('Successfull!');
+
         }else{
-            $dollerRate  =  DollerRate::first()?->amount;
+
 
             $successurl =  url('api/aaparpay/advertise-success');
-            return AamarPayService::gateway( ($validatData['budget_amount'] * $dollerRate), $trxid,'advertise',$successurl);
+            return AamarPayService::gateway($totalprice, $trxid,'advertise',$successurl);
         }
     }
 

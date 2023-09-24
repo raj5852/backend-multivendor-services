@@ -1,13 +1,9 @@
 <?php
 
-use App\Http\Controllers\ApiTestController;
+use App\Enums\Status;
 use App\Models\AdminAdvertise;
-use App\Models\ServiceOrder;
-use App\Models\ServicePackage;
-use App\Models\User;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Route;
 
 
@@ -28,15 +24,6 @@ Route::get('/', function () {
 
 Auth::routes();
 
-// Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
-
-// Route::get('categories', [CategoryController::class, 'index'])->name('admin.categories');
-// Route::get('category/add', [CategoryController::class, 'add'])->name('admin.category.add');
-// Route::post('category/store', [CategoryController::class, 'Store'])->name('admin.category.store');
-// Route::get('category/edit/{id}', [CategoryController::class, 'Edit'])->name('admin.category.edit');
-// Route::post('category/update/{id}', [CategoryController::class, 'Update'])->name('admin.category.update');
-// Route::get('category/delete/{id}', [CategoryController::class, 'Delete'])->name('admin.category.delete');
-// Route::get('test', [ApiTestController::class, 'index']);
 
 Route::get('migrate', function () {
     Artisan::call('migrate:fresh');
@@ -47,15 +34,60 @@ Route::get('seed', function () {
     Artisan::call('db:seed');
 });
 
-// Route::get('composer-install', function () {
-//     $command = "composer require doctrine/dbal";
-//     $path = base_path();
-//     exec("cd {$path} && {$command}");
-// });
 
 
 Route::get('demo', function () {
 
-    // return
+    return AdminAdvertise::all();
+
+
+    $adminadvaertise = new AdminAdvertise();
+    $adminadvaertise->trxid = 1;
+    $adminadvaertise->campaign_objective   =  'test';
+    $adminadvaertise->user_id  =  2;
+    $adminadvaertise->campaign_name   =  'test';
+    $adminadvaertise->conversion_location   =  'test';
+    $adminadvaertise->performance_goal   =  'test';
+    $adminadvaertise->budget_amount   =  'test';
+    $adminadvaertise->start_date   =  'test';
+    $adminadvaertise->end_date   =  'test';
+    $adminadvaertise->age   = 'test';
+    $adminadvaertise->gender   =  'test';
+    $adminadvaertise->detail_targeting   =  'test';
+    $adminadvaertise->country   =  'test';
+    $adminadvaertise->city   =  'test';
+    $adminadvaertise->device   =  'test';
+    $adminadvaertise->platform   =  [
+        [
+            'asdf'=>'fasd',
+
+        ],
+        [
+            'fasd'=>'fasd'
+        ]
+
+    ];
+    $adminadvaertise->inventory   =  'test';
+    $adminadvaertise->format   =  'test';
+    $adminadvaertise->ad_creative   =  [
+       [
+        'name'=>'1'
+       ],
+       [
+        'fas'=>'fasd'
+       ]
+    ];
+    $adminadvaertise->budget   =  'test';
+    $adminadvaertise->placements   =  'test';
+
+
+    $adminadvaertise->destination   =  'test';
+    $adminadvaertise->tracking   =  'test';
+    $adminadvaertise->url_perimeter   =  'test';
+    $adminadvaertise->number   =  'test';
+    $adminadvaertise->last_description   =  'test';
+    $adminadvaertise->status   =  Status::Pending->value;
+
+    $adminadvaertise->save();
 
 });
