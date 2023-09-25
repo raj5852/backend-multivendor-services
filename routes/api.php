@@ -35,7 +35,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('service/orders',[VendorServiceController::class,'serviceorders']);
     Route::post('service/status',[VendorServiceController::class,'statusChange']);
 
-    Route::post('service/myorders/{id}',[VendorServiceController::class,'singlemyorder']);
+    Route::get('service/myorders/{id}',[VendorServiceController::class,'singlemyorder']);
 
     Route::get('service/orders/view/{id}',[VendorServiceController::class,'ordersview']);
 
