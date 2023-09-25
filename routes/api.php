@@ -16,6 +16,7 @@ use App\Http\Controllers\SubscriptionController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\API\Vendor\VendorServiceController;
 use App\Http\Controllers\API\Vendor\OrderDeliveryController;
+use App\Http\Controllers\DollerRateController;
 use App\Http\Controllers\RenewController;
 
 //register
@@ -82,7 +83,7 @@ Route::prefix('aaparpay')->group(function () {
 Route::post('/contact-store', [ContactController::class, 'store']);
 Route::get('all-services',[VendorServiceController::class,'allservice']);
 
-
+Route::get('doller-rate',[DollerRateController::class,'index']);
 Route::get('/settings', [SettingsController::class, 'index']);
 
 Route::get('/companions', [SettingsController::class, 'companion']);
