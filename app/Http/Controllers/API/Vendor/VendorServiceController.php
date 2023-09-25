@@ -144,6 +144,23 @@ class VendorServiceController extends Controller
         return $this->response($order);
     }
 
+
+    function singlemyorder($id)
+    {
+        $data =  ServiceOrder::where(['user_id' => userid(), 'id' => $id,'is_paid'=>1])->first();
+        if (!$data) {
+            return responsejson('Not found', 'fail');
+        }
+
+        $order = ServiceOrder::where(['user_id'=> userid(),'is_paid'=>1])
+            ->with(['customerdetails', 'servicedetails', 'packagedetails', 'files', 'orderdelivery' => function ($query) {
+                $query->with('deliveryfiles');
+            }])
+            ->find($id);
+
+        return $this->response($order);
+    }
+
     function categorysubcategory(){
         $data = ServiceCategory::query()->with('servicesubCategories')->get();
         return $this->response($data);
