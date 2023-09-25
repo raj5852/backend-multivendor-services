@@ -59,7 +59,7 @@ class ServiceOrderShowController extends Controller
         $validatedData = $request->validated();
         $serviceOrder = new ServiceOrder();
         $serviceOrder->status = $validatedData['status'];
-        $validatedData->save();
+        $serviceOrder->save();
 
         return $this->response('Updated successful');
     }
