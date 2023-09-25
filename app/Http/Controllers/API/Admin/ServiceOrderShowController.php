@@ -57,7 +57,7 @@ class ServiceOrderShowController extends Controller
     public function update(CustomerServiceShow $request,$id)
     {
         $validatedData = $request->validated();
-        $serviceOrder = new ServiceOrder();
+        $serviceOrder = ServiceOrder::find($id);
         $serviceOrder->status = $validatedData['status'];
         $serviceOrder->save();
 
