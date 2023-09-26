@@ -12,10 +12,7 @@ class SubscriptionService
 
     public static function update($validateData, $id)
     {
-        // $values = [
-        //     $value1 = request('card_facilities_icon'),
-        //     $value2 = request('card_facilities_title'),
-        // ];
+
 
 
        $subscription = Subscription::find($id);
@@ -23,6 +20,8 @@ class SubscriptionService
        $subscription->card_time                 = $validateData['card_time'];
        $subscription->card_heading              = $validateData['card_heading'];
        $subscription->card_facilities_title     = $validateData['card_facilities_title'];
+       $subscription->subscription_amount = $validateData['subscription_amount'];
+       $subscription->suggest = request('suggest');
        $subscription->save();
        return true;
     }
