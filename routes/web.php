@@ -26,7 +26,7 @@ Auth::routes();
 
 
 Route::get('migrate', function () {
-    Artisan::call('migrate:fresh');
+    Artisan::call('migrate');
 });
 
 
