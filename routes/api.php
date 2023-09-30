@@ -29,7 +29,7 @@ Route::post('logout', [AuthController::class, 'logout']);
 
 Route::middleware('auth:sanctum')->group(function () {
 
-    // service create
+
 
     Route::resource('main-services',VendorServiceController::class);
     Route::get('service/orders',[VendorServiceController::class,'serviceorders']);

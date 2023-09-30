@@ -11,6 +11,7 @@ use App\Rules\BrandRule;
 use App\Rules\CategoryRule;
 use App\Rules\SubCategorydRule;
 use App\Service\Vendor\ProductService;
+use App\Services\Vendor\VendorProductValidation;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -83,6 +84,7 @@ class ProductManageController extends Controller
             ]);
         } else {
 
+            VendorProductValidation::validation();
 
             $product = new Product();
             $product->category_id = $request->category_id;
