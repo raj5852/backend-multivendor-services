@@ -44,7 +44,7 @@ class PlanTypeSeeder extends Seeder
         Subscription::query()->whereIn('id',[4,8,12])->update([
             'plan_type'=>'vip'
         ]);
-        Subscription::query()->whereIn('id',[15,20,24])->update([
+        Subscription::query()->whereIn('id',[16,20,24])->update([
             'plan_type'=>'vip'
         ]);
 

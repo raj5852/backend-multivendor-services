@@ -101,9 +101,13 @@ class SubscriptionController extends Controller
         $validateData = $request->validated();
 
         $subscription = Subscription::find($validateData['subscription_id']);
-        $subscription->service_qty = $validateData['service_qty'];
-        $subscription->product_qty = $validateData['product_qty'];
-        $subscription->affiliate_request = $validateData['affiliate_request'];
+        $subscription->service_qty = request('service_qty');
+        $subscription->product_qty = request('product_qty');
+        $subscription->affiliate_request = request('affiliate_request');
+
+         $subscription->service_qty = $validateData['product_request'];
+        $subscription->product_qty = $validateData['product_approve'];
+        $subscription->affiliate_request = $validateData['service_create'];
         $subscription->save();
 
         return $this->response('Successfull');

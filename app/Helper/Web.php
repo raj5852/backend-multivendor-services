@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\UserSubscription;
 use Illuminate\Support\Str;
 use Intervention\Image\Facades\Image;
 
@@ -132,3 +133,28 @@ function getmonth($monthname)
         return 12;
     }
 }
+
+function ismembershipexists($userid = null)
+{
+    if (!$userid) {
+        $userid = auth()->id();
+    }
+    return UserSubscription::where(['user_id' => $userid])->exists();
+}
+
+function isactivemembership($userid = null){
+    if (!$userid) {
+        $userid = auth()->id();
+    }
+    return UserSubscription::where(['user_id' => $userid])->where('expire_date','>',now())->exists();
+}
+
+
+function getmembershipdetails($userid = null)
+{
+    if (!$userid) {
+        $userid = auth()->id();
+    }
+    return UserSubscription::where(['user_id' => $userid])->first();
+}
+

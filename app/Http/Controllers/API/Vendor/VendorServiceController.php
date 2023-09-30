@@ -29,7 +29,6 @@ class VendorServiceController extends Controller
             ->with(['servicepackages', 'serviceimages'])
             ->paginate(10);
         return $this->response($vendorService);
-
     }
 
     /**
@@ -41,8 +40,32 @@ class VendorServiceController extends Controller
     public function store(StoreVendorServiceRequest $request)
     {
         $data =  $request->validated();
-        $usersubscription = User::find(userid())->usersubscription;
-        // return $usersubscription-> ;
+        $getmembershipdetails = getmembershipdetails();
+        $user = User::find(auth()->id());
+
+        if($user->role_as == 2){
+            $servicecreateqty  = $getmembershipdetails->service_qty;
+        }
+        if($user->role_as == 3){
+            $servicecreateqty  = $getmembershipdetails->service_create;
+        }
+
+
+
+        $totalcreatedservice = VendorService::where('user_id',userid())->count();
+
+        if(!ismembershipexists()){
+            return responsejson('You do not have membership','fail');
+        }
+
+        if(!isactivemembership()){
+            return responsejson('Membership expired!','fail');
+        }
+
+        if($servicecreateqty <=  $totalcreatedservice){
+            return responsejson('You can not create service more than '.$servicecreateqty.'.','fail');
+        }
+
         ProductService::store($data);
         return $this->response('Success');
     }

@@ -2,6 +2,7 @@
 
 use App\Enums\Status;
 use App\Models\AdminAdvertise;
+use App\Models\User;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
@@ -37,7 +38,5 @@ Route::get('seed', function () {
 
 
 Route::get('demo', function () {
-
-
-
+    return getmembershipdetails(2);
 });

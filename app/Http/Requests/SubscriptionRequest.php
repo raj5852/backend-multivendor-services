@@ -28,9 +28,7 @@ class SubscriptionRequest extends FormRequest
     {
         return [
             'subscription_id'=>['required',Rule::exists('subscriptions','id')],
-            'service_qty'=>'required',
-            'product_qty'=>'required',
-            'affiliate_request'=>'required'
+
         ];
     }
 
