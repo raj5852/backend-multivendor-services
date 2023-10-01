@@ -56,6 +56,6 @@ class VendorService extends Model
     }
 
     function servicesubcategory(){
-        return $this->belongsTo(ServiceSubCategory::class,' service_sub_category_id');
+        return $this->belongsTo(ServiceSubCategory::class,'service_sub_category_id');
     }
 }
