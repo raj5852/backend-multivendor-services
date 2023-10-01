@@ -65,7 +65,6 @@ class ProductManageController extends Controller
             }
 
             if($discount_type == 'percent'){
-
                 $required_balance =  (request('selling_price')/100) * $discount_rate;
             }
 

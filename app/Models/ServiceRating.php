@@ -11,4 +11,8 @@ class ServiceRating extends Model
     use HasFactory,SoftDeletes;
 
     protected $guarded = [];
+
+    function user(){
+        return $this->belongsTo(User::class,'user_id');
+    }
 }

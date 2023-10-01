@@ -43,27 +43,27 @@ class VendorServiceController extends Controller
         $getmembershipdetails = getmembershipdetails();
         $user = User::find(auth()->id());
 
-        if($user->role_as == 2){
+        if ($user->role_as == 2) {
             $servicecreateqty  = $getmembershipdetails->service_qty;
         }
-        if($user->role_as == 3){
+        if ($user->role_as == 3) {
             $servicecreateqty  = $getmembershipdetails->service_create;
         }
 
 
 
-        $totalcreatedservice = VendorService::where('user_id',userid())->count();
+        $totalcreatedservice = VendorService::where('user_id', userid())->count();
 
-        if(!ismembershipexists()){
-            return responsejson('You do not have membership','fail');
+        if (!ismembershipexists()) {
+            return responsejson('You do not have membership', 'fail');
         }
 
-        if(!isactivemembership()){
-            return responsejson('Membership expired!','fail');
+        if (!isactivemembership()) {
+            return responsejson('Membership expired!', 'fail');
         }
 
-        if($servicecreateqty <=  $totalcreatedservice){
-            return responsejson('You can not create service more than '.$servicecreateqty.'.','fail');
+        if ($servicecreateqty <=  $totalcreatedservice) {
+            return responsejson('You can not create service more than ' . $servicecreateqty . '.', 'fail');
         }
 
         ProductService::store($data);
@@ -153,12 +153,12 @@ class VendorServiceController extends Controller
 
     function ordersview($id)
     {
-        $data =  ServiceOrder::where(['vendor_id' => userid(), 'id' => $id,'is_paid'=>1])->first();
+        $data =  ServiceOrder::where(['vendor_id' => userid(), 'id' => $id, 'is_paid' => 1])->first();
         if (!$data) {
             return responsejson('Not found', 'fail');
         }
 
-        $order = ServiceOrder::where(['vendor_id'=> userid(),'is_paid'=>1])
+        $order = ServiceOrder::where(['vendor_id' => userid(), 'is_paid' => 1])
             ->with(['customerdetails', 'servicedetails', 'packagedetails', 'files', 'orderdelivery' => function ($query) {
                 $query->with('deliveryfiles');
             }])
@@ -170,12 +170,12 @@ class VendorServiceController extends Controller
 
     function singlemyorder($id)
     {
-        $data =  ServiceOrder::where(['user_id' => userid(), 'id' => $id,'is_paid'=>1])->first();
+        $data =  ServiceOrder::where(['user_id' => userid(), 'id' => $id, 'is_paid' => 1])->first();
         if (!$data) {
             return responsejson('Not found', 'fail');
         }
 
-        $order = ServiceOrder::where(['user_id'=> userid(),'is_paid'=>1])
+        $order = ServiceOrder::where(['user_id' => userid(), 'is_paid' => 1])
             ->with(['customerdetails', 'servicedetails', 'packagedetails', 'files', 'orderdelivery' => function ($query) {
                 $query->with('deliveryfiles');
             }])
@@ -184,12 +184,27 @@ class VendorServiceController extends Controller
         return $this->response($order);
     }
 
-    function categorysubcategory(){
+    function categorysubcategory()
+    {
         $data = ServiceCategory::query()->with('servicesubCategories')->get();
         return $this->response($data);
     }
 
-    function allservice(){
-     return   ShowAllService::show();
+    function allservice()
+    {
+        return   ShowAllService::show();
+    }
+
+    function serviceshow($id)
+    {
+        $service = VendorService::where(['id' => $id, 'status' => 'active'])->first();
+        if (!$service) {
+            return responsejson('Not found', 'fail');
+        }
+
+     return  VendorService::query()
+            ->where(['id' => $id, 'status' => 'active'])
+            ->with(['servicepackages','serviceimages','user:id,name,image','servicerating.user'])
+            ->first();
     }
 }

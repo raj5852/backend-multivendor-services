@@ -42,8 +42,7 @@ class VendorService extends Model
         return $this->hasMany(ServiceOrder::class,'vendor_service_id');
     }
 
-
-
-    // function
-
+    function servicerating(){
+        return $this->hasMany(ServiceRating::class,'vendor_service_id');
+    }
 }

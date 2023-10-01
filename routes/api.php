@@ -85,6 +85,7 @@ Route::prefix('aaparpay')->group(function () {
 
 Route::post('/contact-store', [ContactController::class, 'store']);
 Route::get('all-services',[VendorServiceController::class,'allservice']);
+Route::get('services-view/{id}',[VendorServiceController::class,'serviceshow']);
 
 Route::get('doller-rate',[DollerRateController::class,'index']);
 Route::get('/settings', [SettingsController::class, 'index']);

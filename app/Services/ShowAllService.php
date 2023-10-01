@@ -12,8 +12,10 @@ class ShowAllService
 
     static function show()
     {
-        return VendorService::with(['serviceorders' => function ($query) {
-            // $query->where('');
-        }])->get();
+        return VendorService::query()
+            ->where('status', 'active')
+            ->latest()
+            ->with(['user:id,name,image'])
+            ->paginate(12);
     }
 }
