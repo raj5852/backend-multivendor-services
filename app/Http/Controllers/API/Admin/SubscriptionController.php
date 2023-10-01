@@ -105,9 +105,9 @@ class SubscriptionController extends Controller
         $subscription->product_qty = request('product_qty');
         $subscription->affiliate_request = request('affiliate_request');
 
-         $subscription->service_qty = $validateData['product_request'];
-        $subscription->product_qty = $validateData['product_approve'];
-        $subscription->affiliate_request = $validateData['service_create'];
+         $subscription->product_request = request('product_request');
+        $subscription->product_approve = request('product_approve');
+        $subscription->service_create = request('service_create');
         $subscription->save();
 
         return $this->response('Successfull');

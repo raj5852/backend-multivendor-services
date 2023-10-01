@@ -12,7 +12,7 @@ class Subscription extends Model
 
     protected $guarded = [];
 
-    protected $casts = [
-        'card_facilities_title' => 'json',
-    ];
+    // protected $casts = [
+    //     'card_facilities_title' => 'json',
+    // ];
 }
