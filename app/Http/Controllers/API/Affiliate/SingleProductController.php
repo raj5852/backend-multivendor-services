@@ -28,7 +28,7 @@ class SingleProductController extends Controller
 
     public function AffiliatorProductSingle($id)
     {
-        // color_product
+        // color_product , sizes
         $product = Product::with('specifications','category', 'subcategory','productImage', 'brand', 'vendor:id,name,image', 'productdetails')->find($id);
         if ($product) {
             return response()->json([

@@ -30,14 +30,13 @@ class ProductService
                 'category:id,name,slug,image',
                 'subcategory:id,name',
                 'brand:id,name',
-                'colors:id,name',
-                'sizes:id,name',
                 'productImage',
             ])
             ->latest()
             ->paginate(10)
             ->withQueryString();
-
+            // 'colors:id,name',
+            // 'sizes:id,name',
         return $product;
     }
 
