@@ -19,6 +19,11 @@ class VendorService extends Model
         return $this->hasMany(ServicePackage::class);
     }
 
+    function firstpackage()
+    {
+        return $this->hasOne(ServicePackage::class,'vendor_service_id');
+    }
+
     function serviceimages()
     {
         return $this->hasMany(ServiceImages::class);

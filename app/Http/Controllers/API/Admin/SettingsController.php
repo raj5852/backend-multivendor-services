@@ -2,12 +2,12 @@
 
 namespace App\Http\Controllers\API\Admin;
 
-use App\Http\Controllers\Controller;
-use App\Http\Requests\SettingsRequest;
 use App\Models\Settings;
-use App\Services\Admin\SettingsService;
 use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\File;
+use App\Http\Requests\SettingsRequest;
+use App\Services\Admin\SettingsService;
 
 class SettingsController extends Controller
 {
@@ -40,7 +40,6 @@ class SettingsController extends Controller
 
             foreach($image_files as $image_file){
                 if ($file = $request->file($image_file)) {
-
                     $input[$image_file] = fileUpload($file,'uploads/setting_images', 300, 300);
                 }
             }

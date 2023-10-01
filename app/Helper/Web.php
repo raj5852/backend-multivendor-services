@@ -125,7 +125,7 @@ function membershipexpiredate($value)
 
 function getmonth($monthname)
 {
-    if ($monthname == 'monthy') {
+    if ($monthname == 'monthly') {
         return 1;
     } elseif ($monthname == 'half_yearly') {
         return 6;

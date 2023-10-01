@@ -15,7 +15,7 @@ class ShowAllService
         return VendorService::query()
             ->where('status', 'active')
             ->latest()
-            ->with(['user:id,name,image'])
+            ->with(['user:id,name,image','firstpackage:id,price,vendor_service_id'])
             ->paginate(12);
     }
 }

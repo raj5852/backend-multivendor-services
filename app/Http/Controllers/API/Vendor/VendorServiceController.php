@@ -197,14 +197,16 @@ class VendorServiceController extends Controller
 
     function serviceshow($id)
     {
-        $service = VendorService::where(['id' => $id, 'status' => 'active'])->first();
+        $service = VendorService::query()
+            ->where(['id' => $id, 'status' => 'active'])
+            ->first();
         if (!$service) {
             return responsejson('Not found', 'fail');
         }
 
-     return  VendorService::query()
+        return  VendorService::query()
             ->where(['id' => $id, 'status' => 'active'])
-            ->with(['servicepackages','serviceimages','user:id,name,image','servicerating.user'])
+            ->with(['servicepackages', 'serviceimages', 'user:id,name,image', 'servicerating.user'])
             ->first();
     }
 }
