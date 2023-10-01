@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api\Vendor;
 
 use App\Enums\Status;
 use App\Http\Controllers\Controller;
+use App\Models\Brand;
 use App\Models\Product;
 use App\Models\ProductImage;
 use App\Models\specification;
@@ -32,6 +33,8 @@ class ProductManageController extends Controller
 
     public function VendorProductStore(Request $request)
     {
+
+
         // Log::info($request->all());
         $validator = Validator::make($request->all(), [
             'name' => 'required|max:255',
@@ -48,10 +51,10 @@ class ProductManageController extends Controller
             'variants' => ['nullable', 'array'],
             // 'variants.*.size_name' => ['required_with:variants'],
             // 'variants.*.color_name' => ['required_with:variants'],
-            'variants.*.qty' => ['required_with:variants','integer','min:0'],
+            'variants.*.qty' => ['required_with:variants', 'integer', 'min:0'],
 
-            'image'=>['required','mimes:jpeg,png,jpg'],
-            'images.*'=>['required','mimes:jpeg,png,jpg'],
+            'image' => ['required', 'mimes:jpeg,png,jpg'],
+            'images.*' => ['required', 'mimes:jpeg,png,jpg'],
 
         ]);
 
@@ -60,22 +63,21 @@ class ProductManageController extends Controller
             $discount_rate = request('discount_rate');
             $required_balance = "";
 
-            if($discount_type == 'flat'){
+            if ($discount_type == 'flat') {
                 $required_balance =  $discount_rate;
             }
 
-            if($discount_type == 'percent'){
-                $required_balance =  (request('selling_price')/100) * $discount_rate;
+            if ($discount_type == 'percent') {
+                $required_balance =  (request('selling_price') / 100) * $discount_rate;
             }
 
-            if($required_balance != ''){
-                if ($required_balance > auth()->user()->balance) {
+            if ($required_balance != '') {
+                if ($required_balance > convertfloat(auth()->user()->balance)) {
                     $validator->errors()->add('selling_price', 'At least one product should have  a commission balance');
                 }
             }
-
-
         });
+
         if ($validator->fails()) {
             return response()->json([
                 'status' => 400,
@@ -83,7 +85,24 @@ class ProductManageController extends Controller
             ]);
         } else {
 
-            VendorProductValidation::validation();
+            $getmembershipdetails = getmembershipdetails();
+
+            $productecreateqty = $getmembershipdetails?->product_qty;
+
+            $totalcreatedproduct = Product::where('user_id', userid())->count();
+
+            if (ismembershipexists() != 1) {
+                return responsejson('You do not have a membership', 'fail');
+            }
+
+            if (isactivemembership() != 1) {
+                return responsejson('Membership expired!', 'fail');
+            }
+
+            if ($productecreateqty <=  $totalcreatedproduct) {
+                return responsejson('You can not create product more than ' . $productecreateqty . '.', 'fail');
+            }
+
 
             $product = new Product();
             $product->category_id = $request->category_id;
@@ -185,10 +204,10 @@ class ProductManageController extends Controller
             'variants' => ['nullable', 'array'],
             // 'variants.*.size_name' => ['required_with:variants'],
             // 'variants.*.color_name' => ['required_with:variants'],
-            'variants.*.qty' => ['required_with:variants','integer','min:0'],
+            'variants.*.qty' => ['required_with:variants', 'integer', 'min:0'],
 
-            'image'=>['nullable','mimes:jpeg,png,jpg'],
-            'images.*'=>['nullable','mimes:jpeg,png,jpg'],
+            'image' => ['nullable', 'mimes:jpeg,png,jpg'],
+            'images.*' => ['nullable', 'mimes:jpeg,png,jpg'],
 
 
         ]);
@@ -196,19 +215,18 @@ class ProductManageController extends Controller
             $discount_type = request('discount_type');
             $discount_rate = request('discount_rate');
 
-            if($discount_type == 'flat'){
+            if ($discount_type == 'flat') {
                 $required_balance =  $discount_rate;
             }
 
-            if($discount_type == 'percent'){
+            if ($discount_type == 'percent') {
 
-                $required_balance =  (request('selling_price')/100) * $discount_rate;
+                $required_balance =  (request('selling_price') / 100) * $discount_rate;
             }
 
             if ($required_balance > auth()->user()->balance) {
                 $validator->errors()->add('selling_price', 'At least one product should have  a commission balance');
             }
-
         });
 
         if ($validator->fails()) {
@@ -226,7 +244,7 @@ class ProductManageController extends Controller
                 $product->user_id = auth()->user()->id;
 
                 $product->name = $request->input('name');
-                $product->slug =  slugUpdate(Product::class,$request->name,$id);
+                $product->slug =  slugUpdate(Product::class, $request->name, $id);
                 $product->short_description = $request->input('short_description');
                 $product->long_description = $request->input('long_description');
                 $product->selling_price = $request->input('selling_price');
@@ -272,12 +290,11 @@ class ProductManageController extends Controller
 
                 if ($request->file('images')) {
                     foreach ($request->file('images') as $key => $image) {
-                        $imageUrl = fileUpload($request->file('images')[$key],'uploads/product');
+                        $imageUrl = fileUpload($request->file('images')[$key], 'uploads/product');
                         $proimage = new ProductImage();
                         $proimage->product_id = $product->id;
                         $proimage->image = $imageUrl;
                         $proimage->save();
-
                     }
                 }
 
@@ -332,7 +349,4 @@ class ProductManageController extends Controller
             ]);
         }
     }
-
-
-
 }

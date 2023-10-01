@@ -11,23 +11,23 @@ class VendorProductValidation
 {
 
     static function validation(){
-        $getmembershipdetails = getmembershipdetails();
+        // $getmembershipdetails = getmembershipdetails();
 
-        $productecreateqty = $getmembershipdetails->product_qty;
+        // $productecreateqty = $getmembershipdetails?->product_qty;
 
-        $totalcreatedproduct = Product::where('user_id',userid())->count();
+        // $totalcreatedproduct = Product::where('user_id',userid())->count();
 
-        if(!ismembershipexists()){
-            return responsejson('You do not have membership','fail');
-        }
+        // if(ismembershipexists() != 1){
+        //     return responsejson('You do not have membership','fail');
+        // }
 
-        if(!isactivemembership()){
-            return responsejson('Membership expired!','fail');
-        }
+        // if(isactivemembership() != 1){
+        //     return responsejson('Membership expired!','fail');
+        // }
 
-        if($productecreateqty <=  $totalcreatedproduct){
-            return responsejson('You can not create product more than '.$productecreateqty.'.','fail');
-        }
+        // if($productecreateqty <=  $totalcreatedproduct){
+        //     return responsejson('You can not create product more than '.$productecreateqty.'.','fail');
+        // }
 
     }
 }

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\API\Vendor;
 
 use App\Http\Controllers\Controller;
+use App\Models\Product;
 use App\Models\ProductDetails;
 use Illuminate\Http\Request;
 
@@ -103,6 +104,28 @@ class RequestProductController extends Controller
     {
         $data =  ProductDetails::find($id);
         if ($data) {
+
+            if($request->status == 1){
+                $getmembershipdetails = getmembershipdetails();
+
+                $affiliaterequest = $getmembershipdetails?->affiliate_request;
+
+                $totalrequest =  ProductDetails::where(['vendor_id'=> userid(),'status'=>1])->count();
+
+                if (ismembershipexists() != 1) {
+                    return responsejson('You do not have a membership', 'fail');
+                }
+
+                if (isactivemembership() != 1) {
+                    return responsejson('Membership expired!', 'fail');
+                }
+
+                if ($affiliaterequest <=  $totalrequest) {
+                    return responsejson('You can not accept product request more than ' . $affiliaterequest . '.', 'fail');
+                }
+            }
+
+
             $data->status = $request->status;
             $data->reason = $request->reason;
             $data->save();
