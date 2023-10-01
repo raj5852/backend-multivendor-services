@@ -12,8 +12,9 @@ class RequestProductController extends Controller
 
     function RequestPending()
     {
+        // 'sizes', 'colors'
         $product = ProductDetails::with(['product' => function ($query) {
-            $query->with('productImage', 'sizes', 'colors');
+            $query->with('productImage');
         }])
             ->where('status', '2')
             ->where('vendor_id', auth()->user()->id)

@@ -105,9 +105,9 @@ class ProductStatusController extends Controller
 
     function AdminRequestView($id){
         $product=ProductDetails::with(['vendor','affiliator','product' => function($query) {
-            $query->with('productImage','sizes','colors');
+            $query->with('productImage');
         }])->find($id);
-
+        // 'sizes','colors'
 
             return response()->json([
             'status'=>200,

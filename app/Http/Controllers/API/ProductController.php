@@ -170,9 +170,10 @@ class ProductController extends Controller
     {
         $product = Product::find($id);
         if ($product) {
+            // 'colors','sizes',
             return response()->json([
                 'status' => 200,
-                'product' => $product->load('specifications','category','subcategory','brand','colors','sizes','productImage','productdetails','vendor')
+                'product' => $product->load('specifications','category','subcategory','brand','productImage','productdetails','vendor')
             ]);
         } else {
             return response()->json([
