@@ -39,6 +39,7 @@ return new class extends Migration
              $table->string('user_type')->nullable();
              $table->string('discount_type')->nullable();
              $table->string('discount_rate')->nullable();
+             $table->text('rejected_details')->nullable();
              $table->timestamps();
              $table->softDeletes();
         });
