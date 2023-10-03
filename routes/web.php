@@ -38,8 +38,10 @@ Route::get('seed', function () {
 
 
 Route::get('demo', function () {
-    User::where('balance',null)->update([
-        'balance'=>0
-    ]);
+    // User::where('balance',null)->update([
+    //     'balance'=>0
+    // ]);
 
+    $data = 100.12;
+    return convertfloat($data);
 });
