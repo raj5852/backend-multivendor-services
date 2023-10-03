@@ -105,6 +105,9 @@ function userrole($roleid)
     if ($roleid == 3) {
         return "affiliate";
     }
+    if ($roleid == 4) {
+        return "user";
+    }
 }
 
 function convertfloat($originalNumber)
@@ -158,3 +161,14 @@ function getmembershipdetails($userid = null)
     return UserSubscription::where(['user_id' => $userid])->first();
 }
 
+function paymentredirect($role){
+    if(userrole($role) == 'vendor'){
+        return 'vendors-dashboard';
+    }
+    if(userrole($role) == 'affiliate'){
+        return 'affiliates-dashboard';
+    }
+    if(userrole($role) == 'user'){
+        return 'user-dashboard';
+    }
+}

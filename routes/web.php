@@ -38,5 +38,4 @@ Route::get('seed', function () {
 
 
 Route::get('demo', function () {
-    return getmembershipdetails(2);
 });
