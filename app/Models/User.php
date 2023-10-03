@@ -57,10 +57,10 @@ class User extends Authenticatable
 
     }
 
-    public function getBalanceAttribute($value)
-    {
-        return number_format($value, 2);
-    }
+    // public function getBalanceAttribute($value)
+    // {
+    //     return number_format($value, 2);
+    // }
 
     function usersubscription(){
         return $this->hasOne(UserSubscription::class,'user_id');
