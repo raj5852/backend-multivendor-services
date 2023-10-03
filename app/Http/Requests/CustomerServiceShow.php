@@ -27,7 +27,7 @@ class CustomerServiceShow extends FormRequest
     public function rules()
     {
         return [
-            'status'=>['required',Rule::in(['progress','pending','success','hold','delivered','revision'])],
+            'status'=>['required',Rule::in(['progress','pending','success','hold','delivered','revision','canceled'])],
         ];
     }
 

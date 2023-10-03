@@ -22,7 +22,7 @@ return new class extends Migration
             $table->foreignIdFor(VendorService::class);
             $table->foreignIdFor(ServicePackage::class);
             $table->unsignedBigInteger('vendor_id');
-            $table->enum('status',['progress','pending','success','hold','expire','delivered','revision'])->default('pending');
+            $table->enum('status',['progress','pending','success','hold','expire','delivered','revision','canceled'])->default('pending');
             $table->string('timer')->nullable();
             $table->text('details')->nullable();
             $table->float('amount');
