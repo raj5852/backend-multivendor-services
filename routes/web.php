@@ -38,4 +38,8 @@ Route::get('seed', function () {
 
 
 Route::get('demo', function () {
+    User::where('balance',null)->update([
+        'balance'=>0
+    ]);
+
 });
