@@ -29,6 +29,7 @@ class AdminVendorServiceRequest extends FormRequest
         return [
             'status'=>['required',Rule::in(['active','pending','rejected'])],
             'commission'=>['required','numeric'],
+            'reason'=>['nullable']
         ];
     }
 

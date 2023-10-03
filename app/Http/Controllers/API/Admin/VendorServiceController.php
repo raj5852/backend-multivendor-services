@@ -64,7 +64,9 @@ class VendorServiceController extends Controller
 
         $vendorService->commission = $validateData['commission'];
         $vendorService->status = $validateData['status'];
+        $vendorService->reason = request('reason');
         $vendorService->save();
+
         return $this->response('Updated successfull');
     }
 
