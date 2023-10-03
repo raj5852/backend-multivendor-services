@@ -6,6 +6,8 @@ use App\Http\Controllers\API\Admin\AdminAdvertiseController;
 use App\Http\Controllers\API\Admin\SupportBoxCategoryController;
 use App\Http\Controllers\API\AuthController;
 use App\Http\Controllers\API\CouponListController;
+use App\Http\Controllers\API\HistoryController;
+use App\Http\Controllers\API\RechargeController;
 use App\Http\Controllers\API\ServiceOrderController;
 use App\Http\Controllers\API\SupportBoxController;
 
@@ -68,6 +70,8 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('coupon-lists',[CouponListController::class,'index']);
     Route::post('renew-subscription',[RenewController::class,'store']);
 
+    Route::post('recharge',[RechargeController::class,'recharge']);
+    Route::get('transition-history',[HistoryController::class,'index']);
 });
 
 Route::prefix('aaparpay')->group(function () {
@@ -75,6 +79,7 @@ Route::prefix('aaparpay')->group(function () {
     Route::post('advertise-success',[AamarpayController::class, 'advertisesuccess']);
     Route::post('service-success',[AamarpayController::class, 'servicesuccess']);
     Route::post('renew-success',[AamarpayController::class, 'renewsuccess']);
+    Route::post('recharge-success',[AamarpayController::class, 'rechargesuccess']);
 
     Route::post('subscription-success', [AamarpayController::class, 'subscriptionsuccess']);
 

@@ -2,6 +2,8 @@
 
 namespace App\Http\Requests;
 
+use App\Models\Coupon;
+use App\Models\Subscription;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
@@ -27,9 +29,19 @@ class BuysubscriptionRequest extends FormRequest
     public function rules()
     {
         return [
-            'subscription_id'=>['required',Rule::exists('subscriptions','id')],
-            'coupon_id'=>['nullable',Rule::exists('coupons','id')],
-            'payment_type'=>['required',Rule::in(['my-wallet','aamarpay'])],
+            'subscription_id' => ['required', Rule::exists('subscriptions', 'id')],
+            'coupon_id' => ['nullable', Rule::exists('coupons', 'id'), function ($ttribute, $value, $fail) {
+                if (request('subscription_id') != '' && request('coupon_id') != '') {
+                    $subscription = Subscription::find(request('subscription_id'));
+                    $coupon = Coupon::find(request('coupon_id'));
+
+                    if ($subscription->subscription_amount < $coupon->amount || $subscription->subscription_amount == 0) {
+                        return $fail('You can not use this coupon');
+                    }
+                }
+                return true;
+            }],
+            'payment_type' => ['required', Rule::in(['my-wallet', 'aamarpay'])],
         ];
     }
 

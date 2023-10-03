@@ -3,9 +3,12 @@
 namespace App\Services;
 
 use App\Models\PaymentStore;
+use App\Models\Product;
+use App\Models\ProductDetails;
 use App\Models\Subscription;
 use App\Models\User;
 use App\Models\UserSubscription;
+use App\Models\VendorService;
 use Carbon\Carbon;
 
 /**
@@ -20,7 +23,37 @@ class SubscriptionRenewService
         $trxid = uniqid();
         $getsubscription = Subscription::find($subscriptionid);
 
+        $getusertype  = userrole($user->id);
+        $servicecreated = VendorService::where('user_id', auth()->id())->count();
+
+        if ($getusertype == 'vendor') {
+            $productcreated = Product::where('user_id', auth()->id())->count();
+            $affiliaterequest = ProductDetails::where(['vendor_id'=> auth()->id(),'status'=>1])->count();
+
+
+            if ($getsubscription->service_qty < $servicecreated) {
+                $qty = $servicecreated - $getsubscription->service_qty;
+                return responsejson('You can not renew now. You should delete ' . $qty . ' service','fail');
+            }
+
+
+            if ($getsubscription->product_qty < $productcreated) {
+                $qty = $productcreated - $getsubscription->product_qty;
+                return responsejson('You can not renew now. You should delete ' . $qty . ' product ','fail');
+            }
+
+            if($getsubscription->affiliate_request < $affiliaterequest){
+                $qty = $affiliaterequest - $getsubscription->affiliate_request;
+                return responsejson('You can not renew now. You should delete ' . $qty . ' product request ','fail');
+            }
+
+        }
+
+
+
         if ($validatedData['payment_method'] == 'my-wallet') {
+            $user->balance = convertfloat($user->balance) - $getsubscription->subscription_amount;
+            $user->save();
             return  self::subscriptionadd($user, $subscriptionid, $trxid, 'My wallet', 'Renew');
         }
 
@@ -30,11 +63,11 @@ class SubscriptionRenewService
             $validatedData['user_id'] = auth()->id();
 
             PaymentStore::create([
-                'payment_gateway'=>'aamarpay',
-                'trxid'=>$trxid,
-                'status'=>'pending',
-                'payment_type'=>'renew',
-                'info'=>$validatedData,
+                'payment_gateway' => 'aamarpay',
+                'trxid' => $trxid,
+                'status' => 'pending',
+                'payment_type' => 'renew',
+                'info' => $validatedData,
             ]);
 
 
@@ -62,7 +95,14 @@ class SubscriptionRenewService
             } else {
                 $expiretime = now()->addMonth($addMonth);
             }
+
             $userCurrentSubscription->expire_date = $expiretime;
+            $userCurrentSubscription->service_qty = $getsubscription->service_qty;
+            $userCurrentSubscription->product_qty = $getsubscription->product_qty;
+            $userCurrentSubscription->affiliate_request = $getsubscription->affiliate_request;
+            $userCurrentSubscription->product_request = $getsubscription->product_request;
+            $userCurrentSubscription->product_approve = $getsubscription->product_approve;
+            $userCurrentSubscription->service_create = $getsubscription->service_create;
             $userCurrentSubscription->save();
 
             return responsejson('Renew successfully');

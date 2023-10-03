@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Api\Affiliate;
+namespace App\Http\Controllers\API\Affiliate;
 
 use App\Http\Controllers\Controller;
 use App\Models\User;
@@ -14,7 +14,7 @@ class ProfileController extends Controller
 {
     public function AffiliatorProfile()
     {
-        $user = User::find(Auth::user()->id);
+        $user = User::find(Auth::user()->id)->load('usersubscription');
         return response()->json([
             'status' => 200,
             'user' => $user

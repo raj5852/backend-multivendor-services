@@ -79,9 +79,9 @@ class BuySubscription extends Controller
         } else {
             $balance = $user->balance;
 
-            if (convertfloat($balance) > $amount) {
+            if (convertfloat($balance) >= $amount) {
 
-                SubscriptionService::store($subscription,$user,$amount,$coupon->id,'My wallet');
+                SubscriptionService::store($subscription,$user,$amount,$coupon?->id,'My wallet');
 
                 $user->balance = (convertfloat($user->balance) - $amount);
                 $user->save();

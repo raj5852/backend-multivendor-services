@@ -35,9 +35,7 @@ class RenewPaymentRule implements Rule
                 $subscriptionamount =  Subscription::find(request('package_id'))->subscription_amount;
 
 
-                if (convertfloat($userbalance) > $subscriptionamount) {
-                    $user->balance = convertfloat($user->balance) - $subscriptionamount;
-                    $user->save();
+                if (convertfloat($userbalance) >= $subscriptionamount) {
                     return true;
                 } else {
                     return false;

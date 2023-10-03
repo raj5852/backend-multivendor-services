@@ -74,7 +74,15 @@ class AamarpayController extends Controller
             SubscriptionService::store($subscription,$user,$amount,$couponid,'Aamarpay');
 
         }
-        "success";
+        return "success";
+    }
+    function rechargesuccess(){
+        $response = request()->all();
+        $data = PaymentStore::where(['trxid' => $response['mer_txnid']])->first();
+        PaymentHistoryService::store($data->trxid, $data['info']['amount'],  'Ammarpay', 'Recharge', '+', '',  $data['info']['user_id']);
+        User::find($data['info']['user_id'])->increment('balance',$data['info']['amount']);
+
+        return 'redirect';
     }
 
 

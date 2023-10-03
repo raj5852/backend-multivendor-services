@@ -13,7 +13,7 @@ class RequestProductController extends Controller
 
     function RequestPending()
     {
-        // 'sizes', 'colors'
+
         $product = ProductDetails::with(['product' => function ($query) {
             $query->with('productImage');
         }])
@@ -22,7 +22,22 @@ class RequestProductController extends Controller
             ->whereHas('product', function ($query) {
                 $query->where('name', 'LIKE', '%' . request('search') . '%');
             })
-            ->with(['affiliator:id,name','vendor:id,name'])
+            ->with(['affiliator:id,name', 'vendor:id,name'])
+
+            // ->where(function ($query) {
+            //     $query->whereHas('affiliator', function ($query) {
+            //         $query->whereHas('usersubscription', function ($query) {
+            //             $query->where('product_approve', '>',);
+            //         });
+            //     });
+            // })
+
+            //     whereHas('usersubscription', function ($query) {
+            //         $query->where('product_approve', '>', 10);
+            //     })
+            //     ;
+            // })
+
             ->latest()
             ->paginate(10)
             ->withQueryString();
@@ -33,12 +48,13 @@ class RequestProductController extends Controller
         ]);
     }
 
-    function RequestView($id){
-        $product = ProductDetails::with(['affiliator','vendor','product'=> function ($query) {
+    function RequestView($id)
+    {
+        $product = ProductDetails::with(['affiliator', 'vendor', 'product' => function ($query) {
             $query->with('productImage', 'sizes', 'colors');
         }])
-        ->where('vendor_id', auth()->user()->id)
-        ->find($id);
+            ->where('vendor_id', auth()->user()->id)
+            ->find($id);
 
         return response()->json([
             'status' => 200,
@@ -49,7 +65,7 @@ class RequestProductController extends Controller
     function RequestActive()
     {
 
-        $product = ProductDetails::with(['affiliator','vendor','product'])->where('status', '1')
+        $product = ProductDetails::with(['affiliator', 'vendor', 'product'])->where('status', '1')
             ->where('vendor_id', auth()->user()->id)
             ->whereHas('product', function ($query) {
                 $query->where('name', 'LIKE', '%' . request('search') . '%');
@@ -68,7 +84,7 @@ class RequestProductController extends Controller
     {
 
         $product = ProductDetails::where('vendor_id', auth()->user()->id)
-            ->with(['affiliator','vendor:id,name,image','product'])
+            ->with(['affiliator', 'vendor:id,name,image', 'product'])
             ->whereHas('product', function ($query) {
                 $query->where('name', 'LIKE', '%' . request('search') . '%');
             })
@@ -85,7 +101,7 @@ class RequestProductController extends Controller
 
     function RequestRejected()
     {
-        $product = ProductDetails::with(['affiliator','vendor','product'])->where('status', '3')
+        $product = ProductDetails::with(['affiliator', 'vendor', 'product'])->where('status', '3')
             ->where('vendor_id', auth()->user()->id)
             ->whereHas('product', function ($query) {
                 $query->where('name', 'LIKE', '%' . request('search') . '%');
@@ -105,12 +121,12 @@ class RequestProductController extends Controller
         $data =  ProductDetails::find($id);
         if ($data) {
 
-            if($request->status == 1){
+            if ($request->status == 1) {
                 $getmembershipdetails = getmembershipdetails();
 
                 $affiliaterequest = $getmembershipdetails?->affiliate_request;
 
-                $totalrequest =  ProductDetails::where(['vendor_id'=> userid(),'status'=>1])->count();
+                $totalrequest =  ProductDetails::where(['vendor_id' => userid(), 'status' => 1])->count();
 
                 if (ismembershipexists() != 1) {
                     return responsejson('You do not have a membership', 'fail');

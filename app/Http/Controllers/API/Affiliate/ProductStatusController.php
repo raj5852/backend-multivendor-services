@@ -91,7 +91,25 @@ class ProductStatusController extends Controller
 
     public function AffiliatorProductRequest(Request $request, $id)
     {
-        // $product=ProductDetails::find($id);
+
+        $getmembershipdetails = getmembershipdetails();
+
+        $productecreateqty = $getmembershipdetails?->product_qty;
+
+        $totalcreatedproduct = Product::where('user_id', userid())->count();
+
+        if (ismembershipexists() != 1) {
+            return responsejson('You do not have a membership', 'fail');
+        }
+
+        if (isactivemembership() != 1) {
+            return responsejson('Membership expired!', 'fail');
+        }
+
+        if ($productecreateqty <=  $totalcreatedproduct) {
+            return responsejson('You can not create product more than ' . $productecreateqty . '.', 'fail');
+        }
+
         $product = new ProductDetails();
         $product->status = 2;
         $product->product_id = $request->product_id;
