@@ -14,7 +14,7 @@ class ProfileController extends Controller
 {
     public function VendorProfile()
     {
-        $user = User::find(Auth::user()->id);
+        $user = User::find(Auth::user()->id)->load('usersubscription:id,user_id,service_qty,product_qty,affiliate_request');
         return response()->json([
             'status' => 200,
             'user' => $user

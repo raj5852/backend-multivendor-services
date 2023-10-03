@@ -14,7 +14,7 @@ class ProfileController extends Controller
 {
     public function AffiliatorProfile()
     {
-        $user = User::find(Auth::user()->id)->load('usersubscription');
+        $user = User::find(Auth::user()->id)->load('usersubscription:id,user_id,product_request,product_approve,service_create');
         return response()->json([
             'status' => 200,
             'user' => $user

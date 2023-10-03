@@ -256,7 +256,68 @@ class UserController extends Controller
         ]);
     }
 
+    public function user(Request $request)
+    {
+        $user = User::where('role_as', '4')
+            ->when(request('name') == 'pending', function ($q) {
+                return $q->where('status', 'pending');
+            })
+            ->when(request('name') == 'active', function ($q) {
+                return $q->where('status', 'active');
+            })
+            ->when($request->email,fn($q, $email)=>$q->where('email','like',"%{$email}%"))
+            ->latest()
+            ->paginate(10)
+            ->withQueryString();
 
+
+        return response()->json([
+            'status' => 200,
+            'user' => $user,
+        ]);
+    }
+
+
+
+    public function UserStore(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'email' => 'required|unique:users|max:255',
+            'name' => 'required',
+            'number' => 'required',
+            'status' => 'required',
+            'password' => 'required:min:6',
+
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'status' => 400,
+                'errors' => $validator->messages(),
+            ]);
+        } else {
+            $affiliator = new User();
+            $affiliator->name = $request->input('name');
+            $affiliator->email = $request->input('email');
+            $affiliator->password = Hash::make($request['password']);
+            $affiliator->status = $request->input('status');
+            $affiliator->number = $request->input('number');
+            $affiliator->role_as = '4';
+
+            if ($request->hasFile('image')) {
+
+               $img =  fileUpload($request->file('image'),'uploads/affiliator',125,125);
+
+                $affiliator->image = $img;
+            }
+
+            $affiliator->save();
+            return response()->json([
+                'status' => 200,
+                'message' => 'User Added Sucessfully',
+            ]);
+        }
+    }
 
     public function AffiliatorStore(Request $request)
     {
@@ -297,6 +358,23 @@ class UserController extends Controller
             ]);
         }
     }
+    public function UserEdit($id)
+    {
+        $user = User::find($id);
+        if ($user) {
+            return response()->json([
+                'status' => 200,
+                'user' => $user
+            ]);
+        } else {
+            return response()->json([
+                'status' => 404,
+                'message' => 'No User Id Found'
+            ]);
+        }
+    }
+
+
 
     public function AffiliatorEdit($id)
     {
@@ -365,6 +443,76 @@ class UserController extends Controller
                     'message' => 'Affiliator Not Found',
                 ]);
             }
+        }
+    }
+
+
+    public function Updateuser(Request $request, $id)
+    {
+        $validator = Validator::make($request->all(), [
+            'name' => 'required|max:191',
+            'status' => 'required|max:191',
+
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'status' => 422,
+                'errors' => $validator->messages(),
+            ]);
+        } else {
+            $user = User::find($id);
+            if ($user) {
+
+                $user->name = $request->input('name');
+                $user->email = $request->input('email');
+                $user->status = $request->input('status');
+                $user->number = $request->input('number');
+
+
+
+                if ($request->hasFile('image')) {
+                    $path = $user->image;
+                    if (File::exists($path)) {
+                        File::delete($path);
+                    }
+
+                    $img =  fileUpload($request->file('image'),'uploads/affiliator',125,125);
+
+                    $user->image = $img;
+                }
+
+
+                $user->update();
+
+                return response()->json([
+                    'status' => 200,
+                    'message' => 'Affiliator Updated Successfully',
+                ]);
+            } else {
+                return response()->json([
+                    'status' => 404,
+                    'message' => 'Affiliator Not Found',
+                ]);
+            }
+        }
+    }
+    public function UserDelete($id)
+    {
+        $vendor = User::find($id);
+
+
+        if ($vendor) {
+            $vendor->delete();
+            return response()->json([
+                'status' => 200,
+                'message' => 'User Deleted Successfully',
+            ]);
+        } else {
+            return response()->json([
+                'status' => 404,
+                'message' => 'No User ID Found',
+            ]);
         }
     }
 

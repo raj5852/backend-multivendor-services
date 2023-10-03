@@ -128,6 +128,9 @@ Route::middleware(['auth:sanctum', 'isAPIAdmin'])->group(function () {
     Route::post('update-affiliator/{id}', [UserController::class, 'UpdateAffiliator']);
     Route::delete('delete-affiliator/{id}', [UserController::class, 'AffiliatorDelete']);
 
+    // user
+    Route::get('user/view/{name?}', [UserController::class, 'AffiliatorView']);
+
 
     Route::post('user/status/update/{id}', [UserController::class, 'updateStatus']);
 
