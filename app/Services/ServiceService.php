@@ -43,7 +43,9 @@ class ServiceService
                 'is_paid'=>1
             ]);
             $user = User::find(userid());
-            $user->decrement('balance',$package->price);
+            $user->balance = convertfloat($user->balance)- $package->price;
+            $user->save();
+
             PaymentHistoryService::store($serviceOrder->trxid, $serviceOrder->amount, 'My wallet', 'Service', '-', '', $serviceOrder->user_id);
 
         }else{
