@@ -129,8 +129,11 @@ Route::middleware(['auth:sanctum', 'isAPIAdmin'])->group(function () {
     Route::delete('delete-affiliator/{id}', [UserController::class, 'AffiliatorDelete']);
 
     // user
-    Route::get('user/view/{name?}', [UserController::class, 'AffiliatorView']);
-
+    Route::get('user/view/{name?}', [UserController::class, 'user']);
+    Route::post('user/store', [UserController::class, 'UserStore']);
+    Route::get('edit-user/{id}', [UserController::class, 'UserEdit']);
+    Route::post('update-user/{id}', [UserController::class, 'Updateuser']);
+    Route::delete('delete-user/{id}', [UserController::class, 'UserDelete']);
 
     Route::post('user/status/update/{id}', [UserController::class, 'updateStatus']);
 

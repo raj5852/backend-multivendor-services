@@ -24,7 +24,7 @@ use App\Http\Controllers\RenewController;
 //register
 Route::post('register', [AuthController::class, 'Register']);
 //login
-Route::post('login', [AuthController::class, 'Login']);
+Route::post('login', [AuthController::class, 'login']);
 
 Route::post('logout', [AuthController::class, 'logout']);
 
