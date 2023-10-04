@@ -24,15 +24,14 @@ class RequestProductController extends Controller
                 $query->where('name', 'LIKE', '%' . request('search') . '%');
             })
             ->with(['affiliator:id,name', 'vendor:id,name'])
-            ->where(function ($query) {
-                $query->withwhereHas('affiliator', function ($query) {
-                    $query->withCount('affiliatoractiveproducts')
-                        ->withwhereHas('usersubscription', function ($query) {
-                            $query->where('product_approve', '>', 'affiliatoractiveproducts_count');
-                        });
-                });
+            ->withwhereHas('affiliator', function ($query) {
+                $query->withCount('affiliatoractiveproducts', function ($query) {
+                    $query->where('status', 1);
+                })
+                    ->withwhereHas('usersubscription', function ($query) {
+                        $query->where('product_approve', '>', 'affiliatoractiveproducts_count');
+                    });
             })
-
             ->latest()
             ->paginate(10)
             ->withQueryString();
