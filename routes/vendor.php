@@ -28,7 +28,7 @@ Route::middleware(['auth:sanctum','isAPIVendor','userOnline'])->group(function (
     });
 
     Route::get('vendor/profile', [ProfileController::class, 'VendorProfile']);
-    // Route::post('vendor/update/profile', [ProfileController::class, 'VendorUpdateProfile']);
+    Route::post('vendor/update/profile', [ProfileController::class, 'VendorUpdateProfile']);
 
     //vendor product
     Route::get('vendor/product/{status?}', [ProductManageController::class, 'VendorProduct']);
