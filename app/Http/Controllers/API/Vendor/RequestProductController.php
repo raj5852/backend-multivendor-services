@@ -20,14 +20,14 @@ class RequestProductController extends Controller
             }])
             ->where('status', '2')
             ->where('vendor_id', auth()->user()->id)
-            ->whereHas('product', function ($query) {
+            ->when('product', function ($query) {
                 $query->where('name', 'LIKE', '%' . request('search') . '%');
             })
             ->with(['affiliator:id,name', 'vendor:id,name'])
             ->where(function ($query) {
-                $query->whereHas('affiliator', function ($query) {
+                $query->withwhereHas('affiliator', function ($query) {
                     $query->withCount('affiliatoractiveproducts')
-                        ->whereHas('usersubscription', function ($query) {
+                        ->withwhereHas('usersubscription', function ($query) {
                             $query->where('product_approve', '>', 'affiliatoractiveproducts_count');
                         });
                 });
