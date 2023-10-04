@@ -20,7 +20,7 @@ class RequestProductController extends Controller
             }])
             ->where('status', '2')
             ->where('vendor_id', auth()->user()->id)
-            ->when('product', function ($query) {
+            ->whereHas('product', function ($query) {
                 $query->where('name', 'LIKE', '%' . request('search') . '%');
             })
             ->with(['affiliator:id,name', 'vendor:id,name'])
