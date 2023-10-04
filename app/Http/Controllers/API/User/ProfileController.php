@@ -28,8 +28,8 @@ class ProfileController extends Controller
     {
         $validator =  Validator::make($request->all(), [
             'name' => 'required',
-            'number' => 'required',
-            'number2' => 'nullable',
+            'number' => ['required', 'integer'],
+            'number2' => ['nullable','integer'],
             'old_password' => 'nullable',
             'new_password' => 'nullable',
         ]);

@@ -57,11 +57,6 @@ class User extends Authenticatable
 
     }
 
-    // public function getBalanceAttribute($value)
-    // {
-    //     return number_format($value, 2);
-    // }
-
     function usersubscription(){
         return $this->hasOne(UserSubscription::class,'user_id');
     }
@@ -70,4 +65,7 @@ class User extends Authenticatable
         return $this->hasMany(PaymentHistory::class,'user_id');
     }
 
+    function affiliatoractiveproducts(){
+        return $this->hasMany(ProductDetails::class,'user_id');
+    }
 }

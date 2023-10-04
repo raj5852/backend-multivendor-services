@@ -14,38 +14,7 @@ class RequestProductController extends Controller
     function RequestPending()
     {
 
-        // $product = ProductDetails::quey()
-        //     ->with(['product' => function ($query) {
-        //         $query->with('productImage');
-        //     }])
-        //     ->where('status', '2')
-        //     ->where('vendor_id', auth()->user()->id)
-        //     ->whereHas('product', function ($query) {
-        //         $query->where('name', 'LIKE', '%' . request('search') . '%');
-        //     })
-        //     ->with(['affiliator:id,name', 'vendor:id,name'])
-        //     ->withCount('xyx')
-        //     ->where(function ($query) {
-        //         $query->whereHas('affiliator', function ($query) {
-
-        //             $query->whereHas('usersubscription', function ($query) {
-        //                 $query->where('product_approve', '>',  );
-        //             });
-        //         });
-        //     })
-
-        //     ->latest()
-        //     ->paginate(10)
-        //     ->withQueryString();
-        $affiliateProductIdsWithAtLeastTenApprovals = ProductDetails::query()
-            ->whereHas('affiliator', function ($query) {
-                $query->whereHas('usersubscription', function ($query) {
-                    $query->where('product_approve', '>', 9); // At least 10 approved products
-                });
-            })
-            ->pluck('affiliator_id');
-
-        $product = ProductDetails::query()
+        $product = ProductDetails::quey()
             ->with(['product' => function ($query) {
                 $query->with('productImage');
             }])
@@ -55,17 +24,19 @@ class RequestProductController extends Controller
                 $query->where('name', 'LIKE', '%' . request('search') . '%');
             })
             ->with(['affiliator:id,name', 'vendor:id,name'])
-            ->where(function ($query) use ($affiliateProductIdsWithAtLeastTenApprovals) {
-                $query->whereDoesntHave('affiliator', function ($query) use ($affiliateProductIdsWithAtLeastTenApprovals) {
-                    $query->whereIn('id', $affiliateProductIdsWithAtLeastTenApprovals);
+            ->where(function ($query) {
+                $query->whereHas('affiliator', function ($query) {
+                    $query->withCount('affiliatoractiveproducts')
+                        ->whereHas('usersubscription', function ($query) {
+                            $query->where('product_approve', '>', 'affiliatoractiveproducts_count');
+                        });
                 });
             })
-            ->whereHas('vendor', function ($query) {
-                $query->where('role', 3); // Assuming 3 represents the affiliate role
-            })
+
             ->latest()
             ->paginate(10)
             ->withQueryString();
+
 
 
         return response()->json([
