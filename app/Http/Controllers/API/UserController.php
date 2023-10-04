@@ -454,7 +454,7 @@ class UserController extends Controller
             'status' => 'required|max:191',
             'email' => 'required',
             'number' => 'required',
-
+            'balance'=> ['required','numeric']
         ]);
 
         if ($validator->fails()) {
@@ -470,6 +470,7 @@ class UserController extends Controller
                 $user->email = $request->input('email');
                 $user->status = $request->input('status');
                 $user->number = $request->input('number');
+                $user->balance = request('balance');
 
 
 
