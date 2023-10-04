@@ -14,7 +14,7 @@ class ProfileController extends Controller
 {
     public function AffiliatorProfile()
     {
-        $user = User::find(Auth::user()->id)->load('usersubscription:id,user_id,product_request,product_approve,service_create');
+        $user = User::find(Auth::user()->id)->load('usersubscription:id,user_id,product_request,product_approve,service_create,expire_date');
 
         $user->balance = number_format($user->balance);
 

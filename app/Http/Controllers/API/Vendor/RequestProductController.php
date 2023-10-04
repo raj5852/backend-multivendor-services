@@ -14,10 +14,39 @@ class RequestProductController extends Controller
     function RequestPending()
     {
 
+        // $product = ProductDetails::query()
+        //     ->with(['product' => function ($query) {
+        //         $query->select('id', 'name', 'selling_price')
+        //             ->with('productImage');
+        //     }])
+        //     ->where('status', '2')
+        //     ->where('vendor_id', auth()->user()->id)
+        //     ->whereHas('product', function ($query) {
+        //         $query->where('name', 'LIKE', '%' . request('search') . '%');
+        //     })
+        //     ->with(['affiliator:id,name', 'vendor:id,name'])
+        //     ->withwhereHas('affiliator', function ($query) {
+        //         $query->withCount(['affiliatoractiveproducts' => function ($query) {
+        //             $query->where('status', 1);
+        //         }])
+        //             // ->with(['usersubscriptions' => function ($query) {
+        //             //     $query->select('id', 'product_approve','user_id');
+        //             // }])
+        //             // ->where('affiliatoractiveproducts_count', '<', \DB::raw('usersubscriptions.product_approve'));
+        //             ->withwhereHas('usersubscriptions', function ($query) {
+        //                 $query->select('id', 'product_approve', 'user_id')
+        //                     ->where('affiliatoractiveproducts_count', '<', 'product_approve');
+        //             });
+        //     })
+        //     ->latest()
+        //     ->paginate(10)
+        //     ->withQueryString();
+
+
         $product = ProductDetails::query()
-            ->with(['product'=>function($query){
-                $query->select('id','name','selling_price')
-                ->with('productImage');
+            ->with(['product' => function ($query) {
+                $query->select('id', 'name', 'selling_price')
+                    ->with('productImage');
             }])
             ->where('status', '2')
             ->where('vendor_id', auth()->user()->id)
@@ -26,16 +55,16 @@ class RequestProductController extends Controller
             })
             ->with(['affiliator:id,name', 'vendor:id,name'])
             ->withwhereHas('affiliator', function ($query) {
-                $query->withCount(['affiliatoractiveproducts'=> function ($query) {
+                $query->withCount(['affiliatoractiveproducts' => function ($query) {
                     $query->where('status', 1);
                 }])
-                    ->with('usersubscription')
-                    ->having('affiliatoractiveproducts_count','<','usersubscription');
+                    // ->withSum('usersubscription','product_approve')
+                    // ->having('affiliatoractiveproducts_count','<', \DB::raw('usersubscriptions_sum_product_approve') );
+                    ->having('affiliatoractiveproducts_count','<', \DB::raw('usersubscription.product_approve') );
             })
             ->latest()
             ->paginate(10)
             ->withQueryString();
-
 
 
         return response()->json([
