@@ -220,6 +220,7 @@ Route::middleware(['auth:sanctum', 'isAPIAdmin'])->group(function () {
         Route::resource('advertise', AdminAdvertiseController::class);
         Route::post('advertise/status', [AdminAdvertiseController::class,'status']);
         Route::post('advertise/delivery', [AdminAdvertiseController::class,'delivery']);
+        Route::post('advertise/cancel', [AdminAdvertiseController::class,'cancel']);
 
         Route::resource('vendor-services', VendorServiceController::class);
 

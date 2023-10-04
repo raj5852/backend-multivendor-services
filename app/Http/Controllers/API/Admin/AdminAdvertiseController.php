@@ -6,6 +6,7 @@ use App\Models\AdminAdvertise;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\AdminAdminStatusProgress;
 use App\Http\Requests\AdvertiseDeliveryRequest;
+use App\Http\Requests\CancelAdminAdvertiseRequest;
 use App\Http\Requests\StoreAdminAdvertiseRequest;
 use App\Http\Requests\UpdateAdminAdvertiseRequest;
 use App\Models\User;
@@ -141,5 +142,15 @@ class AdminAdvertiseController extends Controller
                 }
             }
         });
+
+        return $this->response('Delivered successfully!');
+    }
+
+    function cancel(CancelAdminAdvertiseRequest $request){
+
+        $advertise = AdminAdvertise::find(request('advertise_id'));
+        $advertise->status = "cancel";
+        $advertise->reason = request('reason');
+        $advertise->save();
     }
 }
