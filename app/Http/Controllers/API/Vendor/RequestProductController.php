@@ -15,8 +15,9 @@ class RequestProductController extends Controller
     {
 
         $product = ProductDetails::query()
-            ->with(['product' => function ($query) {
-                $query->with('productImage');
+            ->with(['product'=>function($query){
+                $query->select('id','name','selling_price')
+                ->with('productImage');
             }])
             ->where('status', '2')
             ->where('vendor_id', auth()->user()->id)
@@ -25,12 +26,11 @@ class RequestProductController extends Controller
             })
             ->with(['affiliator:id,name', 'vendor:id,name'])
             ->withwhereHas('affiliator', function ($query) {
-                $query->withCount('affiliatoractiveproducts', function ($query) {
+                $query->withCount(['affiliatoractiveproducts'=> function ($query) {
                     $query->where('status', 1);
-                })
-                    ->withwhereHas('usersubscription', function ($query) {
-                        $query->where('product_approve', '>', 'affiliatoractiveproducts_count');
-                    });
+                }])
+                    ->with('usersubscription')
+                    ->having('affiliatoractiveproducts_count','<','usersubscription');
             })
             ->latest()
             ->paginate(10)

@@ -122,7 +122,7 @@ class VendorServiceController extends Controller
 
     function serviceorders()
     {
-        $order = ServiceOrder::where('vendor_id', userid())
+        $order = ServiceOrder::where(['vendor_id'=> userid(),'is_paid'=>1])
             ->with(['customerdetails', 'servicedetails', 'packagedetails'])
             ->latest()
             ->paginate(10);
