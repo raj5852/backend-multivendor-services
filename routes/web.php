@@ -2,9 +2,11 @@
 
 use App\Enums\Status;
 use App\Models\AdminAdvertise;
+use App\Models\Product;
 use App\Models\User;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Route;
 
 
@@ -38,10 +40,12 @@ Route::get('seed', function () {
 
 
 Route::get('demo', function () {
-    // User::where('balance',null)->update([
-    //     'balance'=>0
-    // ]);
 
-    $data = 100.12;
-    return convertfloat($data);
+    return DB::dele('select * from users where email=?',['admin@gmail.com']);
+
+    // return Product::query()
+    // ->select('id','selling_price','original_price',DB::raw('original_price  + selling_price as discountprice'))
+    // ->get();
+
+
 });
