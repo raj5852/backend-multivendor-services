@@ -167,8 +167,8 @@ class RequestProductController extends Controller
                         })
                         ->withSum('usersubscription', 'product_approve')
                         ->having('affiliatoractiveproducts_count', '<', \DB::raw('usersubscription_sum_product_approve'));
-                })
-                ->orwhere('status',1);
+                });
+                // ->orwhere('status',1);
             })
 
             ->latest()
@@ -184,23 +184,31 @@ class RequestProductController extends Controller
 
     function RequestRejected()
     {
-        $product = ProductDetails::with(['affiliator', 'vendor', 'product'])->where('status', '3')
+        $product = ProductDetails::query()
+            ->with(['product' => function ($query) {
+                $query->select('id', 'name', 'selling_price')
+                    ->with('productImage');
+            }])
             ->where('vendor_id', auth()->user()->id)
+            ->where('status', 3)
             ->whereHas('product', function ($query) {
                 $query->where('name', 'LIKE', '%' . request('search') . '%');
             })
+            ->with(['affiliator:id,name', 'vendor:id,name'])
             ->whereHas('affiliator', function ($query) {
                 $query->withCount(['affiliatoractiveproducts' => function ($query) {
                     $query->where('status', 1);
                 }])
                     ->whereHas('usersubscription', function ($query) {
-                        $query->where('expire_date', '<=', now());
+                        $query->where('expire_date', '>', now());
                     })
                 ->withSum('usersubscription', 'product_approve')
                 ->having('affiliatoractiveproducts_count', '<', \DB::raw('usersubscription_sum_product_approve'));
             })
-            ->latest()->paginate(10)
+            ->latest()
+            ->paginate(10)
             ->withQueryString();
+
 
         return response()->json([
             'status' => 200,
