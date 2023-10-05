@@ -189,7 +189,16 @@ class RequestProductController extends Controller
             ->whereHas('product', function ($query) {
                 $query->where('name', 'LIKE', '%' . request('search') . '%');
             })
-
+            ->whereHas('affiliator', function ($query) {
+                $query->withCount(['affiliatoractiveproducts' => function ($query) {
+                    $query->where('status', 1);
+                }])
+                    ->whereHas('usersubscription', function ($query) {
+                        $query->where('expire_date', '<=', now());
+                    })
+                ->withSum('usersubscription', 'product_approve')
+                ->having('affiliatoractiveproducts_count', '<', \DB::raw('usersubscription_sum_product_approve'));
+            })
             ->latest()->paginate(10)
             ->withQueryString();
 
