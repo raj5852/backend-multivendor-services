@@ -94,7 +94,7 @@ class ProductStatusController extends Controller
 
         $getmembershipdetails = getmembershipdetails();
 
-        $productecreateqty = $getmembershipdetails?->product_qty;
+        $productecreateqty = $getmembershipdetails?->product_request;
 
         $totalcreatedproduct = Product::where('user_id', userid())->count();
 
@@ -107,7 +107,7 @@ class ProductStatusController extends Controller
         }
 
         if ($productecreateqty <=  $totalcreatedproduct) {
-            return responsejson('You can not create product more than ' . $productecreateqty . '.', 'fail');
+            return responsejson('You can send product request more then ' . $productecreateqty . '.', 'fail');
         }
 
         $product = new ProductDetails();
