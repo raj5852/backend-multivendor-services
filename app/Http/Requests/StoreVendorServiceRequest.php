@@ -48,7 +48,7 @@ class StoreVendorServiceRequest extends FormRequest
             'time'=>'required|array|size:3',
             'package_title'=>'required|array|size:3',
             'package_description'=>'required|array|size:3',
-            'price'=>'required|array|size:3',
+            'price'=>'required|array|size:3|numeric',
 
             'images' => 'required|array',
             'images.*' => 'image|mimes:jpeg,png,jpg,gif',
