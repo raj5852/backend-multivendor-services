@@ -47,6 +47,40 @@ class RequestProductController extends Controller
         ]);
     }
 
+    function membershipexpireactiveproduct()
+    {
+        $product = ProductDetails::query()
+        ->with(['product' => function ($query) {
+            $query->select('id', 'name', 'selling_price')
+                ->with('productImage');
+        }])
+        ->where('vendor_id', auth()->user()->id)
+        ->where('status', 1)
+        ->whereHas('product', function ($query) {
+            $query->where('name', 'LIKE', '%' . request('search') . '%');
+        })
+        ->with(['affiliator:id,name', 'vendor:id,name'])
+        ->whereHas('affiliator', function ($query) {
+            $query->withCount(['affiliatoractiveproducts' => function ($query) {
+                $query->where('status', 1);
+            }])
+                ->whereHas('usersubscription', function ($query) {
+                    $query->where('expire_date', '<=', now());
+                });
+                // ->withSum('usersubscription', 'product_approve')
+                // ->having('affiliatoractiveproducts_count', '<', \DB::raw('usersubscription_sum_product_approve'));
+        })
+        ->latest()
+        ->paginate(10)
+        ->withQueryString();
+
+
+    return response()->json([
+        'status' => 200,
+        'product' => $product,
+    ]);
+    }
+
     function RequestView($id)
     {
         $product = ProductDetails::query()
@@ -95,9 +129,9 @@ class RequestProductController extends Controller
                 }])
                     ->whereHas('usersubscription', function ($query) {
                         $query->where('expire_date', '>', now());
-                    })
-                    ->withSum('usersubscription', 'product_approve')
-                    ->having('affiliatoractiveproducts_count', '<', \DB::raw('usersubscription_sum_product_approve'));
+                    });
+                    // ->withSum('usersubscription', 'product_approve')
+                    // ->having('affiliatoractiveproducts_count', '<', \DB::raw('usersubscription_sum_product_approve'));
             })
             ->latest()
             ->paginate(10)
@@ -163,19 +197,8 @@ class RequestProductController extends Controller
 
     function RequestUpdate(VendorProductrequestRequest $request, $id)
     {
-        $data =  ProductDetails::query()
-            ->where(['vendor_id' => auth()->id(), 'id' => $id])
-            ->whereHas('affiliator', function ($query) {
-                $query->withCount(['affiliatoractiveproducts' => function ($query) {
-                    $query->where('status', 1);
-                }])
-                    ->whereHas('usersubscription', function ($query) {
-                        $query->where('expire_date', '>', now());
-                    })
-                    ->withSum('usersubscription', 'product_approve')
-                    ->having('affiliatoractiveproducts_count', '<', \DB::raw('usersubscription_sum_product_approve'));
-            })
-            ->first();
+        $validatedData = $request->validated();
+        $data =  ProductDetails::find($id);
 
         if ($data) {
 
