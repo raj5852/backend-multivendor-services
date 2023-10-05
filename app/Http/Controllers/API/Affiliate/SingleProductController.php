@@ -31,7 +31,7 @@ class SingleProductController extends Controller
         // color_product , sizes
         $product = Product::query()
             ->with('specifications', 'category', 'subcategory', 'productImage', 'brand', 'vendor:id,name,image', 'productdetails')
-            ->where('status',1)
+            ->where('status','active')
             ->whereHas('vendor',function($query){
                 $query->withCount(['vendoractiveproduct' => function ($query) {
                     $query->where('status', 1);

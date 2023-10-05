@@ -15,15 +15,15 @@ class ProductStatusController extends Controller
         $product = Product::query()
             ->where('status', 'active')
             ->when(request('search'), fn ($q, $name) => $q->where('name', 'like', "%{$name}%"))
-            ->whereHas('vendor',function($query){
+            ->whereHas('vendor', function ($query) {
                 $query->withCount(['vendoractiveproduct' => function ($query) {
                     $query->where('status', 1);
                 }])
                     ->whereHas('usersubscription', function ($query) {
                         $query->where('expire_date', '>', now());
                     })
-                ->withSum('usersubscription', 'affiliate_request')
-                ->having('vendoractiveproduct_count', '<', \DB::raw('usersubscription_sum_affiliate_request'));
+                    ->withSum('usersubscription', 'affiliate_request')
+                    ->having('vendoractiveproduct_count', '<', \DB::raw('usersubscription_sum_affiliate_request'));
             })
             ->whereDoesntHave('productdetails', function ($query) {
                 $query->where('user_id', auth()->user()->id);
@@ -70,15 +70,15 @@ class ProductStatusController extends Controller
             ->whereHas('product', function ($query) use ($searchTerm) {
                 $query->where('name', 'like', '%' . $searchTerm . '%');
             })
-            ->whereHas('vendor',function($query){
+            ->whereHas('vendor', function ($query) {
                 $query->withCount(['vendoractiveproduct' => function ($query) {
                     $query->where('status', 1);
                 }])
                     ->whereHas('usersubscription', function ($query) {
                         $query->where('expire_date', '>', now());
                     })
-                ->withSum('usersubscription', 'affiliate_request')
-                ->having('vendoractiveproduct_count', '<', \DB::raw('usersubscription_sum_affiliate_request'));
+                    ->withSum('usersubscription', 'affiliate_request')
+                    ->having('vendoractiveproduct_count', '<', \DB::raw('usersubscription_sum_affiliate_request'));
             })
             ->latest()->paginate(10)
             ->withQueryString();
@@ -89,7 +89,8 @@ class ProductStatusController extends Controller
         ]);
     }
 
-    function vendorexpireproducts(){
+    function vendorexpireproducts()
+    {
         $userId = Auth::id();
         $searchTerm = request('search');
 
@@ -97,7 +98,7 @@ class ProductStatusController extends Controller
             ->whereHas('product', function ($query) use ($searchTerm) {
                 $query->where('name', 'like', '%' . $searchTerm . '%');
             })
-            ->whereHas('vendor',function($query){
+            ->whereHas('vendor', function ($query) {
                 $query->withCount(['vendoractiveproduct' => function ($query) {
                     $query->where('status', 1);
                 }])
@@ -163,12 +164,29 @@ class ProductStatusController extends Controller
             return responsejson('You product accept limit over.', 'fail');
         }
 
+        $existproduct = Product::query()
+            ->where('status', 'active')
+            ->whereHas('vendor', function ($query) {
+                $query->withCount(['vendoractiveproduct' => function ($query) {
+                    $query->where('status', 1);
+                }])
+                    ->whereHas('usersubscription', function ($query) {
+                        $query->where('expire_date', '>', now());
+                    })
+                    ->withSum('usersubscription', 'affiliate_request')
+                    ->having('vendoractiveproduct_count', '<', \DB::raw('usersubscription_sum_affiliate_request'));
+            })
+            ->find(request('product_id'));
+
+            if(!$existproduct){
+                return $this->response('Product not fount');
+            }
 
         $product = new ProductDetails();
         $product->status = 2;
-        $product->product_id = $request->product_id;
-        $product->vendor_id = $request->vendor_id;
-        $product->user_id = Auth::user()->id;
+        $product->product_id = $existproduct->id;
+        $product->vendor_id = $existproduct->user_id;
+        $product->user_id = auth()->id();
         $product->save();
 
         return response()->json([
