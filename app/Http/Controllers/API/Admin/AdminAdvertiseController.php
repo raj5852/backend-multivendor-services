@@ -152,5 +152,7 @@ class AdminAdvertiseController extends Controller
         $advertise->status = "cancel";
         $advertise->reason = request('reason');
         $advertise->save();
+
+        return $this->response('Cancel successfully!');
     }
 }
