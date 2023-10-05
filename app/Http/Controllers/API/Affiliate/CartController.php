@@ -15,7 +15,7 @@ class CartController extends Controller
 {
     public function addtocart(Request $request)
     {
-        // Log::info($request->all());
+        Log::info($request->all());
 
         $user_id = auth()->user()->id;
         $product_id = $request->product_id;
@@ -28,7 +28,6 @@ class CartController extends Controller
 
         if($request->discount_type == 'flat'){
             $amount = $request->discount_rate;
-
         }
 
         if($request->discount_type == 'percent'){
