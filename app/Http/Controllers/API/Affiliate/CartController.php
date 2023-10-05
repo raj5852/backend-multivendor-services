@@ -15,7 +15,7 @@ class CartController extends Controller
 {
     public function addtocart(Request $request)
     {
-        Log::info($request->all());
+        // Log::info($request->all());
 
         $user_id = auth()->user()->id;
         $product_id = $request->product_id;
@@ -24,7 +24,7 @@ class CartController extends Controller
 
         $productAmount = Product::find($request->product_id)->selling_price;
 
-        // $product_qty =json_encode($request->product_qty);
+
 
         if($request->discount_type == 'flat'){
             $amount = $request->discount_rate;
@@ -51,15 +51,12 @@ class CartController extends Controller
                 $cartitem = new Cart();
                 $cartitem->user_id = $user_id;
                 $cartitem->product_id = $product_id;
-                // $cartitem->product_qty = $product_qty;
                 $cartitem->product_price = $product_price;
                 $cartitem->vendor_id=$vendor_id;
                 $cartitem->amount=$amount;
                 $cartitem->category_id=$request->category_id;
 
                 $cartitem->save();
-                // $cartitem->colors()->attach($request->colors);
-                // $cartitem->sizes()->attach($request->sizes);
 
                 $colors = [];
                 $sizes = [];
