@@ -96,7 +96,7 @@ class ProductStatusController extends Controller
 
         $productecreateqty = $getmembershipdetails?->product_request;
 
-        $totalcreatedproduct = Product::where('user_id', userid())->count();
+        $totalcreatedproduct = ProductDetails::where('user_id', userid())->count();
 
         if (ismembershipexists() != 1) {
             return responsejson('You do not have a membership', 'fail');

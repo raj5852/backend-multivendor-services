@@ -123,9 +123,6 @@ Route::middleware(['auth:sanctum','isAPIVendor','userOnline'])->group(function (
 
     Route::prefix('vendor')->group(function(){
 
-
-
-
         // Route::resource('test', TestController::class);
     });
 
