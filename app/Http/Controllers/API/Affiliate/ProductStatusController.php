@@ -12,9 +12,19 @@ class ProductStatusController extends Controller
 {
     public function AffiliatorProducts()
     {
-        $product = Product::where('status', 'active')
+        $product = Product::query()
+            ->where('status', 'active')
             ->when(request('search'), fn ($q, $name) => $q->where('name', 'like', "%{$name}%"))
-
+            ->whereHas('vendor',function($query){
+                $query->withCount(['vendoractiveproduct' => function ($query) {
+                    $query->where('status', 1);
+                }])
+                    ->whereHas('usersubscription', function ($query) {
+                        $query->where('expire_date', '>', now());
+                    })
+                ->withSum('usersubscription', 'affiliate_request')
+                ->having('vendoractiveproduct_count', '<', \DB::raw('usersubscription_sum_affiliate_request'));
+            })
             ->whereDoesntHave('productdetails', function ($query) {
                 $query->where('user_id', auth()->user()->id);
             })
@@ -36,13 +46,13 @@ class ProductStatusController extends Controller
         $searchTerm = request('search');
 
         $pending = ProductDetails::with('product')
-        ->where('user_id', $userId)
-        ->where('status', 2)
-        ->whereHas('product', function ($query) use ($searchTerm) {
-            $query->where('name', 'like', '%'.$searchTerm.'%');
-        })
-        ->latest()->paginate(10)
-        ->withQueryString();
+            ->where('user_id', $userId)
+            ->where('status', 2)
+            ->whereHas('product', function ($query) use ($searchTerm) {
+                $query->where('name', 'like', '%' . $searchTerm . '%');
+            })
+            ->latest()->paginate(10)
+            ->withQueryString();
 
         return response()->json([
             'status' => 200,
@@ -57,11 +67,21 @@ class ProductStatusController extends Controller
         $searchTerm = request('search');
 
         $active = ProductDetails::with('product')->where('user_id', $userId)->where('status', 1)
-        ->whereHas('product', function ($query) use ($searchTerm) {
-            $query->where('name', 'like', '%'.$searchTerm.'%');
-        })
-        ->latest()->paginate(10)
-        ->withQueryString();
+            ->whereHas('product', function ($query) use ($searchTerm) {
+                $query->where('name', 'like', '%' . $searchTerm . '%');
+            })
+            ->whereHas('vendor',function($query){
+                $query->withCount(['vendoractiveproduct' => function ($query) {
+                    $query->where('status', 1);
+                }])
+                    ->whereHas('usersubscription', function ($query) {
+                        $query->where('expire_date', '>', now());
+                    })
+                ->withSum('usersubscription', 'affiliate_request')
+                ->having('vendoractiveproduct_count', '<', \DB::raw('usersubscription_sum_affiliate_request'));
+            })
+            ->latest()->paginate(10)
+            ->withQueryString();
 
         return response()->json([
             'status' => 200,
@@ -75,12 +95,12 @@ class ProductStatusController extends Controller
         $userId = Auth::id();
         $searchTerm  = request('search');
 
-        $reject = ProductDetails::with(['product','vendor:id,name'])->where('user_id', $userId)->where('status', 3)
-        ->whereHas('product', function ($query) use ($searchTerm) {
-            $query->where('name', 'like', '%'.$searchTerm.'%');
-        })
-        ->latest()->paginate(10)
-        ->withQueryString();
+        $reject = ProductDetails::with(['product', 'vendor:id,name'])->where('user_id', $userId)->where('status', 3)
+            ->whereHas('product', function ($query) use ($searchTerm) {
+                $query->where('name', 'like', '%' . $searchTerm . '%');
+            })
+            ->latest()->paginate(10)
+            ->withQueryString();
 
         return response()->json([
             'status' => 200,
@@ -93,7 +113,7 @@ class ProductStatusController extends Controller
     {
 
         $getmembershipdetails = getmembershipdetails();
-        $acceptableproduct = ProductDetails::where(['user_id'=> userid(),'status'=>1])->count();
+        $acceptableproduct = ProductDetails::where(['user_id' => userid(), 'status' => 1])->count();
 
         $productecreateqty = $getmembershipdetails?->product_request;
 
@@ -111,7 +131,7 @@ class ProductStatusController extends Controller
             return responsejson('You can send product request more then ' . $productecreateqty . '.', 'fail');
         }
 
-        if($getmembershipdetails ?->product_approve <= $acceptableproduct){
+        if ($getmembershipdetails?->product_approve <= $acceptableproduct) {
             return responsejson('You product accept limit over.', 'fail');
         }
 
@@ -128,8 +148,4 @@ class ProductStatusController extends Controller
             'message' => 'Product Request Successfully Please Wait',
         ]);
     }
-
-
-
-
 }

@@ -61,6 +61,11 @@ class User extends Authenticatable
         return $this->hasOne(UserSubscription::class,'user_id');
     }
 
+    function vendorsubscription(){
+        return $this->hasOne(UserSubscription::class,'user_id');
+    }
+
+
     function usersubscriptions(){
         return $this->hasMany(UserSubscription::class,'user_id');
     }
@@ -71,5 +76,9 @@ class User extends Authenticatable
 
     function affiliatoractiveproducts(){
         return $this->hasMany(ProductDetails::class,'user_id');
+    }
+
+    function vendoractiveproduct(){
+        return $this->hasMany(ProductDetails::class,'vendor_id');
     }
 }
