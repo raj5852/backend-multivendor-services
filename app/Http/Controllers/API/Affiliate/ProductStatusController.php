@@ -93,7 +93,7 @@ class ProductStatusController extends Controller
     {
 
         $getmembershipdetails = getmembershipdetails();
-        $acceptableproduct = ProductDetails::where(['user_id'=> userid(),'status',1])->count();
+        $acceptableproduct = ProductDetails::where(['user_id'=> userid(),'status'=>1])->count();
 
         $productecreateqty = $getmembershipdetails?->product_request;
 
