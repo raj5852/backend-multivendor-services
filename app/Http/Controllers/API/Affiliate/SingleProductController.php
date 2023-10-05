@@ -29,11 +29,20 @@ class SingleProductController extends Controller
     public function AffiliatorProductSingle($id)
     {
         // color_product , sizes
-        $product = Product::with('specifications','category', 'subcategory','productImage', 'brand', 'vendor:id,name,image', 'productdetails')
-        ->whereHas('productdetails',function($query){
-            $query->where('user_id',auth()->id());
-        })
-        ->find($id);
+        $product = Product::query()
+            ->with('specifications', 'category', 'subcategory', 'productImage', 'brand', 'vendor:id,name,image', 'productdetails')
+            ->where('status',1)
+            ->whereHas('vendor',function($query){
+                $query->withCount(['vendoractiveproduct' => function ($query) {
+                    $query->where('status', 1);
+                }])
+                    ->whereHas('usersubscription', function ($query) {
+                        $query->where('expire_date', '>', now());
+                    })
+                ->withSum('usersubscription', 'affiliate_request')
+                ->having('vendoractiveproduct_count', '<', \DB::raw('usersubscription_sum_affiliate_request'));
+            })
+            ->find($id);
         if ($product) {
             return response()->json([
                 'status' => 200,
@@ -46,6 +55,4 @@ class SingleProductController extends Controller
             ]);
         }
     }
-
-
 }
