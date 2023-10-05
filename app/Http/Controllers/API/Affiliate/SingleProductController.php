@@ -29,7 +29,11 @@ class SingleProductController extends Controller
     public function AffiliatorProductSingle($id)
     {
         // color_product , sizes
-        $product = Product::with('specifications','category', 'subcategory','productImage', 'brand', 'vendor:id,name,image', 'productdetails')->find($id);
+        $product = Product::with('specifications','category', 'subcategory','productImage', 'brand', 'vendor:id,name,image', 'productdetails')
+        ->whereHas('productdetails',function($query){
+            $query->where('user_id',auth()->id());
+        })
+        ->find($id);
         if ($product) {
             return response()->json([
                 'status' => 200,

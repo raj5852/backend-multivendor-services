@@ -89,6 +89,34 @@ class ProductStatusController extends Controller
         ]);
     }
 
+    function vendorexpireproducts(){
+        $userId = Auth::id();
+        $searchTerm = request('search');
+
+        $active = ProductDetails::with('product')->where('user_id', $userId)->where('status', 1)
+            ->whereHas('product', function ($query) use ($searchTerm) {
+                $query->where('name', 'like', '%' . $searchTerm . '%');
+            })
+            ->whereHas('vendor',function($query){
+                $query->withCount(['vendoractiveproduct' => function ($query) {
+                    $query->where('status', 1);
+                }])
+                    ->whereHas('usersubscription', function ($query) {
+                        $query->where('expire_date', '>', now());
+                    });
+
+                // ->withSum('usersubscription', 'affiliate_request')
+                // ->having('vendoractiveproduct_count', '<', \DB::raw('usersubscription_sum_affiliate_request'));
+            })
+            ->latest()->paginate(10)
+            ->withQueryString();
+
+        return response()->json([
+            'status' => 200,
+            'active' => $active,
+        ]);
+    }
+
 
     public function  AffiliatorProductRejct()
     {

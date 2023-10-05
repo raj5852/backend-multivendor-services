@@ -29,6 +29,7 @@ Route::middleware(['auth:sanctum','isAPIaffiliator','userOnline'])->group(functi
     Route::get('affiliator/request/pending/product', [ProductStatusController::class, 'AffiliatorProductPendingProduct']);
 
     Route::get('affiliator/request/active/product', [ProductStatusController::class, 'AffiliatorProductActiveProduct']);
+    Route::get('affiliator/vendor-expire-products', [ProductStatusController::class, 'vendorexpireproducts']);
 
     Route::get('affiliator/request/reject/product', [ProductStatusController::class, 'AffiliatorProductRejct']);
     Route::get('affiliator/cart/{id}', [CartController::class, 'affiliatorCart']);
