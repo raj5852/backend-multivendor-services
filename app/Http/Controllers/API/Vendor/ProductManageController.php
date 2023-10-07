@@ -19,6 +19,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\Rule;
 
 class ProductManageController extends Controller
 {
@@ -35,7 +36,6 @@ class ProductManageController extends Controller
     {
 
 
-        // Log::info($request->all());
         $validator = Validator::make($request->all(), [
             'name' => 'required|max:255',
             'category_id' => ['required', 'integer', 'min:1', new CategoryRule],
@@ -52,9 +52,11 @@ class ProductManageController extends Controller
             // 'variants.*.size_name' => ['required_with:variants'],
             // 'variants.*.color_name' => ['required_with:variants'],
             'variants.*.qty' => ['required_with:variants', 'integer', 'min:0'],
-
             'image' => ['required', 'mimes:jpeg,png,jpg'],
             'images.*' => ['required', 'mimes:jpeg,png,jpg'],
+            'selling_type'=>['required',Rule::in(['single','bulk','both'])],
+            'min_bulk_qty'=>['required_if:selling_type,bulk,both','integer','min:1'],
+            'min_bulk_price'=>['required_if:selling_type,bulk,both','numeric','min:1']
 
         ]);
 
@@ -125,7 +127,9 @@ class ProductManageController extends Controller
             $product->discount_type = $request->discount_type;
             $product->discount_rate  = $request->discount_rate;
             $product->variants = $request->variants; //array
-
+            $product->selling_type = request('selling_type');
+            $product->min_bulk_qty = request('min_bulk_qty');
+            $product->min_bulk_price = request('min_bulk_price');
 
             if ($request->hasFile('image')) {
                 $filename =   fileUpload($request->file('image'), 'uploads/product', 500, 500);

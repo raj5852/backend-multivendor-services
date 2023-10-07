@@ -35,7 +35,7 @@ Route::middleware(['auth:sanctum','isAPIaffiliator','userOnline'])->group(functi
     Route::get('affiliator/cart/{id}', [CartController::class, 'affiliatorCart']);
 
     Route::get('single/page/{id}', [SingleProductController::class, 'AffiliatorProductSinglePage']);
-    Route::post('add-to-cart', [CartController::class, 'addtocart']);
+    Route::post('add-to-cat', [CartController::class, 'addtocart']);
     Route::get('cart', [CartController::class, 'viewcart']);
     Route::put('cart-updatequantity/{cart_id}/{scope}', [CartController::class, 'updatequantity']);
     Route::delete('delete-cartitem/{cart_id}', [CartController::class, 'deleteCartitem']);

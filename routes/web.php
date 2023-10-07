@@ -41,11 +41,5 @@ Route::get('seed', function () {
 
 Route::get('demo', function () {
 
-    return DB::dele('select * from users where email=?',['admin@gmail.com']);
-
-    // return Product::query()
-    // ->select('id','selling_price','original_price',DB::raw('original_price  + selling_price as discountprice'))
-    // ->get();
-
 
 });

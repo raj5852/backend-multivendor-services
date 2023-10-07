@@ -11,6 +11,7 @@ use App\Http\Controllers\API\Admin\FaqController;
 use App\Http\Controllers\API\Admin\FooterMediaController;
 use App\Http\Controllers\API\Admin\ItServiceController;
 use App\Http\Controllers\API\Admin\MembersController;
+use App\Http\Controllers\API\Admin\MembershipDetailsController;
 use App\Http\Controllers\API\Admin\MissionController;
 use App\Http\Controllers\API\Admin\OrderController as AdminOrderController;
 use App\Http\Controllers\API\Admin\OrganizationController;
@@ -229,7 +230,8 @@ Route::middleware(['auth:sanctum', 'isAPIAdmin'])->group(function () {
 
         Route::get('doller-price',[DollerPriceController::class,'index']);
         Route::post('doller-price-store',[DollerPriceController::class,'store']);
-
+        Route::get('membership-details/affiliate',[MembershipDetailsController::class,'affiliatemembership']);
+        Route::get('membership-details/vendor',[MembershipDetailsController::class,'vendormembership']);
     });
 
 
