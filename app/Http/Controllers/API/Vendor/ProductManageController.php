@@ -212,7 +212,9 @@ class ProductManageController extends Controller
 
             'image' => ['nullable', 'mimes:jpeg,png,jpg'],
             'images.*' => ['nullable', 'mimes:jpeg,png,jpg'],
-
+            'selling_type'=>['required',Rule::in(['single','bulk','both'])],
+            'min_bulk_qty'=>['required_if:selling_type,bulk,both','integer','min:1'],
+            'min_bulk_price'=>['required_if:selling_type,bulk,both','numeric','min:1']
 
         ]);
         $validator->after(function ($validator) {
