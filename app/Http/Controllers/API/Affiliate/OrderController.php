@@ -107,11 +107,6 @@ class OrderController extends Controller
             }
 
 
-
-
-
-
-
             $vendor_balance = User::find($data['vendor_id']);
 
 
@@ -144,7 +139,6 @@ class OrderController extends Controller
                 'qty'=>$sumQty
             ]);
 
-            return 1;
 
             PendingBalance::create([
                 'affiliator_id' => auth()->user()->id,

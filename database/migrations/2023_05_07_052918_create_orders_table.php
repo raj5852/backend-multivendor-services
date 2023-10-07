@@ -25,7 +25,6 @@ return new class extends Migration
             $table->string('address');
             $table->text('variants');
             $table->string('status')->nullable();
-            $table->string('amount');
             $table->timestamps();
         });
     }

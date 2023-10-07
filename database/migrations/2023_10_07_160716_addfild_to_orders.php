@@ -15,6 +15,10 @@ return new class extends Migration
     {
         Schema::table('orders', function (Blueprint $table) {
             $table->string('order_id')->nullable();
+            $table->float('afi_amount')->nullable();
+            $table->float('product_amount')->nullable();
+            $table->unsignedBigInteger('category_id');
+            $table->integer('qty')->nullable();
         });
     }
 
@@ -26,7 +30,7 @@ return new class extends Migration
     public function down()
     {
         Schema::table('orders', function (Blueprint $table) {
-            $table->dropColumn('order_id');
+            $table->dropColumn(['order_id','afi_amount','product_amount','category_id','qty']);
         });
     }
 };
