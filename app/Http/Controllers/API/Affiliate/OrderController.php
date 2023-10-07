@@ -21,7 +21,6 @@ class OrderController extends Controller
     function store(Request $request)
     {
 
-        // return $request->datas;
         Log::info($request->all());
         $validator =  Validator::make($request->all(),[
             'datas'=>['required','array'],
