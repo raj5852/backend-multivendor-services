@@ -21,7 +21,7 @@ class OrderController extends Controller
     function store(Request $request)
     {
 
-        Log::info($request->all());
+        // Log::info($request->all());
         $validator =  Validator::make($request->all(),[
             'datas'=>['required','array'],
             'datas.*.name'=>['required'],
@@ -143,6 +143,8 @@ class OrderController extends Controller
                 'category_id'=>$categoryId,
                 'qty'=>$sumQty
             ]);
+
+            return 1;
 
             PendingBalance::create([
                 'affiliator_id' => auth()->user()->id,

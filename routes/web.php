@@ -40,6 +40,60 @@ Route::get('seed', function () {
 
 
 Route::get('demo', function () {
+    return array (
+        'datas' =>
+        array (
+          0 =>
+          array (
+            'id' => 1,
+            'name' => 'raj',
+            'phone' => 2121212121212,
+            'email' => 'raj.web58@gmail.com',
+            'city' => 'Dhaka',
+            'address' => 'sa',
+            'vendor_id' => '2',
+            'product_id' => '5',
+            'cart_id' => 5,
+            'amount' => '1',
+            'variants' =>
+            array (
+              0 =>
+              array (
+                'id' => 4,
+                'qty' => '1',
+                'size' => NULL,
+                'color' => NULL,
+                'variant_id' => NULL,
+              ),
+            ),
+          ),
+          1 =>
+          array (
+            'id' => 2,
+            'name' => 'raj',
+            'phone' => 2121212121212,
+            'email' => 'raj.web58@gmail.com',
+            'city' => 'Dhaka',
+            'address' => 'sas',
+            'vendor_id' => '2',
+            'product_id' => '5',
+            'cart_id' => 5,
+            'amount' => '1',
+            'variants' =>
+            array (
+              0 =>
+              array (
+                'id' => 4,
+                'qty' => '1',
+                'size' => NULL,
+                'color' => NULL,
+                'variant_id' => NULL,
+              ),
+            ),
+          ),
+        ),
+      ) ;
+
 return array (
     'datas' =>
     array (
