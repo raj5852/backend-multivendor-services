@@ -54,7 +54,7 @@ class ProductManageController extends Controller
             'variants.*.qty' => ['required_with:variants', 'integer', 'min:0'],
             'image' => ['required', 'mimes:jpeg,png,jpg'],
             'images.*' => ['required', 'mimes:jpeg,png,jpg'],
-            'selling_type'=>['nullable',Rule::in(['single','bulk','both'])],
+            'selling_type'=>['required',Rule::in(['single','bulk','both'])],
             'min_bulk_qty'=>['required_if:selling_type,bulk,both','integer','min:1'],
             'min_bulk_price'=>['required_if:selling_type,bulk,both','numeric','min:1']
 
@@ -265,7 +265,9 @@ class ProductManageController extends Controller
                 $product->discount_type = $request->discount_type;
                 $product->discount_rate  = $request->discount_rate;
                 $product->variants = $request->variants;
-
+                $product->selling_type = request('selling_type');
+                $product->min_bulk_qty = request('min_bulk_qty');
+                $product->min_bulk_price = request('min_bulk_price');
                 $product->update();
 
 
