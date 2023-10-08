@@ -97,29 +97,26 @@ class CartController extends Controller
 
     public function viewcart()
     {
-        if (auth('sanctum')->check()) {
 
-            $user_id = auth()->user()->id;
-            $cartitems = Cart::where('user_id', $user_id)->with(['cartDetails', 'product:id,name'])
-                ->whereHas('product', function ($query) {
-                    $query->whereHas('vendor', function ($query) {
-                        $query->whereHas('usersubscription', function ($query) {
-                            $query->where('expire_date', '>', now());
-                        });
-                    });
+        $user_id = auth()->user()->id;
+        $cartitems = Cart::where('user_id', $user_id)->with(['cartDetails', 'product:id,name'])
+
+            ->whereHas('product', function ($query) {
+                $query->whereHas('productdetails',function($query){
+                    $query->where('status',1);
                 })
-                ->get();
+                ->whereHas('vendor', function ($query) {
+                    $query->whereHas('usersubscription', function ($query) {
+                        $query->where('expire_date', '>', now());
+                    });
+                });
+            })
+            ->get();
 
-            return response()->json([
-                'status' => 200,
-                'cart' => $cartitems,
-            ]);
-        } else {
-            return response()->json([
-                'status' => 401,
-                'message' => 'Login to View Cart Data',
-            ]);
-        }
+        return response()->json([
+            'status' => 200,
+            'cart' => $cartitems,
+        ]);
     }
 
     public function deleteCartitem($cart_id)
@@ -149,15 +146,15 @@ class CartController extends Controller
 
     function affiliatorCart($id)
     {
-        $cart = Cart::where('user_id',userid())
-        ->whereHas('product',function($query){
-            $query->whereHas('vendor',function($query){
-                $query->whereHas('vendorsubscription',function($query){
-                    $query->where('expire_date','>',now());
+        $cart = Cart::where('user_id', userid())
+            ->whereHas('product', function ($query) {
+                $query->whereHas('vendor', function ($query) {
+                    $query->whereHas('vendorsubscription', function ($query) {
+                        $query->where('expire_date', '>', now());
+                    });
                 });
-            });
-        })
-        ->find($id);
+            })
+            ->find($id);
 
         if (!$cart) {
             return response()->json([
