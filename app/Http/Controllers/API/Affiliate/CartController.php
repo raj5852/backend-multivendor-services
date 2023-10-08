@@ -16,7 +16,7 @@ class CartController extends Controller
 {
     public function addtocart(Request $request)
     {
-        Log::info($request->all());
+        // Log::info($request->all());
 
         $user_id = auth()->user()->id;
         $product_id = $request->product_id;
@@ -101,10 +101,10 @@ class CartController extends Controller
 
             $user_id = auth()->user()->id;
             $cartitems = Cart::where('user_id', $user_id)->with(['cartDetails', 'product:id,name'])
-                ->whereHas('product',function($query){
-                    $query->whereHas('vendor',function($query){
-                        $query->whereHas('usersubscription',function($query){
-                            $query->where('expire_date','>',now());
+                ->whereHas('product', function ($query) {
+                    $query->whereHas('vendor', function ($query) {
+                        $query->whereHas('usersubscription', function ($query) {
+                            $query->where('expire_date', '>', now());
                         });
                     });
                 })
@@ -124,25 +124,18 @@ class CartController extends Controller
 
     public function deleteCartitem($cart_id)
     {
-        if (auth('sanctum')->check()) {
-            $user_id = auth('sanctum')->user()->id;
-            $cartitem = Cart::where('id', $cart_id)->where('user_id', $user_id)->first();
-            if ($cartitem) {
-                $cartitem->delete();
-                return response()->json([
-                    'status' => 200,
-                    'message' => 'Cart Item Removed Successfully.',
-                ]);
-            } else {
-                return response()->json([
-                    'status' => 404,
-                    'message' => 'Cart Item not Found',
-                ]);
-            }
+
+        $cartitem = Cart::where('id', $cart_id)->where('user_id', userid())->first();
+        if ($cartitem) {
+            $cartitem->delete();
+            return response()->json([
+                'status' => 200,
+                'message' => 'Cart Item Removed Successfully.',
+            ]);
         } else {
             return response()->json([
-                'status' => 401,
-                'message' => 'Login to continue',
+                'status' => 404,
+                'message' => 'Cart Item not Found',
             ]);
         }
     }
@@ -156,7 +149,16 @@ class CartController extends Controller
 
     function affiliatorCart($id)
     {
-        $cart = Cart::find($id);
+        $cart = Cart::where('user_id',userid())
+        ->whereHas('product',function($query){
+            $query->whereHas('vendor',function($query){
+                $query->whereHas('vendorsubscription',function($query){
+                    $query->where('expire_date','>',now());
+                });
+            });
+        })
+        ->find($id);
+
         if (!$cart) {
             return response()->json([
                 'status' => 'Not found'
