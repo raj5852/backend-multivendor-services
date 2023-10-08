@@ -47,7 +47,7 @@ class OrderDeliveryController extends Controller
         foreach(request('files') as $file){
             $deliveryFile = new DeliveryFile();
             $deliveryFile->order_delivery_id = $orderDelivery->id;
-            $deliveryFile->files = fileUpload($file,'uploads/deliveryfile');
+            $deliveryFile->files = uploadany_file($file,'uploads/deliveryfile');
             $deliveryFile->save();
         }
 
