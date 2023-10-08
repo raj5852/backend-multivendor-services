@@ -52,11 +52,11 @@ class OrderController extends Controller
 
         $getmembershipdetails = getmembershipdetails();
         if($getmembershipdetails == null){
-            return $this->response('You do not have a membership.');
+            return responsejson('You do not have a membership','fail');
         }
 
         if($getmembershipdetails->expire_date <= now() ){
-            return $this->response('Your membership expire');
+            return responsejson('Your membership expire','fail');
         }
 
         if ($validator->fails()) {
