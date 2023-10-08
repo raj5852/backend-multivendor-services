@@ -158,6 +158,7 @@ function getmembershipdetails($userid = null)
     if (!$userid) {
         $userid = auth()->id();
     }
+
     return UserSubscription::where(['user_id' => $userid])->first();
 }
 

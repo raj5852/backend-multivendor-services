@@ -8,6 +8,7 @@ use App\Models\CartDetails;
 use App\Models\Product;
 use Illuminate\Http\Request;
 use App\Models\ProductDetails;
+use App\Models\User;
 use PHPUnit\TextUI\XmlConfiguration\CodeCoverage\Report\Php;
 use Illuminate\Support\Facades\Log;
 
@@ -26,34 +27,30 @@ class CartController extends Controller
 
 
 
-        if($request->discount_type == 'flat'){
+        if ($request->discount_type == 'flat') {
             $amount = $request->discount_rate;
         }
 
-        if($request->discount_type == 'percent'){
-            $amount = ($productAmount/100)*$request->discount_rate;
+        if ($request->discount_type == 'percent') {
+            $amount = ($productAmount / 100) * $request->discount_rate;
         }
 
 
-        $productCheck = Product::where('id',$product_id)->first();
-        if($productCheck)
-        {
-            if(Cart::where('product_id', $product_id)->where('user_id', $user_id)->exists())
-            {
+        $productCheck = Product::where('id', $product_id)->first();
+        if ($productCheck) {
+            if (Cart::where('product_id', $product_id)->where('user_id', $user_id)->exists()) {
                 return response()->json([
-                    'status'=> 409,
-                    'message'=> $productCheck->name.' Already Added to Cart',
+                    'status' => 409,
+                    'message' => $productCheck->name . ' Already Added to Cart',
                 ]);
-            }
-            else
-            {
+            } else {
                 $cartitem = new Cart();
                 $cartitem->user_id = $user_id;
                 $cartitem->product_id = $product_id;
                 $cartitem->product_price = $product_price;
-                $cartitem->vendor_id=$vendor_id;
-                $cartitem->amount=$amount;
-                $cartitem->category_id=$request->category_id;
+                $cartitem->vendor_id = $vendor_id;
+                $cartitem->amount = $amount;
+                $cartitem->category_id = $request->category_id;
 
                 $cartitem->save();
 
@@ -71,13 +68,13 @@ class CartController extends Controller
                 }
 
 
-                foreach($qnts as $key=>$value){
+                foreach ($qnts as $key => $value) {
                     CartDetails::create([
-                        'cart_id'=>$cartitem->id,
-                        'color'=>$colors[$key],
-                        'size'=>$sizes[$key],
-                        'qty'=>$value,
-                        'variant_id'=>$variants[$key]
+                        'cart_id' => $cartitem->id,
+                        'color' => $colors[$key],
+                        'size' => $sizes[$key],
+                        'qty' => $value,
+                        'variant_id' => $variants[$key]
                     ]);
                 }
 
@@ -86,76 +83,73 @@ class CartController extends Controller
 
 
                 return response()->json([
-                    'status'=> 201,
-                    'message'=> 'Added to Cart',
+                    'status' => 201,
+                    'message' => 'Added to Cart',
                 ]);
             }
-        }
-        else
-        {
+        } else {
             return response()->json([
-                'status'=> 404,
-                'message'=> 'Product Not Found',
+                'status' => 404,
+                'message' => 'Product Not Found',
             ]);
         }
-
     }
 
     public function viewcart()
     {
-        if(auth('sanctum')->check())
-        {
+        if (auth('sanctum')->check()) {
+
             $user_id = auth()->user()->id;
-            $cartitems = Cart::where('user_id',$user_id)->with(['cartDetails','product:id,name'])->get();
+            $cartitems = Cart::where('user_id', $user_id)->with(['cartDetails', 'product:id,name'])
+                ->whereHas('product',function($query){
+                    $query->whereHas('vendor',function($query){
+                        $query->whereHas('usersubscription',function($query){
+                            $query->where('expire_date','>',now());
+                        });
+                    });
+                })
+                ->get();
 
             return response()->json([
-                'status'=> 200,
-                 'cart'=> $cartitems,
+                'status' => 200,
+                'cart' => $cartitems,
             ]);
-        }
-        else
-        {
+        } else {
             return response()->json([
-                'status'=> 401,
-                'message'=> 'Login to View Cart Data',
+                'status' => 401,
+                'message' => 'Login to View Cart Data',
             ]);
         }
     }
 
     public function deleteCartitem($cart_id)
     {
-        if(auth('sanctum')->check())
-        {
+        if (auth('sanctum')->check()) {
             $user_id = auth('sanctum')->user()->id;
-            $cartitem = Cart::where('id',$cart_id)->where('user_id',$user_id)->first();
-            if($cartitem)
-            {
+            $cartitem = Cart::where('id', $cart_id)->where('user_id', $user_id)->first();
+            if ($cartitem) {
                 $cartitem->delete();
                 return response()->json([
-                    'status'=> 200,
-                    'message'=> 'Cart Item Removed Successfully.',
+                    'status' => 200,
+                    'message' => 'Cart Item Removed Successfully.',
                 ]);
-            }
-            else
-            {
+            } else {
                 return response()->json([
-                    'status'=> 404,
-                    'message'=> 'Cart Item not Found',
+                    'status' => 404,
+                    'message' => 'Cart Item not Found',
                 ]);
             }
-        }
-        else
-        {
+        } else {
             return response()->json([
-                'status'=> 401,
-                'message'=> 'Login to continue',
+                'status' => 401,
+                'message' => 'Login to continue',
             ]);
         }
     }
 
     public function updatequantity()
     {
-        echo"DOne";
+        echo "DOne";
     }
 
 
@@ -172,5 +166,4 @@ class CartController extends Controller
             return response()->json($data);
         }
     }
-
 }
