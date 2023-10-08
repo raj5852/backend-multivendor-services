@@ -28,7 +28,7 @@ class SingleProductController extends Controller
 
     public function AffiliatorProductSingle($id)
     {
-        $proudct = Product::query()
+        $product = Product::query()
             ->with('specifications', 'category', 'subcategory', 'productImage', 'brand', 'vendor:id,name,image', 'productdetails')
             ->where('status', 'active')
             ->whereHas('vendor', function ($query) {
