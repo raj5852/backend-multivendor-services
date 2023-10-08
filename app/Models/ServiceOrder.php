@@ -37,4 +37,8 @@ class ServiceOrder extends Model
     function files(){
         return $this->morphMany(File::class,'filetable');
     }
+
+    function servicerating(){
+        return $this->hasOne(ServiceRating::class,'service_order_id');
+    }
 }

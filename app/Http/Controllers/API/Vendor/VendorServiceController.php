@@ -159,7 +159,7 @@ class VendorServiceController extends Controller
         }
 
         $order = ServiceOrder::where(['vendor_id' => userid(), 'is_paid' => 1])
-            ->with(['customerdetails', 'servicedetails', 'packagedetails', 'files', 'orderdelivery' => function ($query) {
+            ->with(['customerdetails', 'servicedetails', 'packagedetails', 'files', 'servicerating','orderdelivery' => function ($query) {
                 $query->with('deliveryfiles');
             }])
             ->find($id);
