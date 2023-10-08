@@ -9,6 +9,7 @@ use App\Http\Controllers\API\CouponListController;
 use App\Http\Controllers\API\HistoryController;
 use App\Http\Controllers\API\RechargeController;
 use App\Http\Controllers\API\ServiceOrderController;
+use App\Http\Controllers\API\ServiceRatingController;
 use App\Http\Controllers\API\SupportBoxController;
 
 use App\Http\Controllers\API\User\ContactController;
@@ -72,6 +73,8 @@ Route::middleware('auth:sanctum')->group(function () {
 
     Route::post('recharge',[RechargeController::class,'recharge']);
     Route::get('transition-history',[HistoryController::class,'index']);
+
+    Route::post('service-rating',[ServiceRatingController::class,'store']);
 });
 
 Route::prefix('aaparpay')->group(function () {
