@@ -24,6 +24,8 @@ Route::middleware(['auth:sanctum','isAPIaffiliator','userOnline'])->group(functi
 
     Route::get('affiliator/products', [ProductStatusController::class, 'AffiliatorProducts']);
     Route::get('single/product/{id}', [SingleProductController::class, 'AffiliatorProductSingle']);
+    Route::get('single/active/product/{id}', [SingleProductController::class, 'AffiliatoractiveProduct']);
+
     Route::post('request/product/{id?}', [ProductStatusController::class, 'AffiliatorProductRequest']);
 
     Route::get('affiliator/request/pending/product', [ProductStatusController::class, 'AffiliatorProductPendingProduct']);

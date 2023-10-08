@@ -93,7 +93,7 @@ Route::middleware(['auth:sanctum','isAPIVendor','userOnline'])->group(function (
     Route::get('affiliator/request/product/rejected', [RequestProductController::class, 'RequestRejected']);
     Route::get('affiliator/request/product/view/{id}',[RequestProductController ::class,'RequestView']);
     Route::post('affiliator/product-update/{id}', [RequestProductController::class, 'RequestUpdate']);
-    Route::post('affiliator/membership-expire-product', [RequestProductController::class, 'membershipexpireactiveproduct']);
+    Route::get('affiliator/membership-expire-product', [RequestProductController::class, 'membershipexpireactiveproduct']);
 
     //
     //afi orders api
