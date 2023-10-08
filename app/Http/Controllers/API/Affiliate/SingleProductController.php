@@ -28,7 +28,7 @@ class SingleProductController extends Controller
 
     public function AffiliatorProductSingle($id)
     {
-        $product = Product::query()
+        $proudct = Product::query()
             ->with('specifications', 'category', 'subcategory', 'productImage', 'brand', 'vendor:id,name,image', 'productdetails')
             ->where('status', 'active')
             ->whereHas('vendor', function ($query) {
@@ -55,7 +55,7 @@ class SingleProductController extends Controller
         }
     }
 
-    public function AffiliatoractiveProduct($id)
+    public function AffiliatoractiveProduct(int $id)
     {
         $product = Product::query()
             ->with('specifications', 'category', 'subcategory', 'productImage', 'brand', 'vendor:id,name,image', 'productdetails')

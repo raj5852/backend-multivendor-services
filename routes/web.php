@@ -40,12 +40,6 @@ Route::get('seed', function () {
 
 
 Route::get('demo', function () {
-    $users = User::paginate(4);
 
-    foreach($users as $user){
-        $user->name = "da";
-    }
-
-    return $users;
 
 });

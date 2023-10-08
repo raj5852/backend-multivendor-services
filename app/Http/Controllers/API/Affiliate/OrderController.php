@@ -50,6 +50,14 @@ class OrderController extends Controller
             }
         });
 
+        $getmembershipdetails = getmembershipdetails();
+        if($getmembershipdetails == null){
+            return $this->response('You do not have a membership.');
+        }
+
+        if($getmembershipdetails->expire_date <= now() ){
+            return $this->response('Your membership expire');
+        }
 
         if ($validator->fails()) {
             return response()->json([
@@ -57,6 +65,7 @@ class OrderController extends Controller
                 'errors' => $validator->messages(),
             ]);
         }
+
 
         $product = Product::find(request('datas')[0]['product_id']);
         $cartId = request('datas')[0]['cart_id'];
