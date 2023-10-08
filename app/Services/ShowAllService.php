@@ -15,6 +15,7 @@ class ShowAllService
         return VendorService::query()
             ->where('status', 'active')
             ->latest()
+            ->withAvg('serviceratings','rating')
             ->with(['user:id,name,image','firstpackage:id,price,vendor_service_id'])
             ->paginate(12);
     }

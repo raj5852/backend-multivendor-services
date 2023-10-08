@@ -5,11 +5,12 @@ namespace App\Http\Controllers\API;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\ServiceRatingRequest;
 use App\Models\ServiceRating;
+use App\Models\VendorService;
 use Illuminate\Http\Request;
 
 class ServiceRatingController extends Controller
 {
-    //
+
     function store(ServiceRatingRequest $request){
         $validateddata = $request->validated();
 

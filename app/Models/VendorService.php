@@ -58,4 +58,8 @@ class VendorService extends Model
     function servicesubcategory(){
         return $this->belongsTo(ServiceSubCategory::class,'service_sub_category_id');
     }
+
+    function serviceratings(){
+        return $this->hasMany(ServiceRating::class,' vendor_service_id');
+    }
 }
