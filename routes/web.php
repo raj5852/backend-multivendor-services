@@ -32,7 +32,7 @@ Route::get('migrate', function () {
     Artisan::call('migrate');
 });
 
-Route::get('rollback',function(){
+Route::get('rollback', function () {
     Artisan::call('migrate:rollback', [
         '--step' => 1,
     ]);
@@ -45,5 +45,22 @@ Route::get('seed', function () {
 
 
 Route::get('demo', function () {
-
+    return array(
+        'product_id' => 1,
+        'cartItems' =>
+        array(
+            0 =>
+            array(
+                'id' => '1',
+                'qty' => '2',
+                'size' => 'xl',
+                'color' => 'dsdsds',
+            ),
+        ),
+        'vendor_id' => '2',
+        'product_price' => '10',
+        'discount_type' => 'flat',
+        'discount_rate' => '1',
+        'category_id' => 1,
+    );
 });

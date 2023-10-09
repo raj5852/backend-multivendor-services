@@ -15,8 +15,8 @@ return new class extends Migration
     {
         Schema::table('products', function (Blueprint $table) {
             $table->string('selling_type')->nullable();
-            $table->integer('min_bulk_qty')->nullable();
-            $table->float('min_bulk_price')->nullable();
+            $table->json('selling_details')->nullable();
+            $table->float('advance_payment')->nullable();
         });
     }
 
@@ -28,7 +28,7 @@ return new class extends Migration
     public function down()
     {
         Schema::table('products', function (Blueprint $table) {
-            $table->dropColumn(['selling_type','min_bulk_qty','min_bulk_price']);
+            $table->dropColumn(['selling_type','selling_details']);
         });
     }
 };
