@@ -44,13 +44,20 @@ Route::get('seed', function () {
 });
 
 Route::get('demo',function(){
- return   array (
+ $datas =   array (
         'product_id' => 1,
         'cartItems' =>
         array (
-          0 =>
+
           array (
             'id' => '1',
+            'qty' => '2',
+            'size' => 'xl',
+            'color' => 'dsdsds',
+          ),
+
+          array (
+            'id' => '2',
             'qty' => '2',
             'size' => 'xl',
             'color' => 'dsdsds',
@@ -62,6 +69,11 @@ Route::get('demo',function(){
         'discount_rate' => '1',
         'category_id' => 1,
     );
+
+   $obj = collect($datas);
+
+   return  collect($obj['cartItems'])->sum('qty');
+
 });
 
 

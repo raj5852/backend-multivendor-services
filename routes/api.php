@@ -125,23 +125,7 @@ Route::get('/subscriptions', [SubscriptionController::class, 'index']);
 
 
 Route::post('/test', function () {
-    $validator = Validator::make(request()->all(), [
-        'selling_type'=>['required'],
-        'selling_details'=>['required_if:selling_type,bulk,both' ,'array'],
-        'selling_details.*.min_bulk_qty'=>['integer','min:1'],
-        'selling_details.*.min_bulk_price'=>['numeric','min:1'],
-        'selling_details.*.bulk_commission'=>['numeric','min:1'],
-        'selling_details.*.advance_payment'=>['present'],
-        'advance_payment'=>['nullable']
-    ]);
 
-    if ($validator->fails()) {
-        return response()->json([
-            'status' => 400,
-            'errors' => $validator->messages(),
-        ]);
-    }
-    return 1;
 });
 
 Route::middleware('auth:sanctum')->get('/user', function () {

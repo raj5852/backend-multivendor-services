@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\API\Affiliate;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\ProductAddToCartRequest;
 use App\Models\Cart;
 use App\Models\CartDetails;
 use App\Models\Product;
@@ -14,33 +15,11 @@ use Illuminate\Support\Facades\Log;
 
 class CartController extends Controller
 {
-    public function addtocart(Request $request)
+    //
+    public function addtocart(ProductAddToCartRequest $request)
     {
 
-        $getproduct = Product::query()
-            ->where('id', $request->product_id)
-            ->whereHas('productdetails', function ($query) {
-                $query->where([
-                    'user_id' => auth()->id(),
-                    'status'=> 1
-                ]);
-            })
-            ->where('status', 'active')
-            ->first();
-
-        if (!$getproduct) {
-            return responsejson('Product not found!');
-        }
-
-
-
-
-
-
-
-
-
-
+        $getproduct = Product::find(request('product_id'));
 
 
         $user_id = userid();
@@ -52,11 +31,11 @@ class CartController extends Controller
 
 
 
-        if ($request->discount_type == 'flat') {
+        if (request('discount_type') == 'flat') {
             $amount = $getproduct->discount_rate;
         }
 
-        if ($request->discount_type == 'percent') {
+        if (request('discount_type') == 'percent') {
             $amount = ($productAmount / 100) * $getproduct->discount_rate;
         }
 
@@ -69,6 +48,7 @@ class CartController extends Controller
             ]);
         }
 
+        $obj = collect(request()->all());
 
         $cartitem = new Cart();
         $cartitem->user_id = $user_id;
@@ -78,6 +58,8 @@ class CartController extends Controller
         $cartitem->amount = $amount;
         $cartitem->category_id = $getproduct->category_id;
 
+        $cartitem->product_qty = collect($obj['cartItems'])->sum('qty');
+
         $cartitem->save();
 
         $colors = [];
@@ -86,7 +68,7 @@ class CartController extends Controller
         $variants = [];
 
 
-        foreach ($request->cartItems  as $data) {
+        foreach (request('cartItems')  as $data) {
             $colors[] = $data['color'] ?? null;
             $sizes[] = $data['size'] ?? null;
             $qnts[] = $data['qty'];
@@ -110,10 +92,6 @@ class CartController extends Controller
         ]);
 
 
-        return response()->json([
-            'status' => 404,
-            'message' => 'Product Not Found',
-        ]);
     }
 
     public function viewcart()
