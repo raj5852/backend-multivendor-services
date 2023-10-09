@@ -32,6 +32,11 @@ Route::get('migrate', function () {
     Artisan::call('migrate');
 });
 
+Route::get('rollback',function(){
+    Artisan::call('migrate:rollback', [
+        '--step' => 1,
+    ]);
+});
 
 Route::get('seed', function () {
     Artisan::call('db:seed');
