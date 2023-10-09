@@ -16,8 +16,7 @@ class CartController extends Controller
 {
     public function addtocart(Request $request)
     {
-        // Log::info($request->all());
-
+        info($request->all());
         $user_id = auth()->user()->id;
         $product_id = $request->product_id;
         $product_price = $request->product_price;
@@ -77,10 +76,6 @@ class CartController extends Controller
                         'variant_id' => $variants[$key]
                     ]);
                 }
-
-
-
-
 
                 return response()->json([
                     'status' => 201,
