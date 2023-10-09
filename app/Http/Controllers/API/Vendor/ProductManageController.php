@@ -53,13 +53,14 @@ class ProductManageController extends Controller
             'variants.*.qty' => ['required_with:variants', 'integer', 'min:0'],
             'image' => ['required', 'mimes:jpeg,png,jpg'],
             'images.*' => ['required', 'mimes:jpeg,png,jpg'],
+
             'selling_type'=>['required',Rule::in(['single','bulk','both'])],
-            'min_bulk_qty'=>['required_if:selling_type,bulk,both','integer','min:1'],
-            'min_bulk_price'=>['required_if:selling_type,bulk,both','numeric','min:1'],
-            'bulk_qty'=>['required_if:selling_type,bulk,both','integer','min:1'],
-            'bulk_commission'=>['required_if:selling_type,bulk,both','numeric','min:1'],
-            'bulk_commission_type'=>['required_if:selling_type,bulk,both',Rule::in(['flat','percentage'])],
-            'payment_type'=>['required',Rule::in(['cod','onlinepayment','both'])],
+            'selling_details'=>['required_if:selling_type,bulk,both' ,'array'],
+            'selling_details.*.min_bulk_qty'=>['integer','min:1'],
+            'selling_details.*.min_bulk_price'=>['numeric','min:1'],
+            'selling_details.*.bulk_commission'=>['numeric','min:1'],
+            'selling_details.*.advance_payment'=>['present','numeric','min:0'],
+            'advance_payment'=>['numeric','min:0'],
 
         ]);
 
@@ -131,12 +132,8 @@ class ProductManageController extends Controller
             $product->discount_rate  = $request->discount_rate;
             $product->variants = $request->variants; //array
             $product->selling_type = request('selling_type');
-            $product->min_bulk_qty = request('min_bulk_qty');
-            $product->min_bulk_price = request('min_bulk_price');
-            $product->bulk_qty = request('bulk_qty');
-            $product->bulk_commission = request('bulk_commission');
-            $product->bulk_commission_type = request('bulk_commission_type');
-            $product->payment_type = request('payment_type');
+            $product->selling_details = request('selling_details');
+            $product->advance_payment = request('advance_payment');
 
             if ($request->hasFile('image')) {
                 $filename =   fileUpload($request->file('image'), 'uploads/product', 500, 500);
@@ -220,12 +217,12 @@ class ProductManageController extends Controller
             'image' => ['nullable', 'mimes:jpeg,png,jpg'],
             'images.*' => ['nullable', 'mimes:jpeg,png,jpg'],
             'selling_type'=>['required',Rule::in(['single','bulk','both'])],
-            'min_bulk_qty'=>['required_if:selling_type,bulk,both','integer','min:1'],
-            'min_bulk_price'=>['required_if:selling_type,bulk,both','numeric','min:1'],
-            'bulk_qty'=>['required_if:selling_type,bulk,both','integer','min:1'],
-            'bulk_commission'=>['required_if:selling_type,bulk,both','numeric','min:1'],
-            'bulk_commission_type'=>['required_if:selling_type,bulk,both',Rule::in(['flat','percentage'])],
-            'payment_type'=>['required',Rule::in(['cod','onlinepayment','both'])],
+            'selling_details'=>['required_if:selling_type,bulk,both' ,'array'],
+            'selling_details.*.min_bulk_qty'=>['integer','min:1'],
+            'selling_details.*.min_bulk_price'=>['numeric','min:1'],
+            'selling_details.*.bulk_commission'=>['numeric','min:1'],
+            'selling_details.*.advance_payment'=>['present','numeric','min:0'],
+            'advance_payment'=>['numeric','min:0'],
         ]);
         $validator->after(function ($validator) {
             $discount_type = request('discount_type');
@@ -276,12 +273,8 @@ class ProductManageController extends Controller
                 $product->discount_rate  = $request->discount_rate;
                 $product->variants = $request->variants;
                 $product->selling_type = request('selling_type');
-                $product->min_bulk_qty = request('min_bulk_qty');
-                $product->min_bulk_price = request('min_bulk_price');
-                $product->bulk_qty = request('bulk_qty');
-                $product->bulk_commission = request('bulk_commission');
-                $product->bulk_commission_type = request('bulk_commission_type');
-                $product->payment_type = request('payment_type');
+                $product->selling_details = request('selling_details');
+                $product->advance_payment = request('advance_payment');
                 $product->update();
 
 

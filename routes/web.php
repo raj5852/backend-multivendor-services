@@ -1,6 +1,7 @@
 <?php
 
 use App\Enums\Status;
+use App\Http\Controllers\TestController;
 use App\Models\AdminAdvertise;
 use App\Models\Product;
 use App\Models\User;
@@ -44,23 +45,7 @@ Route::get('seed', function () {
 
 
 
-Route::get('demo', function () {
-    return array(
-        'product_id' => 1,
-        'cartItems' =>
-        array(
-            0 =>
-            array(
-                'id' => '1',
-                'qty' => '2',
-                'size' => 'xl',
-                'color' => 'dsdsds',
-            ),
-        ),
-        'vendor_id' => '2',
-        'product_price' => '10',
-        'discount_type' => 'flat',
-        'discount_rate' => '1',
-        'category_id' => 1,
-    );
+Route::get('test', function () {
+    return view('test');
 });
+Route::post('test',[TestController::class,'index'])->name('test');

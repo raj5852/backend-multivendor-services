@@ -68,7 +68,8 @@ class Product extends Model
     protected $casts = [
         'tags'=>'array',
         'variants'=>'array',
-        'meta_keyword'=>'array'
+        'meta_keyword'=>'array',
+        'selling_details'=>'json'
     ];
 
 

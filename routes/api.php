@@ -21,6 +21,7 @@ use App\Http\Controllers\API\Vendor\VendorServiceController;
 use App\Http\Controllers\API\Vendor\OrderDeliveryController;
 use App\Http\Controllers\DollerRateController;
 use App\Http\Controllers\RenewController;
+use Illuminate\Support\Facades\Validator;
 
 //register
 Route::post('register', [AuthController::class, 'Register']);
@@ -34,17 +35,17 @@ Route::middleware('auth:sanctum')->group(function () {
 
 
 
-    Route::resource('main-services',VendorServiceController::class);
-    Route::get('service/orders',[VendorServiceController::class,'serviceorders']);
-    Route::post('service/status',[VendorServiceController::class,'statusChange']);
+    Route::resource('main-services', VendorServiceController::class);
+    Route::get('service/orders', [VendorServiceController::class, 'serviceorders']);
+    Route::post('service/status', [VendorServiceController::class, 'statusChange']);
 
-    Route::get('service/myorders/{id}',[VendorServiceController::class,'singlemyorder']);
+    Route::get('service/myorders/{id}', [VendorServiceController::class, 'singlemyorder']);
 
-    Route::get('service/orders/view/{id}',[VendorServiceController::class,'ordersview']);
+    Route::get('service/orders/view/{id}', [VendorServiceController::class, 'ordersview']);
 
     // Route::post('service/delivery-to-customer',[VendorServiceController::class,'deliverytocustomer']);
-    Route::resource('service/delivery-to-customer',OrderDeliveryController::class);
-    Route::get('service-category-subcategory',[VendorServiceController::class,'categorysubcategory']);
+    Route::resource('service/delivery-to-customer', OrderDeliveryController::class);
+    Route::get('service-category-subcategory', [VendorServiceController::class, 'categorysubcategory']);
 
 
     Route::resource('supportbox', SupportBoxController::class);
@@ -53,36 +54,36 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('ticket-replay', [SupportBoxController::class, 'supportreplay']);
 
     Route::apiResource('service/order', ServiceOrderController::class);
-    Route::post('service/order/status', [ServiceOrderController::class,'status']);
+    Route::post('service/order/status', [ServiceOrderController::class, 'status']);
     // Route::apiResource('coupon-list', CouponUsedController::class);
-    Route::get('all-ticket-category',[SupportBoxCategoryController::class,'index']);
-    Route::get('ticket-category-to-problem/{id}',[SupportBoxCategoryController::class,'ticketcategorytoproblem']);
+    Route::get('all-ticket-category', [SupportBoxCategoryController::class, 'index']);
+    Route::get('ticket-category-to-problem/{id}', [SupportBoxCategoryController::class, 'ticketcategorytoproblem']);
 
-    Route::get('buy/subscription/{id}',[BuySubscription::class,'buy']);
-    Route::post('apply/coupon',[BuySubscription::class,'coupon']);
-    Route::post('buy-subscription',[BuySubscription::class,'buysubscription']);
+    Route::get('buy/subscription/{id}', [BuySubscription::class, 'buy']);
+    Route::post('apply/coupon', [BuySubscription::class, 'coupon']);
+    Route::post('buy-subscription', [BuySubscription::class, 'buysubscription']);
 
-    Route::post('create-advertise', [AdminAdvertiseController ::class,'store']);
+    Route::post('create-advertise', [AdminAdvertiseController::class, 'store']);
     // advertise-success
 
-    Route::get('all-advertise', [AdvertiseController ::class,'index']);
-    Route::get('advertise/{id}', [AdvertiseController ::class,'show']);
+    Route::get('all-advertise', [AdvertiseController::class, 'index']);
+    Route::get('advertise/{id}', [AdvertiseController::class, 'show']);
 
-    Route::get('coupon-lists',[CouponListController::class,'index']);
-    Route::post('renew-subscription',[RenewController::class,'store']);
+    Route::get('coupon-lists', [CouponListController::class, 'index']);
+    Route::post('renew-subscription', [RenewController::class, 'store']);
 
-    Route::post('recharge',[RechargeController::class,'recharge']);
-    Route::get('transition-history',[HistoryController::class,'index']);
+    Route::post('recharge', [RechargeController::class, 'recharge']);
+    Route::get('transition-history', [HistoryController::class, 'index']);
 
-    Route::post('service-rating',[ServiceRatingController::class,'store']);
+    Route::post('service-rating', [ServiceRatingController::class, 'store']);
 });
 
 Route::prefix('aaparpay')->group(function () {
 
-    Route::post('advertise-success',[AamarpayController::class, 'advertisesuccess']);
-    Route::post('service-success',[AamarpayController::class, 'servicesuccess']);
-    Route::post('renew-success',[AamarpayController::class, 'renewsuccess']);
-    Route::post('recharge-success',[AamarpayController::class, 'rechargesuccess']);
+    Route::post('advertise-success', [AamarpayController::class, 'advertisesuccess']);
+    Route::post('service-success', [AamarpayController::class, 'servicesuccess']);
+    Route::post('renew-success', [AamarpayController::class, 'renewsuccess']);
+    Route::post('recharge-success', [AamarpayController::class, 'rechargesuccess']);
 
     Route::post('subscription-success', [AamarpayController::class, 'subscriptionsuccess']);
 
@@ -92,10 +93,10 @@ Route::prefix('aaparpay')->group(function () {
 });
 
 Route::post('/contact-store', [ContactController::class, 'store']);
-Route::get('all-services',[VendorServiceController::class,'allservice']);
-Route::get('services-view/{id}',[VendorServiceController::class,'serviceshow']);
+Route::get('all-services', [VendorServiceController::class, 'allservice']);
+Route::get('services-view/{id}', [VendorServiceController::class, 'serviceshow']);
 
-Route::get('doller-rate',[DollerRateController::class,'index']);
+Route::get('doller-rate', [DollerRateController::class, 'index']);
 Route::get('/settings', [SettingsController::class, 'index']);
 
 Route::get('/companions', [SettingsController::class, 'companion']);
@@ -123,7 +124,25 @@ Route::get('/testimonials', [SettingsController::class, 'testimonial']);
 Route::get('/subscriptions', [SubscriptionController::class, 'index']);
 
 
+Route::post('/test', function () {
+    $validator = Validator::make(request()->all(), [
+        'selling_type'=>['required'],
+        'selling_details'=>['required_if:selling_type,bulk,both' ,'array'],
+        'selling_details.*.min_bulk_qty'=>['integer','min:1'],
+        'selling_details.*.min_bulk_price'=>['numeric','min:1'],
+        'selling_details.*.bulk_commission'=>['numeric','min:1'],
+        'selling_details.*.advance_payment'=>['present'],
+        'advance_payment'=>['nullable']
+    ]);
 
+    if ($validator->fails()) {
+        return response()->json([
+            'status' => 400,
+            'errors' => $validator->messages(),
+        ]);
+    }
+    return 1;
+});
 
 Route::middleware('auth:sanctum')->get('/user', function () {
     return auth()->user();
