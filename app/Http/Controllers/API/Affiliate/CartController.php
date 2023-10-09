@@ -20,9 +20,12 @@ class CartController extends Controller
         $getproduct = Product::query()
             ->where('id', $request->product_id)
             ->whereHas('productdetails', function ($query) {
-                $query->where('user_id', auth()->id());
+                $query->where([
+                    'user_id' => auth()->id(),
+                    'status'=> 1
+                ]);
             })
-            ->where('status', 1)
+            ->where('status', 'active')
             ->first();
 
         if (!$getproduct) {
