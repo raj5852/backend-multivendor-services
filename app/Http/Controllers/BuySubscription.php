@@ -42,8 +42,8 @@ class BuySubscription extends Controller
 
         $user = User::find(userid());
 
-        if($user->usersubscription){
-            return responsejson('You have a subscription. You can not buy again.','fail');
+        if ($user->usersubscription) {
+            return responsejson('You have a subscription. You can not buy again.', 'fail');
         }
 
         $subscription = Subscription::find($validateData['subscription_id']);
@@ -57,7 +57,7 @@ class BuySubscription extends Controller
             $coupon = ModelsCoupon::query()
                 ->where('id', request('coupon_id'))
                 ->where('status', 'active')
-                ->where('limitation','>',$couponUsed->couponused_count)
+                ->where('limitation', '>', $couponUsed->couponused_count)
                 ->whereDate('expire_date', '>', now())
                 ->first();
 
@@ -75,19 +75,25 @@ class BuySubscription extends Controller
 
 
         if ($validateData['payment_type'] == 'aamarpay') {
-            return  SosService::aamarpaysubscription($amount, $validateData,$coupon?->id);
+            return  SosService::aamarpaysubscription($amount, $validateData, $coupon?->id);
         } else {
             $balance = $user->balance;
 
             if (convertfloat($balance) >= $amount) {
 
-                SubscriptionService::store($subscription,$user,$amount,$coupon?->id,'My wallet');
+                if( request('payment_type') == 'free'){
+                    $paymentmethod = "free";
+                }elseif(request('payment_type') == 'my-wallet'){
+                    $paymentmethod = "My wallet";
+                }
+
+                SubscriptionService::store($subscription, $user, $amount, $coupon?->id, $paymentmethod);
+
 
                 $user->balance = (convertfloat($user->balance) - $amount);
                 $user->save();
 
                 return $this->response('Success');
-
             } else {
                 return responsejson('Not enough balance', 'fail');
             }
