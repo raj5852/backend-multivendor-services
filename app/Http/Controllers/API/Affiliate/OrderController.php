@@ -20,7 +20,7 @@ class OrderController extends Controller
 
     function store(Request $request)
     {
-
+        info(request()->all());
         $validator =  Validator::make($request->all(),[
             'datas'=>['required','array'],
             'datas.*.name'=>['required'],
@@ -44,6 +44,7 @@ class OrderController extends Controller
             if($totalQty > $totalProductQty){
                 $validator->errors()->add('datas.*.variants.*.qty','Product quantity not available');
             }
+
             if($product->status == Status::Pending->value){
                 $validator->errors()->add('datas','The product under construction');
             }

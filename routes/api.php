@@ -4,6 +4,7 @@ use App\Http\Controllers\AamarpayController;
 use App\Http\Controllers\AdvertiseController;
 use App\Http\Controllers\API\Admin\AdminAdvertiseController;
 use App\Http\Controllers\API\Admin\SupportBoxCategoryController;
+use App\Http\Controllers\API\Affiliate\BankController;
 use App\Http\Controllers\API\Affiliate\PendingBalanceController;
 use App\Http\Controllers\API\Affiliate\WithdrawController;
 use App\Http\Controllers\API\AuthController;
@@ -83,6 +84,9 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('all-withdraw/history/{status?}',[WithdrawController::class,'index']);
 
     Route::post('coupon-request-send',[CouponRequestController::class,'store']);
+    // Route::get('all/banks',[ ::class,'index']);
+    Route::get('all/banks',[BankController::class,'index']);
+
 });
 
 Route::prefix('aaparpay')->group(function () {
