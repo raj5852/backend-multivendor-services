@@ -44,34 +44,7 @@ Route::get('seed', function () {
 });
 
 Route::get('demo', function () {
-    $data =  [
-        [
-            "min_bulk_qty" => 5,
-            "min_bulk_price" => 5,
-            "bulk_commission" => 5,
-            "advance_payment" => 10,
-        ],
-        [
-            "min_bulk_qty" => 10,
-            "min_bulk_price" => 5,
-            "bulk_commission" => 3,
-            "advance_payment" => 3
-        ],
-        [
-            "min_bulk_qty" => 30,
-            "min_bulk_price" => 5,
-            "bulk_commission" => 3,
-            "advance_payment" => 3
-        ],
 
-        [
-            "min_bulk_qty" => 52,
-            "min_bulk_price" => 5,
-            "bulk_commission" => 3,
-            "advance_payment" => 3
-        ]
-    ];
-    return collect($data)->where('min_bulk_qty','<=',51)->max();
 });
 
 

@@ -121,7 +121,8 @@ class CartController extends Controller
         $cartitems = Cart::where('user_id', $user_id)->with(['cartDetails', 'product:id,name'])
 
             ->whereHas('product', function ($query) {
-                $query->whereHas('productdetails', function ($query) {
+                $query->where('status','active')
+                ->whereHas('productdetails', function ($query) {
                     $query->where('status', 1);
                 })
                     ->whereHas('vendor', function ($query) {
@@ -167,7 +168,9 @@ class CartController extends Controller
     {
         $cart = Cart::where('user_id', userid())
             ->whereHas('product', function ($query) {
-                $query->whereHas('vendor', function ($query) {
+
+                $query->where('status','active')
+                    ->whereHas('vendor', function ($query) {
                     $query->whereHas('vendorsubscription', function ($query) {
                         $query->where('expire_date', '>', now());
                     });
