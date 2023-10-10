@@ -41,7 +41,7 @@ class BuysubscriptionRequest extends FormRequest
                 }
                 return true;
             }],
-            'payment_type' => ['required', Rule::in(['my-wallet', 'aamarpay'])],
+            'payment_type' => ['required', Rule::in(['my-wallet', 'aamarpay','free'])],
         ];
     }
 
