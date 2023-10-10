@@ -35,6 +35,7 @@ use App\Http\Controllers\API\AuthController;
 use App\Http\Controllers\API\CategoryController;
 use App\Http\Controllers\API\SubCategoryController;
 use App\Http\Controllers\API\BrandController;
+use App\Http\Controllers\API\CouponRequestController;
 use App\Http\Controllers\API\ProductController;
 use App\Http\Controllers\API\User\MemberController;
 use App\Http\Controllers\API\UserController;
@@ -232,6 +233,8 @@ Route::middleware(['auth:sanctum', 'isAPIAdmin'])->group(function () {
         Route::post('doller-price-store',[DollerPriceController::class,'store']);
         Route::get('membership-details/affiliate',[MembershipDetailsController::class,'affiliatemembership']);
         Route::get('membership-details/vendor',[MembershipDetailsController::class,'vendormembership']);
+        Route::get('all-coupon-request',[CouponRequestController::class,'allcouponrequest']);
+        Route::post('coupon-request-status-change/{id}',[CouponRequestController::class,'changestatus']);
     });
 
 

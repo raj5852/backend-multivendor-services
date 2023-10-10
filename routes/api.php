@@ -4,8 +4,11 @@ use App\Http\Controllers\AamarpayController;
 use App\Http\Controllers\AdvertiseController;
 use App\Http\Controllers\API\Admin\AdminAdvertiseController;
 use App\Http\Controllers\API\Admin\SupportBoxCategoryController;
+use App\Http\Controllers\API\Affiliate\PendingBalanceController;
+use App\Http\Controllers\API\Affiliate\WithdrawController;
 use App\Http\Controllers\API\AuthController;
 use App\Http\Controllers\API\CouponListController;
+use App\Http\Controllers\API\CouponRequestController;
 use App\Http\Controllers\API\HistoryController;
 use App\Http\Controllers\API\RechargeController;
 use App\Http\Controllers\API\ServiceOrderController;
@@ -76,6 +79,10 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('transition-history', [HistoryController::class, 'index']);
 
     Route::post('service-rating', [ServiceRatingController::class, 'store']);
+    Route::post('withdraw-money',[WithdrawController::class,'withdraw']);
+    Route::get('all-withdraw/history/{status?}',[WithdrawController::class,'index']);
+
+    Route::post('coupon-request-send',[CouponRequestController::class,'store']);
 });
 
 Route::prefix('aaparpay')->group(function () {
@@ -90,6 +97,7 @@ Route::prefix('aaparpay')->group(function () {
 
     Route::post('fail', [AamarpayController::class, 'fail']);
     Route::post('cancel', [AamarpayController::class, 'cancel']);
+
 });
 
 Route::post('/contact-store', [ContactController::class, 'store']);

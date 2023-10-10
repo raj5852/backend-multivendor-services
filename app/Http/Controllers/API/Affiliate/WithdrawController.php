@@ -11,12 +11,10 @@ use Illuminate\Support\Facades\Validator;
 
 class WithdrawController extends Controller
 {
-    //
+
     function index(){
         $withdraw = Withdraw::where('affiliator_id',auth()->user()->id)
         ->latest()
-        // ->when(request('search'),fn($q, $name)=>$q->where('bank_name','like',"%{$name}%"))
-
         ->when(request('status') == 'success', function ($q) {
             return $q->where('status', 'success');
         })
@@ -37,13 +35,11 @@ class WithdrawController extends Controller
     }
 
     function withdraw(Request $request){
+
         $validator = Validator::make($request->all(),[
-            'amount'=>'required|integer',
-            // 'name'=>'required',
-            'bank_name'=>'required',
+            'amount'=>['required','numeric','min:200'],
+            'bank_name'=>['required'],
             'ac_or_number'=>'required',
-            // 'holder_name'=>'required',
-            // 'branch_name'=>'required',
         ]);
 
         if($validator->fails()){
@@ -52,12 +48,12 @@ class WithdrawController extends Controller
                 'message'=>$validator->messages()
             ]);
         }
+
         if(auth()->user()->balance >= $request->amount){
 
             Withdraw::create([
                 'affiliator_id'=>auth()->user()->id,
                 'amount'=>$request->amount,
-                // 'name'=>$request->name,
                 'bank_name'=>$request->bank_name,
                 'ac_or_number'=>$request->ac_or_number,
                 'holder_name'=>$request->holder_name,
@@ -78,7 +74,7 @@ class WithdrawController extends Controller
 
             return response()->json([
                 'status'=>200,
-                'message' => 'Balance Not Available!'
+                'message' => 'Balance not available!'
             ]);
 
 
