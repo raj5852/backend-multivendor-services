@@ -26,47 +26,65 @@ class ProductAddToCartRequest extends FormRequest
      */
     public function rules()
     {
+
+        if (request('product_id')) {
+            $getproduct = Product::query()
+                ->where('id', request('product_id'))
+                ->whereHas('productdetails', function ($query) {
+                    $query->where([
+                        'user_id' => auth()->id(),
+                        'status' => 1
+                    ]);
+                })
+                ->where('status', 'active')
+                ->first();
+        }
+
         return [
-            'product_id' => ['required', function ($attribute, $value, $fail) {
+            'product_id' => ['required', function ($attribute, $value, $fail) use ($getproduct) {
                 if (request('product_id') != '') {
-                    $getproduct = Product::query()
-                        ->where('id', request('product_id'))
-                        ->whereHas('productdetails', function ($query) {
-                            $query->where([
-                                'user_id' => auth()->id(),
-                                'status' => 1
-                            ]);
-                        })
-                        ->where('status', 'active')
-                        ->first();
+
                     if (!$getproduct) {
                         $fail('Product not found!');
                     }
                 }
             }],
-            'purchase_type' => ['required', function ($attribute, $value, $fail) {
+
+            'purchase_type' => ['required', function ($attribute, $value, $fail) use ($getproduct) {
                 if (request('purchase_type') != '' && request('product_id')) {
                     $selling_type = Product::find(request('product_id'))->selling_type;
-                    if($selling_type == null){
+                    if ($selling_type == null) {
                         $fail('No selling type found in this product');
                     }
-                    if($selling_type == 'both'){
-                        $purchase_waya = ['single','bulk'];
-                    }elseif($selling_type == 'single'){
+                    if ($selling_type == 'both') {
+                        $purchase_waya = ['single', 'bulk'];
+                    } elseif ($selling_type == 'single') {
                         $purchase_waya = ['single'];
-                    }else{
+                    } else {
                         $purchase_waya = ['bulk'];
                     }
 
 
-                    if(in_array(request('purchase_type'),$purchase_waya)){
+                    if (in_array(request('purchase_type'), $purchase_waya)) {
                         return true;
-                    }else{
+                    } else {
                         return $fail('Invalid purchase type.');
                     }
-
                 }
-            }]
+            }],
+            'cartItems' => [
+                'required',
+                'array'
+            ],
+            'cartItems.*.qty' => [
+                'required',
+                'integer',
+                function ($attribute, $value, $fail) use ($getproduct) {
+                    if ($getproduct->qty < $value) {
+                        $fail('Product quantity not available!');
+                    }
+                }
+            ]
         ];
     }
 

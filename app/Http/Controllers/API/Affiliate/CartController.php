@@ -18,25 +18,47 @@ class CartController extends Controller
     //
     public function addtocart(ProductAddToCartRequest $request)
     {
+        $validatedData =  $request->validated();
+
 
         $getproduct = Product::find(request('product_id'));
+        $totalqty = collect(request('cartItems'))->sum('qty');
 
+        if ($getproduct->qty < $totalqty) {
+            return responsejson('Quantity not available', 'fail');
+        }
+        if (request('purchase_type') != 'single') {
+
+            $min_bulk_qty =  min(array_column($getproduct->selling_details, 'min_bulk_qty'));
+            if($min_bulk_qty > $totalqty){
+                return responsejson('Minimum  Bulk Quantity '.$min_bulk_qty .'.','fail');
+            }
+        }
 
         $user_id = userid();
         $product_id = $getproduct->id;
-        $product_price = $getproduct->selling_price;
+        $productAmount = $getproduct->selling_price;
         $vendor_id = $getproduct->user_id;
 
-        $productAmount = $getproduct->selling_price;
+
+        if (request('purchase_type') == 'single') {
+            $product_price = $getproduct->selling_price;
+
+            if ($getproduct->discount_type == 'percent') {
+                $affi_commission = ($productAmount / 100) * $getproduct->discount_rate;
+            } else {
+                $affi_commission = $getproduct->discount_rate;
+            }
+            $totalproductprice = $product_price * $totalqty;
+            $total_affiliate_commission = $affi_commission * $totalqty;
 
 
-
-        if (request('discount_type') == 'flat') {
-            $amount = $getproduct->discount_rate;
-        }
-
-        if (request('discount_type') == 'percent') {
-            $amount = ($productAmount / 100) * $getproduct->discount_rate;
+        } else {
+            $bulkdetails =  collect($getproduct->selling_details)->where('min_bulk_qty','<=',$totalqty)->max();
+            $product_price = $bulkdetails['min_bulk_price'];
+            $totalproductprice = $product_price * $totalqty;
+            $total_affiliate_commission = $bulkdetails['bulk_commission'] * $totalqty;
+            $affi_commission = $bulkdetails['bulk_commission'];
         }
 
 
@@ -55,11 +77,11 @@ class CartController extends Controller
         $cartitem->product_id = $product_id;
         $cartitem->product_price = $product_price;
         $cartitem->vendor_id = $vendor_id;
-        $cartitem->amount = $amount;
+        $cartitem->amount = $affi_commission;
         $cartitem->category_id = $getproduct->category_id;
-
-        $cartitem->product_qty = collect($obj['cartItems'])->sum('qty');
-
+        $cartitem->product_qty = $totalqty;
+        $cartitem->totalproductprice = $totalproductprice;
+        $cartitem->total_affiliate_commission = $total_affiliate_commission;
         $cartitem->save();
 
         $colors = [];
@@ -90,8 +112,6 @@ class CartController extends Controller
             'status' => 201,
             'message' => 'Added to Cart',
         ]);
-
-
     }
 
     public function viewcart()

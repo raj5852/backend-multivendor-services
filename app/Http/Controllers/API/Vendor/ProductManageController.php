@@ -60,7 +60,7 @@ class ProductManageController extends Controller
             'selling_details.*.min_bulk_price'=>['numeric','min:1'],
             'selling_details.*.bulk_commission'=>['numeric','min:1'],
             'selling_details.*.advance_payment'=>['present','numeric','min:0'],
-            'advance_payment'=>['numeric','min:0'],
+            'advance_payment'=>['numeric','min:0','nullable'],
 
         ]);
 

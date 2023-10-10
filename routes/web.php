@@ -43,41 +43,39 @@ Route::get('seed', function () {
     Artisan::call('db:seed');
 });
 
-Route::get('demo',function(){
- $datas =   array (
-        'product_id' => 1,
-        'cartItems' =>
-        array (
+Route::get('demo', function () {
+    $data =  [
+        [
+            "min_bulk_qty" => 5,
+            "min_bulk_price" => 5,
+            "bulk_commission" => 5,
+            "advance_payment" => 10,
+        ],
+        [
+            "min_bulk_qty" => 10,
+            "min_bulk_price" => 5,
+            "bulk_commission" => 3,
+            "advance_payment" => 3
+        ],
+        [
+            "min_bulk_qty" => 30,
+            "min_bulk_price" => 5,
+            "bulk_commission" => 3,
+            "advance_payment" => 3
+        ],
 
-          array (
-            'id' => '1',
-            'qty' => '2',
-            'size' => 'xl',
-            'color' => 'dsdsds',
-          ),
-
-          array (
-            'id' => '2',
-            'qty' => '2',
-            'size' => 'xl',
-            'color' => 'dsdsds',
-          ),
-        ),
-        'vendor_id' => '2',
-        'product_price' => '10',
-        'discount_type' => 'flat',
-        'discount_rate' => '1',
-        'category_id' => 1,
-    );
-
-   $obj = collect($datas);
-
-   return  collect($obj['cartItems'])->sum('qty');
-
+        [
+            "min_bulk_qty" => 52,
+            "min_bulk_price" => 5,
+            "bulk_commission" => 3,
+            "advance_payment" => 3
+        ]
+    ];
+    return collect($data)->where('min_bulk_qty','<=',51)->max();
 });
 
 
 Route::get('test', function () {
     return view('test');
 });
-Route::post('test',[TestController::class,'index'])->name('test');
+Route::post('test', [TestController::class, 'index'])->name('test');
