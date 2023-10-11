@@ -19,7 +19,7 @@ use Illuminate\Support\Facades\Validator;
 class OrderController extends Controller
 {
 
-    function store(ProductRequest $request,)
+    function store(ProductRequest $request)
     {
 
         $request->validated();
@@ -49,6 +49,7 @@ class OrderController extends Controller
         if (!$product) {
             return responsejson('Product not available currently!');
         }
+
         if($cart->purchase_type == 'single'){
             if($product->selling_type !=  'single'){
                 return responsejson('Something is wrong. Delete the cart.');
@@ -59,106 +60,100 @@ class OrderController extends Controller
 
 
 
-        // if ($cart->purchase_type == 'bulk') {
-        //     $firstaddress =  $datas->first();
-        //     $variants  = collect($firstaddress)['variants'];
-        //     $totalqty = collect($variants)->sum('qty');
-        //     if($product->qty < $totalqty){
-        //         return responsejson('Product quantity not available!','fail');
+        if ($cart->purchase_type == 'bulk') {
+            $firstaddress =  $datas->first();
+            $variants  = collect($firstaddress)['variants'];
+            $totalqty = collect($variants)->sum('qty');
+
+            if($product->qty < $totalqty){
+                return responsejson('Product quantity not available!','fail');
+            }
+        }
+
+        if($cart->purchase_type == 'single'){ //single
+
+            $varients = $datas->pluck('variants');
+
+            $totalqty = collect($varients)->collapse()->sum('qty');
+
+            if($product->qty < $totalqty){
+                return responsejson('Product quantity not available!','fail');
+            }
+        }
+        if ($product->status == Status::Pending->value) {
+            return responsejson('The product under construction!','fail');
+        }
+
+        $uservarients = collect(request()->datas)->pluck('variants')->collapse();
+
+
+        if ($product->variants != ''){
+            foreach($uservarients  as $vr){
+               $data = collect($product->variants)->where('id', $vr['variant_id'])->where('qty','>=',$vr['qty'])->first();
+               if(!$data){
+                return responsejson('Something is wrong. Delete the cart','fail');
+               }
+            }
+        }
+
+
+        // $validator =  Validator::make($request->all(), [
+        //     'datas' => ['required', 'array'],
+        //     'datas.*.name' => ['required'],
+        //     'datas.*.phone' => ['required', 'integer', 'min:1'],
+        //     'datas.*.email' => ['nullable'],
+        //     'datas.*.city' => ['required'],
+        //     'datas.*.address' => ['required'],
+        //     'datas.*.vendor_id' => ['required', 'integer'],
+        //     'datas.*.variants' => ['required', 'array'],
+        //     'datas.*.variants.*.qty' => ['required', 'integer', 'min:1']
+        // ]);
+
+        // $validator->after(function ($validator) {
+        //     $product = Product::find(request('datas')[0]['product_id']);
+        //     $totalProductQty = Product::find(request('datas')[0]['product_id'])->qty;
+
+        //     $totalQty = collect(request('datas'))->sum(function ($item) {
+        //         return collect($item['variants'])->sum('qty');
+        //     });
+
+        //     if ($totalQty > $totalProductQty) {
+        //         $validator->errors()->add('datas.*.variants.*.qty', 'Product quantity not available');
         //     }
+
+        //     if ($product->status == Status::Pending->value) {
+        //         $validator->errors()->add('datas', 'The product under construction');
+        //     }
+        // });
+
+        // $getmembershipdetails = getmembershipdetails();
+        // if ($getmembershipdetails == null) {
+        //     return responsejson('You do not have a membership', 'fail');
         // }
 
-        if($cart->purchase_type == 'bulk'){ //single
+        // if ($getmembershipdetails->expire_date <= now()) {
+        //     return responsejson('Your membership expire', 'fail');
+        // }
 
-        return    $firstaddress =  $datas;
-            // $variants  = collect($firstaddress)['variants'];
-            // $totalqty = collect($variants)->sum('qty');
-            // if($product->qty < $totalqty){
-            //     return responsejson('Product quantity not available!','fail');
-            // }
-
-        }
-
-        return 1;
+        // if ($validator->fails()) {
+        //     return response()->json([
+        //         'status' => 422,
+        //         'errors' => $validator->messages(),
+        //     ]);
+        // }
 
 
-
-
-        $validator =  Validator::make($request->all(), [
-            'datas' => ['required', 'array'],
-            'datas.*.name' => ['required'],
-            'datas.*.phone' => ['required', 'integer', 'min:1'],
-            'datas.*.email' => ['nullable'],
-            'datas.*.city' => ['required'],
-            'datas.*.address' => ['required'],
-            'datas.*.vendor_id' => ['required', 'integer'],
-            'datas.*.variants' => ['required', 'array'],
-            'datas.*.variants.*.qty' => ['required', 'integer', 'min:1']
-        ]);
-
-        $validator->after(function ($validator) {
-            $product = Product::find(request('datas')[0]['product_id']);
-            $totalProductQty = Product::find(request('datas')[0]['product_id'])->qty;
-
-            $totalQty = collect(request('datas'))->sum(function ($item) {
-                return collect($item['variants'])->sum('qty');
-            });
-
-            if ($totalQty > $totalProductQty) {
-                $validator->errors()->add('datas.*.variants.*.qty', 'Product quantity not available');
-            }
-
-            if ($product->status == Status::Pending->value) {
-                $validator->errors()->add('datas', 'The product under construction');
-            }
-        });
-
-        $getmembershipdetails = getmembershipdetails();
-        if ($getmembershipdetails == null) {
-            return responsejson('You do not have a membership', 'fail');
-        }
-
-        if ($getmembershipdetails->expire_date <= now()) {
-            return responsejson('Your membership expire', 'fail');
-        }
-
-        if ($validator->fails()) {
-            return response()->json([
-                'status' => 422,
-                'errors' => $validator->messages(),
-            ]);
-        }
-
-
-        $product = Product::find(request('datas')[0]['product_id']);
-        $cartId = request('datas')[0]['cart_id'];
+        // $product = Product::find(request('datas')[0]['product_id']);
+        $cartId = request('cart_id');
 
         $categoryId = Cart::find($cartId)->category_id;
 
-        foreach ($request->datas as $data) {
+        foreach (request('datas') as $data) {
 
-
-            $sumQty = 0;
-            foreach ($data['variants'] as $item) {
-                $sumQty += intval($item['qty']);
-            }
-
-
-
-
-            if ($product->qty >= $data['variants'][0]['qty']) {
-                $product->qty = ($product->qty - $sumQty);
-                $product->save();
-            } else {
-                return response()->json([
-                    'status' => 201,
-                    'message' => 'Product quantity  not available!'
-                ]);
-            }
-
+            $product->decrement('qty',$totalqty);
 
             $result = [];
-            $databaseValue = Product::find($data['product_id']);
+            $databaseValue = $product;
 
             if ($databaseValue->variants != '') {
 
@@ -172,19 +167,17 @@ class OrderController extends Controller
                     $result[] = $dbItem;
                 }
 
-
-
                 $databaseValue->variants = $result;
                 $databaseValue->save();
             }
 
 
-            $vendor_balance = User::find($data['vendor_id']);
+            $vendor_balance = User::find($product->user_id);
 
 
-            $afi_amount = $sumQty * $data['amount'];
+            $afi_amount = $totalqty * $cart->amount;
 
-            if ($vendor_balance->balance >= $afi_amount) {
+            if ($vendor_balance->balance > $afi_amount) {
                 $status = Status::Pending->value;
                 $vendor_balance->balance = ($vendor_balance->balance - $afi_amount);
                 $vendor_balance->save();
@@ -192,12 +185,10 @@ class OrderController extends Controller
                 $status = Status::Hold->value;
             }
 
-
-
             $order =   Order::create([
-                'vendor_id' => $data['vendor_id'],
-                'affiliator_id' => auth()->user()->id,
-                'product_id' => $data['product_id'],
+                'vendor_id' => $product->user_id,
+                'affiliator_id' => auth()->id(),
+                'product_id' => $product->id,
                 'name' => $data['name'],
                 'phone' => $data['phone'],
                 'email' => $data['email'],
@@ -205,23 +196,23 @@ class OrderController extends Controller
                 'address' => $data['address'],
                 'variants' => json_encode($data['variants']),
                 'afi_amount' => $afi_amount,
-                'product_amount' => $product->selling_price * $sumQty,
+                'product_amount' => $cart->product_price * $totalqty,
                 'status' =>  $status,
                 'category_id' => $categoryId,
-                'qty' => $sumQty
+                'qty' => $totalqty
             ]);
 
 
             PendingBalance::create([
                 'affiliator_id' => auth()->user()->id,
-                'product_id' => $data['product_id'],
+                'product_id' => $product->id,
                 'order_id' => $order->id,
-                'qty' => $sumQty,
+                'qty' => $totalqty,
                 'amount' => $afi_amount,
                 'status' => Status::Pending->value
             ]);
 
-            DB::table('carts')->where('id', $data['cart_id'])->delete();
+            DB::table('carts')->where('id', request('cart_id'))->delete();
         }
 
 
