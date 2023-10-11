@@ -82,6 +82,7 @@ class CartController extends Controller
         $cartitem->product_qty = $totalqty;
         $cartitem->totalproductprice = $totalproductprice;
         $cartitem->total_affiliate_commission = $total_affiliate_commission;
+        $cartitem->purchase_type = request('purchase_type');
         $cartitem->save();
 
         $colors = [];
