@@ -105,6 +105,7 @@ class OrderController extends Controller
             if ($user->balance < $advancepayment) {
                 return responsejson('You do not have enough balance.', 'fail');
             }
+            $user->decrement('balance',$advancepayment);
 
             return  ProductCheckoutService::store($cart->id, $product->id, $totalqty, $user->id, request('datas'));
         } elseif (request('payment_type') == 'aamarpay') {
