@@ -52,6 +52,9 @@ class CartController extends Controller
             $totalproductprice = $product_price * $totalqty;
             $total_affiliate_commission = $affi_commission * $totalqty;
 
+            $advancepayment = $getproduct->advance_payment;
+            $totaladvancepayment = $getproduct->advance_payment * $totalqty;
+
 
         } else {
             $bulkdetails =  collect($getproduct->selling_details)->where('min_bulk_qty','<=',$totalqty)->max();
@@ -59,6 +62,9 @@ class CartController extends Controller
             $totalproductprice = $product_price * $totalqty;
             $total_affiliate_commission = $bulkdetails['bulk_commission'] * $totalqty;
             $affi_commission = $bulkdetails['bulk_commission'];
+
+            $advancepayment =  $bulkdetails['advance_payment'];
+            $totaladvancepayment = $bulkdetails['advance_payment'] * $totalqty;
         }
 
 
@@ -83,6 +89,9 @@ class CartController extends Controller
         $cartitem->totalproductprice = $totalproductprice;
         $cartitem->total_affiliate_commission = $total_affiliate_commission;
         $cartitem->purchase_type = request('purchase_type');
+        $cartitem->advancepayment = $advancepayment;
+        $cartitem->totaladvancepayment = $totaladvancepayment;
+
         $cartitem->save();
 
         $colors = [];
