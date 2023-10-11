@@ -8,9 +8,12 @@ use App\Http\Requests\ProductRequest;
 use App\Models\Cart;
 use App\Models\Order;
 use App\Models\OrderVariant;
+use App\Models\PaymentStore;
 use App\Models\PendingBalance;
 use App\Models\Product;
 use App\Models\User;
+use App\Services\AamarPayService;
+use App\Services\ProductCheckoutService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -50,8 +53,8 @@ class OrderController extends Controller
             return responsejson('Product not available currently!');
         }
 
-        if($cart->purchase_type == 'single'){
-            if($product->selling_type !=  'single'){
+        if ($cart->purchase_type == 'single') {
+            if ($product->selling_type !=  'single') {
                 return responsejson('Something is wrong. Delete the cart.');
             }
         }
@@ -65,39 +68,66 @@ class OrderController extends Controller
             $variants  = collect($firstaddress)['variants'];
             $totalqty = collect($variants)->sum('qty');
 
-            if($product->qty < $totalqty){
-                return responsejson('Product quantity not available!','fail');
+            if ($product->qty < $totalqty) {
+                return responsejson('Product quantity not available!', 'fail');
             }
         }
 
-        if($cart->purchase_type == 'single'){ //single
+        if ($cart->purchase_type == 'single') { //single
 
             $varients = $datas->pluck('variants');
 
             $totalqty = collect($varients)->collapse()->sum('qty');
 
-            if($product->qty < $totalqty){
-                return responsejson('Product quantity not available!','fail');
+            if ($product->qty < $totalqty) {
+                return responsejson('Product quantity not available!', 'fail');
             }
         }
         if ($product->status == Status::Pending->value) {
-            return responsejson('The product under construction!','fail');
+            return responsejson('The product under construction!', 'fail');
         }
 
         $uservarients = collect(request()->datas)->pluck('variants')->collapse();
 
 
-        if ($product->variants != ''){
-            foreach($uservarients  as $vr){
-               $data = collect($product->variants)->where('id', $vr['variant_id'])->where('qty','>=',$vr['qty'])->first();
-               if(!$data){
-                return responsejson('Something is wrong. Delete the cart','fail');
-               }
+        if ($product->variants != '') {
+            foreach ($uservarients  as $vr) {
+                $data = collect($product->variants)->where('id', $vr['variant_id'])->where('qty', '>=', $vr['qty'])->first();
+                if (!$data) {
+                    return responsejson('Something is wrong. Delete the cart', 'fail');
+                }
             }
         }
-        // if()
+        $user = User::find(auth()->id());
+        $advancepayment = $cart->advancepayment *  $totalqty;
 
+        if (request('payment_type') == 'my-wallet') {
+            if ($user->balance < $advancepayment) {
+                return responsejson('You do not have enough balance.', 'fail');
+            }
+
+            return  ProductCheckoutService::store($cart->id, $product->id, $totalqty, $user->id, request('datas'));
+        } elseif (request('payment_type') == 'aamarpay') {
+            $trx = uniqid();
+            PaymentStore::create([
+                'payment_gateway' => 'aamarpay',
+                'trxid' => $trx,
+                'status' => 'pending',
+                'payment_type' => 'checkout',
+                'info' => [
+                    'cartid' => $cart->id,
+                    'productid' => $product->id,
+                    'totalqty' => $totalqty,
+                    'userid' => $user->id,
+                    'datas' => request('datas'),
+                ],
+
+            ]);
+            $successurl = url('api/aaparpay/product-checkout-success');
+            return  AamarPayService::gateway($advancepayment, $trx, 'Product Checkout', $successurl);
+        }
     }
+
     function pendingOrders()
     {
         $orders = Order::searchProduct()

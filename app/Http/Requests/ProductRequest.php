@@ -31,6 +31,7 @@ class ProductRequest extends FormRequest
         return [
             // 'purchase_type'=>['required',Rule::in(['single','bulk'])] ,
             // 'product_id' => ['required'],
+            'payment_type'=>['required',Rule::in(['aamarpay','my-wallet'])],
             'cart_id'=>['required',function($attribute,$value,$fail){
 
                 $cart = Cart::where(['user_id'=>userid(),'id'=>request('cart_id')])->first();

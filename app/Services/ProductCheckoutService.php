@@ -16,18 +16,19 @@ use Illuminate\Support\Facades\DB;
 class ProductCheckoutService
 {
 
-    function store($cartId,$productid,$totalqty,$userid,$datas){
-
-
-
+    static   function store($cartId, $productid, $totalqty, $userid, $datas)
+    {
         $cart = Cart::find($cartId);
+        if(!$cart){
+            return false;
+        }
         $product = Product::find($productid);
 
         $categoryId = $cart->category_id;
 
         foreach ($datas as $data) {
 
-            $product->decrement('qty',$totalqty);
+            $product->decrement('qty', $totalqty);
 
             $result = [];
             $databaseValue = $product;
@@ -77,7 +78,7 @@ class ProductCheckoutService
                 'status' =>  $status,
                 'category_id' => $categoryId,
                 'qty' => $totalqty,
-                'totaladvancepayment'=> $cart->advancepayment * $totalqty
+                'totaladvancepayment' => $cart->advancepayment * $totalqty
             ]);
 
 
@@ -90,9 +91,9 @@ class ProductCheckoutService
                 'status' => Status::Pending->value
             ]);
 
-            DB::table('carts')->where('id', $cartId)->delete();
         }
 
+       DB::table('carts')->where('id', $cartId)->delete();
 
         return response()->json([
             'status' => 200,

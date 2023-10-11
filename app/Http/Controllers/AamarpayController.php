@@ -12,6 +12,7 @@ use App\Models\ServicePackage;
 use App\Models\Subscription;
 use App\Models\User;
 use App\Services\PaymentHistoryService;
+use App\Services\ProductCheckoutService;
 use App\Services\SubscriptionRenewService;
 use App\Services\SubscriptionService;
 
@@ -29,8 +30,24 @@ class AamarpayController extends Controller
 
         $user = User::find($vendorservice->user_id);
         $path = paymentredirect($user->role_as);
-        $url = config('app.redirecturl') . $path.'?message=Service purchase successfully';
+        $url = config('app.redirecturl') . $path . '?message=Service purchase successfully';
         return redirect($url);
+    }
+
+    function productcheckoutsuccess()
+    {
+
+        $response = request()->all();
+        $data = PaymentStore::where('trxid', $response['mer_txnid'])->first();
+
+        if (!$data) {
+            return false;
+        }
+        $info = $data->info;
+
+        PaymentHistoryService::store($data->trxid, $response['amount'], 'Ammarpay', 'Payment Checkout', '-', '', $info['userid']);
+      return  ProductCheckoutService::store($info['cartid'], $info['productid'], $info['totalqty'], $info['userid'], $info['datas']);
+
 
     }
 
@@ -47,7 +64,7 @@ class AamarpayController extends Controller
 
 
         $path = paymentredirect($user->role_as);
-        $url = config('app.redirecturl') . $path.'?message=Renew successfull';
+        $url = config('app.redirecturl') . $path . '?message=Renew successfull';
         return redirect($url);
     }
     function advertisesuccess()
@@ -63,7 +80,7 @@ class AamarpayController extends Controller
         PaymentHistoryService::store($adminAdvertise->trxid, ($adminAdvertise->budget_amount * $dollerRate), 'Ammarpay', 'Advertise', '-', '', $adminAdvertise->user_id);
         $user = User::find($adminAdvertise->user_id);
         $path = paymentredirect($user->role_as);
-        $url = config('app.redirecturl') . $path.'?message=Advertise payment successfull';
+        $url = config('app.redirecturl') . $path . '?message=Advertise payment successfull';
         return redirect($url);
     }
 
@@ -87,7 +104,7 @@ class AamarpayController extends Controller
         }
 
         $path = paymentredirect($user->role_as);
-        $url = config('app.redirecturl') . $path.'?message=Subscription added successfull';
+        $url = config('app.redirecturl') . $path . '?message=Subscription added successfull';
         return redirect($url);
     }
     function rechargesuccess()
@@ -99,7 +116,7 @@ class AamarpayController extends Controller
 
         $user = User::find($data['info']['user_id']);
         $path = paymentredirect($user->role_as);
-        $url = config('app.redirecturl') . $path.'?message=Recharge successful';
+        $url = config('app.redirecturl') . $path . '?message=Recharge successful';
         return redirect($url);
     }
 

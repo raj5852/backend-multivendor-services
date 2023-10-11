@@ -97,6 +97,7 @@ Route::prefix('aaparpay')->group(function () {
     Route::post('recharge-success', [AamarpayController::class, 'rechargesuccess']);
 
     Route::post('subscription-success', [AamarpayController::class, 'subscriptionsuccess']);
+    Route::post('product-checkout-success', [AamarpayController::class, 'productcheckoutsuccess']);
 
 
     Route::post('fail', [AamarpayController::class, 'fail']);
