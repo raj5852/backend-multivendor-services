@@ -2,6 +2,8 @@
 
 namespace App\Providers;
 
+use App\Models\Product;
+use App\Observers\ProductObserver;
 use Illuminate\Pagination\Paginator;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Schema;
@@ -26,5 +28,6 @@ class AppServiceProvider extends ServiceProvider
     {
            Schema::defaultStringLength(191);
            Paginator::useBootstrap();
+           Product::observe(ProductObserver::class);
     }
 }

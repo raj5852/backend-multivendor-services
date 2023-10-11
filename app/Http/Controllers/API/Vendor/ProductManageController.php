@@ -210,10 +210,7 @@ class ProductManageController extends Controller
             'meta_keyword' => ['nullable', 'array'],
             'tags' => ['nullable', 'array'],
             'variants' => ['nullable', 'array'],
-            // 'variants.*.size_name' => ['required_with:variants'],
-            // 'variants.*.color_name' => ['required_with:variants'],
             'variants.*.qty' => ['required_with:variants', 'integer', 'min:0'],
-
             'image' => ['nullable', 'mimes:jpeg,png,jpg'],
             'images.*' => ['nullable', 'mimes:jpeg,png,jpg'],
             'selling_type'=>['required',Rule::in(['single','bulk','both'])],
@@ -267,7 +264,7 @@ class ProductManageController extends Controller
                 $product->meta_title = $request->input('meta_title');
                 $product->meta_keyword = $request->input('meta_keyword');
                 $product->meta_description = $request->input('meta_description');
-                $product->status = Status::Pending->value;
+
                 $product->tags = $request->input('tags');
                 $product->discount_type = $request->discount_type;
                 $product->discount_rate  = $request->discount_rate;
