@@ -103,7 +103,7 @@ class ProductStatusController extends Controller
                     $query->where('status', 1);
                 }])
                     ->whereHas('usersubscription', function ($query) {
-                        $query->where('expire_date', '>', now());
+                        $query->where('expire_date', '<', now());
                     });
 
                 // ->withSum('usersubscription', 'affiliate_request')

@@ -23,7 +23,8 @@ class OrderController extends Controller
     {
 
         $request->validated();
-      return  $cart  = Cart::find(request('cart_id'));
+        $cart  = Cart::find(request('cart_id'));
+
         $getmembershipdetails = getmembershipdetails();
         if ($getmembershipdetails == null) {
             return responsejson('You do not have a membership', 'fail');
@@ -34,7 +35,7 @@ class OrderController extends Controller
         }
 
         $product = Product::query()
-            ->where(['id' => request('product_id'), 'status' => 'active'])
+            ->where(['id' => $cart->product_id, 'status' => 'active'])
             ->whereHas('vendor', function ($query) {
                 $query->whereHas('vendorsubscription', function ($query) {
                     $query->where('expire_date', '>', now());
@@ -48,20 +49,37 @@ class OrderController extends Controller
         if (!$product) {
             return responsejson('Product not available currently!');
         }
+        if($cart->purchase_type == 'single'){
+            if($product->selling_type !=  'single'){
+                return responsejson('Something is wrong. Delete the cart.');
+            }
+        }
 
         $datas = collect(request('datas'));
 
-        if (request('purchase_type') == 'bulk') {
-            $firstaddress =  $datas->first();
-            $variants  = collect($firstaddress)['variants'];
-            $qty = collect($variants)->sum('qty');
-            if($product->qty < $qty){
-                return responsejson('Product quantity not available!','fail');
-            }
+
+
+        // if ($cart->purchase_type == 'bulk') {
+        //     $firstaddress =  $datas->first();
+        //     $variants  = collect($firstaddress)['variants'];
+        //     $totalqty = collect($variants)->sum('qty');
+        //     if($product->qty < $totalqty){
+        //         return responsejson('Product quantity not available!','fail');
+        //     }
+        // }
+
+        if($cart->purchase_type == 'bulk'){ //single
+
+        return    $firstaddress =  $datas;
+            // $variants  = collect($firstaddress)['variants'];
+            // $totalqty = collect($variants)->sum('qty');
+            // if($product->qty < $totalqty){
+            //     return responsejson('Product quantity not available!','fail');
+            // }
 
         }
 
-
+        return 1;
 
 
 
