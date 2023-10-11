@@ -44,54 +44,7 @@ Route::get('seed', function () {
 });
 
 Route::get('demo', function () {
- $data =    [
-        [
-            [
-                'id'=>1,
-                "qty"=> 4
-            ],
 
-            [
-                'id'=>2,
-                "qty"=> 12
-            ],
-
-        ],
-        [
-            [
-                'id'=>4,
-                "qty"=> 12
-            ],
-
-            [
-                'id'=>24,
-                "qty"=>3
-            ],
-        ]
-        ];
-
-    return    $flattenedData = collect($data)->collapse();
-
-        // [
-        //     [
-        //         'id'=>1,
-        //         "qty"=> 4
-        //     ],
-
-        //     [
-        //         'id'=>2,
-        //         "qty"=> 12
-        //     ],
-        //     [
-        //         'id'=>4,
-        //         "qty"=> 12
-        //     ],
-
-        //     [
-        //         'id'=>24,
-        //         "qty"=>3
-        //     ],
-        // ]
 });
 
 
