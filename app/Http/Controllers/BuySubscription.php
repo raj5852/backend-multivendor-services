@@ -22,9 +22,9 @@ class BuySubscription extends Controller
         });
         $user = User::find(userid());
 
-        if ($subscription->subscription_user_type !=  userrole($user->role_as)) {
-            return responsejson('This subscription is not for you');
-        }
+        // if ($subscription->subscription_user_type !=  userrole($user->role_as)) {
+        //     return responsejson('This subscription is not for you');
+        // }
 
         return $this->response($subscription);
     }
