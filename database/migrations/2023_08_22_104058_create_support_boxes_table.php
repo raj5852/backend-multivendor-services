@@ -22,7 +22,7 @@ return new class extends Migration
             $table->foreignIdFor(User::class);
             $table->foreignIdFor(SupportBoxCategory::class);
             $table->foreignIdFor(SupportProblemTopic::class);
-            $table->enum('status',[Status::Pending->value,Status::Progress->value ,Status::Delivered->value]);
+            $table->enum('status',[Status::Pending->value,Status::Progress->value ,Status::Delivered->value,'answered']);
             $table->text('description');
             $table->string('file')->nullable();
             $table->softDeletes();

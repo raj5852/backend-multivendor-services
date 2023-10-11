@@ -87,9 +87,9 @@ class TicketReplyController extends Controller
         return $this->response('Ticket colse successfull!');
     }
 
-    function progress($id){
+    function status($id){
         $supportbox = SupportBox::find($id);
-        $supportbox->status = 'progress';
+        $supportbox->status = request('status');
         $supportbox->save();
 
         return "Status updated successfull!";
