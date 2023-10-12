@@ -60,29 +60,32 @@ class ProductManageController extends Controller
             'selling_details.*.advance_payment'=>['present','numeric','min:0'],
             'advance_payment'=>['numeric','min:0','nullable'],
             'discount_type' => ['nullable', 'in:percent,flat'],
-            'discount_rate' => ['required_if:selling_type,single,both', 'numeric', 'min:1'],
+            'discount_rate' => ['required_if:selling_type,single', 'numeric', 'min:1'],
 
         ]);
 
-        $validator->after(function ($validator) {
-            $discount_type = request('discount_type');
-            $discount_rate = request('discount_rate');
-            $required_balance = "";
+        if(request('selling_type') == 'single'){
+            $validator->after(function ($validator) {
+                $discount_type = request('discount_type');
+                $discount_rate = request('discount_rate');
+                $required_balance = "";
 
-            if ($discount_type == 'flat') {
-                $required_balance =  $discount_rate;
-            }
-
-            if ($discount_type == 'percent') {
-                $required_balance =  (request('selling_price') / 100) * $discount_rate;
-            }
-
-            if ($required_balance != '') {
-                if ($required_balance > convertfloat(auth()->user()->balance)) {
-                    $validator->errors()->add('selling_price', 'At least one product should have  a commission balance');
+                if ($discount_type == 'flat') {
+                    $required_balance =  $discount_rate;
                 }
-            }
-        });
+
+                if ($discount_type == 'percent') {
+                    $required_balance =  (request('selling_price') / 100) * $discount_rate;
+                }
+
+                if ($required_balance != '') {
+                    if ($required_balance > convertfloat(auth()->user()->balance)) {
+                        $validator->errors()->add('selling_price', 'At least one product should have  a commission balance');
+                    }
+                }
+            });
+        }
+
 
         if ($validator->fails()) {
             return response()->json([
@@ -219,26 +222,31 @@ class ProductManageController extends Controller
             'selling_details.*.advance_payment'=>['present','numeric','min:0'],
             'advance_payment'=>['numeric','min:0'],
             'discount_type' => ['nullable', 'in:percent,flat'],
-            'discount_rate' => ['required_if:selling_type,single,both', 'numeric', 'min:1'],
+            'discount_rate' => ['required_if:selling_type,single', 'numeric', 'min:1'],
 
         ]);
-        $validator->after(function ($validator) {
-            $discount_type = request('discount_type');
-            $discount_rate = request('discount_rate');
 
-            if ($discount_type == 'flat') {
-                $required_balance =  $discount_rate;
-            }
+        if(request('selling_type') == 'single'){
+            $validator->after(function ($validator) {
+                $discount_type = request('discount_type');
+                $discount_rate = request('discount_rate');
+                $required_balance = "";
 
-            if ($discount_type == 'percent') {
+                if ($discount_type == 'flat') {
+                    $required_balance =  $discount_rate;
+                }
 
-                $required_balance =  (request('selling_price') / 100) * $discount_rate;
-            }
+                if ($discount_type == 'percent') {
+                    $required_balance =  (request('selling_price') / 100) * $discount_rate;
+                }
 
-            if ($required_balance > auth()->user()->balance) {
-                $validator->errors()->add('selling_price', 'At least one product should have  a commission balance');
-            }
-        });
+                if ($required_balance != '') {
+                    if ($required_balance > convertfloat(auth()->user()->balance)) {
+                        $validator->errors()->add('selling_price', 'At least one product should have  a commission balance');
+                    }
+                }
+            });
+        }
 
         if ($validator->fails()) {
             return response()->json([
