@@ -11,4 +11,8 @@ class UserSubscription extends Model
     use HasFactory,SoftDeletes;
 
     protected $guarded = [];
+
+    function subscription(){
+        return $this->belongsTo(Subscription::class,'subscription_id');
+    }
 }

@@ -14,7 +14,7 @@ class ProfileController extends Controller
 {
     public function VendorProfile()
     {
-        $user = User::find(Auth::user()->id)->load('usersubscription:id,user_id,service_qty,product_qty,affiliate_request,expire_date');
+        $user = User::find(Auth::user()->id)->load(['usersubscription.subscription:id,card_heading']);
 
         $user->balance = number_format($user->balance);
 
@@ -78,6 +78,4 @@ class ProfileController extends Controller
             'message' => 'Profile updated Sucessfully!',
         ]);
     }
-
-
 }
