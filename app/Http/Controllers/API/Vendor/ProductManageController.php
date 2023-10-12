@@ -35,7 +35,6 @@ class ProductManageController extends Controller
     public function VendorProductStore(Request $request)
     {
 
-
         $validator = Validator::make($request->all(), [
             'name' => 'required|max:255',
             'category_id' => ['required', 'integer', 'min:1', new CategoryRule],
@@ -44,8 +43,7 @@ class ProductManageController extends Controller
             'selling_price' => ['required', 'numeric', 'min:1'],
             'original_price' => ['required', 'numeric', 'min:1'],
             'brand_id' => ['required', 'integer', 'min:1', new BrandRule],
-            'discount_type' => ['nullable', 'in:percent,flat'],
-            'discount_rate' => ['required_with:discount_type', 'numeric', 'min:1'],
+
             'meta_keyword' => ['nullable', 'array'],
             'tags' => ['nullable', 'array'],
             'variants' => ['nullable', 'array'],
@@ -61,6 +59,8 @@ class ProductManageController extends Controller
             'selling_details.*.bulk_commission'=>['numeric','min:1'],
             'selling_details.*.advance_payment'=>['present','numeric','min:0'],
             'advance_payment'=>['numeric','min:0','nullable'],
+            'discount_type' => ['nullable', 'in:percent,flat'],
+            'discount_rate' => ['required_if:selling_type,single,both', 'numeric', 'min:1'],
 
         ]);
 
@@ -205,8 +205,6 @@ class ProductManageController extends Controller
             'selling_price' => ['required', 'numeric', 'min:1'],
             'original_price' => ['required', 'numeric', 'min:1'],
             'brand_id' => ['required', 'integer', 'min:1', new BrandRule],
-            'discount_type' => ['nullable', 'in:percent,flat'],
-            'discount_rate' => ['required_with:discount_type', 'numeric', 'min:1'],
             'meta_keyword' => ['nullable', 'array'],
             'tags' => ['nullable', 'array'],
             'variants' => ['nullable', 'array'],
@@ -220,6 +218,9 @@ class ProductManageController extends Controller
             'selling_details.*.bulk_commission'=>['numeric','min:1'],
             'selling_details.*.advance_payment'=>['present','numeric','min:0'],
             'advance_payment'=>['numeric','min:0'],
+            'discount_type' => ['nullable', 'in:percent,flat'],
+            'discount_rate' => ['required_if:selling_type,single,both', 'numeric', 'min:1'],
+
         ]);
         $validator->after(function ($validator) {
             $discount_type = request('discount_type');
