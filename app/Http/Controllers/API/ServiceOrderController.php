@@ -21,7 +21,15 @@ class ServiceOrderController extends Controller
      */
     public function index()
     {
-        $serviceOrder = ServiceOrder::where(['user_id'=> userid(),'is_paid'=>1])->with(['servicedetails', 'packagedetails', 'vendor'])->latest()->paginate(10);
+        $serviceOrder = ServiceOrder::query()
+            ->where(['user_id' => userid(), 'is_paid' => 1])
+            ->with(['servicedetails', 'packagedetails', 'vendor'])
+            ->when(request('status'),function($request){
+                $request->where('status',request('status'));
+            })
+            ->latest()
+            ->paginate(10);
+
         return $this->response($serviceOrder);
     }
 
