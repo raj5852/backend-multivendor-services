@@ -104,7 +104,15 @@ class AamarpayController extends Controller
 
         if ($response['opt_a'] == 'subscription') {
             $amount = $response['amount_original'];
-            SubscriptionService::store($subscription, $user, $amount, $couponid, 'Aamarpay');
+           $subscriptiondata =  SubscriptionService::store($subscription, $user, $amount, $couponid, 'Aamarpay');
+        }
+        if($subscriptiondata == '2' || $subscriptiondata == 3){
+            $tokens = $user->tokens;
+
+            foreach ($tokens as $token) {
+                $token->delete();
+            }
+            return redirect(config('app.maindomain'));
         }
 
         $path = paymentredirect($user->role_as);

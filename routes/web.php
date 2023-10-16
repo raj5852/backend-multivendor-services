@@ -44,7 +44,9 @@ Route::get('seed', function () {
 });
 
 Route::get('demo', function () {
-
+    // $data =  response()->json([
+    //     'userid'=>1
+    // ]);
 });
 
 
