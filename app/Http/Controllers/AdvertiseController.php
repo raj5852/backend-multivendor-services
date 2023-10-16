@@ -18,8 +18,7 @@ class AdvertiseController extends Controller
         ->where('is_paid',1)
         ->with('AdvertiseAudienceFile', 'advertiseLocationFiles')->find($id);
 
-        // all-advertise
-        // files
+
 
         return $this->response($data);
     }

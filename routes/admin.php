@@ -4,6 +4,7 @@ use App\Http\Controllers\API\Admin\AdminAdvertiseController;
 use App\Http\Controllers\API\Admin\BankController;
 use App\Http\Controllers\API\Admin\CompanionController;
 use App\Http\Controllers\API\Admin\ContactController;
+use App\Http\Controllers\API\Admin\ContactPageController;
 use App\Http\Controllers\API\Admin\CouponController;
 use App\Http\Controllers\API\Admin\DashboardController;
 use App\Http\Controllers\API\Admin\DollerPriceController;
@@ -29,6 +30,7 @@ use App\Http\Controllers\API\Admin\SupportBoxController;
 use App\Http\Controllers\API\Admin\SupportProblemTopicController;
 use App\Http\Controllers\API\Admin\TestimonialController;
 use App\Http\Controllers\API\Admin\TicketReplyController;
+use App\Http\Controllers\API\Admin\UserEmailSubscribeControllerList;
 use App\Http\Controllers\API\Admin\VendorServiceController;
 use App\Http\Controllers\API\Admin\WithdrawController as AdminWithdrawController;
 use App\Http\Controllers\API\AuthController;
@@ -236,8 +238,11 @@ Route::middleware(['auth:sanctum', 'isAPIAdmin'])->group(function () {
         Route::get('membership-details/vendor',[MembershipDetailsController::class,'vendormembership']);
         Route::get('all-coupon-request',[CouponRequestController::class,'allcouponrequest']);
         Route::post('coupon-request-status-change/{id}',[CouponRequestController::class,'changestatus']);
+
+        Route::post('contact-page',[ContactPageController::class,'store']);
+        Route::get('contact-page-data',[ContactPageController::class,'index']);
+        Route::get('email-subscriber-list',[UserEmailSubscribeControllerList::class,'index']);
+
     });
-
-
 
 });

@@ -81,19 +81,18 @@ class BuySubscription extends Controller
 
             if (convertfloat($balance) >= $amount) {
 
-                if( request('payment_type') == 'free'){
+                if (request('payment_type') == 'free') {
                     $paymentmethod = "free";
-                }elseif(request('payment_type') == 'my-wallet'){
+                } elseif (request('payment_type') == 'my-wallet') {
                     $paymentmethod = "My wallet";
                 }
-
-                SubscriptionService::store($subscription, $user, $amount, $coupon?->id, $paymentmethod);
-
+                $data =  SubscriptionService::store($subscription, $user, $amount, $coupon?->id, $paymentmethod);
 
                 $user->balance = (convertfloat($user->balance) - $amount);
                 $user->save();
 
-                return $this->response('Success');
+
+                return $data;
             } else {
                 return responsejson('Not enough balance', 'fail');
             }

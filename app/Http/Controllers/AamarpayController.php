@@ -46,8 +46,12 @@ class AamarpayController extends Controller
         $info = $data->info;
 
         PaymentHistoryService::store($data->trxid, $response['amount'], 'Ammarpay', 'Payment Checkout', '-', '', $info['userid']);
-      return  ProductCheckoutService::store($info['cartid'], $info['productid'], $info['totalqty'], $info['userid'], $info['datas']);
+        ProductCheckoutService::store($info['cartid'], $info['productid'], $info['totalqty'], $info['userid'], $info['datas']);
 
+        $user = User::find($info['userid']);
+        $path = paymentredirect($user->role_as);
+        $url = config('app.redirecturl') . $path . '?message=Product purchase successfully';
+        return redirect($url);
 
     }
 
@@ -107,6 +111,7 @@ class AamarpayController extends Controller
         $url = config('app.redirecturl') . $path . '?message=Subscription added successfull';
         return redirect($url);
     }
+
     function rechargesuccess()
     {
         $response = request()->all();

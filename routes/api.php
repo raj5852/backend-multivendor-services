@@ -17,6 +17,8 @@ use App\Http\Controllers\API\ServiceRatingController;
 use App\Http\Controllers\API\SupportBoxController;
 
 use App\Http\Controllers\API\User\ContactController;
+use App\Http\Controllers\API\User\ContactPageController;
+use App\Http\Controllers\API\User\EmailSubscribeController;
 use App\Http\Controllers\API\User\SettingsController;
 use App\Http\Controllers\BuySubscription;
 use App\Http\Controllers\SubscriptionController;
@@ -25,6 +27,8 @@ use App\Http\Controllers\API\Vendor\VendorServiceController;
 use App\Http\Controllers\API\Vendor\OrderDeliveryController;
 use App\Http\Controllers\DollerRateController;
 use App\Http\Controllers\RenewController;
+use App\Models\User;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 
 //register
@@ -36,6 +40,7 @@ Route::post('logout', [AuthController::class, 'logout']);
 
 
 Route::middleware('auth:sanctum')->group(function () {
+
 
 
 
@@ -80,13 +85,12 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('transition-history', [HistoryController::class, 'index']);
 
     Route::post('service-rating', [ServiceRatingController::class, 'store']);
-    Route::post('withdraw-money',[WithdrawController::class,'withdraw']);
-    Route::get('all-withdraw/history/{status?}',[WithdrawController::class,'index']);
+    Route::post('withdraw-money', [WithdrawController::class, 'withdraw']);
+    Route::get('all-withdraw/history/{status?}', [WithdrawController::class, 'index']);
 
-    Route::post('coupon-request-send',[CouponRequestController::class,'store']);
+    Route::post('coupon-request-send', [CouponRequestController::class, 'store']);
     // Route::get('all/banks',[ ::class,'index']);
-    Route::get('all/banks',[BankController::class,'index']);
-
+    Route::get('all/banks', [BankController::class, 'index']);
 });
 
 Route::prefix('aaparpay')->group(function () {
@@ -102,7 +106,6 @@ Route::prefix('aaparpay')->group(function () {
 
     Route::post('fail', [AamarpayController::class, 'fail']);
     Route::post('cancel', [AamarpayController::class, 'cancel']);
-
 });
 
 Route::post('/contact-store', [ContactController::class, 'store']);
@@ -136,10 +139,9 @@ Route::get('/testimonials', [SettingsController::class, 'testimonial']);
 
 Route::get('/subscriptions', [SubscriptionController::class, 'index']);
 
+Route::get('contact-page-data', [ContactPageController::class, 'index']);
+Route::post('email-subscribe', [EmailSubscribeController::class, 'store']);
 
-Route::post('/test', function () {
-
-});
 
 Route::middleware('auth:sanctum')->get('/user', function () {
     return auth()->user();

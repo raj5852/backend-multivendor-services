@@ -41,6 +41,18 @@ class SubscriptionService
             false;
         }
 
+        PaymentHistoryService::store($trxid, $totalamount, $paymentmethod, 'Subscription', '-', $coupon, $user->id);
+
+        if ($coupon != '') {
+            $getcoupon = Coupon::find($coupon);
+
+            $couponUser = User::find($getcoupon->user_id);
+            $couponUser->increment('balance', $getcoupon->commission);
+
+
+            PaymentHistoryService::store($trxid, $getcoupon->commission, 'My wallet', 'Referral bonus', '+', $coupon, $couponUser->id);
+        }
+
         if (userrole($user->role_as) == 'user') {
 
             $getuser = User::find($user->id);
@@ -53,19 +65,15 @@ class SubscriptionService
             }
             $getuser->save();
 
+           $redirect = paymentredirect(userrole($getuser->role_as));
+           $tokens = $getuser->tokens;
+           foreach ($tokens as $token) {
+               $token->delete();
+           }
+           return redirect($redirect);
+
         }
 
-
-        PaymentHistoryService::store($trxid, $totalamount, $paymentmethod, 'Subscription', '-', $coupon, $user->id);
-
-        if ($coupon != '') {
-            $getcoupon = Coupon::find($coupon);
-
-            $couponUser = User::find($getcoupon->user_id);
-            $couponUser->increment('balance', $getcoupon->commission);
-
-
-            PaymentHistoryService::store($trxid, $getcoupon->commission, 'My wallet', 'Referral bonus', '+', $coupon, $couponUser->id);
-        }
+        return responsejson('Successfull','success');
     }
 }

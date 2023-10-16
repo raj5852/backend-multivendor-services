@@ -17,7 +17,7 @@ return [
 
     'name' => env('APP_NAME', 'Laravel'),
     'aamarpay'=>'https://sandbox.aamarpay.com/index.php',
-    'redirecturl'=>'http://localhost:3000/',
+    'redirecturl'=>'https://dasboard.bazar64.xyz',
 
     /*
     |--------------------------------------------------------------------------
