@@ -91,6 +91,10 @@ class BuySubscription extends Controller
                 $user->balance = (convertfloat($user->balance) - $amount);
                 $user->save();
 
+                if ($data == '2' || $data == '3') {
+                    $path = paymentredirect($data);
+                    return config('app.redirecturl') . $path . '?message=successful';
+                }
 
                 return $data;
             } else {
