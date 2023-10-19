@@ -39,21 +39,21 @@ class ProductManageController extends Controller
         //     'd'=>'required_if:dsdd'
         // ])
         $validator = Validator::make($request->all(), [
-            // 'name' => 'required|max:255',
-            // 'category_id' => ['required', 'integer', 'min:1', new CategoryRule],
-            // 'subcategory_id' => ['nullable', new SubCategorydRule],
-            // 'qty' => ['required', 'integer', 'min:1'],
-            // 'selling_price' => ['required', 'numeric', 'min:1'],
-            // 'original_price' => ['required', 'numeric', 'min:1'],
-            // 'brand_id' => ['required', 'integer', 'min:1', new BrandRule],
+            'name' => 'required|max:255',
+            'category_id' => ['required', 'integer', 'min:1', new CategoryRule],
+            'subcategory_id' => ['nullable', new SubCategorydRule],
+            'qty' => ['required', 'integer', 'min:1'],
+            'selling_price' => ['required', 'numeric', 'min:1'],
+            'original_price' => ['required', 'numeric', 'min:1'],
+            'brand_id' => ['required', 'integer', 'min:1', new BrandRule],
 
-            // 'meta_keyword' => ['nullable', 'array'],
-            // 'tags' => ['nullable', 'array'],
-            // 'variants' => ['nullable', 'array'],
+            'meta_keyword' => ['nullable', 'array'],
+            'tags' => ['nullable', 'array'],
+            'variants' => ['nullable', 'array'],
 
-            // 'variants.*.qty' => ['required_with:variants', 'integer', 'min:0'],
-            // 'image' => ['required', 'mimes:jpeg,png,jpg'],
-            // 'images.*' => ['required', 'mimes:jpeg,png,jpg'],
+            'variants.*.qty' => ['required_with:variants', 'integer', 'min:0'],
+            'image' => ['required', 'mimes:jpeg,png,jpg'],
+            'images.*' => ['required', 'mimes:jpeg,png,jpg'],
 
             'selling_type'=>['required',Rule::in(['single','bulk','both'])],
             'advance_payment'=>['numeric','min:0','nullable'],
@@ -110,7 +110,7 @@ class ProductManageController extends Controller
                 'errors' => $validator->messages(),
             ]);
         } else {
-            return 11;
+
             $getmembershipdetails = getmembershipdetails();
 
             $productecreateqty = $getmembershipdetails?->product_qty;
