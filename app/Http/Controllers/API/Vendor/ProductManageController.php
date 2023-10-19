@@ -35,36 +35,53 @@ class ProductManageController extends Controller
     public function VendorProductStore(Request $request)
     {
 
+        // $request->validate([
+        //     'd'=>'required_if:dsdd'
+        // ])
         $validator = Validator::make($request->all(), [
-            'name' => 'required|max:255',
-            'category_id' => ['required', 'integer', 'min:1', new CategoryRule],
-            'subcategory_id' => ['nullable', new SubCategorydRule],
-            'qty' => ['required', 'integer', 'min:1'],
-            'selling_price' => ['required', 'numeric', 'min:1'],
-            'original_price' => ['required', 'numeric', 'min:1'],
-            'brand_id' => ['required', 'integer', 'min:1', new BrandRule],
+            // 'name' => 'required|max:255',
+            // 'category_id' => ['required', 'integer', 'min:1', new CategoryRule],
+            // 'subcategory_id' => ['nullable', new SubCategorydRule],
+            // 'qty' => ['required', 'integer', 'min:1'],
+            // 'selling_price' => ['required', 'numeric', 'min:1'],
+            // 'original_price' => ['required', 'numeric', 'min:1'],
+            // 'brand_id' => ['required', 'integer', 'min:1', new BrandRule],
 
-            'meta_keyword' => ['nullable', 'array'],
-            'tags' => ['nullable', 'array'],
-            'variants' => ['nullable', 'array'],
+            // 'meta_keyword' => ['nullable', 'array'],
+            // 'tags' => ['nullable', 'array'],
+            // 'variants' => ['nullable', 'array'],
 
-            'variants.*.qty' => ['required_with:variants', 'integer', 'min:0'],
-            'image' => ['required', 'mimes:jpeg,png,jpg'],
-            'images.*' => ['required', 'mimes:jpeg,png,jpg'],
+            // 'variants.*.qty' => ['required_with:variants', 'integer', 'min:0'],
+            // 'image' => ['required', 'mimes:jpeg,png,jpg'],
+            // 'images.*' => ['required', 'mimes:jpeg,png,jpg'],
 
             'selling_type'=>['required',Rule::in(['single','bulk','both'])],
-            'selling_details'=>['required_if:selling_type,bulk,both' ,'array'],
-            'selling_details.*.min_bulk_qty'=>['integer','min:1'],
-            'selling_details.*.min_bulk_price'=>['numeric','min:1'],
-            'selling_details.*.bulk_commission'=>['numeric','min:1'],
-            'selling_details.*.advance_payment'=>['present','numeric','min:0'],
             'advance_payment'=>['numeric','min:0','nullable'],
-            'discount_type' => ['nullable', 'in:percent,flat'],
-            'discount_rate' => ['required_if:selling_type,single', 'numeric', 'min:1'],
+            'single_advance_payment_type'=>[Rule::in(['flat','percent']), Rule::requiredIf(function(){
+                return (request('advance_payment') > 0) && (in_array(request('selling_type'),['single','both']));
+            })],
 
+            'selling_details'=>['required_if:selling_type,bulk,both' ,'array'],
+            'selling_details.*.min_bulk_qty'=>['required','integer','min:0'],
+            'selling_details.*.min_bulk_price'=>['required','numeric','min:1'],
+            'selling_details.*.bulk_commission'=>['numeric','min:0'],
+            'selling_details.*.bulk_commission_type'=>[Rule::in(['percent','flat']),'required'],
+            'selling_details.*.advance_payment'=>['present','numeric','min:0'],
+            'selling_details.*.advance_payment_type'=>[Rule::in(['percent','flat']),'required'],
+
+            'discount_rate' => ['required_if:selling_type,single,both', 'numeric', 'min:0'],
+            'discount_type' => ['in:percent,flat', Rule::requiredIf(function(){
+                return request('discount_rate') > 0;
+            })],
+            'is_connect_bulk_single'=>[function($attribute,$value,$fail){
+                if((request('is_connect_bulk_single') == 1) && (request('selling_details') == 'single')){
+                    $fail('You many not active when selling type single.');
+                }
+            }]
         ]);
 
-        if(request('selling_type') == 'single'){
+
+        if(request('selling_type') == 'single') {
             $validator->after(function ($validator) {
                 $discount_type = request('discount_type');
                 $discount_rate = request('discount_rate');
@@ -93,7 +110,7 @@ class ProductManageController extends Controller
                 'errors' => $validator->messages(),
             ]);
         } else {
-
+            return 11;
             $getmembershipdetails = getmembershipdetails();
 
             $productecreateqty = $getmembershipdetails?->product_qty;
@@ -137,6 +154,8 @@ class ProductManageController extends Controller
             $product->selling_type = request('selling_type');
             $product->selling_details = request('selling_details');
             $product->advance_payment = request('advance_payment');
+            $product->single_advance_payment_type = request('single_advance_payment_type');
+            $product->is_connect_bulk_single = request('is_connect_bulk_single');
 
             if ($request->hasFile('image')) {
                 $filename =   fileUpload($request->file('image'), 'uploads/product', 500, 500);

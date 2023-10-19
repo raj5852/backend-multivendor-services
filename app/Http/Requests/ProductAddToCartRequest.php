@@ -6,6 +6,7 @@ use App\Models\Product;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
+use Illuminate\Validation\Rule;
 
 class ProductAddToCartRequest extends FormRequest
 {
@@ -41,9 +42,8 @@ class ProductAddToCartRequest extends FormRequest
         }
 
         return [
-            'product_id' => ['required', function ($attribute, $value, $fail) use ($getproduct) {
+            'product_id' => ['required',Rule::exists('products','id'), function ($attribute, $value, $fail) use ($getproduct) {
                 if (request('product_id') != '') {
-
                     if (!$getproduct) {
                         $fail('Product not found!');
                     }
@@ -80,9 +80,19 @@ class ProductAddToCartRequest extends FormRequest
                 'required',
                 'integer',
                 function ($attribute, $value, $fail) use ($getproduct) {
+
+                    if (request('purchase_type') == 'bulk') {
+                        if ($getproduct->is_connect_bulk_single == 1) {
+                            if ($getproduct->qty < $value) {
+                                $fail('Product quantity not available!');
+                            }
+                        }
+                        return true;
+                    }
                     if ($getproduct->qty < $value) {
                         $fail('Product quantity not available!');
                     }
+
                 }
             ]
         ];

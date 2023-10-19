@@ -24,14 +24,17 @@ class CartController extends Controller
         $getproduct = Product::find(request('product_id'));
         $totalqty = collect(request('cartItems'))->sum('qty');
 
-        if ($getproduct->qty < $totalqty) {
-            return responsejson('Quantity not available', 'fail');
+        if (request('purchase_type') == 'single' ||  (request('purchase_type') == 'bulk' && $getproduct->is_connect_bulk_single == 1)) {
+            if ($getproduct->qty < $totalqty) {
+                return responsejson('Quantity not available', 'fail');
+            }
         }
-        if (request('purchase_type') != 'single') {
 
+
+        if (request('purchase_type') != 'single') {
             $min_bulk_qty =  min(array_column($getproduct->selling_details, 'min_bulk_qty'));
-            if($min_bulk_qty > $totalqty){
-                return responsejson('Minimum  Bulk Quantity '.$min_bulk_qty .'.','fail');
+            if ($min_bulk_qty > $totalqty) {
+                return responsejson('Minimum  Bulk Quantity ' . $min_bulk_qty . '.', 'fail');
             }
         }
 
@@ -52,19 +55,37 @@ class CartController extends Controller
             $totalproductprice = $product_price * $totalqty;
             $total_affiliate_commission = $affi_commission * $totalqty;
 
-            $advancepayment = $getproduct->advance_payment;
+            if($getproduct->single_advance_payment_type == 'percent'){
+                $advancepayment = ($product_price / 100) *$getproduct->advance_payment;
+            }else{
+                $advancepayment = $getproduct->advance_payment;
+            }
+
+
             $totaladvancepayment = $getproduct->advance_payment * $totalqty;
 
 
         } else {
-            $bulkdetails =  collect($getproduct->selling_details)->where('min_bulk_qty','<=',$totalqty)->max();
+            $bulkdetails =  collect($getproduct->selling_details)->where('min_bulk_qty', '<=', $totalqty)->max();
             $product_price = $bulkdetails['min_bulk_price'];
             $totalproductprice = $product_price * $totalqty;
-            $total_affiliate_commission = $bulkdetails['bulk_commission'] * $totalqty;
-            $affi_commission = $bulkdetails['bulk_commission'];
 
-            $advancepayment =  $bulkdetails['advance_payment'];
-            $totaladvancepayment = $bulkdetails['advance_payment'] * $totalqty;
+            if ($bulkdetails['bulk_commission_type'] == 'percent') {
+                $bulk_commission =  ($product_price / 100) * $bulkdetails['bulk_commission'];
+            }else{
+                $bulk_commission =  $bulkdetails['bulk_commission'];
+            }
+
+            $total_affiliate_commission = $bulk_commission * $totalqty;
+            $affi_commission = $bulk_commission;
+
+            if($bulkdetails['advance_payment_type'] == 'percent'){
+                $advancepayment =  ($product_price / 100) * $bulkdetails['advance_payment'];
+            }else{
+                $advancepayment =   $bulkdetails['advance_payment'];
+            }
+
+            $totaladvancepayment = $advancepayment * $totalqty;
         }
 
 
@@ -131,10 +152,10 @@ class CartController extends Controller
         $cartitems = Cart::where('user_id', $user_id)->with(['cartDetails', 'product:id,name'])
 
             ->whereHas('product', function ($query) {
-                $query->where('status','active')
-                ->whereHas('productdetails', function ($query) {
-                    $query->where('status', 1);
-                })
+                $query->where('status', 'active')
+                    ->whereHas('productdetails', function ($query) {
+                        $query->where('status', 1);
+                    })
                     ->whereHas('vendor', function ($query) {
                         $query->whereHas('usersubscription', function ($query) {
                             $query->where('expire_date', '>', now());
@@ -179,12 +200,12 @@ class CartController extends Controller
         $cart = Cart::where('user_id', userid())
             ->whereHas('product', function ($query) {
 
-                $query->where('status','active')
+                $query->where('status', 'active')
                     ->whereHas('vendor', function ($query) {
-                    $query->whereHas('vendorsubscription', function ($query) {
-                        $query->where('expire_date', '>', now());
+                        $query->whereHas('vendorsubscription', function ($query) {
+                            $query->where('expire_date', '>', now());
+                        });
                     });
-                });
             })
             ->find($id);
 

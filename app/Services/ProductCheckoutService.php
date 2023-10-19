@@ -19,7 +19,7 @@ class ProductCheckoutService
     static   function store($cartId, $productid, $totalqty, $userid, $datas)
     {
         $cart = Cart::find($cartId);
-        if(!$cart){
+        if (!$cart) {
             return false;
         }
         $product = Product::find($productid);
@@ -28,26 +28,29 @@ class ProductCheckoutService
 
         foreach ($datas as $data) {
 
-            $product->decrement('qty', $totalqty);
+            if ($cart->purchase_type == 'single' || $product->is_connect_bulk_single == 1) {
+                $product->decrement('qty', $totalqty);
 
-            $result = [];
-            $databaseValue = $product;
+                $result = [];
+                $databaseValue = $product;
 
-            if ($databaseValue->variants != '') {
+                if ($databaseValue->variants != '') {
 
-                foreach ($databaseValue->variants as $dbItem) {
-                    foreach ($data['variants'] as $userItem) {
-                        if ($dbItem['id'] == $userItem['variant_id']) {
-                            $dbItem['qty'] -= $userItem['qty'];
-                            break;
+                    foreach ($databaseValue->variants as $dbItem) {
+                        foreach ($data['variants'] as $userItem) {
+                            if ($dbItem['id'] == $userItem['variant_id']) {
+                                $dbItem['qty'] -= $userItem['qty'];
+                                break;
+                            }
                         }
+                        $result[] = $dbItem;
                     }
-                    $result[] = $dbItem;
-                }
 
-                $databaseValue->variants = $result;
-                $databaseValue->save();
+                    $databaseValue->variants = $result;
+                    $databaseValue->save();
+                }
             }
+
 
 
             $vendor_balance = User::find($product->user_id);
@@ -90,10 +93,9 @@ class ProductCheckoutService
                 'amount' => $afi_amount,
                 'status' => Status::Pending->value
             ]);
-
         }
 
-       DB::table('carts')->where('id', $cartId)->delete();
+        DB::table('carts')->where('id', $cartId)->delete();
 
         return response()->json([
             'status' => 200,

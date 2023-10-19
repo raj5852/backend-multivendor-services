@@ -44,9 +44,59 @@ Route::get('seed', function () {
 });
 
 Route::get('demo', function () {
-    // $data =  response()->json([
-    //     'userid'=>1
-    // ]);
+
+  return array (
+    'product_id' => 23,
+    'cartItems' =>
+    array (
+      0 =>
+      array (
+        'id' => '1',
+        'qty' => '2',
+        'size' => 'M',
+        'color' => 'BLACK',
+      ),
+      1 =>
+      array (
+        'id' => '2',
+        'qty' => '3',
+        'size' => 'S',
+        'color' => 'BLUE',
+      ),
+    ),
+    'vendor_id' => '97',
+    'product_price' => '100',
+    'discount_type' => 'flat',
+    'discount_rate' => '20',
+    'category_id' => 1,
+    'purchase_type' => 'bulk',
+);
+//   [2023-10-19 11:21:38] local.INFO: array (
+//     'product_id' => 23,
+//     'cartItems' =>
+//     array (
+//       0 =>
+//       array (
+//         'id' => '1',
+//         'qty' => '2',
+//         'size' => 'M',
+//         'color' => 'BLACK',
+//       ),
+//       1 =>
+//       array (
+//         'id' => '2',
+//         'qty' => '3',
+//         'size' => 'S',
+//         'color' => 'BLUE',
+//       ),
+//     ),
+//     'vendor_id' => '97',
+//     'product_price' => '100',
+//     'discount_type' => 'flat',
+//     'discount_rate' => '20',
+//     'category_id' => 1,
+//     'purchase_type' => 'single',
+//   ) ;
 });
 
 

@@ -29,8 +29,6 @@ class ProductRequest extends FormRequest
     public function rules()
     {
         return [
-            // 'purchase_type'=>['required',Rule::in(['single','bulk'])] ,
-            // 'product_id' => ['required'],
             'payment_type'=>['required',Rule::in(['aamarpay','my-wallet'])],
             'cart_id'=>['required',function($attribute,$value,$fail){
 

@@ -55,7 +55,7 @@ class OrderController extends Controller
 
         if ($cart->purchase_type == 'single') {
             if ($product->selling_type !=  'single') {
-                return responsejson('Something is wrong. Delete the cart.');
+                return responsejson('Something is wrong. Delete the cart.','fail');
             }
         }
 
@@ -68,8 +68,10 @@ class OrderController extends Controller
             $variants  = collect($firstaddress)['variants'];
             $totalqty = collect($variants)->sum('qty');
 
-            if ($product->qty < $totalqty) {
-                return responsejson('Product quantity not available!', 'fail');
+            if ($product->is_connect_bulk_single == 1) {
+                if ($product->qty < $totalqty) {
+                    return responsejson('Product quantity not available!', 'fail');
+                }
             }
         }
 
@@ -83,6 +85,7 @@ class OrderController extends Controller
                 return responsejson('Product quantity not available!', 'fail');
             }
         }
+
         if ($product->status == Status::Pending->value) {
             return responsejson('The product under construction!', 'fail');
         }
@@ -105,7 +108,7 @@ class OrderController extends Controller
             if ($user->balance < $advancepayment) {
                 return responsejson('You do not have enough balance.', 'fail');
             }
-            $user->decrement('balance',$advancepayment);
+            $user->decrement('balance', $advancepayment);
 
             return  ProductCheckoutService::store($cart->id, $product->id, $totalqty, $user->id, request('datas'));
         } elseif (request('payment_type') == 'aamarpay') {
