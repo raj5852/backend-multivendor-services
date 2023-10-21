@@ -218,7 +218,7 @@ class ProductManageController extends Controller
     public function VendorProductEdit($id)
     {
         $userId = Auth::id();
-        $product = Product::with('vendor', 'brand', 'specifications', 'category', 'subcategory', 'productImage')->where('user_id', $userId)->find($id);
+        $product = Product::with('vendor', 'brand', 'category', 'subcategory', 'productImage')->where('user_id', $userId)->find($id);
 
         if ($product) {
             return response()->json([
