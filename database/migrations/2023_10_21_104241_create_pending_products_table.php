@@ -16,12 +16,12 @@ return new class extends Migration
         Schema::create('pending_products', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('product_id');
-            $table->text('short_description');
-            $table->longText('long_description');
-            $table->longText('specification');
-            $table->longText('specification_ans');
-            $table->string('image');
-            $table->longText('images');
+            $table->text('short_description')->nullable();
+            $table->longText('long_description')->nullable();
+            $table->longText('specification')->nullable();
+            $table->longText('specification_ans')->nullable();
+            $table->string('image')->nullable();
+            $table->longText('images')->nullable();
             $table->softDeletes();
             $table->timestamps();
         });
