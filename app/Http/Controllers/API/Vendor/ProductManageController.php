@@ -15,6 +15,7 @@ use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
+use App\Models\PendingProduct;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\File;
 use App\Service\Vendor\ProductService;
@@ -55,33 +56,33 @@ class ProductManageController extends Controller
             'image' => ['required', 'mimes:jpeg,png,jpg'],
             'images.*' => ['required', 'mimes:jpeg,png,jpg'],
 
-            'selling_type'=>['required',Rule::in(['single','bulk','both'])],
-            'advance_payment'=>['numeric','min:0','nullable'],
-            'single_advance_payment_type'=>[Rule::in(['flat','percent']), Rule::requiredIf(function(){
-                return (request('advance_payment') > 0) && (in_array(request('selling_type'),['single','both']));
+            'selling_type' => ['required', Rule::in(['single', 'bulk', 'both'])],
+            'advance_payment' => ['numeric', 'min:0', 'nullable'],
+            'single_advance_payment_type' => [Rule::in(['flat', 'percent']), Rule::requiredIf(function () {
+                return (request('advance_payment') > 0) && (in_array(request('selling_type'), ['single', 'both']));
             })],
 
-            'selling_details'=>['required_if:selling_type,bulk,both' ,'array'],
-            'selling_details.*.min_bulk_qty'=>['required','integer','min:0'],
-            'selling_details.*.min_bulk_price'=>['required','numeric','min:1'],
-            'selling_details.*.bulk_commission'=>['numeric','min:0'],
-            'selling_details.*.bulk_commission_type'=>[Rule::in(['percent','flat']),'required'],
-            'selling_details.*.advance_payment'=>['present','numeric','min:0'],
-            'selling_details.*.advance_payment_type'=>[Rule::in(['percent','flat']),'required'],
+            'selling_details' => ['required_if:selling_type,bulk,both', 'array'],
+            'selling_details.*.min_bulk_qty' => ['required', 'integer', 'min:0'],
+            'selling_details.*.min_bulk_price' => ['required', 'numeric', 'min:1'],
+            'selling_details.*.bulk_commission' => ['numeric', 'min:0'],
+            'selling_details.*.bulk_commission_type' => [Rule::in(['percent', 'flat']), 'required'],
+            'selling_details.*.advance_payment' => ['present', 'numeric', 'min:0'],
+            'selling_details.*.advance_payment_type' => [Rule::in(['percent', 'flat']), 'required'],
 
             'discount_rate' => ['required_if:selling_type,single,both', 'numeric', 'min:0'],
-            'discount_type' => ['in:percent,flat', Rule::requiredIf(function(){
+            'discount_type' => ['in:percent,flat', Rule::requiredIf(function () {
                 return request('discount_rate') > 0;
             })],
-            'is_connect_bulk_single'=>[function($attribute,$value,$fail){
-                if((request('is_connect_bulk_single') == 1) && (request('selling_details') == 'single')){
+            'is_connect_bulk_single' => [function ($attribute, $value, $fail) {
+                if ((request('is_connect_bulk_single') == 1) && (request('selling_details') == 'single')) {
                     $fail('You many not active when selling type single.');
                 }
             }]
         ]);
 
 
-        if(request('selling_type') == 'single') {
+        if (request('selling_type') == 'single') {
             $validator->after(function ($validator) {
                 $discount_type = request('discount_type');
                 $discount_rate = request('discount_rate');
@@ -132,8 +133,6 @@ class ProductManageController extends Controller
 
 
             $product = new Product();
-            // if(($product->short_description != request('short_description')) || ($product->long_description != request('long_description'))  || ){
-            // }
 
 
 
@@ -253,33 +252,33 @@ class ProductManageController extends Controller
             'image' => ['nullable', 'mimes:jpeg,png,jpg'],
             'images.*' => ['nullable', 'mimes:jpeg,png,jpg'],
 
-            'selling_type'=>['required',Rule::in(['single','bulk','both'])],
-            'advance_payment'=>['numeric','min:0','nullable'],
-            'single_advance_payment_type'=>[Rule::in(['flat','percent']), Rule::requiredIf(function(){
-                return (request('advance_payment') > 0) && (in_array(request('selling_type'),['single','both']));
+            'selling_type' => ['required', Rule::in(['single', 'bulk', 'both'])],
+            'advance_payment' => ['numeric', 'min:0', 'nullable'],
+            'single_advance_payment_type' => [Rule::in(['flat', 'percent']), Rule::requiredIf(function () {
+                return (request('advance_payment') > 0) && (in_array(request('selling_type'), ['single', 'both']));
             })],
 
-            'selling_details'=>['required_if:selling_type,bulk,both' ,'array'],
-            'selling_details.*.min_bulk_qty'=>['required','integer','min:0'],
-            'selling_details.*.min_bulk_price'=>['required','numeric','min:1'],
-            'selling_details.*.bulk_commission'=>['numeric','min:0'],
-            'selling_details.*.bulk_commission_type'=>[Rule::in(['percent','flat']),'required'],
-            'selling_details.*.advance_payment'=>['present','numeric','min:0'],
-            'selling_details.*.advance_payment_type'=>[Rule::in(['percent','flat']),'required'],
+            'selling_details' => ['required_if:selling_type,bulk,both', 'array'],
+            'selling_details.*.min_bulk_qty' => ['required', 'integer', 'min:0'],
+            'selling_details.*.min_bulk_price' => ['required', 'numeric', 'min:1'],
+            'selling_details.*.bulk_commission' => ['numeric', 'min:0'],
+            'selling_details.*.bulk_commission_type' => [Rule::in(['percent', 'flat']), 'required'],
+            'selling_details.*.advance_payment' => ['present', 'numeric', 'min:0'],
+            'selling_details.*.advance_payment_type' => [Rule::in(['percent', 'flat']), 'required'],
 
             'discount_rate' => ['required_if:selling_type,single,both', 'numeric', 'min:0'],
-            'discount_type' => ['in:percent,flat', Rule::requiredIf(function(){
+            'discount_type' => ['in:percent,flat', Rule::requiredIf(function () {
                 return request('discount_rate') > 0;
             })],
-            'is_connect_bulk_single'=>[function($attribute,$value,$fail){
-                if((request('is_connect_bulk_single') == 1) && (request('selling_details') == 'single')){
+            'is_connect_bulk_single' => [function ($attribute, $value, $fail) {
+                if ((request('is_connect_bulk_single') == 1) && (request('selling_details') == 'single')) {
                     $fail('You many not active when selling type single.');
                 }
             }]
 
         ]);
 
-        if(request('selling_type') == 'single'){
+        if (request('selling_type') == 'single') {
             $validator->after(function ($validator) {
                 $discount_type = request('discount_type');
                 $discount_rate = request('discount_rate');
@@ -312,11 +311,10 @@ class ProductManageController extends Controller
 
             if ($product) {
 
-
                 $product->category_id = $request->input('category_id');
                 $product->subcategory_id = $request->input('subcategory_id');
                 $product->brand_id = $request->input('brand_id');
-                $product->user_id = auth()->user()->id;
+                $product->user_id = auth()->id();
 
                 $product->name = $request->input('name');
                 $product->slug =  slugUpdate(Product::class, $request->name, $id);
@@ -343,40 +341,61 @@ class ProductManageController extends Controller
                 $product->update();
 
 
-                DB::table('specifications')->where('product_id', $product->id)->delete();
-
-                if ($request->specifications) {
-                    foreach ($request->specifications as $key => $sp) {
-                        specification::create([
-                            'product_id' => $product->id,
-                            'specification' => $sp['specification'],
-                            'specification_ans' =>  $sp['specification_ans']
-                        ]);
+                if (($product->short_description != request('short_description')) || ($product->long_description != request('long_description'))  || request()->hasFile('image') || request()->hasFile('images')) {
+                    $pendingproductdetails =  PendingProduct::where('product_id',$product->id)->first();
+                    if(!$pendingproductdetails){
+                        $pendingproduct = new  PendingProduct();
+                    }else{
+                        $pendingproduct =  $pendingproductdetails;
                     }
+                    $pendingproduct->product_id = $product->id;
+                    $pendingproduct->short_description = request('short_description');
+                    $pendingproduct->long_description = request('long_description');
+                    if(request()->hasFile('image')){
+                        $pendingproduct->image =  fileUpload($request->file('image'), 'uploads/product');
+                    }
+
+                    $allimages = [];
+                    if ($request->file('images')) {
+                        foreach ($request->file('images') as $key => $image) {
+                            $allimages[] = fileUpload($request->file('images')[$key], 'uploads/product');
+                        }
+                    }
+
+                    if(request()->has('images')){
+                        $pendingproduct->images =  $allimages;
+                    }
+                    $pendingproduct->save();
+
                 }
 
 
-                if ($request->hasFile('image')) {
-                    $path = $product->image;
-                    if (File::exists($path)) {
-                        File::delete($path);
-                    }
+                // DB::table('specifications')->where('product_id', $product->id)->delete();
 
-                    $filename =   fileUpload($request->file('image'), 'uploads/product');
-                    $product->image =  $filename;
-                }
+                // if ($request->specifications) {
+                //     foreach ($request->specifications as $key => $sp) {
+                //         specification::create([
+                //             'product_id' => $product->id,
+                //             'specification' => $sp['specification'],
+                //             'specification_ans' =>  $sp['specification_ans']
+                //         ]);
+                //     }
+                // }
+
+
+                // if ($request->hasFile('image')) {
+                //     $path = $product->image;
+                //     if (File::exists($path)) {
+                //         File::delete($path);
+                //     }
+
+                //     $filename =   fileUpload($request->file('image'), 'uploads/product');
+                //     $product->image =  $filename;
+                // }
 
 
 
-                if ($request->file('images')) {
-                    foreach ($request->file('images') as $key => $image) {
-                        $imageUrl = fileUpload($request->file('images')[$key], 'uploads/product');
-                        $proimage = new ProductImage();
-                        $proimage->product_id = $product->id;
-                        $proimage->image = $imageUrl;
-                        $proimage->save();
-                    }
-                }
+
 
 
                 $product->update();

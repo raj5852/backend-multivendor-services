@@ -45,16 +45,13 @@ Route::get('seed', function () {
 
 Route::get('demo', function () {
 
-    $specification = ['sp1', 'sp2'];
-    $specification_ans = ['ans1', 'ans2'];
+    // $datas = [1,2,3,4,4];
+    // $store = [];
+    // foreach($datas as $data){
+    //     $store[] = $data;
+    // }
+    // return $store;
 
-
-   return $result = collect($specification)->map(function ($item, $key) use ($specification_ans) {
-        return [
-            "specification" => $item,
-            "specification_ans" => $specification_ans[$key],
-        ];
-    })->toArray();
 
 });
 
