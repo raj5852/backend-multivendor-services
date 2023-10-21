@@ -11,4 +11,8 @@ class PendingProduct extends Model
     use HasFactory,SoftDeletes;
 
     protected $guarded = [];
+
+    protected $casts = [
+        'images'=>'array',
+    ];
 }
