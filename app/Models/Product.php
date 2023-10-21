@@ -69,7 +69,8 @@ class Product extends Model
         'tags'=>'array',
         'variants'=>'array',
         'meta_keyword'=>'array',
-        'selling_details'=>'array'
+        'selling_details'=>'array',
+        'specifications'=>'array'
     ];
 
 
