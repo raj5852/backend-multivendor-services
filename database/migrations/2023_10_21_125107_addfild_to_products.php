@@ -14,8 +14,7 @@ return new class extends Migration
     public function up()
     {
         Schema::table('products', function (Blueprint $table) {
-            $table->string('single_advance_payment_type')->nullable()->comment('flat,percentage');
-            $table->string('is_connect_bulk_single')->default(0)->comment('1=connected,0=not connected');
+            $table->longText('specifications')->nullable();
         });
     }
 
@@ -27,7 +26,7 @@ return new class extends Migration
     public function down()
     {
         Schema::table('products', function (Blueprint $table) {
-            $table->dropColumn('single_advance_payment_type','is_connect_bulk_single');
+            $table->dropColumn(['specifications']);
         });
     }
 };

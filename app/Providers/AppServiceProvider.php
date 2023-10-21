@@ -28,6 +28,6 @@ class AppServiceProvider extends ServiceProvider
     {
            Schema::defaultStringLength(191);
            Paginator::useBootstrap();
-           Product::observe(ProductObserver::class);
+        //    Product::observe(ProductObserver::class);
     }
 }

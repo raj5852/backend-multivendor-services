@@ -3,23 +3,23 @@
 namespace App\Http\Controllers\Api\Vendor;
 
 use App\Enums\Status;
-use App\Http\Controllers\Controller;
 use App\Models\Brand;
 use App\Models\Product;
-use App\Models\ProductImage;
-use App\Models\specification;
 use App\Rules\BrandRule;
 use App\Rules\CategoryRule;
-use App\Rules\SubCategorydRule;
-use App\Service\Vendor\ProductService;
-use App\Services\Vendor\VendorProductValidation;
+use App\Models\ProductImage;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\File;
-use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Validator;
+use App\Models\specification;
+use App\Rules\SubCategorydRule;
 use Illuminate\Validation\Rule;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
+use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\File;
+use App\Service\Vendor\ProductService;
+use Illuminate\Support\Facades\Validator;
+use App\Services\Vendor\VendorProductValidation;
 
 class ProductManageController extends Controller
 {
@@ -130,14 +130,23 @@ class ProductManageController extends Controller
             }
 
 
+
             $product = new Product();
+            // if(($product->short_description != request('short_description')) || ($product->long_description != request('long_description'))  || ){
+            // }
+
+
+
             $product->category_id = $request->category_id;
             $product->subcategory_id = $request->subcategory_id;
             $product->brand_id = $request->brand_id;
             $product->user_id = Auth::user()->id;
             $product->name = $request->name;
             $product->slug =   slugCreate(Product::class, $request->name);
+
+
             $product->short_description = $request->short_description;
+
             $product->long_description = $request->long_description;
             $product->selling_price = $request->selling_price;
             $product->original_price = $request->original_price;
@@ -162,17 +171,28 @@ class ProductManageController extends Controller
                 $product->image =  $filename;
             }
 
+            $specification = request('specification');
+            $specification_ans  = request('specification_ans');
+
+            $specificationdata = collect($specification)->map(function ($item, $key) use ($specification_ans) {
+                return [
+                    "specification" => $item,
+                    "specification_ans" => $specification_ans[$key],
+                ];
+            })->toArray();
+
+            $product->specifications = $specificationdata;
             $product->save();
 
-            if ($request->specification) {
-                foreach ($request->specification as $key => $sp) {
-                    specification::create([
-                        'product_id' => $product->id,
-                        'specification' => $sp,
-                        'specification_ans' => $request->specification_ans[$key]
-                    ]);
-                }
-            }
+            // if ($request->specification) {
+            //     foreach ($request->specification as $key => $sp) {
+            //         specification::create([
+            //             'product_id' => $product->id,
+            //             'specification' => $sp,
+            //             'specification_ans' => $request->specification_ans[$key]
+            //         ]);
+            //     }
+            // }
 
             $productId = $product->id;
 
@@ -216,7 +236,6 @@ class ProductManageController extends Controller
 
     public function VendotUpdateProduct(Request $request, $id)
     {
-        // Log::info($request->all());
         $validator = Validator::make($request->all(), [
 
 
@@ -233,15 +252,30 @@ class ProductManageController extends Controller
             'variants.*.qty' => ['required_with:variants', 'integer', 'min:0'],
             'image' => ['nullable', 'mimes:jpeg,png,jpg'],
             'images.*' => ['nullable', 'mimes:jpeg,png,jpg'],
+
             'selling_type'=>['required',Rule::in(['single','bulk','both'])],
+            'advance_payment'=>['numeric','min:0','nullable'],
+            'single_advance_payment_type'=>[Rule::in(['flat','percent']), Rule::requiredIf(function(){
+                return (request('advance_payment') > 0) && (in_array(request('selling_type'),['single','both']));
+            })],
+
             'selling_details'=>['required_if:selling_type,bulk,both' ,'array'],
-            'selling_details.*.min_bulk_qty'=>['integer','min:1'],
-            'selling_details.*.min_bulk_price'=>['numeric','min:1'],
-            'selling_details.*.bulk_commission'=>['numeric','min:1'],
+            'selling_details.*.min_bulk_qty'=>['required','integer','min:0'],
+            'selling_details.*.min_bulk_price'=>['required','numeric','min:1'],
+            'selling_details.*.bulk_commission'=>['numeric','min:0'],
+            'selling_details.*.bulk_commission_type'=>[Rule::in(['percent','flat']),'required'],
             'selling_details.*.advance_payment'=>['present','numeric','min:0'],
-            'advance_payment'=>['numeric','min:0'],
-            'discount_type' => ['nullable', 'in:percent,flat'],
-            'discount_rate' => ['required_if:selling_type,single', 'numeric', 'min:1'],
+            'selling_details.*.advance_payment_type'=>[Rule::in(['percent','flat']),'required'],
+
+            'discount_rate' => ['required_if:selling_type,single,both', 'numeric', 'min:0'],
+            'discount_type' => ['in:percent,flat', Rule::requiredIf(function(){
+                return request('discount_rate') > 0;
+            })],
+            'is_connect_bulk_single'=>[function($attribute,$value,$fail){
+                if((request('is_connect_bulk_single') == 1) && (request('selling_details') == 'single')){
+                    $fail('You many not active when selling type single.');
+                }
+            }]
 
         ]);
 
@@ -274,7 +308,10 @@ class ProductManageController extends Controller
             ]);
         } else {
             $product = Product::find($id);
+
+
             if ($product) {
+
 
                 $product->category_id = $request->input('category_id');
                 $product->subcategory_id = $request->input('subcategory_id');
@@ -300,6 +337,9 @@ class ProductManageController extends Controller
                 $product->selling_type = request('selling_type');
                 $product->selling_details = request('selling_details');
                 $product->advance_payment = request('advance_payment');
+                $product->single_advance_payment_type = request('single_advance_payment_type');
+                $product->is_connect_bulk_single = request('is_connect_bulk_single');
+
                 $product->update();
 
 
