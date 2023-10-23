@@ -253,7 +253,7 @@ class OrderController extends Controller
             // $allData =    $order->load(['product', 'vendor', 'affiliator']);
 
             $allData =    $order->load([
-                'product.specifications',
+                'product:id,specifications',
                 'product.category:id,name',
                 'product.subcategory:id,name',
                 'product.brand:id,name',

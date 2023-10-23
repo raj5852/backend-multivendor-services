@@ -54,11 +54,11 @@ class VendorServiceController extends Controller
 
         $totalcreatedservice = VendorService::where('user_id', userid())->count();
 
-        if (!ismembershipexists()) {
+        if (ismembershipexists() != 1) {
             return responsejson('You do not have membership', 'fail');
         }
 
-        if (!isactivemembership()) {
+        if (isactivemembership() != 1)  {
             return responsejson('Membership expired!', 'fail');
         }
 

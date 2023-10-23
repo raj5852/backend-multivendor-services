@@ -26,7 +26,7 @@ class ProductService
                 return $q->where('status', 'active');
             })
             ->with([
-                'specifications',
+
                 'category:id,name,slug,image',
                 'subcategory:id,name',
                 'brand:id,name',

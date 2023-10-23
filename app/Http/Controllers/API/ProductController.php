@@ -31,7 +31,7 @@ class ProductController extends Controller
             ->when(request('status') == 'rejected', function ($q) {
                 return $q->where('status', 'rejected');
             })
-            ->with('specifications','category', 'brand', 'subcategory', 'productImage','vendor:id,name')
+            ->with('category', 'brand', 'subcategory', 'productImage','vendor:id,name')
             ->latest()->paginate(10)
             ->withQueryString();
 
@@ -173,7 +173,7 @@ class ProductController extends Controller
             // 'colors','sizes',
             return response()->json([
                 'status' => 200,
-                'product' => $product->load('specifications','category','subcategory','brand','productImage','productdetails','vendor')
+                'product' => $product->load('category','subcategory','brand','productImage','productdetails','vendor')
             ]);
         } else {
             return response()->json([

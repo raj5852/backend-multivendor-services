@@ -45,13 +45,6 @@ Route::get('seed', function () {
 
 Route::get('demo', function () {
 
-    // $datas = [1,2,3,4,4];
-    // $store = [];
-    // foreach($datas as $data){
-    //     $store[] = $data;
-    // }
-    // return $store;
-
 
 });
 

@@ -255,11 +255,12 @@ class OrderController extends Controller
         if ($order) {
 
             $allData =    $order->load([
-                'product.specifications',
+                'product:id,specifications',
                 'product.category:id,name',
                 'product.subcategory:id,name',
                 'product.brand:id,name',
-                'vendor', 'affiliator'
+                'vendor',
+                'affiliator'
             ]);
 
             $allData->variants = json_decode($allData->variants);

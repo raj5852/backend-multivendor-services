@@ -65,6 +65,10 @@ class Product extends Model
         return $this->hasMany(Order::class,'product_id','id');
     }
 
+    function pendingproduct(){
+        return $this->hasOne(PendingProduct::class,'product_id');
+    }
+
     protected $casts = [
         'tags'=>'array',
         'variants'=>'array',

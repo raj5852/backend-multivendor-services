@@ -1,6 +1,8 @@
 <?php
 
+use App\Models\Subscription;
 use App\Models\UserSubscription;
+use Carbon\Carbon;
 use Illuminate\Support\Str;
 use Intervention\Image\Facades\Image;
 
@@ -145,11 +147,21 @@ function ismembershipexists($userid = null)
     return UserSubscription::where(['user_id' => $userid])->exists();
 }
 
-function isactivemembership($userid = null){
+function isactivemembership($userid = null)
+{
     if (!$userid) {
         $userid = auth()->id();
     }
-    return UserSubscription::where(['user_id' => $userid])->where('expire_date','>',now())->exists();
+    $usersubscription =  UserSubscription::where(['user_id' => $userid])->first();
+    $sub = Subscription::find($usersubscription->subscription_id);
+    if ($sub->subscription_amount != 0) {
+        $date =  Carbon::parse($usersubscription->expire_date)->addMonth();
+        if ($date > now()) {
+            return 1;
+        }
+        return;
+    }
+    return;
 }
 
 
@@ -162,14 +174,15 @@ function getmembershipdetails($userid = null)
     return UserSubscription::where(['user_id' => $userid])->first();
 }
 
-function paymentredirect($role){
-    if(userrole($role) == 'vendor'){
+function paymentredirect($role)
+{
+    if (userrole($role) == 'vendor') {
         return 'vendors-dashboard';
     }
-    if(userrole($role) == 'affiliate'){
+    if (userrole($role) == 'affiliate') {
         return 'affiliates-dashboard';
     }
-    if(userrole($role) == 'user'){
+    if (userrole($role) == 'user') {
         return 'user-dashboard';
     }
 }
