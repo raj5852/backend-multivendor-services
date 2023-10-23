@@ -319,8 +319,8 @@ class ProductManageController extends Controller
 
                 $product->name = $request->input('name');
                 $product->slug =  slugUpdate(Product::class, $request->name, $id);
-                $product->short_description = $request->input('short_description');
-                $product->long_description = $request->input('long_description');
+                // $product->short_description = $request->input('short_description');
+                // $product->long_description = $request->input('long_description');
                 $product->selling_price = $request->input('selling_price');
                 $product->original_price = $request->input('original_price');
                 $product->qty = $request->input('qty');
