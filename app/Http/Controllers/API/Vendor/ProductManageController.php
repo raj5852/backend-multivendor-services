@@ -462,7 +462,7 @@ class ProductManageController extends Controller
     {
         $product =  Product::query()
             ->where('user_id', auth()->id())
-            ->whereHas('pendingproduct')
+            ->withwhereHas('pendingproduct')
             ->find($id);
 
         if (!$product) {
