@@ -380,4 +380,8 @@ class ProductController extends Controller
             ]);
         }
     }
+
+    function producteditrequest(){
+
+    }
 }

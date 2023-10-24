@@ -115,7 +115,7 @@ Route::middleware(['auth:sanctum', 'isAPIAdmin'])->group(function () {
     Route::put('update-product/{id}', [ProductController::class, 'UpdateProduct']);
     Route::delete('delete-product/{id}', [ProductController::class, 'destroy']);
     Route::post('admin-product-status-update/{id}', [ProductController::class, 'updateStatus']);
-
+    Route::get('product-edit-request',[ProductController::class, 'producteditrequest']);
 
     // vendor
     Route::get('vendor/view/{name?}', [UserController::class, 'VendorView']);

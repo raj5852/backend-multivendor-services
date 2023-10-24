@@ -113,13 +113,13 @@ class BrandController extends Controller
                 $brand->status = $request->input('status');
 
 
-
-                if ($request->hasFile('image')) {
+                if (request()->hasFile('image')) {
+                    info(request()->all());
                     $path = $brand->image;
                     if (File::exists($path)) {
                         File::delete($path);
                     }
-                    $file = $request->file('image');
+                    $file = request('image');
                     $extension = $file->getClientOriginalExtension();
                     $filename = time() . '.' . $extension;
                     $file->move('uploads/brand/', $filename);
