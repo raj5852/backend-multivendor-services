@@ -22,6 +22,8 @@ return new class extends Migration
             $table->longText('specification_ans')->nullable();
             $table->string('image')->nullable();
             $table->longText('images')->nullable();
+            $table->integer('is_reject')->default(0)->nullable();
+            $table->longText('reason')->nullable();
             $table->softDeletes();
             $table->timestamps();
         });
