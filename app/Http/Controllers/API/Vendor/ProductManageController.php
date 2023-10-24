@@ -343,16 +343,16 @@ class ProductManageController extends Controller
 
 
                 if (($product->short_description != request('short_description')) || ($product->long_description != request('long_description'))  || request()->hasFile('image') || request()->hasFile('images')) {
-                    $pendingproductdetails =  PendingProduct::where('product_id',$product->id)->first();
-                    if(!$pendingproductdetails){
+                    $pendingproductdetails =  PendingProduct::where('product_id', $product->id)->first();
+                    if (!$pendingproductdetails) {
                         $pendingproduct = new  PendingProduct();
-                    }else{
+                    } else {
                         $pendingproduct =  $pendingproductdetails;
                     }
                     $pendingproduct->product_id = $product->id;
                     $pendingproduct->short_description = request('short_description');
                     $pendingproduct->long_description = request('long_description');
-                    if(request()->hasFile('image')){
+                    if (request()->hasFile('image')) {
                         $pendingproduct->image =  fileUpload($request->file('image'), 'uploads/product');
                     }
 
@@ -363,11 +363,10 @@ class ProductManageController extends Controller
                         }
                     }
 
-                    if(request()->has('images')){
+                    if (request()->has('images')) {
                         $pendingproduct->images =  $allimages;
                     }
                     $pendingproduct->save();
-
                 }
 
 
@@ -433,7 +432,6 @@ class ProductManageController extends Controller
         }
     }
 
-
     function VendorDeleteImage($id)
     {
         $image = ProductImage::find($id);
@@ -448,5 +446,29 @@ class ProductManageController extends Controller
                 'message' => 'Product Image Deleted Successfilly!',
             ]);
         }
+    }
+
+    function vendorproducteditrequest()
+    {
+        return $products = Product::query()
+            ->where('user_id', auth()->id())
+            ->whereHas('pendingproduct')
+            ->when(request('search'), fn ($q, $name) => $q->where('name', 'like', "%{$name}%"))
+            ->latest()
+            ->paginate(10)
+            ->withQueryString();
+    }
+    function vendorproducteditrequestview(int $id)
+    {
+        $product =  Product::query()
+            ->where('user_id', auth()->id())
+            ->whereHas('pendingproduct')
+            ->find($id);
+
+        if (!$product) {
+            return $this->response('Product not found');
+        }
+
+        return $product;
     }
 }

@@ -122,7 +122,8 @@ Route::middleware(['auth:sanctum','isAPIVendor','userOnline'])->group(function (
 
 
     Route::prefix('vendor')->group(function(){
-
+        Route::get('product-edit-requests',[ProductManageController::class,'vendorproducteditrequest']);
+        Route::get('product-edit-requests/{id}',[ProductManageController::class,'vendorproducteditrequestview']);
         // Route::resource('test', TestController::class);
     });
 
