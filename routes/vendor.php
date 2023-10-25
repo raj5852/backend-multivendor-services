@@ -1,24 +1,24 @@
 <?php
 
+use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\API\SizeController;
 use App\Http\Controllers\API\ColorController;
 use App\Http\Controllers\API\ProductController;
-use App\Http\Controllers\API\SizeController;
 use App\Http\Controllers\API\SubCategoryController;
-use App\Http\Controllers\API\Vendor\RequestProductController;
-use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\API\Vendor\VendorController;
-use App\Http\Controllers\API\Vendor\BrandController as VendorBrandController;
-use App\Http\Controllers\API\Vendor\OrderController as VendorOrderController;
-use App\Http\Controllers\API\Vendor\BankController as VendorBankController;
-use App\Http\Controllers\API\Vendor\PaymentRequestController;
-use App\Http\Controllers\API\Vendor\DashboardController as VendorDashboardController;
+use App\Http\Controllers\API\Vendor\ProfileController;
 use App\Http\Controllers\API\Vendor\ProductManageController;
 use App\Http\Controllers\API\Vendor\ProductStatusController;
-use App\Http\Controllers\API\Vendor\ProfileController;
-
+use App\Http\Controllers\API\Vendor\PaymentRequestController;
+use App\Http\Controllers\API\Vendor\RequestProductController;
 use App\Http\Controllers\API\Vendor\ServiceCategoryController;
-
 use App\Http\Controllers\API\Vendor\ServiceSubCategoryController;
+use App\Http\Controllers\API\Vendor\BankController as VendorBankController;
+use App\Http\Controllers\API\Vendor\BrandController as VendorBrandController;
+
+use App\Http\Controllers\API\Vendor\OrderController as VendorOrderController;
+
+use App\Http\Controllers\API\Vendor\DashboardController as VendorDashboardController;
 
 
 // vendor

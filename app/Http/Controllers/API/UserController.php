@@ -12,6 +12,8 @@ use App\Models\User;
 use App\Models\Category;
 use App\Models\Brand;
 use App\Models\Order;
+use App\Models\Subscription;
+use App\Services\SubscriptionService;
 
 class UserController extends Controller
 {
@@ -63,12 +65,14 @@ class UserController extends Controller
 
     public function VendorStore(Request $request)
     {
+
         $validator = Validator::make($request->all(), [
             'email' => 'required|unique:users|max:255',
             'name' => 'required',
-            'number' => 'required',
+            'number' => ['required', 'integer'],
             'status' => 'required',
             'password' => 'required:min:8',
+            'balance'=>['numeric','min:0']
         ]);
 
         if ($validator->fails()) {
@@ -77,11 +81,6 @@ class UserController extends Controller
                 'errors' => $validator->messages(),
             ]);
         } else {
-            if($request->balance){
-                if($request->balance < 0){
-                    return response()->json(['Balance Not Valid']);
-                }
-            }
 
             $vendor = new User();
             $vendor->name = $request->input('name');
@@ -96,8 +95,15 @@ class UserController extends Controller
                $img =  fileUpload($request->file('image'),'uploads/vendor',125,125);
                $vendor->image = $img;
             }
-
             $vendor->save();
+            // $vendor->defa
+            $subscription = Subscription::find(1);
+            $user = $vendor;
+            $amount = 0;
+            $coupon = null;
+            $paymentmethod = "Manually";
+            SubscriptionService::store($subscription, $user, $amount, $coupon?->id, $paymentmethod);
+
             return response()->json([
                 'status' => 200,
                 'message' => 'Vendor Added Sucessfully',

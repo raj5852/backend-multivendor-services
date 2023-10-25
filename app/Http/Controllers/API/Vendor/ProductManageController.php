@@ -458,6 +458,8 @@ class ProductManageController extends Controller
             ->paginate(10)
             ->withQueryString();
     }
+
+
     function vendorproducteditrequestview(int $id)
     {
         $product =  Product::query()
