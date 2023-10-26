@@ -14,6 +14,7 @@ use App\Http\Controllers\API\HistoryController;
 use App\Http\Controllers\API\RechargeController;
 use App\Http\Controllers\API\ServiceOrderController;
 use App\Http\Controllers\API\ServiceRatingController;
+use App\Http\Controllers\API\SupportBoxCloseController;
 use App\Http\Controllers\API\SupportBoxController;
 
 use App\Http\Controllers\API\User\ContactController;
@@ -91,6 +92,8 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('coupon-request-send', [CouponRequestController::class, 'store']);
     // Route::get('all/banks',[ ::class,'index']);
     Route::get('all/banks', [BankController::class, 'index']);
+
+    Route::post('supportbox-close/{id}',[SupportBoxCloseController::class,'index']);
 });
 
 Route::prefix('aaparpay')->group(function () {
