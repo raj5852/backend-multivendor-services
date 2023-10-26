@@ -49,11 +49,8 @@ Route::get('seed', function () {
 
 Route::get('demo', function () {
 
-
-   return    $supportData = SupportBox::query()
-    ->with(['user', 'ticketreplay' => function ($query) {
-        $query->latest()->first();
-    }])
+    return $supportData = SupportBox::query()
+    ->with(['user', 'latestTicketreplay'])
     ->latest()
     ->paginate(10);
 });
