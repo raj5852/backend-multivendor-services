@@ -49,10 +49,7 @@ Route::get('seed', function () {
 
 Route::get('demo', function () {
 
-    return $supportData = SupportBox::query()
-    ->with(['user', 'latestTicketreplay'])
-    ->latest()
-    ->paginate(10);
+    return User::find(2)->load('usersubscription.subscription:id,card_heading');
 });
 
 

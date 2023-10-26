@@ -117,7 +117,7 @@ class UserController extends Controller
 
     public function VendorEdit($id)
     {
-        $vendor = User::find($id)->load('usersubscription');
+        $vendor = User::find($id)->load('usersubscription.subscription:id,card_heading');
         if ($vendor) {
             return response()->json([
                 'status' => 200,
@@ -396,7 +396,7 @@ class UserController extends Controller
 
     public function AffiliatorEdit($id)
     {
-        $affiliator = User::find($id)->load('usersubscription');
+        $affiliator = User::find($id)->load('usersubscription.subscription:id,card_heading');
 
         if ($affiliator) {
             return response()->json([
