@@ -22,7 +22,7 @@ class SupportBoxController extends Controller
      */
     public function index()
     {
-        $data = SupportBox::where('user_id', auth()->user()->id)->latest()->paginate(10);
+        $data = SupportBox::where('user_id', auth()->user()->id)->with('latestTicketreplay')->latest()->paginate(10);
         return $this->response($data);
     }
 
