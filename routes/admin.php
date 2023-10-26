@@ -125,6 +125,8 @@ Route::middleware(['auth:sanctum', 'isAPIAdmin'])->group(function () {
     Route::delete('delete-vendor/{id}', [UserController::class, 'VendorDelete']);
 
 
+
+
     //affiliator
     Route::post('affiliator/store', [UserController::class, 'AffiliatorStore']);
     Route::get('affiliator/view/{name?}', [UserController::class, 'AffiliatorView']);
@@ -182,6 +184,9 @@ Route::middleware(['auth:sanctum', 'isAPIAdmin'])->group(function () {
         //service category subcategory
         Route::resource('servicecategory',ServiceCategoryController::class);
         Route::resource('service-sub-category',ServiceSubCategoryController::class);
+
+         //all users list
+        Route::get('all-users-list',[UserController::class, 'alluserlist']);
 
        // Home Page
         Route::resource('service', OurServiceController::class);

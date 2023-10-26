@@ -19,7 +19,8 @@ class UserController extends Controller
 {
 
 
-    function updateStatus(Request $request,$id){
+    function updateStatus(Request $request, $id)
+    {
         $validator = Validator::make($request->all(), [
             'status' => 'required',
         ]);
@@ -29,16 +30,15 @@ class UserController extends Controller
                 'status' => 400,
                 'errors' => $validator->messages(),
             ]);
-        }else{
+        } else {
             $user = User::find($id);
             $user->status = $request->status;
             $user->save();
 
             return response()->json([
-                'status'=>200,
-                'message'=>'Updated successfully!'
+                'status' => 200,
+                'message' => 'Updated successfully!'
             ]);
-
         }
     }
     public function VendorView(Request $request)
@@ -52,8 +52,34 @@ class UserController extends Controller
             ->when(request('name') == 'active', function ($q) {
                 return $q->where('status', 'active');
             })
-            ->when($request->email,fn($q, $email) => $q->where('email','like',"%{$email}%")
-                ->orWhere('id','like',"%{$email}%")
+            ->when(
+                $request->email,
+                fn ($q, $email) => $q->where('email', 'like', "%{$email}%")
+                    ->orWhere('id', 'like', "%{$email}%")
+            )
+            ->latest()
+            ->paginate(10)
+            ->withQueryString();
+
+        return response()->json([
+            'status' => 200,
+            'vendor' => $vendor,
+        ]);
+    }
+
+    function alluserlist()
+    {
+        $vendor = User::where('role_as', '!=', '1')
+            ->when(request('name') == 'pending', function ($q) {
+                return $q->where('status', 'pending');
+            })
+            ->when(request('name') == 'active', function ($q) {
+                return $q->where('status', 'active');
+            })
+            ->when(
+                request('email'),
+                fn ($q, $email) => $q->where('email', 'like', "%{$email}%")
+                    ->orWhere('id', 'like', "%{$email}%")
             )
             ->latest()
             ->paginate(10)
@@ -74,7 +100,7 @@ class UserController extends Controller
             'number' => ['required', 'integer'],
             'status' => 'required',
             'password' => 'required:min:8',
-            'balance'=>['numeric','min:0']
+            'balance' => ['numeric', 'min:0']
         ]);
 
         if ($validator->fails()) {
@@ -94,8 +120,8 @@ class UserController extends Controller
             $vendor->role_as = '2';
 
             if ($request->hasFile('image')) {
-               $img =  fileUpload($request->file('image'),'uploads/vendor',125,125);
-               $vendor->image = $img;
+                $img =  fileUpload($request->file('image'), 'uploads/vendor', 125, 125);
+                $vendor->image = $img;
             }
             $vendor->save();
             // $vendor->defa
@@ -148,9 +174,9 @@ class UserController extends Controller
             $vendor = User::find($id);
             if ($vendor) {
 
-                if($request->balance){
+                if ($request->balance) {
                     // return "Amount Wrong";
-                    if($request->balance < 0){
+                    if ($request->balance < 0) {
                         return response()->json(['Balance Not Valid']);
                     }
                 }
@@ -170,7 +196,7 @@ class UserController extends Controller
                         File::delete($path);
                     }
 
-                    $img =  fileUpload($request->file('image'),'uploads/vendor',125,125);
+                    $img =  fileUpload($request->file('image'), 'uploads/vendor', 125, 125);
                     $vendor->image = $img;
                 }
 
@@ -179,26 +205,24 @@ class UserController extends Controller
 
 
 
-               $vendorId = $vendor->id;
+                $vendorId = $vendor->id;
 
-               $holdOrders = Order::where([
-                'vendor_id'=>$vendorId,
-                'status'=> 'hold'
-               ])->get();
+                $holdOrders = Order::where([
+                    'vendor_id' => $vendorId,
+                    'status' => 'hold'
+                ])->get();
 
-            foreach($holdOrders as $holdOrder){
-                $vendorBalance = User::find($id);
+                foreach ($holdOrders as $holdOrder) {
+                    $vendorBalance = User::find($id);
 
-                if($holdOrder->afi_amount <= $vendorBalance->balance){
+                    if ($holdOrder->afi_amount <= $vendorBalance->balance) {
 
 
-                    $holdOrder->update(['status' => 'pending']);
+                        $holdOrder->update(['status' => 'pending']);
 
-                    $vendor->decrement('balance', $holdOrder->afi_amount);
-
+                        $vendor->decrement('balance', $holdOrder->afi_amount);
+                    }
                 }
-
-            }
 
 
                 return response()->json([
@@ -252,8 +276,10 @@ class UserController extends Controller
             ->when(request('name') == 'active', function ($q) {
                 return $q->where('status', 'active');
             })
-            ->when($request->email,fn($q, $email)=>$q->where('email','like',"%{$email}%")
-            ->owWhere('id','like',"%{$email}%")
+            ->when(
+                $request->email,
+                fn ($q, $email) => $q->where('email', 'like', "%{$email}%")
+                    ->owWhere('id', 'like', "%{$email}%")
             )
             ->latest()
             ->paginate(10)
@@ -275,7 +301,7 @@ class UserController extends Controller
             ->when(request('name') == 'active', function ($q) {
                 return $q->where('status', 'active');
             })
-            ->when($request->email,fn($q, $email)=>$q->where('email','like',"%{$email}%"))
+            ->when($request->email, fn ($q, $email) => $q->where('email', 'like', "%{$email}%"))
             ->latest()
             ->paginate(10)
             ->withQueryString();
@@ -316,7 +342,7 @@ class UserController extends Controller
 
             if ($request->hasFile('image')) {
 
-               $img =  fileUpload($request->file('image'),'uploads/affiliator',125,125);
+                $img =  fileUpload($request->file('image'), 'uploads/affiliator', 125, 125);
 
                 $affiliator->image = $img;
             }
@@ -334,7 +360,7 @@ class UserController extends Controller
         $validator = Validator::make($request->all(), [
             'email' => 'required|unique:users|max:255',
             'name' => 'required',
-            'number' => ['required','numeric'],
+            'number' => ['required', 'numeric'],
             'status' => 'required',
             'password' => 'required:min:6',
 
@@ -357,7 +383,7 @@ class UserController extends Controller
 
             if ($request->hasFile('image')) {
 
-               $img =  fileUpload($request->file('image'),'uploads/affiliator',125,125);
+                $img =  fileUpload($request->file('image'), 'uploads/affiliator', 125, 125);
 
                 $affiliator->image = $img;
             }
@@ -444,7 +470,7 @@ class UserController extends Controller
                         File::delete($path);
                     }
 
-                    $img =  fileUpload($request->file('image'),'uploads/affiliator',125,125);
+                    $img =  fileUpload($request->file('image'), 'uploads/affiliator', 125, 125);
 
                     $affiliator->image = $img;
                 }
@@ -473,7 +499,7 @@ class UserController extends Controller
             'status' => 'required|max:191',
             'email' => 'required',
             'number' => 'required',
-            'balance'=> ['required','numeric']
+            'balance' => ['required', 'numeric']
         ]);
 
         if ($validator->fails()) {
@@ -499,7 +525,7 @@ class UserController extends Controller
                         File::delete($path);
                     }
 
-                    $img =  fileUpload($request->file('image'),'uploads/affiliator',125,125);
+                    $img =  fileUpload($request->file('image'), 'uploads/affiliator', 125, 125);
 
                     $user->image = $img;
                 }
