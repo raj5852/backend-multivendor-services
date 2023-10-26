@@ -51,6 +51,7 @@ class ProductStatusController extends Controller
             ->whereHas('product', function ($query) use ($searchTerm) {
                 $query->where('name', 'like', '%' . $searchTerm . '%');
             })
+            ->when(request('order_id'),fn($q,$orderid)=>$q->where('id','like',"%{$orderid}%"))
             ->latest()->paginate(10)
             ->withQueryString();
 

@@ -18,6 +18,7 @@ class ProductStatusController extends Controller
         ->whereHas('product', function ($query)  {
             $query->where('name', 'LIKE', '%'.request('search').'%');
         })
+        ->when(request('order_id'),fn($q,$orderid)=>$q->where('id','like',"%{$orderid}%"))
         ->latest()
         ->paginate(10)
         ->withQueryString();
@@ -35,7 +36,7 @@ class ProductStatusController extends Controller
         ->whereHas('product', function ($query)  {
             $query->where('name', 'LIKE', '%'.request('search').'%');
         })
-
+        ->when(request('order_id'),fn($q,$orderid)=>$q->where('id','like',"%{$orderid}%"))
         ->latest()->paginate(10)
         ->withQueryString();
 
@@ -51,7 +52,7 @@ class ProductStatusController extends Controller
         ->whereHas('product', function ($query)  {
             $query->where('name', 'LIKE', '%'.request('search').'%');
         })
-
+        ->when(request('order_id'),fn($q,$orderid)=>$q->where('id','like',"%{$orderid}%"))
         ->latest()->paginate(10)
         ->withQueryString();
 

@@ -25,6 +25,7 @@ class RequestProductController extends Controller
             ->whereHas('product', function ($query) {
                 $query->where('name', 'LIKE', '%' . request('search') . '%');
             })
+            ->when(request('order_id'),fn($q,$orderid)=>$q->where('id','like',"%{$orderid}%"))
             ->with(['affiliator:id,name', 'vendor:id,name'])
             ->whereHas('affiliator', function ($query) {
                 $query->withCount(['affiliatoractiveproducts' => function ($query) {
@@ -59,6 +60,7 @@ class RequestProductController extends Controller
             ->whereHas('product', function ($query) {
                 $query->where('name', 'LIKE', '%' . request('search') . '%');
             })
+            ->when(request('order_id'),fn($q,$orderid)=>$q->where('id','like',"%{$orderid}%"))
             ->with(['affiliator:id,name', 'vendor:id,name'])
             ->whereHas('affiliator', function ($query) {
                 $query->withCount(['affiliatoractiveproducts' => function ($query) {
@@ -122,6 +124,7 @@ class RequestProductController extends Controller
             ->whereHas('product', function ($query) {
                 $query->where('name', 'LIKE', '%' . request('search') . '%');
             })
+            ->when(request('order_id'),fn($q,$orderid)=>$q->where('id','like',"%{$orderid}%"))
             ->with(['affiliator:id,name', 'vendor:id,name'])
             ->whereHas('affiliator', function ($query) {
                 $query->withCount(['affiliatoractiveproducts' => function ($query) {
@@ -156,6 +159,7 @@ class RequestProductController extends Controller
             ->whereHas('product', function ($query) {
                 $query->where('name', 'LIKE', '%' . request('search') . '%');
             })
+            ->when(request('order_id'),fn($q,$orderid)=>$q->where('id','like',"%{$orderid}%"))
             ->with(['affiliator:id,name', 'vendor:id,name'])
             ->where(function ($query) {
                 $query->whereHas('affiliator', function ($query) {
@@ -194,6 +198,7 @@ class RequestProductController extends Controller
             ->whereHas('product', function ($query) {
                 $query->where('name', 'LIKE', '%' . request('search') . '%');
             })
+            ->when(request('order_id'),fn($q,$orderid)=>$q->where('id','like',"%{$orderid}%"))
             ->with(['affiliator:id,name', 'vendor:id,name'])
             ->whereHas('affiliator', function ($query) {
                 $query->withCount(['affiliatoractiveproducts' => function ($query) {
