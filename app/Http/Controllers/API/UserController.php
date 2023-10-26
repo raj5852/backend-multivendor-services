@@ -52,7 +52,9 @@ class UserController extends Controller
             ->when(request('name') == 'active', function ($q) {
                 return $q->where('status', 'active');
             })
-            ->when($request->email,fn($q, $email)=>$q->where('email','like',"%{$email}%"))
+            ->when($request->email,fn($q, $email) => $q->where('email','like',"%{$email}%")
+                ->orWhere('id','like',"%{$email}%")
+            )
             ->latest()
             ->paginate(10)
             ->withQueryString();
