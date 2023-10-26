@@ -115,7 +115,7 @@ class UserController extends Controller
 
     public function VendorEdit($id)
     {
-        $vendor = User::find($id);
+        $vendor = User::find($id)->load('usersubscription');
         if ($vendor) {
             return response()->json([
                 'status' => 200,
@@ -392,7 +392,8 @@ class UserController extends Controller
 
     public function AffiliatorEdit($id)
     {
-        $affiliator = User::find($id);
+        $affiliator = User::find($id)->load('usersubscription');
+
         if ($affiliator) {
             return response()->json([
                 'status' => 200,
