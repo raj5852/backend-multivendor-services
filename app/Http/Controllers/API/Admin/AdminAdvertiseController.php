@@ -22,7 +22,10 @@ class AdminAdvertiseController extends Controller
      */
     public function index()
     {
-        $data = AdminAdvertise::with('AdvertiseAudienceFile', 'advertisePlacement', 'advertiseLocationFiles', 'files')->latest()->paginate(10);
+        $data = AdminAdvertise::with('AdvertiseAudienceFile', 'advertisePlacement', 'advertiseLocationFiles', 'files')->latest()
+            ->when(request('order_id'), fn ($q, $orderid) => $q->where('trxid', 'like', "%{$orderid}%"))
+            ->paginate(10);
+
         return $this->response($data);
     }
 
@@ -146,7 +149,8 @@ class AdminAdvertiseController extends Controller
         return $this->response('Delivered successfully!');
     }
 
-    function cancel(CancelAdminAdvertiseRequest $request){
+    function cancel(CancelAdminAdvertiseRequest $request)
+    {
 
         $advertise = AdminAdvertise::find(request('advertise_id'));
         $advertise->status = "cancel";
