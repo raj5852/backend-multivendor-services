@@ -255,9 +255,6 @@ class OrderController extends Controller
     function  orderView($id){
         $order  = Order::where('id',$id)->where('vendor_id',auth()->user()->id)->first();
         if($order){
-            // $allData =    $order->load(['product','vendor:id,name,image','affiliator']);
-
-
             $allData =    $order->load([
                 'product:id,specifications',
                 'product.category:id,name',
@@ -269,6 +266,10 @@ class OrderController extends Controller
 
 
             $allData->variants = json_decode($allData->variants);
+            if($allData->status == 'pending'){
+                $allData->name = substr($allData->name, 0, 2) . '...';
+                $allData->phone = substr($allData->phone, 0, 4) . '...';
+            }
             return response()->json([
                 'status'=>200,
                 'message'=>$allData
