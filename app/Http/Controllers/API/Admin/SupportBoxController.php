@@ -20,7 +20,7 @@ class SupportBoxController extends Controller
     {
         $supportData = SupportBox::query()
             ->with(['user', 'ticketreplay' => function ($query) {
-                $query->take(1)->get();
+                $query->latest()->first();
             }])
             ->latest()
             ->paginate(10);
