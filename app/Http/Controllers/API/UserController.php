@@ -88,7 +88,7 @@ class UserController extends Controller
             $vendor->password = Hash::make($request['password']);
             $vendor->status = $request->input('status');
             $vendor->number = $request->input('number');
-            $vendor->balance = $request->input('balance');
+            $vendor->balance = $request->balance ?? 0;
             $vendor->role_as = '2';
 
             if ($request->hasFile('image')) {
@@ -330,7 +330,7 @@ class UserController extends Controller
         $validator = Validator::make($request->all(), [
             'email' => 'required|unique:users|max:255',
             'name' => 'required',
-            'number' => 'required',
+            'number' => ['required','numeric'],
             'status' => 'required',
             'password' => 'required:min:6',
 
@@ -348,6 +348,7 @@ class UserController extends Controller
             $affiliator->password = Hash::make($request['password']);
             $affiliator->status = $request->input('status');
             $affiliator->number = $request->input('number');
+            $affiliator->balance = 0;
             $affiliator->role_as = '3';
 
             if ($request->hasFile('image')) {
@@ -356,8 +357,15 @@ class UserController extends Controller
 
                 $affiliator->image = $img;
             }
-
             $affiliator->save();
+
+            $subscription = Subscription::find(13);
+            $user = $affiliator;
+            $amount = 0;
+            $coupon = null;
+            $paymentmethod = "Manually";
+
+            SubscriptionService::store($subscription, $user, $amount, $coupon?->id, $paymentmethod);
             return response()->json([
                 'status' => 200,
                 'message' => 'Affiliator Added Sucessfully',
