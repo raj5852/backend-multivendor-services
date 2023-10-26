@@ -266,7 +266,7 @@ class OrderController extends Controller
 
 
             $allData->variants = json_decode($allData->variants);
-            if($allData->status == 'pending'){
+            if($allData->status == 'pending' || $allData->status == 'hold' || $allData->status == 'cancel'){
                 $allData->name = substr($allData->name, 0, 2) . '...';
                 $allData->phone = substr($allData->phone, 0, 4) . '.....';
                 $allData->email = substr($allData->email, 0, 3) . '....';
