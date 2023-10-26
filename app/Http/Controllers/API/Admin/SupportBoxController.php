@@ -18,7 +18,13 @@ class SupportBoxController extends Controller
      */
     public function index()
     {
-        $supportData = SupportBox::with('user')->latest()->paginate(10);
+        $supportData = SupportBox::query()
+            ->with(['user', 'ticketreplay' => function ($query) {
+                $query->take(1)->get();
+            }])
+            ->latest()
+            ->paginate(10);
+
         return $this->response($supportData);
     }
 
@@ -44,11 +50,11 @@ class SupportBoxController extends Controller
     {
         $supportBox = SupportBox::find($id);
         if (!$supportBox) {
-            return responsejson('Not found','fail');
+            return responsejson('Not found', 'fail');
         }
 
-        $data =  $supportBox->load(['ticketreplay'=>function($query){
-            $query->with(['user','file']);
+        $data =  $supportBox->load(['ticketreplay' => function ($query) {
+            $query->with(['user', 'file']);
         }]);
 
         return $this->response($data);
@@ -75,7 +81,7 @@ class SupportBoxController extends Controller
     public function destroy($id)
     {
         $support = SupportBox::find($id);
-        if(File::exists($support->file)){
+        if (File::exists($support->file)) {
             File::delete($support->file);
         }
         $support->delete();

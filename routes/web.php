@@ -4,6 +4,7 @@ use App\Enums\Status;
 use App\Http\Controllers\TestController;
 use App\Models\AdminAdvertise;
 use App\Models\Product;
+use App\Models\SupportBox;
 use App\Models\User;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Auth;
@@ -43,13 +44,13 @@ Route::get('seed', function () {
     Artisan::call('db:seed');
 });
 
+
+
+
 Route::get('demo', function () {
 
-
+    // return
 });
 
 
-Route::get('test', function () {
-    return view('test');
-});
-Route::post('test', [TestController::class, 'index'])->name('test');
+// Route::post('test', [TestController::class, 'index'])->name('test');
