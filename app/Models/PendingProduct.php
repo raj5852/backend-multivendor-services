@@ -14,5 +14,6 @@ class PendingProduct extends Model
 
     protected $casts = [
         'images'=>'array',
+        'specifications'=>'array'
     ];
 }

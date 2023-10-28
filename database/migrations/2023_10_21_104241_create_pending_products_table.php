@@ -18,8 +18,7 @@ return new class extends Migration
             $table->unsignedBigInteger('product_id');
             $table->text('short_description')->nullable();
             $table->longText('long_description')->nullable();
-            $table->longText('specification')->nullable();
-            $table->longText('specification_ans')->nullable();
+            $table->longText('specifications')->nullable();
             $table->string('image')->nullable();
             $table->longText('images')->nullable();
             $table->integer('is_reject')->default(0)->nullable();
