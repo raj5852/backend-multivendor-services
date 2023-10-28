@@ -49,7 +49,26 @@ Route::get('seed', function () {
 
 Route::get('demo', function () {
 
-    return request('data',[]);
+    $jsonData = [
+        [
+            "specification" => "ds",
+            "specification_ans" => "ds"
+        ],
+        [
+            "id" => "1",
+            "specification" => "2",
+            "specification_ans" => "2"
+        ],
+        [
+            "specification" => "2",
+            "specification_ans" => "2"
+        ]
+    ];
+
+  return  $cleanedData = array_map(function ($item) {
+        unset($item['id']);
+        return $item;
+    }, $jsonData);
 
 });
 

@@ -332,20 +332,22 @@ class ProductManageController extends Controller
 
                 $product->update();
 
-                $specification = request('specification',[]);
-                $specification_ans  = request('specification_ans',[]);
+                $specification = request('specification', []);
+                $specification_ans  = request('specification_ans', []);
 
-                $specificationdata = collect($specification)->map(function ($item, $key) use ($specification_ans) {
-                    return [
-                        "specification" => $item,
-                        "specification_ans" => $specification_ans[$key],
-                    ];
-                })->toArray();
+                // $specificationdata = collect($specification)->map(function ($item, $key) use ($specification_ans) {
+                //     return [
+                //         "specification" => $item,
+                //         "specification_ans" => $specification_ans[$key],
+                //     ];
+                // })->toArray();
 
-                info($specificationdata);
-                info(1);
+                // info($specification);
 
-                if (($product->short_description != request('short_description')) || ($product->long_description != request('long_description'))  || request()->hasFile('image') || request()->hasFile('images') || $product->specifications != $specificationdata) {
+                // info($specificationdata);
+
+
+                if (($product->short_description != request('short_description')) || ($product->long_description != request('long_description'))  || request()->hasFile('image') || request()->hasFile('images') || $product->specifications != request('specifications')) {
                     $pendingproductdetails =  PendingProduct::where('product_id', $product->id)->first();
 
                     if (!$pendingproductdetails) {
@@ -355,11 +357,11 @@ class ProductManageController extends Controller
                     }
 
                     $pendingproduct->product_id = $product->id;
-                    if($product->short_description != request('short_description')){
+                    if ($product->short_description != request('short_description')) {
                         $pendingproduct->short_description = request('short_description');
                     }
 
-                    if($product->long_description != request('long_description')){
+                    if ($product->long_description != request('long_description')) {
                         $pendingproduct->long_description = request('long_description');
                     }
 
@@ -374,8 +376,11 @@ class ProductManageController extends Controller
                         }
                     }
 
-                    if($product->specifications != $specificationdata){
-                        $pendingproduct->specifications =  $specificationdata;
+                    if ($product->specifications != request('specifications')) {
+                        $pendingproduct->specifications =  array_map(function ($item) {
+                            unset($item['id']);
+                            return $item;
+                        }, request('specifications'));
                     }
 
 
