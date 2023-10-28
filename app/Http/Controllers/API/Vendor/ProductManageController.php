@@ -184,15 +184,6 @@ class ProductManageController extends Controller
             $product->specifications = $specificationdata;
             $product->save();
 
-            // if ($request->specification) {
-            //     foreach ($request->specification as $key => $sp) {
-            //         specification::create([
-            //             'product_id' => $product->id,
-            //             'specification' => $sp,
-            //             'specification_ans' => $request->specification_ans[$key]
-            //         ]);
-            //     }
-            // }
 
             $productId = $product->id;
 
@@ -341,17 +332,35 @@ class ProductManageController extends Controller
 
                 $product->update();
 
+                $specification = request('specification',[]);
+                $specification_ans  = request('specification_ans',[]);
 
-                if (($product->short_description != request('short_description')) || ($product->long_description != request('long_description'))  || request()->hasFile('image') || request()->hasFile('images')) {
+                $specificationdata = collect($specification)->map(function ($item, $key) use ($specification_ans) {
+                    return [
+                        "specification" => $item,
+                        "specification_ans" => $specification_ans[$key],
+                    ];
+                })->toArray();
+
+
+                if (($product->short_description != request('short_description')) || ($product->long_description != request('long_description'))  || request()->hasFile('image') || request()->hasFile('images') || $product->specifications != $specificationdata) {
                     $pendingproductdetails =  PendingProduct::where('product_id', $product->id)->first();
+
                     if (!$pendingproductdetails) {
                         $pendingproduct = new  PendingProduct();
                     } else {
                         $pendingproduct =  $pendingproductdetails;
                     }
+
                     $pendingproduct->product_id = $product->id;
-                    $pendingproduct->short_description = request('short_description');
-                    $pendingproduct->long_description = request('long_description');
+                    if($product->short_description != request('short_description')){
+                        $pendingproduct->short_description = request('short_description');
+                    }
+
+                    if($product->long_description != request('long_description')){
+                        $pendingproduct->long_description = request('long_description');
+                    }
+
                     if (request()->hasFile('image')) {
                         $pendingproduct->image =  fileUpload($request->file('image'), 'uploads/product');
                     }
@@ -363,36 +372,16 @@ class ProductManageController extends Controller
                         }
                     }
 
+                    if($product->specifications != $specificationdata){
+                        $pendingproduct->specifications =  $specificationdata;
+                    }
+
+
                     if (request()->has('images')) {
                         $pendingproduct->images =  $allimages;
                     }
                     $pendingproduct->save();
                 }
-
-
-                // DB::table('specifications')->where('product_id', $product->id)->delete();
-
-                // if ($request->specifications) {
-                //     foreach ($request->specifications as $key => $sp) {
-                //         specification::create([
-                //             'product_id' => $product->id,
-                //             'specification' => $sp['specification'],
-                //             'specification_ans' =>  $sp['specification_ans']
-                //         ]);
-                //     }
-                // }
-
-
-                // if ($request->hasFile('image')) {
-                //     $path = $product->image;
-                //     if (File::exists($path)) {
-                //         File::delete($path);
-                //     }
-
-                //     $filename =   fileUpload($request->file('image'), 'uploads/product');
-                //     $product->image =  $filename;
-                // }
-
 
 
 

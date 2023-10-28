@@ -49,7 +49,8 @@ Route::get('seed', function () {
 
 Route::get('demo', function () {
 
-    return User::find(2)->load('usersubscription.subscription:id,card_heading');
+    return request('data',[]);
+
 });
 
 

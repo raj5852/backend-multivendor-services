@@ -31,6 +31,7 @@ use App\Http\Controllers\API\Admin\SupportProblemTopicController;
 use App\Http\Controllers\API\Admin\TestimonialController;
 use App\Http\Controllers\API\Admin\TicketReplyController;
 use App\Http\Controllers\API\Admin\UserEmailSubscribeControllerList;
+use App\Http\Controllers\API\Admin\VendorProductController;
 use App\Http\Controllers\API\Admin\VendorServiceController;
 use App\Http\Controllers\API\Admin\WithdrawController as AdminWithdrawController;
 use App\Http\Controllers\API\AuthController;
@@ -248,6 +249,9 @@ Route::middleware(['auth:sanctum', 'isAPIAdmin'])->group(function () {
         Route::get('contact-page-data',[ContactPageController::class,'index']);
         Route::get('email-subscriber-list',[UserEmailSubscribeControllerList::class,'index']);
 
+        Route::get('vendor-products-edit-request',[VendorProductController::class,'index']);
+        Route::get('vendor-products-edit-request-view/{id}',[VendorProductController::class,'productview']);
+        Route::post('vendor-products-edit-request-status/{id}',[VendorProductController::class,'productstatus']);
     });
 
 });
