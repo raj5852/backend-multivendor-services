@@ -180,6 +180,7 @@ Route::middleware(['auth:sanctum', 'isAPIAdmin'])->group(function () {
     Route::get('admin/recent-order', [DashboardController::class, 'recentOrder']);
 
     Route::get('admin/category-status', [DashboardController::class, 'categoryStatus']);
+    Route::get('all/view/{status}',[UserController::class, 'alluserlist']);
 
     Route::prefix('admin')->group(function () {
         //service category subcategory
@@ -187,7 +188,6 @@ Route::middleware(['auth:sanctum', 'isAPIAdmin'])->group(function () {
         Route::resource('service-sub-category',ServiceSubCategoryController::class);
 
          //all users list
-        Route::get('all/view/{status}',[UserController::class, 'alluserlist']);
 
        // Home Page
         Route::resource('service', OurServiceController::class);
