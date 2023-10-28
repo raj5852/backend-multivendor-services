@@ -16,7 +16,7 @@ return new class extends Migration
     {
         Schema::table('orders', function (Blueprint $table) {
             $table->text('reason')->nullable();
-            $table->string('is_connect_bulk_single')->nullable();
+            $table->string('is_unlimited')->nullable();
         });
     }
 
@@ -28,7 +28,7 @@ return new class extends Migration
     public function down()
     {
         Schema::table('orders', function (Blueprint $table) {
-            $table->dropColumn(['reason','is_connect_bulk_single']);
+            $table->dropColumn(['reason','is_unlimited']);
         });
     }
 };

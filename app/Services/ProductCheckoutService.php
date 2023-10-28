@@ -27,7 +27,7 @@ class ProductCheckoutService
         $categoryId = $cart->category_id;
 
         foreach ($datas as $data) {
-
+            $is_unlimited =  1;
             if ($cart->purchase_type == 'single' || $product->is_connect_bulk_single == 1) {
                 $product->decrement('qty', $totalqty);
 
@@ -49,6 +49,7 @@ class ProductCheckoutService
                     $databaseValue->variants = $result;
                     $databaseValue->save();
                 }
+                $is_unlimited =  0;
             }
 
 
@@ -82,7 +83,7 @@ class ProductCheckoutService
                 'category_id' => $categoryId,
                 'qty' => $totalqty,
                 'totaladvancepayment' => $cart->advancepayment * $totalqty,
-                'is_connect_bulk_single'=>$product->is_connect_bulk_single
+                'is_unlimited'=>  $is_unlimited
             ]);
 
 
