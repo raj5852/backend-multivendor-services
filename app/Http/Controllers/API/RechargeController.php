@@ -11,6 +11,7 @@ use Illuminate\Http\Request;
 class RechargeController extends Controller
 {
     function recharge(RechargeRequest $request){
+
         $validateData = $request->validated();
         $validateData['user_id'] = auth()->id();
 
@@ -25,7 +26,7 @@ class RechargeController extends Controller
             'info' => $validateData,
             'customer_requirement_id' => 0,
         ]);
-
+        // return 2;
 
      return   AamarPayService::gateway($validateData['amount'],$trxid,$type,$successurl);
     }

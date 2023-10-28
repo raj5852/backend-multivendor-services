@@ -175,7 +175,6 @@ class UserController extends Controller
             if ($vendor) {
 
                 if ($request->balance) {
-                    // return "Amount Wrong";
                     if ($request->balance < 0) {
                         return response()->json(['Balance Not Valid']);
                     }
@@ -203,26 +202,6 @@ class UserController extends Controller
 
                 $vendor->update();
 
-
-
-                $vendorId = $vendor->id;
-
-                $holdOrders = Order::where([
-                    'vendor_id' => $vendorId,
-                    'status' => 'hold'
-                ])->get();
-
-                foreach ($holdOrders as $holdOrder) {
-                    $vendorBalance = User::find($id);
-
-                    if ($holdOrder->afi_amount <= $vendorBalance->balance) {
-
-
-                        $holdOrder->update(['status' => 'pending']);
-
-                        $vendor->decrement('balance', $holdOrder->afi_amount);
-                    }
-                }
 
 
                 return response()->json([
