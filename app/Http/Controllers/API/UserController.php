@@ -258,7 +258,7 @@ class UserController extends Controller
             ->when(
                 $request->email,
                 fn ($q, $email) => $q->where('email', 'like', "%{$email}%")
-                    ->owWhere('id', 'like', "%{$email}%")
+                    ->orWhere('id', 'like', "%{$email}%")
             )
             ->latest()
             ->paginate(10)
