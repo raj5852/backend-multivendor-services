@@ -54,7 +54,7 @@ class OrderController extends Controller
         }
 
         if ($cart->purchase_type == 'single') {
-            if ($product->selling_type !=  'single') {
+            if ($product->selling_type ==  'bulk') {
                 return responsejson('Something is wrong. Delete the cart.','fail');
             }
         }

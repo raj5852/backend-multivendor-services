@@ -132,7 +132,6 @@ class OrderController extends Controller
         $order =  Order::find($id);
         if ($order) {
 
-
             if ($order->reason) {
                 $order->reason = $request->reason;
             }
@@ -172,8 +171,6 @@ class OrderController extends Controller
                 $balance = PendingBalance::where('order_id', $order->id)->first();
 
                 if ($order->status == Status::Delivered->value) {
-
-
 
                     return response()->json([
                             'status'=>401,
