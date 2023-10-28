@@ -67,14 +67,14 @@ class UserController extends Controller
         ]);
     }
 
-    function alluserlist()
+    function alluserlist($status)
     {
         $vendor = User::where('role_as', '!=', '1')
-            ->when(request('name') == 'pending', function ($q) {
-                return $q->where('status', 'pending');
-            })
-            ->when(request('name') == 'active', function ($q) {
+            ->when($status == 'active', function ($q) {
                 return $q->where('status', 'active');
+            })
+            ->when($status == 'pending', function ($q) {
+                return $q->where('status', 'pending');
             })
             ->when(
                 request('email'),

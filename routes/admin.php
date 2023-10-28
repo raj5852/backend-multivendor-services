@@ -187,7 +187,7 @@ Route::middleware(['auth:sanctum', 'isAPIAdmin'])->group(function () {
         Route::resource('service-sub-category',ServiceSubCategoryController::class);
 
          //all users list
-        Route::get('all-users-list',[UserController::class, 'alluserlist']);
+        Route::get('all/view/{status}',[UserController::class, 'alluserlist']);
 
        // Home Page
         Route::resource('service', OurServiceController::class);
