@@ -87,7 +87,7 @@ class UserController extends Controller
 
         return response()->json([
             'status' => 200,
-            'vendor' => $vendor,
+            'all' => $vendor,
         ]);
     }
 
