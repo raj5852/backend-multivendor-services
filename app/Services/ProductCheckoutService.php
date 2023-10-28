@@ -81,7 +81,8 @@ class ProductCheckoutService
                 'status' =>  $status,
                 'category_id' => $categoryId,
                 'qty' => $totalqty,
-                'totaladvancepayment' => $cart->advancepayment * $totalqty
+                'totaladvancepayment' => $cart->advancepayment * $totalqty,
+                'is_connect_bulk_single'=>$product->is_connect_bulk_single
             ]);
 
 
