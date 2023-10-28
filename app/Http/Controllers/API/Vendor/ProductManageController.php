@@ -343,6 +343,7 @@ class ProductManageController extends Controller
                 })->toArray();
 
                 info($specificationdata);
+                info(1);
 
                 if (($product->short_description != request('short_description')) || ($product->long_description != request('long_description'))  || request()->hasFile('image') || request()->hasFile('images') || $product->specifications != $specificationdata) {
                     $pendingproductdetails =  PendingProduct::where('product_id', $product->id)->first();
