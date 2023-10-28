@@ -423,7 +423,7 @@ class UserController extends Controller
         $validator = Validator::make($request->all(), [
             'name' => 'required|max:191',
             'status' => 'required|max:191',
-
+            'balance'=>['numeric']
         ]);
 
         if ($validator->fails()) {
@@ -439,7 +439,8 @@ class UserController extends Controller
                 $affiliator->email = $request->input('email');
                 $affiliator->status = $request->input('status');
                 $affiliator->number = $request->input('number');
-                // $affiliator->image = $request->input('image');
+                $affiliator->balance = $request->input('balance');
+
 
 
 
