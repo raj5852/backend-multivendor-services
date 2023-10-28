@@ -13,7 +13,9 @@ class VendorProductController extends Controller
     {
         return Product::query()
             ->with('vendor')
-            ->whereHas('pendingproduct')
+            ->withwhereHas('pendingproduct',function($query){
+                $query->select('id','product_id','is_reject');
+            })
             ->latest()
             ->paginate(10);
     }
@@ -33,31 +35,54 @@ class VendorProductController extends Controller
         return $this->response($product);
     }
 
-    function productstatus(ProductEditRequest $request, int $id){
+    function productstatus(ProductEditRequest $request, int $id)
+    {
         $product = Product::query()
-        ->where('id', $id)
-        ->with('pendingproduct')
-        ->first();
+            ->where('id', $id)
+            ->withWhereHas('pendingproduct')
+            ->first();
 
-        if(!$product){
-            return responsejson('Not found','fail');
+        if (!$product) {
+            return responsejson('Not found', 'fail');
         }
 
         $data =  $product->pendingproduct;
 
-        if(request('status') == 1){
+        if (request('status') == 1) {
             $data->is_reject = 1;
             $data->reason = request('reason');
             $data->save();
-            // return
         }
-        if(request('status') == 2){
-            $product->short_description = $data->short_description;
-            $product->short_description = $data->short_description;
+        if (request('status') == 2) {
+            if($data->short_description != ''){
+                $product->short_description = $data->short_description;
+            }
+            if($data->long_description != ''){
+                $product->long_description = $data->long_description;
+            }
+
+            if($data->specifications != ''){
+                $product->specifications = $data->specifications;
+            }
+
+            if($data->image != ''){
+                $product->image = $data->image;
+            }
+            if($data->images != ''){
+                $product->images = $data->images;
+            }
+            $product->save();
+
+            $data->delete();
+        }
+
+        if(request('status') == 0){
+            $data->is_reject = 0;
+            $data->reason = '';
+            $data->save();
         }
 
 
         return $this->response('Updated successfully');
-
     }
 }

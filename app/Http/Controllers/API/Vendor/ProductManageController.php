@@ -335,16 +335,6 @@ class ProductManageController extends Controller
                 $specification = request('specification', []);
                 $specification_ans  = request('specification_ans', []);
 
-                // $specificationdata = collect($specification)->map(function ($item, $key) use ($specification_ans) {
-                //     return [
-                //         "specification" => $item,
-                //         "specification_ans" => $specification_ans[$key],
-                //     ];
-                // })->toArray();
-
-                // info($specification);
-
-                // info($specificationdata);
 
 
                 if (($product->short_description != request('short_description')) || ($product->long_description != request('long_description'))  || request()->hasFile('image') || request()->hasFile('images') || $product->specifications != request('specifications')) {
