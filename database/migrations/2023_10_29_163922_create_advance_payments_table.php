@@ -21,8 +21,8 @@ return new class extends Migration
             $table->unsignedBigInteger('vendor_id') ;
             $table->unsignedBigInteger('affiliate_id') ;
             $table->foreignIdFor(Product::class);
-            $table->integer('qty')->nullable();
-            $table->float('amount')->nullable();
+            $table->string('qty')->nullable();
+            $table->string('amount')->nullable();
             $table->foreignIdFor(Order::class);
             $table->softDeletes();
             $table->timestamps();
