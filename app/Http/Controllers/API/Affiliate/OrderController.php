@@ -94,13 +94,17 @@ class OrderController extends Controller
 
 
         if ($product->variants != '') {
-            foreach ($uservarients  as $vr) {
-                $data = collect($product->variants)->where('id', $vr['variant_id'])->where('qty', '>=', $vr['qty'])->first();
-                if (!$data) {
-                    return responsejson('Something is wrong. Delete the cart', 'fail');
+            if(($cart->purchase_type != 'bulk') && ($product->is_connect_bulk_single != 1)){
+                foreach ($uservarients  as $vr) {
+                    $data = collect($product->variants)->where('id', $vr['variant_id'])->where('qty', '>=', $vr['qty'])->first();
+                    if (!$data) {
+                        return responsejson('Something is wrong. Delete the cart', 'fail');
+                    }
                 }
             }
+
         }
+
         $user = User::find(auth()->id());
         $advancepayment = $cart->advancepayment *  $totalqty;
 
