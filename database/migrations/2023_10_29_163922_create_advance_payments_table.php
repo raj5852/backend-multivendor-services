@@ -18,8 +18,8 @@ return new class extends Migration
     {
         Schema::create('advance_payments', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('vendor_id') ;
-            $table->unsignedBigInteger('affiliate_id');
+            $table->integer('vendor_id') ;
+            $table->integer('affiliate_id');
             $table->foreignIdFor(Product::class);
             $table->string('qty')->nullable();
             $table->string('amount')->nullable();
