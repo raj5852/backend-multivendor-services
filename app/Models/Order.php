@@ -59,4 +59,9 @@ class Order extends Model
 
         return $transactionId;
     }
+
+
+    function productrating(){
+        return $this->hasOne(ProductRating::class,'order_id');
+    }
 }

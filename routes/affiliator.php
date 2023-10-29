@@ -71,5 +71,5 @@ Route::middleware(['auth:sanctum','isAPIaffiliator','userOnline'])->group(functi
 
     Route::get('affiliator/dashboard-datas',[AffiliateDashboardController::class,'index']);
     Route::get('affiliator/order-vs-comission',[AffiliateDashboardController::class,'orderVsRevenue']);
-    Route::post('affiliator/product-rating/{order_id}',[ProductRatingController::class,'rating']);
+    Route::post('affiliator/product-rating',[ProductRatingController::class,'rating']);
 });
