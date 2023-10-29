@@ -93,7 +93,7 @@ class ProductCheckoutService
                 'product_id'=>$product->id,
                 'qty'=>$totalqty,
                 'amount'=>$cart->advancepayment * $totalqty,
-                'order_id'=>$order
+                'order_id'=>$order->id
             ]);
 
             PendingBalance::create([
