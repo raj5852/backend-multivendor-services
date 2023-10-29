@@ -438,7 +438,7 @@ class ProductManageController extends Controller
     {
         return $products = Product::query()
             ->where('user_id', auth()->id())
-            ->whereHas('pendingproduct')
+            ->withwhereHas('pendingproduct:id,product_id,is_reject')
             ->when(request('search'), fn ($q, $name) => $q->where('name', 'like', "%{$name}%"))
             ->latest()
             ->paginate(10)

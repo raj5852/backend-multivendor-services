@@ -6,6 +6,7 @@ use App\Http\Controllers\API\Affiliate\CheckoutController;
 use App\Http\Controllers\API\Affiliate\DashboardController as AffiliateDashboardController;
 use App\Http\Controllers\API\Affiliate\OrderController;
 use App\Http\Controllers\API\Affiliate\PendingBalanceController;
+use App\Http\Controllers\API\Affiliate\ProductRatingController;
 use App\Http\Controllers\API\Affiliate\ProductStatusController;
 use App\Http\Controllers\API\Affiliate\ProfileController;
 use App\Http\Controllers\API\Affiliate\SingleProductController;
@@ -70,5 +71,5 @@ Route::middleware(['auth:sanctum','isAPIaffiliator','userOnline'])->group(functi
 
     Route::get('affiliator/dashboard-datas',[AffiliateDashboardController::class,'index']);
     Route::get('affiliator/order-vs-comission',[AffiliateDashboardController::class,'orderVsRevenue']);
-
+    Route::post('affiliator/product-rating/{order_id}',[ProductRatingController::class,'rating']);
 });
