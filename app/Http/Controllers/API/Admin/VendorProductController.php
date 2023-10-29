@@ -5,6 +5,7 @@ namespace App\Http\Controllers\API\Admin;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\ProductEditRequest;
 use App\Models\Product;
+use App\Models\ProductImage;
 use Illuminate\Http\Request;
 
 class VendorProductController extends Controller
@@ -69,7 +70,14 @@ class VendorProductController extends Controller
                 $product->image = $data->image;
             }
             if($data->images != ''){
-                $product->images = $data->images;
+
+                foreach($data->images as $img){
+                    ProductImage::create([
+                        'product_id'=>$product->id,
+                        'image'=>$img
+                    ]);
+                }
+
             }
             $product->save();
 

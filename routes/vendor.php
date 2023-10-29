@@ -5,6 +5,7 @@ use App\Http\Controllers\API\SizeController;
 use App\Http\Controllers\API\ColorController;
 use App\Http\Controllers\API\ProductController;
 use App\Http\Controllers\API\SubCategoryController;
+use App\Http\Controllers\API\Vendor\AdvancePaymentController;
 use App\Http\Controllers\API\Vendor\VendorController;
 use App\Http\Controllers\API\Vendor\ProfileController;
 use App\Http\Controllers\API\Vendor\ProductManageController;
@@ -122,9 +123,10 @@ Route::middleware(['auth:sanctum','isAPIVendor','userOnline'])->group(function (
 
 
     Route::prefix('vendor')->group(function(){
+
         Route::get('product-edit-requests',[ProductManageController::class,'vendorproducteditrequest']);
         Route::get('product-edit-requests/{id}',[ProductManageController::class,'vendorproducteditrequestview']);
-        // Route::resource('test', TestController::class);
+        Route::get('transition-history-advance-payment',[AdvancePaymentController::class,'store']);
     });
 
 
