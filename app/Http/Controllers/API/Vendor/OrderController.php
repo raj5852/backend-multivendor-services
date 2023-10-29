@@ -165,7 +165,7 @@ class OrderController extends Controller
                 $user->save();
             }
 
-            if ($request->status == Status::Cancel->value || $request->status =='return') {
+            if (($request->status == Status::Cancel->value) || ($request->status =='return')) {
 
 
 
