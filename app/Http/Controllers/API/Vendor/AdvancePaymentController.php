@@ -8,4 +8,7 @@ use Illuminate\Http\Request;
 class AdvancePaymentController extends Controller
 {
     //
+    function store(){
+        // return
+    }
 }

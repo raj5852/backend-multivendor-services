@@ -4,6 +4,7 @@ namespace App\Http\Controllers\API\Admin;
 
 use App\Enums\Status;
 use App\Http\Controllers\Controller;
+use App\Models\CancelOrderBalance;
 use App\Models\Order;
 use App\Models\PendingBalance;
 use App\Models\Product;
@@ -132,25 +133,24 @@ class OrderController extends Controller
         $order =  Order::find($id);
         if ($order) {
 
-
             if ($order->reason) {
                 $order->reason = $request->reason;
             }
 
 
-            if($order->status == Status::Hold->value){
-               if($request->status != Status::Cancel->value){
+            if ($order->status == Status::Hold->value) {
+                if ($request->status != Status::Cancel->value) {
                     $vendor = User::find($order->vendor_id);
-                    if($order->afi_amount > $vendor->balance){
+                    if ($order->afi_amount > $vendor->balance) {
                         return response()->json([
-                            'status'=>401,
-                            'message'=>'Vendor balance not available'
+                            'status' => 401,
+                            'message' => 'Vendor balance not available'
                         ]);
-                    }else{
+                    } else {
                         $vendor->balance = ($vendor->balance - $order->afi_amount);
                         $vendor->save();
                     }
-               }
+                }
             }
 
             if ($request->status == Status::Delivered->value) {
@@ -165,7 +165,7 @@ class OrderController extends Controller
                 $user->save();
             }
 
-            if ($request->status == Status::Cancel->value) {
+            if ($request->status == Status::Cancel->value || $request->status =='return') {
 
 
 
@@ -173,64 +173,65 @@ class OrderController extends Controller
 
                 if ($order->status == Status::Delivered->value) {
 
-                    $user =  User::find($balance->affiliator_id);
-                    $user->balance = ($user->balance - $balance->amount);
-                    $user->save();
-
+                    return response()->json([
+                        'status' => 401,
+                        'message' => 'Not possible to update'
+                    ]);
                 }
 
 
-                if($order->status != Status::Hold->value){
+                if ($order->status != Status::Hold->value) {
                     $vendor = User::find($order->vendor_id);
-                    $vendor->balance = ($vendor->balance + $balance->amount);
-                    $vendor->save();
+                    CancelOrderBalance::create([
+                        'user_id'=>$order->vendor_id,
+                        'balance'=>$balance->amount
+                    ]);
                 }
 
 
-                $balance->status = Status::Cancel->value;
+                $balance->status = $request->status;
                 $balance->save();
 
+                if ($order->is_unlimited != 1) {
+                    $product =  Product::find($order->product_id);
+                    $product->qty = ($product->qty + $balance->qty);
 
-                $product =  Product::find($order->product_id);
-                $product->qty = ($product->qty + $balance->qty);
-
-                $variants = json_decode($order->variants);
-                $data = collect($variants)->pluck('qty','variant_id');
-
-
-                $result = [];
-
-                foreach ($data as $variantId => $qty) {
-                    $result[] = [
-                        "variant_id" => $variantId,
-                        "qty" => $qty
-                    ];
-                }
+                    $variants = json_decode($order->variants);
+                    $data = collect($variants)->pluck('qty', 'variant_id');
 
 
-                $databaseValues = $product->variants;
-                $userValues = $result;
+                    $result = [];
 
-
-
-                if($databaseValues != ''){
-                    foreach ($databaseValues as &$databaseItem) {
-                        $variantId = $databaseItem['id'];
-                        $matchingUserValue = collect($userValues)->firstWhere('variant_id', $variantId);
-
-                        if ($matchingUserValue) {
-                            $userQty = $matchingUserValue['qty'];
-                            $databaseItem['qty'] += $userQty;
-                        }
+                    foreach ($data as $variantId => $qty) {
+                        $result[] = [
+                            "variant_id" => $variantId,
+                            "qty" => $qty
+                        ];
                     }
 
-                    $product->variants = $databaseValues;
+
+                    $databaseValues = $product->variants;
+                    $userValues = $result;
+
+
+
+                    if ($databaseValues != '') {
+                        foreach ($databaseValues as &$databaseItem) {
+                            $variantId = $databaseItem['id'];
+                            $matchingUserValue = collect($userValues)->firstWhere('variant_id', $variantId);
+
+                            if ($matchingUserValue) {
+                                $userQty = $matchingUserValue['qty'];
+                                $databaseItem['qty'] += $userQty;
+                            }
+                        }
+
+                        $product->variants = $databaseValues;
+                    }
+
+                    $product->save();
                 }
-
-                $product->save();
             }
-
-
 
 
 
