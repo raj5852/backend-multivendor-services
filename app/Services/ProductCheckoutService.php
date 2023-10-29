@@ -87,14 +87,14 @@ class ProductCheckoutService
                 'is_unlimited'=>  $is_unlimited
             ]);
 
-            AdvancePayment::create([
-                'vendor_id'=>$product->user_id,
-                'affiliate_id'=>$userid,
-                'product_id'=>$product->id,
-                'qty'=>$totalqty,
-                'amount'=>$cart->advancepayment * $totalqty,
-                'order_id'=>$order
-            ]);
+            // AdvancePayment::create([
+            //     'vendor_id'=>$product->user_id,
+            //     'affiliate_id'=>$userid,
+            //     'product_id'=>$product->id,
+            //     'qty'=>$totalqty,
+            //     'amount'=>$cart->advancepayment * $totalqty,
+            //     'order_id'=>$order
+            // ]);
 
             PendingBalance::create([
                 'affiliator_id' => $userid,
