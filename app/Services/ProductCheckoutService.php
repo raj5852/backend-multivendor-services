@@ -67,6 +67,7 @@ class ProductCheckoutService
             } else {
                 $status = Status::Hold->value;
             }
+            $totaladvancepayment =  $cart->advancepayment * $totalqty;
 
             $order =   Order::create([
                 'vendor_id' => $product->user_id,
@@ -83,18 +84,21 @@ class ProductCheckoutService
                 'status' =>  $status,
                 'category_id' => $categoryId,
                 'qty' => $totalqty,
-                'totaladvancepayment' => $cart->advancepayment * $totalqty,
+                'totaladvancepayment' => $totaladvancepayment,
                 'is_unlimited'=>  $is_unlimited
             ]);
 
-            AdvancePayment::create([
-                'vendor_id'=>$product->user_id,
-                'affiliate_id'=>$userid,
-                'product_id'=>$product->id,
-                'qty'=>$totalqty,
-                'amount'=>$cart->advancepayment * $totalqty,
-                'order_id'=>$order->id
-            ]);
+            if($totaladvancepayment > 0){
+                AdvancePayment::create([
+                    'vendor_id'=>$product->user_id,
+                    'affiliate_id'=>$userid,
+                    'product_id'=>$product->id,
+                    'qty'=>$totalqty,
+                    'amount'=>$totaladvancepayment,
+                    'order_id'=>$order->id
+                ]);
+            }
+
 
             PendingBalance::create([
                 'affiliator_id' => $userid,

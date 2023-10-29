@@ -4,6 +4,7 @@ namespace App\Http\Controllers\API\Vendor;
 
 use App\Enums\Status;
 use App\Http\Controllers\Controller;
+use App\Models\AdvancePayment;
 use App\Models\CancelOrderBalance;
 use App\Models\Order;
 use App\Models\PendingBalance;
@@ -184,9 +185,20 @@ class OrderController extends Controller
                     $vendor = User::find($order->vendor_id);
                     CancelOrderBalance::create([
                         'user_id'=>$order->vendor_id,
-                        'balance'=>$balance->amount
+                        'balance'=>$balance?->amount
                     ]);
                 }
+
+
+                $advancepayment =  AdvancePayment::where('order_id',$order->id)->exists();
+
+                if($advancepayment){
+                     CancelOrderBalance::create([
+                        'user_id'=>$order-> affiliator_id,
+                        'balance'=>$advancepayment->amount
+                    ]);
+                }
+
 
 
                 $balance->status = Status::Cancel->value;
