@@ -188,6 +188,7 @@ class ProductStatusController extends Controller
         $product->product_id = $existproduct->id;
         $product->vendor_id = $existproduct->user_id;
         $product->user_id = auth()->id();
+        $product->reason = request('reason');
         $product->save();
 
         return response()->json([

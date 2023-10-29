@@ -23,7 +23,7 @@ class ProductController extends Controller
         $product = Product::when(request('status') == 'pending', function ($q) {
             return $q->where('status', 'pending');
         })
-            ->when(request('search'), fn ($q, $name) => $q->where('name', 'like', "%{$name}%"))
+            ->when(request('search'), fn ($q, $name) => $q->where('name', 'like', "%{$name}%")->orWhere('id', 'like', "%{$name}%") )
 
             ->when(request('status') == 'active', function ($q) {
                 return $q->where('status', 'active');

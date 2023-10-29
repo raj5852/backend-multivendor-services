@@ -14,8 +14,8 @@ return new class extends Migration
     public function up()
     {
         Schema::table('carts', function (Blueprint $table) {
-            $table->float('totalproductprice')->nullable();
-            $table->float('total_affiliate_commission')->nullable();
+            $table->float('totalproductprice',20)->nullable();
+            $table->float('total_affiliate_commission',20)->nullable();
         });
     }
 
