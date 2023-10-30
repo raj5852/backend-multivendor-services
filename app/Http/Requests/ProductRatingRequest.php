@@ -40,7 +40,7 @@ class ProductRatingRequest extends FormRequest
                     }
                 }
             }],
-            'rating'=>['required','numeric', Rule::in([1,2,3,4,5])],
+            'rating'=>['required','numeric', 'min:1','max:5' ],
             'comment'=>['required']
         ];
     }
