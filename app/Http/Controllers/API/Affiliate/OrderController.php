@@ -255,7 +255,9 @@ class OrderController extends Controller
         $order  = Order::where('id', $id)->where('affiliator_id', auth()->user()->id)->first();
         if ($order) {
 
-            $allData =    $order->load([
+            $allData =
+            Order::query()
+            ->with([
                 'productrating.user',
                 'product:id,specifications',
                 'product.category:id,name',
@@ -263,7 +265,7 @@ class OrderController extends Controller
                 'product.brand:id,name',
                 'vendor',
                 'affiliator'
-            ]);
+            ])->find($id);
 
 
 
