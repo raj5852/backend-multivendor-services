@@ -141,7 +141,7 @@ class OrderController extends Controller
         $orders = Order::searchProduct()
             ->where('affiliator_id', auth()->user()->id)
             ->where('status', Status::Pending->value)
-            ->with(['product:id,name', 'vendor:id,name'])
+            ->with(['product:id,name', 'vendor:id,name','productrating'])
             ->latest()
             ->paginate(10)
             ->withQueryString();
@@ -164,7 +164,7 @@ class OrderController extends Controller
         $orders = Order::searchProduct()
             ->where('affiliator_id', auth()->user()->id)
             ->where('status', Status::Progress->value)
-            ->with(['product:id,name', 'vendor:id,name'])
+            ->with(['product:id,name', 'vendor:id,name','productrating'])
             ->latest()
             ->paginate(10)
             ->withQueryString();
@@ -187,7 +187,7 @@ class OrderController extends Controller
         $orders = Order::searchProduct()
             ->where('affiliator_id', auth()->user()->id)
             ->where('status', Status::Delivered->value)
-            ->with(['product:id,name', 'vendor:id,name'])
+            ->with(['product:id,name', 'vendor:id,name','productrating'])
             ->latest()
             ->paginate(10)
             ->withQueryString();
@@ -209,7 +209,7 @@ class OrderController extends Controller
         $orders = Order::searchProduct()
             ->where('affiliator_id', auth()->user()->id)
             ->where('status', Status::Cancel->value)
-            ->with(['product:id,name', 'vendor:id,name'])
+            ->with(['product:id,name', 'vendor:id,name','productrating'])
             ->latest()
             ->paginate(10)
             ->withQueryString();
@@ -288,7 +288,7 @@ class OrderController extends Controller
         $orders = Order::searchProduct()
             ->where('affiliator_id', auth()->user()->id)
             ->where('status', Status::Hold->value)
-            ->with(['product:id,name', 'vendor:id,name'])
+            ->with(['product:id,name', 'vendor:id,name','productrating'])
             ->latest()
             ->paginate(10)
             ->withQueryString();
