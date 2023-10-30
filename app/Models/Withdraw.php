@@ -13,4 +13,8 @@ class Withdraw extends Model
     function affiliator(){
         return $this->belongsTo(User::class,'affiliator_id','id');
     }
+
+    function user(){
+        return $this->belongsTo(User::class,'user_id','id');
+    }
 }

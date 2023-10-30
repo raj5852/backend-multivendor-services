@@ -19,8 +19,17 @@ class WithdrawController extends Controller
         ->when(request('status') == 'success', function ($q) {
             return $q->where('status', 'success');
         })
-
-        ->with('affiliator')
+        ->when(request('type') == 'vendor', function ($q) {
+            return $q->where('role', '2');
+        })
+        ->when(request('type') == 'affiliate', function ($q) {
+            return $q->where('role', '3');
+        })
+        ->when(request('type') == 'user', function ($q) {
+            return $q->where('role', '4');
+        })
+        ->with('user')
+        ->latest()
         ->paginate(10)
         ->withQueryString();
 
