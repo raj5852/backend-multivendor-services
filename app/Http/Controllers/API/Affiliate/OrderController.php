@@ -254,10 +254,9 @@ class OrderController extends Controller
     {
         $order  = Order::where('id', $id)->where('affiliator_id', auth()->user()->id)->first();
         if ($order) {
-            // $allData =    $order->load(['product', 'vendor', 'affiliator']);
 
             $allData =    $order->load([
-                'productrating',
+                'productrating.user',
                 'product:id,specifications',
                 'product.category:id,name',
                 'product.subcategory:id,name',

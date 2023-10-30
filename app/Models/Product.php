@@ -69,6 +69,10 @@ class Product extends Model
         return $this->hasOne(PendingProduct::class,'product_id');
     }
 
+    function productrating(){
+        return $this->hasMany(ProductRating::class,'product_id');
+    }
+
     protected $casts = [
         'tags'=>'array',
         'variants'=>'array',

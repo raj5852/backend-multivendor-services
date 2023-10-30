@@ -12,5 +12,8 @@ class ProductRating extends Model
 
     protected $guarded = [];
 
+    function affiliate(){
+        return $this->belongsTo(User::class,'user_id');
+    }
 
 }
