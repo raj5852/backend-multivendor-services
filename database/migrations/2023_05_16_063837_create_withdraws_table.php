@@ -15,7 +15,7 @@ return new class extends Migration
     {
         Schema::create('withdraws', function (Blueprint $table) {
             $table->id();
-            $table->string('affiliator_id');
+            $table->integer('user_id');
             $table->string('amount');
             $table->string('bank_name')->nullable();
             $table->string('ac_or_number')->nullable();
@@ -24,7 +24,7 @@ return new class extends Migration
             $table->string('admin_transition_id')->nullable();
             $table->string('admin_screenshot')->nullable();
             $table->string('admin_bank_name')->nullable();
-
+            $table->string('role')->nullable();
             $table->timestamps();
         });
     }

@@ -13,7 +13,7 @@ class WithdrawController extends Controller
 {
 
     function index(){
-        $withdraw = Withdraw::where('affiliator_id',auth()->user()->id)
+        $withdraw = Withdraw::where('user_id',auth()->id())
         ->latest()
         ->when(request('status') == 'success', function ($q) {
             return $q->where('status', 'success');
@@ -52,12 +52,13 @@ class WithdrawController extends Controller
         if(auth()->user()->balance >= $request->amount){
 
             Withdraw::create([
-                'affiliator_id'=>auth()->user()->id,
+                'user_id'=>auth()->id(),
                 'amount'=>$request->amount,
                 'bank_name'=>$request->bank_name,
                 'ac_or_number'=>$request->ac_or_number,
                 'holder_name'=>$request->holder_name,
                 'branch_name'=>$request->branch_name,
+                'role_id'=>auth()->user()->role_as
             ]);
 
             $afi = Auth::user();

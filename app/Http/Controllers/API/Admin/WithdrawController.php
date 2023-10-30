@@ -13,11 +13,9 @@ class WithdrawController extends Controller
     //
     function index(){
         $withdraw  = Withdraw::latest()
-
         ->when(request('status') == 'pending', function ($q) {
             return $q->where('status', 'pending');
         })
-
         ->when(request('status') == 'success', function ($q) {
             return $q->where('status', 'success');
         })
