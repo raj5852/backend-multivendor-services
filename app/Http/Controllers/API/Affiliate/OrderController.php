@@ -258,7 +258,7 @@ class OrderController extends Controller
             $allData =
             Order::query()
             ->with([
-                'productrating.user',
+                'productrating.affiliate',
                 'product:id,specifications',
                 'product.category:id,name',
                 'product.subcategory:id,name',
