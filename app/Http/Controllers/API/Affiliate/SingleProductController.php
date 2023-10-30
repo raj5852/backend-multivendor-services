@@ -62,6 +62,8 @@ class SingleProductController extends Controller
         $product = Product::query()
             ->with('category', 'subcategory', 'productImage', 'brand', 'vendor:id,name,image', 'productdetails')
             ->where('status', 'active')
+            ->withAvg('productrating','rating')
+            ->with('productrating.affiliate:id,name,image')
             ->whereHas('vendor', function ($query) {
                     $query->whereHas('usersubscription', function ($query) {
                         $query->where('expire_date', '>', now());

@@ -173,7 +173,10 @@ class ProductController extends Controller
             // 'colors','sizes',
             return response()->json([
                 'status' => 200,
-                'product' => $product->load('category','subcategory','brand','productImage','productdetails','vendor')
+                'product' => Product::query()
+                ->with('category','subcategory','brand','productImage','productdetails','vendor','productrating.affiliate:id,name,image')
+                ->withAvg('productrating', 'rating')
+                ->find($id)
             ]);
         } else {
             return response()->json([
