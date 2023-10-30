@@ -230,7 +230,7 @@ class OrderController extends Controller
     {
         $orders = Order::searchProduct()
             ->where('affiliator_id', auth()->user()->id)
-            ->with(['product:id,name', 'vendor:id,name', 'affiliator:id,name'])
+            ->with(['product:id,name', 'vendor:id,name', 'affiliator:id,name','productrating'])
             ->latest()
             ->paginate(10)
             ->withQueryString();
@@ -257,6 +257,7 @@ class OrderController extends Controller
             // $allData =    $order->load(['product', 'vendor', 'affiliator']);
 
             $allData =    $order->load([
+                'productrating',
                 'product:id,specifications',
                 'product.category:id,name',
                 'product.subcategory:id,name',
