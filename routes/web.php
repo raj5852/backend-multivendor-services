@@ -49,26 +49,32 @@ Route::get('seed', function () {
 
 Route::get('demo', function () {
 
-    $jsonData = [
-        [
-            "specification" => "ds",
-            "specification_ans" => "ds"
-        ],
-        [
-            "id" => "1",
-            "specification" => "2",
-            "specification_ans" => "2"
-        ],
-        [
-            "specification" => "2",
-            "specification_ans" => "2"
-        ]
-    ];
+   return $vendor = User::where('role_as', '!=', '1')
+            // ->when($status == 'active', function ($q) {
+            //     return $q->where('status', 'active');
+            // })
+            // ->when($status == 'pending', function ($q) {
+            //     return $q->where('status', 'pending');
+            // })
 
-  return  $cleanedData = array_map(function ($item) {
-        unset($item['id']);
-        return $item;
-    }, $jsonData);
+            // ->when(request()->enum()('type',['vendor','aff']), function ($q) {
+            //     // return $q->where('role_as', '2');
+            //     dd(1);
+            // })
+            // ->when(request('type') == 'affiliate' , function ($q) {
+            //     return $q->where('role_as', '3');
+            // })
+            // ->when(request('type') == 'affiliate' , function ($q) {
+            //     return $q->where('role_as', '3');
+            // })
+            ->when(
+                request('email'),
+                fn ($q, $email) => $q->where('email', 'like', "%{$email}%")
+                    ->orWhere('id', 'like', "%{$email}%")
+            )
+            ->latest()
+            ->paginate(10)
+            ->withQueryString();
 
 });
 

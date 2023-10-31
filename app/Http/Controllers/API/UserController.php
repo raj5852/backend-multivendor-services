@@ -14,6 +14,7 @@ use App\Models\Brand;
 use App\Models\Order;
 use App\Models\Subscription;
 use App\Services\SubscriptionService;
+use Carbon\Carbon;
 
 class UserController extends Controller
 {
@@ -69,12 +70,25 @@ class UserController extends Controller
 
     function alluserlist($status)
     {
+
         $vendor = User::where('role_as', '!=', '1')
             ->when($status == 'active', function ($q) {
                 return $q->where('status', 'active');
             })
             ->when($status == 'pending', function ($q) {
                 return $q->where('status', 'pending');
+            })
+            ->when(request('type') == 'vendor' , function ($q) {
+                return $q->where('role_as', '2');
+            })
+            ->when(request('type') == 'affiliate' , function ($q) {
+                return $q->where('role_as', '3');
+            })
+            ->when(request('type') == 'user' , function ($q) {
+                return $q->where('role_as', '4');
+            })
+            ->when(request('from') != '' && request('to') != '' , function ($q) {
+                return $q->whereBetween('created_at',[Carbon::parse(request('from')), Carbon::parse(request('to'))]);
             })
             ->when(
                 request('email'),

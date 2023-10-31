@@ -181,6 +181,7 @@ Route::middleware(['auth:sanctum', 'isAPIAdmin'])->group(function () {
 
     Route::get('admin/category-status', [DashboardController::class, 'categoryStatus']);
     Route::get('all/view/{status}',[UserController::class, 'alluserlist']);
+    Route::get('all/user/{status}',[UserController::class, 'alluserlist']);
 
     Route::prefix('admin')->group(function () {
         //service category subcategory
