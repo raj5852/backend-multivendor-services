@@ -8,6 +8,7 @@ use App\Http\Requests\StoreCouponRequest;
 use App\Http\Requests\UpdateCouponRequest;
 use App\Models\User;
 use App\Services\Admin\CouponService;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 
 class CouponController extends Controller
@@ -19,13 +20,36 @@ class CouponController extends Controller
      */
     public function index()
     {
-        $data =  Coupon::query()
+        // $data =  Coupon::query()
+        //     ->latest()
+        //     ->with('user:id,name,email')
+        //     ->when(request('frmo') != '' && request('to'), function ($query) {
+        //         $query->whereBetween('created_at', [Carbon::parse(request('frmo')) , Carbon::parse(request('to'))])
+        //             ->withCount('couponused')
+        //             ->withSum('couponused', 'total_commission');
+
+        //     }, function ($query) {
+        //         $query->withCount('couponused')
+        //             ->withSum('couponused', 'total_commission');
+        //     })
+        //     ->paginate();
+
+        $data = Coupon::query()
             ->latest()
             ->with('user:id,name,email')
-            ->withCount('couponused')
-            ->withSum('couponused', 'total_commission')
+            ->when(request('from') != '' && request('to'), function ($query) {
+                $fromDate = Carbon::parse(request('from'));
+                $toDate = Carbon::parse(request('to'));
+                $query->whereHas('couponused', function ($couponUsedQuery) use ($fromDate, $toDate) {
+                    $couponUsedQuery->whereBetween('created_at', [$fromDate, $toDate]);
+                })
+                    ->withCount('couponused')
+                    ->withSum('couponused', 'total_commission');
+            }, function ($query) {
+                $query->withCount('couponused')
+                    ->withSum('couponused', 'total_commission');
+            })
             ->paginate();
-
 
         return $this->response($data);
     }
