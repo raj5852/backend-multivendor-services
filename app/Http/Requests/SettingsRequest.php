@@ -117,6 +117,7 @@ class SettingsRequest extends FormRequest
             'mission_image'   => 'nullable', 'image', 'mimes:png,jpg,jpeg',
             'subscription_heading' => 'nullable',
             'subscription_title' => 'nullable',
+            'tag_manager'=> 'nullable'
         ];
     }
 
