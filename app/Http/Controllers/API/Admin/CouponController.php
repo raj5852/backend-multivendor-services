@@ -49,7 +49,7 @@ class CouponController extends Controller
                 $query->withCount('couponused')
                     ->withSum('couponused', 'total_commission');
             })
-            ->paginate();
+            ->paginate(10);
 
         return $this->response($data);
     }
