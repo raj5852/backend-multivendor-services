@@ -19,7 +19,14 @@ class CouponController extends Controller
      */
     public function index()
     {
-        $data =  Coupon::latest()->with('user:id,name,email')->paginate();
+        $data =  Coupon::query()
+            ->latest()
+            ->with('user:id,name,email')
+            ->withCount('couponused')
+            ->withSum('couponused', 'total_commission')
+            ->paginate();
+
+
         return $this->response($data);
     }
 
