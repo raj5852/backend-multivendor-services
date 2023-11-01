@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Models\Coupon;
+use App\Models\CouponUsed;
 use App\Models\Subscription;
 use App\Models\User;
 use App\Models\UserSubscription;
@@ -42,13 +43,17 @@ class SubscriptionService
         }
 
         PaymentHistoryService::store($trxid, $totalamount, $paymentmethod, 'Subscription', '-', $coupon, $user->id);
+        $getcoupon = Coupon::find($coupon);
 
-        if ($coupon != '') {
-            $getcoupon = Coupon::find($coupon);
-
+        if ($getcoupon) {
             $couponUser = User::find($getcoupon->user_id);
             $couponUser->increment('balance', $getcoupon->commission);
 
+            CouponUsed::create([
+                'user_id'=>$getcoupon->user_id,
+                'coupon_id'=>$coupon,
+                'total_commission'=>$getcoupon->commission
+            ]);
 
             PaymentHistoryService::store($trxid, $getcoupon->commission, 'My wallet', 'Referral bonus', '+', $coupon, $couponUser->id);
         }

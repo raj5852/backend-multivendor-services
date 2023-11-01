@@ -3,6 +3,7 @@
 use App\Enums\Status;
 use App\Http\Controllers\TestController;
 use App\Models\AdminAdvertise;
+use App\Models\Coupon;
 use App\Models\Product;
 use App\Models\SupportBox;
 use App\Models\User;
@@ -49,32 +50,9 @@ Route::get('seed', function () {
 
 Route::get('demo', function () {
 
-   return $vendor = User::where('role_as', '!=', '1')
-            // ->when($status == 'active', function ($q) {
-            //     return $q->where('status', 'active');
-            // })
-            // ->when($status == 'pending', function ($q) {
-            //     return $q->where('status', 'pending');
-            // })
 
-            // ->when(request()->enum()('type',['vendor','aff']), function ($q) {
-            //     // return $q->where('role_as', '2');
-            //     dd(1);
-            // })
-            // ->when(request('type') == 'affiliate' , function ($q) {
-            //     return $q->where('role_as', '3');
-            // })
-            // ->when(request('type') == 'affiliate' , function ($q) {
-            //     return $q->where('role_as', '3');
-            // })
-            ->when(
-                request('email'),
-                fn ($q, $email) => $q->where('email', 'like', "%{$email}%")
-                    ->orWhere('id', 'like', "%{$email}%")
-            )
-            ->latest()
-            ->paginate(10)
-            ->withQueryString();
+   return $coupon = Coupon::where('user_id',2)->withCount('couponused')->first();
+
 
 });
 

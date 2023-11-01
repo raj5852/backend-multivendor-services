@@ -106,14 +106,18 @@ class AamarpayController extends Controller
             $amount = $response['amount_original'];
            $subscriptiondata =  SubscriptionService::store($subscription, $user, $amount, $couponid, 'Aamarpay');
         }
-        if($subscriptiondata == '2' || $subscriptiondata == 3){
-            $tokens = $user->tokens;
 
-            foreach ($tokens as $token) {
-                $token->delete();
+        if(!is_object($subscriptiondata)){
+            if($subscriptiondata == '2' || $subscriptiondata == 3){
+                $tokens = $user->tokens;
+
+                foreach ($tokens as $token) {
+                    $token->delete();
+                }
+                return redirect(config('app.maindomain'));
             }
-            return redirect(config('app.maindomain'));
         }
+
 
         $path = paymentredirect($user->role_as);
         $url = config('app.redirecturl') . $path . '?message=Subscription added successfull';

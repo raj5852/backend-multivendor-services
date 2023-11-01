@@ -28,7 +28,8 @@ class CouponstausRequest extends FormRequest
     {
         return [
 
-            'status'=>['required',Rule::in(['pending','active','reject'])]
+            'status'=>['required',Rule::in(['active','reject'])],
+            'reason'=>'required_if:status,reject'
         ];
     }
 

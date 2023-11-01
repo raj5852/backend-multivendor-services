@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\Models\CouponRequest;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
@@ -26,7 +27,17 @@ class CouponSendRequest extends FormRequest
     public function rules()
     {
         return [
-            'comments'=>'required',
+            'comments'=>['required', function($attribute,$value,$fail){
+                if(request('comments') != ''){
+                   $data = CouponRequest::query()
+                    ->where('user_id',auth()->id())
+                    ->whereIn('status',['pending','active'])
+                    ->exists();
+                    if($data){
+                        $fail('You can not send coupon request one more time');
+                    }
+                }
+            } ],
         ];
     }
 

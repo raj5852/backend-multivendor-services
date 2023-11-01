@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\Models\Coupon;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
@@ -33,7 +34,16 @@ class StoreCouponRequest extends FormRequest
             'commission' => ['required'],
             'expire_date' => ['required'],
             'limitation' => ['required'],
-            'user_id' => ['required', 'integer',Rule::exists('users', 'id')->whereIn('role_as', [2, 3])]
+            'user_id' => ['required', 'integer',Rule::exists('users', 'id')->whereIn('role_as', [2, 3]),function($attribute,$value,$fail){
+                if(request('user_id') != ''){
+                   $data = Coupon::query()
+                    ->where('user_id',auth()->id())
+                    ->exists();
+                    if($data){
+                        $fail('Already coupon exists');
+                    }
+                }
+            }]
         ];
     }
 

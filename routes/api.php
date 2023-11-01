@@ -90,7 +90,8 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('all-withdraw/history/{status?}', [WithdrawController::class, 'index']);
 
     Route::post('coupon-request-send', [CouponRequestController::class, 'store']);
-    // Route::get('all/banks',[ ::class,'index']);
+    Route::get('get-coupon-request', [CouponRequestController::class, 'getcouponrequest']);
+
     Route::get('all/banks', [BankController::class, 'index']);
 
     Route::post('supportbox-close/{id}',[SupportBoxCloseController::class,'index']);

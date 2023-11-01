@@ -12,13 +12,25 @@ class CouponRequestController extends Controller
 {
     function store(CouponSendRequest $request)
     {
-
         CouponRequest::create([
             'user_id' => auth()->id(),
             'comments' => request('comments')
         ]);
 
         return $this->response('Coupon request send successfully!');
+    }
+
+    function getcouponrequest()
+    {
+        $couponrequest = CouponRequest::query()
+            ->where('user_id', auth()->id())
+            ->latest()
+            ->first();
+
+        if (!$couponrequest) {
+            return responsejson('', 'success');
+        }
+        return $this->response($couponrequest);
     }
 
     function allcouponrequest()
@@ -36,6 +48,10 @@ class CouponRequestController extends Controller
         }
 
         $couponrequest->status = request('status');
+        if (request('status') == 'reject') {
+            $couponrequest->reason = request('reason');
+        }
+
         $couponrequest->save();
         return $this->response('success');
     }

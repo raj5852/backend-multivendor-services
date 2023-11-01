@@ -8,9 +8,14 @@ use Illuminate\Http\Request;
 
 class CouponListController extends Controller
 {
-    function index(){
-        $coupon = Coupon::where('user_id',userid())->withCount('couponused')->get();
+    function index()
+    {
+
+        $coupon = Coupon::query()
+            ->where('user_id', userid())
+            ->withCount('couponused')
+            ->withSum('couponused','total_commission')
+            ->get();
         return $this->response($coupon);
     }
-
 }
