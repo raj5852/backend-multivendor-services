@@ -29,7 +29,7 @@ class StoreCouponRequest extends FormRequest
     {
         return [
             'name' => ['required', 'max:256', 'unique:coupons'],
-            'type' => ['required|in:flat,percentage'],
+            'type' => ['required',Rule::in(['flat','percentage'])],
             'amount' => ['required'],
             'commission' => ['required'],
             'expire_date' => ['required'],
