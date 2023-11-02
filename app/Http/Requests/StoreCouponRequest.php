@@ -37,7 +37,7 @@ class StoreCouponRequest extends FormRequest
             'user_id' => ['required', 'integer',Rule::exists('users', 'id')->whereIn('role_as', [2, 3]),function($attribute,$value,$fail){
                 if(request('user_id') != ''){
                    $data = Coupon::query()
-                    ->where('user_id',auth()->id())
+                    ->where('user_id',request('user_id'))
                     ->exists();
                     if($data){
                         $fail('Already coupon exists');
