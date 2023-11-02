@@ -160,8 +160,13 @@ function isactivemembership($userid = null)
             return 1;
         }
         return;
+    } else {
+        $freesubscriptiondate =  Carbon::parse($usersubscription->expire_date);
+        if ($freesubscriptiondate > now()) {
+            return 1;
+        }
+        return;
     }
-    return;
 }
 
 
