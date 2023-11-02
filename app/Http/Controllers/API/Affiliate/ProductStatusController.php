@@ -2,10 +2,11 @@
 
 namespace App\Http\Controllers\Api\Affiliate;
 
-use App\Http\Controllers\Controller;
 use App\Models\Product;
-use App\Models\ProductDetails;
 use Illuminate\Http\Request;
+use App\Models\ProductDetails;
+use Illuminate\Support\Facades\DB;
+use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 
 class ProductStatusController extends Controller
@@ -48,11 +49,15 @@ class ProductStatusController extends Controller
         $pending = ProductDetails::with('product')
             ->where('user_id', $userId)
             ->where('status', 2)
-            ->whereHas('product', function ($query) use ($searchTerm) {
-                $query->where('name', 'like', '%' . $searchTerm . '%');
+            ->whereHas('product')
+            ->when($searchTerm != '', function ($query) use ($searchTerm) {
+                $query->whereHas('product', function ($query) use ($searchTerm) {
+                    $query->where('name', 'like', '%' . $searchTerm . '%');
+                })
+                    ->orWhere('uniqid', 'like', '%' . $searchTerm . '%');
             })
-            ->when(request('order_id'),fn($q,$orderid)=>$q->where('id','like',"%{$orderid}%"))
-            ->latest()->paginate(10)
+            ->latest()
+            ->paginate(10)
             ->withQueryString();
 
         return response()->json([
@@ -67,9 +72,15 @@ class ProductStatusController extends Controller
         $userId = Auth::id();
         $searchTerm = request('search');
 
-        $active = ProductDetails::with('product')->where('user_id', $userId)->where('status', 1)
-            ->whereHas('product', function ($query) use ($searchTerm) {
-                $query->where('name', 'like', '%' . $searchTerm . '%');
+        $active = ProductDetails::query()
+            ->with('product')
+            ->where(['user_id' => $userId, 'status' => 1])
+            ->whereHas('product')
+            ->when($searchTerm != '', function ($query) use ($searchTerm) {
+                $query->whereHas('product', function ($query) use ($searchTerm) {
+                    $query->where('name', 'like', '%' . $searchTerm . '%');
+                })
+                    ->orWhere('uniqid', 'like', '%' . $searchTerm . '%');
             })
             ->whereHas('vendor', function ($query) {
                 $query->withCount(['vendoractiveproduct' => function ($query) {
@@ -96,8 +107,12 @@ class ProductStatusController extends Controller
         $searchTerm = request('search');
 
         $active = ProductDetails::with('product')->where('user_id', $userId)->where('status', 1)
-            ->whereHas('product', function ($query) use ($searchTerm) {
-                $query->where('name', 'like', '%' . $searchTerm . '%');
+            ->whereHas('product')
+            ->when($searchTerm != '', function ($query) use ($searchTerm) {
+                $query->whereHas('product', function ($query) use ($searchTerm) {
+                    $query->where('name', 'like', '%' . $searchTerm . '%');
+                })
+                    ->orWhere('uniqid', 'like', '%' . $searchTerm . '%');
             })
             ->whereHas('vendor', function ($query) {
                 $query->withCount(['vendoractiveproduct' => function ($query) {
@@ -106,11 +121,9 @@ class ProductStatusController extends Controller
                     ->whereHas('usersubscription', function ($query) {
                         $query->where('expire_date', '<', now());
                     });
-
-                // ->withSum('usersubscription', 'affiliate_request')
-                // ->having('vendoractiveproduct_count', '<', \DB::raw('usersubscription_sum_affiliate_request'));
             })
-            ->latest()->paginate(10)
+            ->latest()
+            ->paginate(10)
             ->withQueryString();
 
         return response()->json([
@@ -125,11 +138,18 @@ class ProductStatusController extends Controller
         $userId = Auth::id();
         $searchTerm  = request('search');
 
-        $reject = ProductDetails::with(['product', 'vendor:id,name'])->where('user_id', $userId)->where('status', 3)
-            ->whereHas('product', function ($query) use ($searchTerm) {
-                $query->where('name', 'like', '%' . $searchTerm . '%');
+        $reject = ProductDetails::query()
+            ->with(['product', 'vendor:id,name'])
+            ->where(['user_id' => $userId, 'status' => 3])
+            ->whereHas('product')
+            ->when($searchTerm != '', function ($query) use ($searchTerm) {
+                $query->whereHas('product', function ($query) use ($searchTerm) {
+                    $query->where('name', 'like', '%' . $searchTerm . '%');
+                })
+                    ->orWhere('uniqid', 'like', '%' . $searchTerm . '%');
             })
-            ->latest()->paginate(10)
+            ->latest()
+            ->paginate(10)
             ->withQueryString();
 
         return response()->json([
@@ -179,9 +199,9 @@ class ProductStatusController extends Controller
             })
             ->find(request('product_id'));
 
-            if(!$existproduct){
-                return $this->response('Product not fount');
-            }
+        if (!$existproduct) {
+            return $this->response('Product not fount');
+        }
 
         $product = new ProductDetails();
         $product->status = 2;
@@ -189,6 +209,7 @@ class ProductStatusController extends Controller
         $product->vendor_id = $existproduct->user_id;
         $product->user_id = auth()->id();
         $product->reason = request('reason');
+        $product->uniqid = uniqid();
         $product->save();
 
         return response()->json([
