@@ -14,6 +14,8 @@ class RequestProductController extends Controller
 
     function RequestPending()
     {
+
+        $search = request('search');
         $product = ProductDetails::query()
             ->with(['product' => function ($query) {
                 $query->select('id', 'name', 'selling_price')
@@ -22,10 +24,13 @@ class RequestProductController extends Controller
             ->where('vendor_id', auth()->user()->id)
 
             ->where('status', '2')
-            ->whereHas('product', function ($query) {
-                $query->where('name', 'LIKE', '%' . request('search') . '%');
+            ->whereHas('product')
+            ->when($search != '', function ($query) use ($search) {
+                $query->whereHas('product', function ($query) use ($search) {
+                    $query->where('name', 'like', '%' . $search . '%');
+                })
+                    ->orWhere('uniqid', 'like', '%' . $search . '%');
             })
-            ->when(request('order_id'),fn($q,$orderid)=>$q->where('id','like',"%{$orderid}%"))
             ->with(['affiliator:id,name', 'vendor:id,name'])
             ->whereHas('affiliator', function ($query) {
                 $query->withCount(['affiliatoractiveproducts' => function ($query) {
@@ -50,17 +55,19 @@ class RequestProductController extends Controller
 
     function membershipexpireactiveproduct()
     {
+        $search = request('search');
         $product = ProductDetails::query()
-            ->with(['product' => function ($query) {
+            ->withWhereHas(['product' => function ($query) {
                 $query->select('id', 'name', 'selling_price')
                     ->with('productImage');
             }])
-            ->where('vendor_id', auth()->user()->id)
-            ->where('status', 1)
-            ->whereHas('product', function ($query) {
-                $query->where('name', 'LIKE', '%' . request('search') . '%');
+            ->where(['vendor_id', auth()->id(), 'status' => 1])
+            ->when($search != '', function ($query) use ($search) {
+                $query->whereHas('product', function ($query) use ($search) {
+                    $query->where('name', 'like', '%' . $search . '%');
+                })
+                    ->orWhere('uniqid', 'like', '%' . $search . '%');
             })
-            ->when(request('order_id'),fn($q,$orderid)=>$q->where('id','like',"%{$orderid}%"))
             ->with(['affiliator:id,name', 'vendor:id,name'])
             ->whereHas('affiliator', function ($query) {
                 $query->withCount(['affiliatoractiveproducts' => function ($query) {
@@ -69,8 +76,6 @@ class RequestProductController extends Controller
                     ->whereHas('usersubscription', function ($query) {
                         $query->where('expire_date', '<=', now());
                     });
-                // ->withSum('usersubscription', 'product_approve')
-                // ->having('affiliatoractiveproducts_count', '<', \DB::raw('usersubscription_sum_product_approve'));
             })
             ->latest()
             ->paginate(10)
@@ -113,7 +118,7 @@ class RequestProductController extends Controller
 
     function RequestActive()
     {
-
+        $search = request('search');
         $product = ProductDetails::query()
             ->with(['product' => function ($query) {
                 $query->select('id', 'name', 'selling_price')
@@ -121,10 +126,13 @@ class RequestProductController extends Controller
             }])
             ->where('vendor_id', auth()->user()->id)
             ->where('status', 1)
-            ->whereHas('product', function ($query) {
-                $query->where('name', 'LIKE', '%' . request('search') . '%');
+            ->whereHas('product')
+            ->when($search != '', function ($query) use ($search) {
+                $query->whereHas('product', function ($query) use ($search) {
+                    $query->where('name', 'like', '%' . $search . '%');
+                })
+                    ->orWhere('uniqid', 'like', '%' . $search . '%');
             })
-            ->when(request('order_id'),fn($q,$orderid)=>$q->where('id','like',"%{$orderid}%"))
             ->with(['affiliator:id,name', 'vendor:id,name'])
             ->whereHas('affiliator', function ($query) {
                 $query->withCount(['affiliatoractiveproducts' => function ($query) {
@@ -133,8 +141,6 @@ class RequestProductController extends Controller
                     ->whereHas('usersubscription', function ($query) {
                         $query->where('expire_date', '>', now());
                     });
-                // ->withSum('usersubscription', 'product_approve')
-                // ->having('affiliatoractiveproducts_count', '<', \DB::raw('usersubscription_sum_product_approve'));
             })
             ->latest()
             ->paginate(10)
@@ -149,17 +155,21 @@ class RequestProductController extends Controller
 
     function RequestAll()
     {
-
+        $search = request('search');
         $product = ProductDetails::query()
             ->with(['product' => function ($query) {
                 $query->select('id', 'name', 'selling_price')
                     ->with('productImage');
             }])
             ->where('vendor_id', auth()->user()->id)
-            ->whereHas('product', function ($query) {
-                $query->where('name', 'LIKE', '%' . request('search') . '%');
+            ->whereHas('product')
+            ->when($search != '', function ($query) use ($search) {
+                $query->whereHas('product', function ($query) use ($search) {
+                    $query->where('name', 'like', '%' . $search . '%');
+                })
+                    ->orWhere('uniqid', 'like', '%' . $search . '%');
             })
-            ->when(request('order_id'),fn($q,$orderid)=>$q->where('id','like',"%{$orderid}%"))
+            ->when(request('order_id'), fn ($q, $orderid) => $q->where('id', 'like', "%{$orderid}%"))
             ->with(['affiliator:id,name', 'vendor:id,name'])
             ->where(function ($query) {
                 $query->whereHas('affiliator', function ($query) {
@@ -188,17 +198,19 @@ class RequestProductController extends Controller
 
     function RequestRejected()
     {
+        $search = request('search');
         $product = ProductDetails::query()
-            ->with(['product' => function ($query) {
+            ->where(['vendor_id' => auth()->id(), 'status' => 3])
+            ->withWhereHas(['product' => function ($query) {
                 $query->select('id', 'name', 'selling_price')
                     ->with('productImage');
             }])
-            ->where('vendor_id', auth()->user()->id)
-            ->where('status', 3)
-            ->whereHas('product', function ($query) {
-                $query->where('name', 'LIKE', '%' . request('search') . '%');
+            ->when($search != '', function ($query) use ($search) {
+                $query->whereHas('product', function ($query) use ($search) {
+                    $query->where('name', 'like', '%' . $search . '%');
+                })
+                    ->orWhere('uniqid', 'like', '%' . $search . '%');
             })
-            ->when(request('order_id'),fn($q,$orderid)=>$q->where('id','like',"%{$orderid}%"))
             ->with(['affiliator:id,name', 'vendor:id,name'])
             ->whereHas('affiliator', function ($query) {
                 $query->withCount(['affiliatoractiveproducts' => function ($query) {
@@ -207,8 +219,8 @@ class RequestProductController extends Controller
                     ->whereHas('usersubscription', function ($query) {
                         $query->where('expire_date', '>', now());
                     })
-                ->withSum('usersubscription', 'product_approve')
-                ->having('affiliatoractiveproducts_count', '<', \DB::raw('usersubscription_sum_product_approve'));
+                    ->withSum('usersubscription', 'product_approve')
+                    ->having('affiliatoractiveproducts_count', '<', \DB::raw('usersubscription_sum_product_approve'));
             })
             ->latest()
             ->paginate(10)
