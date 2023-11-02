@@ -282,6 +282,7 @@ class OrderController extends Controller
                 $allData->name = substr($allData->name, 0, 2) . '...';
                 $allData->phone = substr($allData->phone, 0, 4) . '.....';
                 $allData->email = substr($allData->email, 0, 3) . '....';
+                $allData->address = substr($allData->address, 0, 3) . '....';
             }
             return response()->json([
                 'status' => 200,
