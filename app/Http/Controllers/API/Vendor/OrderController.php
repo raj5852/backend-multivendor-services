@@ -268,7 +268,7 @@ class OrderController extends Controller
         $order  = Order::where('id', $id)->where('vendor_id', auth()->user()->id)->first();
         if ($order) {
             $allData =    $order->load([
-                'product:id,specifications',
+                'product',
                 'product.category:id,name',
                 'product.subcategory:id,name',
                 'product.brand:id,name',
