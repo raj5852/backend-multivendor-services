@@ -272,7 +272,6 @@ class OrderController extends Controller
                 'product.category:id,name',
                 'product.subcategory:id,name',
                 'product.brand:id,name',
-                'affiliator'
             ]);
 
 
