@@ -12,83 +12,103 @@ class ProductStatusController extends Controller
 
     public function AdminRequestPending()
     {
-
-         $product=ProductDetails::with(['vendor','affiliator','product'])
-        ->where('status','2')
-        ->whereHas('product', function ($query)  {
-            $query->where('name', 'LIKE', '%'.request('search').'%');
-        })
-        ->when(request('order_id'),fn($q,$orderid)=>$q->where('id','like',"%{$orderid}%"))
-        ->latest()
-        ->paginate(10)
-        ->withQueryString();
+        $search = request('search');
+        $product = ProductDetails::query()
+            ->with(['vendor', 'affiliator', 'product'])
+            ->where('status', '2')
+            ->when($search != '', function ($query) use ($search) {
+                $query->whereHas('product', function ($query) use ($search) {
+                    $query->where('name', 'like', '%' . $search . '%');
+                })
+                    ->orWhere('uniqid', 'like', '%' . $search . '%');
+            })
+            ->latest()
+            ->paginate(10)
+            ->withQueryString();
 
         return response()->json([
-            'status'=>200,
-            'product'=>$product,
+            'status' => 200,
+            'product' => $product,
         ]);
     }
 
 
     public function AdminRequestActive()
     {
-         $product=ProductDetails::with(['vendor','affiliator','product'])->where('status','1')
-        ->whereHas('product', function ($query)  {
-            $query->where('name', 'LIKE', '%'.request('search').'%');
-        })
-        ->when(request('order_id'),fn($q,$orderid)=>$q->where('id','like',"%{$orderid}%"))
-        ->latest()->paginate(10)
-        ->withQueryString();
+        $search = request('search');
+        $product = ProductDetails::query()
+            ->with(['vendor', 'affiliator', 'product'])
+            ->where('status', '1')
+            ->when($search != '', function ($query) use ($search) {
+                $query->whereHas('product', function ($query) use ($search) {
+                    $query->where('name', 'like', '%' . $search . '%');
+                })
+                    ->orWhere('uniqid', 'like', '%' . $search . '%');
+            })
+            ->latest()
+            ->paginate(10)
+            ->withQueryString();
 
         return response()->json([
-            'status'=>200,
-            'product'=>$product,
+            'status' => 200,
+            'product' => $product,
         ]);
     }
 
 
-    function AdminRequestAll(){
-        $product=ProductDetails::with(['vendor','affiliator','product'])
-        ->whereHas('product', function ($query)  {
-            $query->where('name', 'LIKE', '%'.request('search').'%');
-        })
-        ->when(request('order_id'),fn($q,$orderid)=>$q->where('id','like',"%{$orderid}%"))
-        ->latest()->paginate(10)
-        ->withQueryString();
+    function AdminRequestAll()
+    {
+        $search = request('search');
+        $product = ProductDetails::query()
+            ->with(['vendor', 'affiliator', 'product'])
+            ->when($search != '', function ($query) use ($search) {
+                $query->whereHas('product', function ($query) use ($search) {
+                    $query->where('name', 'like', '%' . $search . '%');
+                })
+                    ->orWhere('uniqid', 'like', '%' . $search . '%');
+            })
+            ->latest()
+            ->paginate(10)
+            ->withQueryString();
 
         return response()->json([
-            'status'=>200,
-            'product'=>$product,
+            'status' => 200,
+            'product' => $product,
         ]);
 
-        // return ProductDetails::with('product')->get();
     }
 
 
-    function RequestRejected(){
-
-        $product=ProductDetails::with(['vendor','affiliator','product'])
-        ->where('status','3')
-        ->whereHas('product', function ($query)  {
-            $query->where('name', 'LIKE', '%'.request('search').'%');
-        })
-        ->latest()
-        ->paginate(10)
-        ->withQueryString();
+    function RequestRejected()
+    {
+        $search = request('search');
+        $product = ProductDetails::query()
+            ->with(['vendor', 'affiliator', 'product'])
+            ->where('status', '3')
+            ->when($search != '', function ($query) use ($search) {
+                $query->whereHas('product', function ($query) use ($search) {
+                    $query->where('name', 'like', '%' . $search . '%');
+                })
+                    ->orWhere('uniqid', 'like', '%' . $search . '%');
+            })
+            ->latest()
+            ->paginate(10)
+            ->withQueryString();
 
         return response()->json([
-            'status'=>200,
-            'product'=>$product,
+            'status' => 200,
+            'product' => $product,
         ]);
     }
 
 
-    function RequestUpdate(Request $request,$id){
+    function RequestUpdate(Request $request, $id)
+    {
 
         $data =  ProductDetails::find($id);
         if ($data) {
             $data->status = $request->status;
-                $data->reason = $request->reason;
+            $data->reason = $request->reason;
             $data->save();
         } else {
             return response()->json([
@@ -104,31 +124,30 @@ class ProductStatusController extends Controller
     }
 
 
-    function AdminRequestView($id){
-        $product=ProductDetails::with(['vendor','affiliator','product' => function($query) {
+    function AdminRequestView($id)
+    {
+        $product = ProductDetails::with(['vendor', 'affiliator', 'product' => function ($query) {
             $query->with('productImage');
         }])->find($id);
         // 'sizes','colors'
 
-            return response()->json([
-            'status'=>200,
-            'product'=>$product,
+        return response()->json([
+            'status' => 200,
+            'product' => $product,
         ]);
     }
 
 
     public function AdminRequestBalances()
     {
-        $user=User::where('balance_status',0)->get();
+        $user = User::where('balance_status', 0)->get();
         return response()->json($user);
     }
 
 
     public function AdminRequestBalanceActive()
     {
-        $user=User::where('balance_status',1)->get();
+        $user = User::where('balance_status', 1)->get();
         return response()->json($user);
     }
-
-
 }
