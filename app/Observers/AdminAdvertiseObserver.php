@@ -19,16 +19,16 @@ class AdminAdvertiseObserver
     public function created(AdminAdvertise $adminAdvertise)
     {
         if(request('paymethod') == 'my-wallet'){
-            $user = User::find(userid());
-            $dollerRate  =  DollerRate::first()?->amount;
+            // $user = User::find(userid());
+            // $dollerRate  =  DollerRate::first()?->amount;
 
 
-            $user->decrement('balance',(request('budget_amount') * $dollerRate));
-            $adminAdvertise->update([
-                'is_paid'=>1
-            ]);
+            // $user->decrement('balance',(request('budget_amount') * $dollerRate));
+            // $adminAdvertise->update([
+            //     'is_paid'=>1
+            // ]);
 
-            PaymentHistoryService::store($adminAdvertise->trxid,($adminAdvertise->budget_amount * $dollerRate),'My Wallet','Advertise','-','',$adminAdvertise->user_id);
+            // PaymentHistoryService::store($adminAdvertise->trxid,($adminAdvertise->budget_amount * $dollerRate),'My Wallet','Advertise','-','',$adminAdvertise->user_id);
         }
     }
 
