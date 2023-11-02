@@ -49,11 +49,7 @@ Route::get('seed', function () {
 
 
 Route::get('demo', function () {
-
-
-   return $coupon = Coupon::where('user_id',2)->withCount('couponused')->first();
-
-
+    return app('raj_service');
 });
 
 

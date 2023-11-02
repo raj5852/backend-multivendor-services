@@ -48,6 +48,8 @@ class AdminAdvertiseController extends Controller
     public function store(StoreAdminAdvertiseRequest $request)
     {
 
+        info(request()->all());
+
         $advertise =  AdminAdvertiseService::create($request->validated());
 
         return $this->response($advertise);

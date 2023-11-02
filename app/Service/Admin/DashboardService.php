@@ -174,7 +174,7 @@ class DashboardService
                     ->where('status', 'delivered');
             },
             'products as product_qty' => function ($query) {
-                $query->select(DB::raw('sum(qty)'))
+                $query->withCount('products')
                     ->where('status', 'active');
             }
         ])

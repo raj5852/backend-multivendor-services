@@ -80,15 +80,7 @@ class AdminAdvertiseService
             }
         }
 
-        // $advertisePlace = new AdvertisePlacement();
-        // $advertisePlace->advertise_id  = $adminadvaertise->id;
-        // $advertisePlace->feeds  = request('feeds') ? request('feeds')  : '';
-        // $advertisePlace->story_reels  = request('story_reels') ? request('story_reels') : '';
-        // $advertisePlace->adds_video_and_reels  = request('adds_video_and_reels') ? request('adds_video_and_reels') : '';
-        // $advertisePlace->search_result  = request('search_result') ? request('search_result') : '';
-        // $advertisePlace->messages  = request('messages') ? request('messages') : '';
-        // $advertisePlace->apps_and_sites  = request('apps_and_sites') ? request('apps_and_sites') : '';
-        // $advertisePlace->save();
+
 
         $dollerRate  =  DollerRate::first()?->amount;
         $totalprice = ($validatData['budget_amount'] * $dollerRate);

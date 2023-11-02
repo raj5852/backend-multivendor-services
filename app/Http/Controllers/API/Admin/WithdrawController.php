@@ -11,45 +11,46 @@ use Illuminate\Support\Facades\Validator;
 class WithdrawController extends Controller
 {
     //
-    function index(){
+    function index()
+    {
         $withdraw  = Withdraw::latest()
-        ->when(request('status') == 'pending', function ($q) {
-            return $q->where('status', 'pending');
-        })
-        ->when(request('status') == 'success', function ($q) {
-            return $q->where('status', 'success');
-        })
-        ->when(request('type') == 'vendor', function ($q) {
-            return $q->where('role', '2');
-        })
-        ->when(request('type') == 'affiliate', function ($q) {
-            return $q->where('role', '3');
-        })
-        ->when(request('type') == 'user', function ($q) {
-            return $q->where('role', '4');
-        })
-        ->with('user')
-        ->latest()
-        ->paginate(10)
-        ->withQueryString();
+            ->when(request('status') == 'pending', function ($q) {
+                return $q->where('status', 'pending');
+            })
+            ->when(request('status') == 'success', function ($q) {
+                return $q->where('status', 'success');
+            })
+            ->when(request('type') == 'vendor', function ($q) {
+                return $q->where('role', '2');
+            })
+            ->when(request('type') == 'affiliate', function ($q) {
+                return $q->where('role', '3');
+            })
+            ->when(request('type') == 'user', function ($q) {
+                return $q->where('role', '4');
+            })
+            ->with('user')
+            ->latest()
+            ->paginate(10)
+            ->withQueryString();
 
         return response([
-            'status'=>200,
-            'message'=>$withdraw
+            'status' => 200,
+            'message' => $withdraw
         ]);
-
     }
 
-    function paid(Request $request,$id){
-        $validator = Validator::make($request->all(),[
-            'admin_transition_id'=>'required',
-            'admin_bank_name'=>'required'
+    function paid(Request $request, $id)
+    {
+        $validator = Validator::make($request->all(), [
+            'admin_transition_id' => 'required',
+            'admin_bank_name' => 'required'
 
         ]);
-        if($validator->fails()){
+        if ($validator->fails()) {
             return response()->json([
-                'status'=>401,
-                'message'=>$validator->messages()
+                'status' => 401,
+                'message' => $validator->messages()
             ]);
         }
 
@@ -57,8 +58,8 @@ class WithdrawController extends Controller
         $withdraw = Withdraw::find($id);
         $withdraw->admin_transition_id = $request->admin_transition_id;
 
-        if($request->file('admin_screenshot')){
-          $admin_screenshot =   fileUpload($request->file('admin_screenshot'),'uploads/admin/screenshort');
+        if ($request->file('admin_screenshot')) {
+            $admin_screenshot =   fileUpload($request->file('admin_screenshot'), 'uploads/admin/screenshort');
             $withdraw->admin_screenshot = $admin_screenshot;
         }
 
@@ -67,10 +68,28 @@ class WithdrawController extends Controller
         $withdraw->save();
 
         return response()->json([
-            'status'=>200,
-            'message'=>'Paid Successfully'
+            'status' => 200,
+            'message' => 'Paid Successfully'
         ]);
+    }
 
+    function withdrawcancel(int $id)
+    {
+        $withdraw = Withdraw::query()
+            ->where('id', $id)
+            ->where('status', '!=', 'success')
+            ->first();
 
+        if (!$withdraw) {
+            return responsejson('Not found', 'fail');
+        }
+        if (request('reason') != '') {
+            $withdraw->reason = request('reason');
+        }
+
+        $withdraw->status = 'reject';
+        $withdraw->save();
+
+        return responsejson('Reject successfully!');
     }
 }
