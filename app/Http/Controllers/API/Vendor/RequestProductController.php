@@ -18,7 +18,7 @@ class RequestProductController extends Controller
         $search = request('search');
         $product = ProductDetails::query()
             ->with(['product' => function ($query) {
-                $query->select('id', 'name', 'selling_price')
+                $query->select('id', 'name', 'selling_price','image')
                     ->with('productImage');
             }])
             ->where('vendor_id', auth()->user()->id)
@@ -58,10 +58,10 @@ class RequestProductController extends Controller
         $search = request('search');
         $product = ProductDetails::query()
             ->withWhereHas('product' , function ($query) {
-                $query->select('id', 'name', 'selling_price')
+                $query->select('id', 'name', 'selling_price','image')
                     ->with('productImage');
             })
-            ->where(['vendor_id', auth()->id(), 'status' => 1])
+            ->where(['vendor_id'=> auth()->id(), 'status' => 1])
             ->when($search != '', function ($query) use ($search) {
                 $query->whereHas('product', function ($query) use ($search) {
                     $query->where('name', 'like', '%' . $search . '%');
@@ -121,7 +121,7 @@ class RequestProductController extends Controller
         $search = request('search');
         $product = ProductDetails::query()
             ->with(['product' => function ($query) {
-                $query->select('id', 'name', 'selling_price')
+                $query->select('id', 'name', 'selling_price','image')
                     ->with('productImage');
             }])
             ->where('vendor_id', auth()->user()->id)
@@ -158,7 +158,7 @@ class RequestProductController extends Controller
         $search = request('search');
         $product = ProductDetails::query()
             ->with(['product' => function ($query) {
-                $query->select('id', 'name', 'selling_price')
+                $query->select('id', 'name', 'selling_price','image')
                     ->with('productImage');
             }])
             ->where('vendor_id', auth()->user()->id)
@@ -202,7 +202,7 @@ class RequestProductController extends Controller
         $product = ProductDetails::query()
             ->where(['vendor_id' => auth()->id(), 'status' => 3])
             ->withWhereHas('product' , function ($query) {
-                $query->select('id', 'name', 'selling_price')
+                $query->select('id', 'name', 'selling_price','image')
                     ->with('productImage');
             })
             ->when($search != '', function ($query) use ($search) {
