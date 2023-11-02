@@ -10,7 +10,7 @@ use Illuminate\Http\Request;
 
 class RequestProductController extends Controller
 {
-    //
+
 
     function RequestPending()
     {
@@ -57,10 +57,10 @@ class RequestProductController extends Controller
     {
         $search = request('search');
         $product = ProductDetails::query()
-            ->withWhereHas(['product' => function ($query) {
+            ->withWhereHas('product' , function ($query) {
                 $query->select('id', 'name', 'selling_price')
                     ->with('productImage');
-            }])
+            })
             ->where(['vendor_id', auth()->id(), 'status' => 1])
             ->when($search != '', function ($query) use ($search) {
                 $query->whereHas('product', function ($query) use ($search) {
@@ -182,7 +182,7 @@ class RequestProductController extends Controller
                         ->withSum('usersubscription', 'product_approve')
                         ->having('affiliatoractiveproducts_count', '<', \DB::raw('usersubscription_sum_product_approve'));
                 });
-                // ->orwhere('status',1);
+
             })
 
             ->latest()
@@ -201,10 +201,10 @@ class RequestProductController extends Controller
         $search = request('search');
         $product = ProductDetails::query()
             ->where(['vendor_id' => auth()->id(), 'status' => 3])
-            ->withWhereHas(['product' => function ($query) {
+            ->withWhereHas('product' , function ($query) {
                 $query->select('id', 'name', 'selling_price')
                     ->with('productImage');
-            }])
+            })
             ->when($search != '', function ($query) use ($search) {
                 $query->whereHas('product', function ($query) use ($search) {
                     $query->where('name', 'like', '%' . $search . '%');
