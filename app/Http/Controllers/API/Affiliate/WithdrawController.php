@@ -14,13 +14,18 @@ class WithdrawController extends Controller
 
     function index()
     {
-        $withdraw = Withdraw::where('user_id', auth()->id())
+        $search = request('search');
+        $withdraw = Withdraw::query()
+            ->where('user_id', auth()->id())
             ->latest()
             ->when(request('status') == 'success', function ($q) {
                 return $q->where('status', 'success');
             })
             ->when(request('status') == 'pending', function ($q) {
                 return $q->where('status', 'pending');
+            })
+            ->when($search != '', function ($query) use ($search) {
+                $query->where('uniqid', 'like', "%{$search}%");
             })
             ->paginate(10)
             ->withQueryString();
@@ -58,7 +63,8 @@ class WithdrawController extends Controller
                 'ac_or_number' => $request->ac_or_number,
                 'holder_name' => $request->holder_name,
                 'branch_name' => $request->branch_name,
-                'role' => auth()->user()->role_as
+                'role' => auth()->user()->role_as,
+                'uniqid' => uniqid()
             ]);
 
             $afi = Auth::user();

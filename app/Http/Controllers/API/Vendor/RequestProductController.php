@@ -91,10 +91,10 @@ class RequestProductController extends Controller
     function RequestView($id)
     {
         $product = ProductDetails::query()
-            ->with(['affiliator', 'vendor', 'product' => function ($query) {
+            ->with(['product' => function ($query) {
                 $query->with('productImage');
             }])
-            ->where('vendor_id', auth()->user()->id)
+            ->where('vendor_id', auth()->id())
             ->whereHas('affiliator', function ($query) {
                 $query->withCount(['affiliatoractiveproducts' => function ($query) {
                     $query->where('status', 1);

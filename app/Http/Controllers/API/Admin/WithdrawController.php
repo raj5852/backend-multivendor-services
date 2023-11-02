@@ -13,7 +13,9 @@ class WithdrawController extends Controller
     //
     function index()
     {
-        $withdraw  = Withdraw::latest()
+        $search = request('search');
+        $withdraw  = Withdraw::query()
+        ->latest()
             ->when(request('status') == 'pending', function ($q) {
                 return $q->where('status', 'pending');
             })
@@ -28,6 +30,9 @@ class WithdrawController extends Controller
             })
             ->when(request('type') == 'user', function ($q) {
                 return $q->where('role', '4');
+            })
+            ->when($search != '',function($query)use($search){
+                $query->where('uniqid','like',"%{$search}%");
             })
             ->with('user')
             ->latest()
