@@ -34,7 +34,7 @@ class ProfileDataController extends Controller
             'number2' => 'nullable',
             'old_password' => 'nullable',
             'new_password' => 'nullable',
-            'balance'=>['required','numeric','min:1']
+            'balance'=>['nullable','numeric','min:1']
         ]);
 
         if ($request->has('old_password') && $request->input('old_password') !== null) {
@@ -55,7 +55,11 @@ class ProfileDataController extends Controller
         $data->name = $request->name;
         $data->number = $request->number;
         $data->number2 = $request->number2;
-        $data->balance =  $request->balance;
+
+        if(request('balance') != ''){
+            $data->balance =   $request->balance;
+        }
+
         if ($request->old_password) {
             if (!Hash::check($request->old_password, auth()->user()->password)) {
                 return response()->json([
