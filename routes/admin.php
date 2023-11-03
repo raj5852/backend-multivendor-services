@@ -20,6 +20,7 @@ use App\Http\Controllers\API\Admin\OrganizationTwoController;
 use App\Http\Controllers\API\Admin\OurServiceController;
 use App\Http\Controllers\API\Admin\PartnerController;
 use App\Http\Controllers\API\Admin\PaymentHistoryController;
+use App\Http\Controllers\API\Admin\ProductController as AdminProductController;
 use App\Http\Controllers\API\Admin\ProductStatusController;
 use App\Http\Controllers\API\Admin\ProfileController;
 use App\Http\Controllers\API\Admin\ServiceOrderShowController;
@@ -254,6 +255,8 @@ Route::middleware(['auth:sanctum', 'isAPIAdmin'])->group(function () {
         Route::get('vendor-products-edit-request',[VendorProductController::class,'index']);
         Route::get('vendor-products-edit-request-view/{id}',[VendorProductController::class,'productview']);
         Route::post('vendor-products-edit-request-status/{id}',[VendorProductController::class,'productstatus']);
+        Route::post('product-update/{productid}',[AdminProductController::class,'productupdate']);
+
     });
 
 });
