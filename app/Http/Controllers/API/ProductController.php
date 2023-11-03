@@ -12,7 +12,9 @@ use App\Models\ProductImage;
 use Illuminate\Support\Facades\File;
 use App\Models\Category;
 use App\Models\Brand;
+use App\Models\Color;
 use App\Models\ProductDetails;
+use App\Models\Size;
 use App\Models\Subcategory;
 use Illuminate\Support\Facades\DB;
 
@@ -170,13 +172,16 @@ class ProductController extends Controller
     {
         $product = Product::find($id);
         if ($product) {
-            // 'colors','sizes',
+            $vendorproduct = Product::query()
+            ->with('category','subcategory','brand','productImage','productdetails','vendor','productrating.affiliate:id,name,image')
+            ->withAvg('productrating', 'rating')
+            ->find($id);
+
             return response()->json([
                 'status' => 200,
-                'product' => Product::query()
-                ->with('category','subcategory','brand','productImage','productdetails','vendor','productrating.affiliate:id,name,image')
-                ->withAvg('productrating', 'rating')
-                ->find($id)
+                'product' => $vendorproduct,
+                'vendor_all_color'=>Color::where('user_id', $product->user_id)->get(),
+                'vendor_all_size'=>Size::where('user_id', $product->user_id)->get()
             ]);
         } else {
             return response()->json([
