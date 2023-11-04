@@ -25,7 +25,7 @@ class CouponController extends Controller
             ->latest()
             ->with('user:id,name,email')
             ->when(request('form') != '' && request('to'), function ($query) {
-                $fromDate = Carbon::parse(request('from'));
+                $fromDate = Carbon::parse(request('form'));
                 $toDate = Carbon::parse(request('to'));
                 $query->whereHas('couponused', function ($couponUsedQuery) use ($fromDate, $toDate) {
                     $couponUsedQuery->whereBetween('created_at', [$fromDate, $toDate]);
