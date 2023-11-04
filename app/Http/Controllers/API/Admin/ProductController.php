@@ -171,4 +171,15 @@ class ProductController extends Controller
             ]);
         }
     }
+    function deleteproductimage(int $id)
+    {
+        $productimge = ProductImage::find($id);
+
+        if (!$productimge) {
+            return responsejson('Not found', 'fail');
+        }
+        $productimge->delete();
+
+        return $this->response('Image deleted successfully');
+    }
 }
