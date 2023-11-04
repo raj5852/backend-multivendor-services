@@ -256,7 +256,7 @@ Route::middleware(['auth:sanctum', 'isAPIAdmin'])->group(function () {
         Route::get('vendor-products-edit-request-view/{id}',[VendorProductController::class,'productview']);
         Route::post('vendor-products-edit-request-status/{id}',[VendorProductController::class,'productstatus']);
         Route::post('product-update/{productid}',[AdminProductController::class,'productupdate']);
-        Route::post('product-image-delete/{id}',[AdminProductController::class,'deleteproductimage']);
+        Route::delete('product-image-delete/{id}',[AdminProductController::class,'deleteproductimage']);
     });
 
 });
