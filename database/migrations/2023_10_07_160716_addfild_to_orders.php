@@ -15,8 +15,8 @@ return new class extends Migration
     {
         Schema::table('orders', function (Blueprint $table) {
             $table->string('order_id')->nullable();
-            $table->float('afi_amount')->nullable();
-            $table->float('product_amount')->nullable();
+            $table->float('afi_amount',20)->nullable();
+            $table->float('product_amount',20)->nullable();
             $table->unsignedBigInteger('category_id');
             $table->integer('qty')->nullable();
         });

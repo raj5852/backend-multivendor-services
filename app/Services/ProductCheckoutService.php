@@ -80,7 +80,7 @@ class ProductCheckoutService
                 'address' => $data['address'],
                 'variants' => json_encode($data['variants']),
                 'afi_amount' => $afi_amount,
-                'product_amount' => $cart->product_price * $totalqty,
+                'product_amount' => convertfloat($cart->product_price)  * convertfloat($totalqty),
                 'status' =>  $status,
                 'category_id' => $categoryId,
                 'qty' => $totalqty,

@@ -181,7 +181,9 @@ class ProductController extends Controller
                 'status' => 200,
                 'product' => $vendorproduct,
                 'vendor_all_color'=>Color::where(['user_id'=> $product->user_id,'status'=>'active'])->get(),
-                'vendor_all_size'=>Size::where(['user_id'=> $product->user_id,'status'=>'active'])->get()
+                'vendor_all_size'=>Size::where(['user_id'=> $product->user_id,'status'=>'active'])->get(),
+                'all_category_list'=>Category::where('status','active')->get(),
+                'all_subcategory_list'=>Subcategory::where('status','active')->get()
             ]);
         } else {
             return response()->json([
