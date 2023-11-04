@@ -24,14 +24,16 @@ class CouponController extends Controller
         $data = Coupon::query()
             ->latest()
             ->with('user:id,name,email')
-            ->when(request('form') != '' && request('to'), function ($query) {
+            ->when((request('form') != '') && request('to') != '', function ($query) {
                 $fromDate = Carbon::parse(request('form'));
                 $toDate = Carbon::parse(request('to'));
-                $query->whereHas('couponused', function ($couponUsedQuery) use ($fromDate, $toDate) {
-                    $couponUsedQuery->whereBetween('created_at', [$fromDate, $toDate]);
-                })
-                    ->withCount('couponused')
-                    ->withSum('couponused', 'total_commission');
+
+                $query->withCount(['couponused' => function ($query) use ($fromDate, $toDate) {
+                    $query->whereBetween('created_at', [$fromDate, $toDate]);
+                }])
+                    ->withSum(['couponused' => function ($query) use ($fromDate, $toDate) {
+                        $query->whereBetween('created_at', [$fromDate, $toDate]);
+                    }], 'total_commission');
             }, function ($query) {
                 $query->withCount('couponused')
                     ->withSum('couponused', 'total_commission');
