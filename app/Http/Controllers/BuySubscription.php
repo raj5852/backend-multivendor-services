@@ -32,7 +32,7 @@ class BuySubscription extends Controller
     function coupon(CouponApplyRequest $request)
     {
         $validateData = $request->validated();
-        $coupon = ModelsCoupon::where('name', $validateData['name'])->first();
+        $coupon = ModelsCoupon::where('name', $validateData['name'])->select('id','amount','type')->first();
         return $this->response($coupon);
     }
 

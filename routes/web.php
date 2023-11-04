@@ -49,7 +49,9 @@ Route::get('seed', function () {
 
 
 Route::get('demo', function () {
-    return uniqid('OR');
+
+    return User::select('id','name')->first();
+
 });
 
 
