@@ -20,24 +20,11 @@ class CouponController extends Controller
      */
     public function index()
     {
-        // $data =  Coupon::query()
-        //     ->latest()
-        //     ->with('user:id,name,email')
-        //     ->when(request('frmo') != '' && request('to'), function ($query) {
-        //         $query->whereBetween('created_at', [Carbon::parse(request('frmo')) , Carbon::parse(request('to'))])
-        //             ->withCount('couponused')
-        //             ->withSum('couponused', 'total_commission');
-
-        //     }, function ($query) {
-        //         $query->withCount('couponused')
-        //             ->withSum('couponused', 'total_commission');
-        //     })
-        //     ->paginate();
 
         $data = Coupon::query()
             ->latest()
             ->with('user:id,name,email')
-            ->when(request('from') != '' && request('to'), function ($query) {
+            ->when(request('form') != '' && request('to'), function ($query) {
                 $fromDate = Carbon::parse(request('from'));
                 $toDate = Carbon::parse(request('to'));
                 $query->whereHas('couponused', function ($couponUsedQuery) use ($fromDate, $toDate) {
