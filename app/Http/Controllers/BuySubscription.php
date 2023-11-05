@@ -73,7 +73,7 @@ class BuySubscription extends Controller
             if ($coupon->type == 'flat') {
                 $amount = ($amount - $coupon->amount);
             } else {
-                $amount = ($amount / 100) * $coupon->amount;
+                $amount = ($amount - (($amount / 100) * $coupon->amount));
             }
         }
 
