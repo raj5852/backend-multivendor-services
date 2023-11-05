@@ -50,10 +50,14 @@ Route::get('seed', function () {
 
 
 Route::get('demo', function () {
-    $user = User::find(2)?->usersubscription;
+   return $user = User::find(2)?->usersubscription;
+
+    if(!$user){
+        return 0;
+    }
 
     $userdate = Carbon::parse($user?->expire_date);
-    $currentdate = Carbon::parse(now());
+    $currentdate = now();
 
     if ($userdate < now()) {
         $totaldueday =  $userdate->diffInDays($currentdate);
@@ -76,8 +80,8 @@ Route::get('demo', function () {
     } else {
         $totaldueable = 0;
     }
+
     return $totaldueable;
 });
 
 
-// Route::post('test', [TestController::class, 'index'])->name('test');

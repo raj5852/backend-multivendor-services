@@ -60,6 +60,24 @@ class SubscriptionRenewService
         }
 
 
+        if ($getusertype == 'affiliate') {
+
+            if ($getsubscription->service_qty < $servicecreated) {
+                $qty = $servicecreated - $getsubscription->service_qty;
+                return responsejson('You can not renew now. You should delete ' . $qty . ' service','fail');
+            }
+            $product_request = ProductDetails::where('user_id',auth()->id())->count();
+            $product_approve = ProductDetails::where(['user_id'=>auth()->id(),'status'=>1])->count();
+
+            if ($getsubscription->product_request < $product_request) {
+                return responsejson('You can not renew now. You should contact to admin','fail');
+            }
+
+            if ($getsubscription->product_approve < $product_approve) {
+                return responsejson('You can not renew now. You should contact to admin','fail');
+            }
+        }
+
 
         if ($validatedData['payment_method'] == 'my-wallet') {
             $user->balance = convertfloat($user->balance) - ($getsubscription->subscription_amount+$subscriptiondue);
