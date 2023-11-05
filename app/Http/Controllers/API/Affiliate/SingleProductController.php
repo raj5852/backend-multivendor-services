@@ -62,7 +62,9 @@ class SingleProductController extends Controller
     public function AffiliatoractiveProduct(int $id)
     {
         $product = Product::query()
-            ->with('category', 'subcategory', 'productImage', 'brand', 'vendor:id,name,image', 'productdetails')
+            ->with(['category', 'subcategory', 'productImage', 'brand', 'vendor:id,name,image', 'productdetails'=>function($query){
+                $query->where(['user_id'=>auth()->id(),'status'=>3]);
+            }])
             ->where('status', 'active')
             ->withAvg('productrating','rating')
             ->with('productrating.affiliate:id,name,image')
