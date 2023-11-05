@@ -50,8 +50,42 @@ Route::get('seed', function () {
 
 Route::get('demo', function () {
 
-    return User::select('id','name')->first();
+    $datas =  array(
+        'datas' =>
+        array(
+            0 =>
+            array(
+                'id' => 1,
+                'name' => 'Amaya',
+                'phone' => 752,
+                'email' => 'lesema@mailinator.com',
+                'city' => 'Qui ut et aliquid ex',
+                'address' => 'Obcaecati autem moll',
+                'vendor_id' => '2',
+                'product_id' => '37',
+                'variants' =>
+                array(
+                    0 =>
+                    array(
+                        'id' => 98,
+                        'qty' => '2',
+                        'size' => NULL,
+                        'color' => NULL,
+                        'variant_id' => NULL,
+                    ),
+                ),
+                'cart_id' => 93,
+                'amount' => '23',
+            ),
+        ),
+        'cart_id' => 93,
+        'payment_type' => 'my-wallet',
+    );
 
+     $mydatas =  $datas['datas'];
+    foreach($mydatas as $dt){
+        echo collect($dt['variants'])->sum('qty');
+    }
 });
 
 

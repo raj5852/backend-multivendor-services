@@ -19,6 +19,8 @@ class ProductCheckoutService
 
     static   function store($cartId, $productid, $totalqty, $userid, $datas)
     {
+
+        info($datas);
         $cart = Cart::find($cartId);
         if (!$cart) {
             return false;
