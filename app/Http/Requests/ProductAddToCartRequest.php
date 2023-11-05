@@ -89,7 +89,7 @@ class ProductAddToCartRequest extends FormRequest
                         }
                         return true;
                     }
-                    if ($getproduct->qty < $value) {
+                    if ($getproduct?->qty < $value) {
                         $fail('Product quantity not available!');
                     }
 
