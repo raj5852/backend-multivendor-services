@@ -62,8 +62,8 @@ class SubscriptionRenewService
 
         if ($getusertype == 'affiliate') {
 
-            if ($getsubscription->service_qty < $servicecreated) {
-                $qty = $servicecreated - $getsubscription->service_qty;
+            if ($getsubscription->service_create < $servicecreated) {
+                $qty = $servicecreated - $getsubscription->service_create;
                 return responsejson('You can not renew now. You should delete ' . $qty . ' service','fail');
             }
             $product_request = ProductDetails::where('user_id',auth()->id())->count();
