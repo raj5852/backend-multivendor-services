@@ -19,7 +19,7 @@ class SubscriptionDueService
         }
 
         $userdate = Carbon::parse($user?->expire_date);
-        $currentdate = Carbon::parse(now());
+        $currentdate = now();
 
         if ($userdate < now()) {
             $totaldueday =  $userdate->diffInDays($currentdate);
