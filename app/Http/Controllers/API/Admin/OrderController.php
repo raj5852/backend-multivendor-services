@@ -256,7 +256,7 @@ class OrderController extends Controller
         if ($order) {
 
             $allData =    $order->load([
-                'product:id,specifications',
+                'product',
                 'product.category:id,name',
                 'product.subcategory:id,name',
                 'product.brand:id,name',

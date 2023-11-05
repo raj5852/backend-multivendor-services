@@ -299,7 +299,7 @@ class OrderController extends Controller
         $orders = Order::searchProduct()
             ->where('vendor_id', auth()->user()->id)
             ->where('status', Status::Hold->value)
-            ->with(['affiliator:id,name', 'vendor:id,name', 'product:id,name'])
+            ->with(['affiliator:id,name', 'vendor:id,name', 'product:id,name,image'])
             ->latest()
             ->paginate(10)
             ->withQueryString();
