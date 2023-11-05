@@ -24,6 +24,7 @@ class OrderController extends Controller
 
     function store(ProductRequest $request)
     {
+        info(request()->all());
 
         $request->validated();
         $cart  = Cart::find(request('cart_id'));
