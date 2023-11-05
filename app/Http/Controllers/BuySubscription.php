@@ -10,6 +10,7 @@ use App\Models\User;
 use App\Models\UserSubscription;
 use App\Services\PaymentHistoryService;
 use App\Services\SosService;
+use App\Services\SubscriptionDueService;
 use App\Services\SubscriptionService;
 use Illuminate\Http\Request;
 
@@ -20,19 +21,23 @@ class BuySubscription extends Controller
         $subscription =  Subscription::findOr($id, function () {
             return responsejson('Not found', 404);
         });
-        $user = User::find(userid());
 
-        // if ($subscription->subscription_user_type !=  userrole($user->role_as)) {
-        //     return responsejson('This subscription is not for you');
-        // }
+        $user = User::find(auth()->id())->usersubscription;
+        $proviousdue = SubscriptionDueService::subscriptiondue(auth()->id());
 
-        return $this->response($subscription);
+        return response()->json(
+            [
+                'data' => 'success',
+                'message' => $subscription,
+                'previous_due' => $proviousdue
+            ]
+        );
     }
 
     function coupon(CouponApplyRequest $request)
     {
         $validateData = $request->validated();
-        $coupon = ModelsCoupon::where('name', $validateData['name'])->select('id','amount','type')->first();
+        $coupon = ModelsCoupon::where('name', $validateData['name'])->select('id', 'amount', 'type')->first();
         return $this->response($coupon);
     }
 

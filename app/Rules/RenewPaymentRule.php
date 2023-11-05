@@ -4,6 +4,7 @@ namespace App\Rules;
 
 use App\Models\Subscription;
 use App\Models\User;
+use App\Services\SubscriptionDueService;
 use Illuminate\Contracts\Validation\Rule;
 
 class RenewPaymentRule implements Rule
@@ -33,9 +34,9 @@ class RenewPaymentRule implements Rule
             $userbalance = $user->balance;
             if (request('package_id')) {
                 $subscriptionamount =  Subscription::find(request('package_id'))->subscription_amount;
+                $subscriptiondue = SubscriptionDueService::subscriptiondue(auth()->id());
 
-
-                if (convertfloat($userbalance) >= $subscriptionamount) {
+                if (convertfloat($userbalance) >= ($subscriptionamount + $subscriptiondue)) {
                     return true;
                 } else {
                     return false;

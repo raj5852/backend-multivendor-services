@@ -18,7 +18,17 @@ class SubscriptionRenewService
 {
     static  function renew($validatedData)
     {
+
+
         $user = User::find(userid());
+        if(!$user->usersubscription){
+            if($user->role_as == 2 || $user->role_as == 3){
+                return responsejson('You have not subscription.','fail');
+            }
+        }
+        // subscription due balance
+        $subscriptiondue = SubscriptionDueService::subscriptiondue(auth()->id());
+
         $subscriptionid = $validatedData['package_id'];
         $trxid = uniqid();
         $getsubscription = Subscription::find($subscriptionid);
@@ -52,7 +62,7 @@ class SubscriptionRenewService
 
 
         if ($validatedData['payment_method'] == 'my-wallet') {
-            $user->balance = convertfloat($user->balance) - $getsubscription->subscription_amount;
+            $user->balance = convertfloat($user->balance) - ($getsubscription->subscription_amount+$subscriptiondue);
             $user->save();
             return  self::subscriptionadd($user, $subscriptionid, $trxid, 'My wallet', 'Renew');
         }
@@ -70,8 +80,8 @@ class SubscriptionRenewService
                 'info' => $validatedData,
             ]);
 
-
-            return AamarPayService::gateway($getsubscription->subscription_amount, $trxid, 'renew', $successurl);
+            $price = $getsubscription->subscription_amount + $subscriptiondue;
+            return AamarPayService::gateway($price, $trxid, 'renew', $successurl);
         }
     }
 

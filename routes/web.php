@@ -7,6 +7,7 @@ use App\Models\Coupon;
 use App\Models\Product;
 use App\Models\SupportBox;
 use App\Models\User;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -49,65 +50,33 @@ Route::get('seed', function () {
 
 
 Route::get('demo', function () {
-   $datas  = array (
-        0 =>
-        array (
-          'id' => 1,
-          'name' => 'Bruno',
-          'phone' => 207,
-          'email' => 'wowilag@mailinator.com',
-          'city' => 'Magnam ex perspiciat',
-          'address' => 'Excepteur aliquid qu',
-          'vendor_id' => '2',
-          'product_id' => '37',
-          'variants' =>
-          array (
-            0 =>
-            array (
-              'id' => 99,
-              'qty' => '1',
-              'size' => NULL,
-              'color' => NULL,
-              'variant_id' => NULL,
-            ),
-          ),
-          'cart_id' => 94,
-          'amount' => '23',
-        ),
-        1 =>
-        array (
-          'id' => 2,
-          'name' => 'Imelda',
-          'phone' => 123,
-          'email' => 'dacys@mailinator.com',
-          'city' => 'Eveniet alias solut',
-          'address' => 'In qui quo omnis par',
-          'vendor_id' => '2',
-          'product_id' => '37',
-          'cart_id' => 94,
-          'amount' => '23',
-          'variants' =>
-          array (
-            0 =>
-            array (
-              'id' => 99,
-              'qty' => '1',
-              'size' => NULL,
-              'color' => NULL,
-              'variant_id' => NULL,
-            ),
-          ),
-        ),
-    );
+    $user = User::find(2)?->usersubscription;
 
-    foreach($datas as $data){
-      $totalqty =  collect($data['variants'])->sum('qty');
+    $userdate = Carbon::parse($user?->expire_date);
+    $currentdate = Carbon::parse(now());
+
+    if ($userdate < now()) {
+        $totaldueday =  $userdate->diffInDays($currentdate);
+        $usersubscription =  $user->subscription;
+        $userpackagetype =  $usersubscription?->subscription_package_type;
+
+        if ($totaldueday < 30) {
+            $totaldueday = 30;
+        }
+
+        if ($userpackagetype == 'monthly') {
+            $amount = ($usersubscription->subscription_amount / 30);
+        } elseif ($userpackagetype == 'half_yearly') {
+            $amount = ($usersubscription->subscription_amount / 180); // 6 month;
+        } elseif ($userpackagetype == 'yearly') {
+            $amount = ($usersubscription->subscription_amount / 360); // 6 month;
+        }
+
+        $totaldueable = ($totaldueday * $amount);
+    } else {
+        $totaldueable = 0;
     }
-
-    //  $mydatas =  $datas['datas'];
-    // foreach($mydatas as $dt){
-    //     echo collect($dt['variants'])->sum('qty');
-    // }
+    return $totaldueable;
 });
 
 
