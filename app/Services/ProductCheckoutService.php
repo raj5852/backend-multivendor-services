@@ -17,7 +17,7 @@ use Illuminate\Support\Facades\DB;
 class ProductCheckoutService
 {
 
-    static   function store($cartId, $productid, $totalquantity, $userid, $datas)
+    static   function store($cartId, $productid, $totalquantity, $userid, $datas, $paymentprocess = 'aamarpay')
     {
 
         // info($datas);
@@ -113,6 +113,8 @@ class ProductCheckoutService
                 'status' => Status::Pending->value
             ]);
         }
+
+        PaymentHistoryService::store(uniqid(),($cart->amount * $totalquantity),$paymentprocess,'checkout','-','',$userid);
 
         DB::table('carts')->where('id', $cartId)->delete();
 
