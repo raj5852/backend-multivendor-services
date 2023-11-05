@@ -15,6 +15,7 @@ use App\Http\Controllers\API\ProfileDataController;
 use App\Http\Controllers\API\RechargeController;
 use App\Http\Controllers\API\ServiceOrderController;
 use App\Http\Controllers\API\ServiceRatingController;
+use App\Http\Controllers\API\SubscriptionAlertController;
 use App\Http\Controllers\API\SupportBoxCloseController;
 use App\Http\Controllers\API\SupportBoxController;
 
@@ -99,6 +100,7 @@ Route::middleware('auth:sanctum')->group(function () {
 
     Route::get('profile-data',[ProfileDataController::class,'profile']);
     Route::post('profile-data-update',[ProfileDataController::class,'profileupdate']);
+    Route::get('subscription-notification',[SubscriptionAlertController::class,'index']);
 
 });
 
