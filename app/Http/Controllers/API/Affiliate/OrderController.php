@@ -260,7 +260,7 @@ class OrderController extends Controller
             Order::query()
             ->with([
                 'productrating.affiliate',
-                'product:id,specifications',
+                'product',
                 'product.category:id,name',
                 'product.subcategory:id,name',
                 'product.brand:id,name',
