@@ -17,10 +17,10 @@ use Illuminate\Support\Facades\DB;
 class ProductCheckoutService
 {
 
-    static   function store($cartId, $productid, $totalqty, $userid, $datas)
+    static   function store($cartId, $productid, $totalquantity, $userid, $datas)
     {
 
-        info($datas);
+        // info($datas);
         $cart = Cart::find($cartId);
         if (!$cart) {
             return false;
@@ -30,6 +30,8 @@ class ProductCheckoutService
         $categoryId = $cart->category_id;
 
         foreach ($datas as $data) {
+            $totalqty = collect($data['variants'])->sum('qty');
+
             $is_unlimited =  1;
             if ($cart->purchase_type == 'single' || $product->is_connect_bulk_single == 1) {
                 $product->decrement('qty', $totalqty);

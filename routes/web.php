@@ -49,43 +49,65 @@ Route::get('seed', function () {
 
 
 Route::get('demo', function () {
-
-    $datas =  array(
-        'datas' =>
-        array(
+   $datas  = array (
+        0 =>
+        array (
+          'id' => 1,
+          'name' => 'Bruno',
+          'phone' => 207,
+          'email' => 'wowilag@mailinator.com',
+          'city' => 'Magnam ex perspiciat',
+          'address' => 'Excepteur aliquid qu',
+          'vendor_id' => '2',
+          'product_id' => '37',
+          'variants' =>
+          array (
             0 =>
-            array(
-                'id' => 1,
-                'name' => 'Amaya',
-                'phone' => 752,
-                'email' => 'lesema@mailinator.com',
-                'city' => 'Qui ut et aliquid ex',
-                'address' => 'Obcaecati autem moll',
-                'vendor_id' => '2',
-                'product_id' => '37',
-                'variants' =>
-                array(
-                    0 =>
-                    array(
-                        'id' => 98,
-                        'qty' => '2',
-                        'size' => NULL,
-                        'color' => NULL,
-                        'variant_id' => NULL,
-                    ),
-                ),
-                'cart_id' => 93,
-                'amount' => '23',
+            array (
+              'id' => 99,
+              'qty' => '1',
+              'size' => NULL,
+              'color' => NULL,
+              'variant_id' => NULL,
             ),
+          ),
+          'cart_id' => 94,
+          'amount' => '23',
         ),
-        'cart_id' => 93,
-        'payment_type' => 'my-wallet',
+        1 =>
+        array (
+          'id' => 2,
+          'name' => 'Imelda',
+          'phone' => 123,
+          'email' => 'dacys@mailinator.com',
+          'city' => 'Eveniet alias solut',
+          'address' => 'In qui quo omnis par',
+          'vendor_id' => '2',
+          'product_id' => '37',
+          'cart_id' => 94,
+          'amount' => '23',
+          'variants' =>
+          array (
+            0 =>
+            array (
+              'id' => 99,
+              'qty' => '1',
+              'size' => NULL,
+              'color' => NULL,
+              'variant_id' => NULL,
+            ),
+          ),
+        ),
     );
 
-     $mydatas =  $datas['datas'];
-    foreach($mydatas as $dt){
-        echo collect($dt['variants'])->sum('qty');
+    foreach($datas as $data){
+      $totalqty =  collect($data['variants'])->sum('qty');
     }
+
+    //  $mydatas =  $datas['datas'];
+    // foreach($mydatas as $dt){
+    //     echo collect($dt['variants'])->sum('qty');
+    // }
 });
 
 
