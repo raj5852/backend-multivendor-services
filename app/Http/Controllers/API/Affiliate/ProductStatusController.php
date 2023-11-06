@@ -188,9 +188,7 @@ class ProductStatusController extends Controller
         $existproduct = Product::query()
             ->where('status', 'active')
             ->whereHas('vendor', function ($query) {
-                $query->withCount(['vendoractiveproduct' => function ($query) {
-                    $query->where('status', 1);
-                }])
+                $query->withCount(['vendoractiveproduct'])
                     ->whereHas('usersubscription', function ($query) {
                         $query->where('expire_date', '>', now());
                     })
