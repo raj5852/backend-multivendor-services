@@ -12,6 +12,7 @@ class RenewController extends Controller
 {
     function store(RenewRequest $request)
     {
+
      $validatedData =  $request->validated();
      return   SubscriptionRenewService::renew($validatedData);
     }

@@ -33,7 +33,7 @@ class SubscriptionRenewService
         $trxid = uniqid();
         $getsubscription = Subscription::find($subscriptionid);
 
-        $getusertype  = userrole($user->id);
+        $getusertype  = userrole($user->role_as);
         $servicecreated = VendorService::where('user_id', auth()->id())->count();
 
         if ($getusertype == 'vendor') {
