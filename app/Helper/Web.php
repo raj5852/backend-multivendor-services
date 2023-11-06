@@ -155,7 +155,7 @@ function isactivemembership($userid = null)
     $usersubscription =  UserSubscription::where(['user_id' => $userid])->first();
     $sub = Subscription::find($usersubscription->subscription_id);
     if ($sub->subscription_amount != 0) {
-        $date =  Carbon::parse($usersubscription->expire_date)->addMonth();
+        $date =  Carbon::parse($usersubscription->expire_date)->addMonth(1);
         if ($date > now()) {
             return 1;
         }
