@@ -10,13 +10,10 @@ class Product extends Model
 {
     use HasFactory;
 
-
-
     public function category()
     {
         return $this->belongsTo(Category::class, 'category_id', 'id');
     }
-
 
     public function subcategory()
     {
@@ -27,8 +24,6 @@ class Product extends Model
     {
         return $this->belongsTo(Brand::class, 'brand_id', 'id');
     }
-
-
 
     public function colors()
     {

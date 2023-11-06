@@ -17,18 +17,24 @@ class ProductStatusController extends Controller
             ->where('status', 'active')
             ->when(request('search'), fn ($q, $name) => $q->where('name', 'like', "%{$name}%"))
             ->whereHas('vendor', function ($query) {
-                $query->withCount(['vendoractiveproduct as activevendorproduct' => function ($query) {
-                    $query->where('status', 1);
-                }])
-                    ->withCount('vendoractiveproduct')
-                    ->whereHas('usersubscription', function ($query) {
-                        $query->where('expire_date', '>', now());
+                $query->withCount('vendoractiveproduct')
+                    ->whereHas('usersubscriptions', function ($query) {
+                        $query->whereHas('subscription', function ($query) {
+                            $query->where(function ($query) {
+                                $query->where('plan_type', 'freemium')
+                                    ->where('expire_date', '>', now());
+                            })
+                                ->orwhere(function ($query) {
+                                    $query->where('plan_type', '!=', 'freemium')
+                                        ->where('expire_date', '>', now()->subMonth(1));
+                                });
+                        });
                     })
                     ->withSum('usersubscription', 'affiliate_request')
                     ->having('vendoractiveproduct_count', '<', \DB::raw('usersubscription_sum_affiliate_request'));
             })
             ->whereDoesntHave('productdetails', function ($query) {
-                $query->where('user_id', auth()->user()->id);
+                $query->where('user_id', auth()->id());
             })
             ->latest()
             ->paginate(10)
