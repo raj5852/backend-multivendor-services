@@ -22,7 +22,20 @@ class SupportBoxController extends Controller
      */
     public function index()
     {
-        $data = SupportBox::where('user_id', auth()->user()->id)->with('latestTicketreplay')->latest()->paginate(10);
+        $datas =  SupportBox::where('user_id', 2)
+            ->withCount(['ticketreplay as total_admin_replay' => function ($query) {
+                $query->where('user_id', 1);
+            }])
+            ->with('latestTicketreplay')
+            ->latest()
+            ->paginate(10);
+
+        foreach ($datas as $data) {
+            if ($data->total_admin_replay <= 0) {
+                $data->latest_ticketreplay == null;
+            }
+        }
+
         return $this->response($data);
     }
 
@@ -52,8 +65,8 @@ class SupportBoxController extends Controller
             return responsejson('Not found', 'fail');
         }
 
-        $data =  $supportBox->load(['ticketreplay'=>function($query){
-            $query->with(['file','user']);
+        $data =  $supportBox->load(['ticketreplay' => function ($query) {
+            $query->with(['file', 'user']);
         }]);
 
         return $this->response($data);

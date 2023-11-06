@@ -8,18 +8,21 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class SupportBox extends Model
 {
-    use HasFactory,SoftDeletes;
+    use HasFactory, SoftDeletes;
 
     protected $guarded = [];
 
-    function user(){
+    function user()
+    {
         return $this->belongsTo(User::class);
     }
 
-    function ticketreplay(){
+    function ticketreplay()
+    {
         return $this->hasMany(TicketReply::class);
     }
     function latestTicketreplay(){
         return $this->hasOne(TicketReply::class,'support_box_id')->latestOfMany();
     }
+
 }
