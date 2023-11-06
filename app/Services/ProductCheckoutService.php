@@ -20,7 +20,6 @@ class ProductCheckoutService
     static   function store($cartId, $productid, $totalquantity, $userid, $datas, $paymentprocess = 'aamarpay')
     {
 
-        // info($datas);
         $cart = Cart::find($cartId);
         if (!$cart) {
             return false;
