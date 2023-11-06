@@ -29,7 +29,7 @@ Route::get('/', function () {
     return "API for SOS projec :)";
 });
 
-Auth::routes();
+// Auth::routes();
 
 
 Route::get('migrate', function () {

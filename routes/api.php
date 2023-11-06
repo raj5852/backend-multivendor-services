@@ -116,7 +116,7 @@ Route::prefix('aaparpay')->group(function () {
 
 
     Route::post('fail', [AamarpayController::class, 'fail']);
-    Route::post('cancel', [AamarpayController::class, 'cancel']);
+    Route::get('cancel', [AamarpayController::class, 'cancel']);
 });
 
 Route::post('/contact-store', [ContactController::class, 'store']);
