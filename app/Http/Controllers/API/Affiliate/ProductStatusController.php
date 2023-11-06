@@ -17,9 +17,10 @@ class ProductStatusController extends Controller
             ->where('status', 'active')
             ->when(request('search'), fn ($q, $name) => $q->where('name', 'like', "%{$name}%"))
             ->whereHas('vendor', function ($query) {
-                $query->withCount(['vendoractiveproduct' => function ($query) {
+                $query->withCount(['vendoractiveproduct as activevendorproduct' => function ($query) {
                     $query->where('status', 1);
                 }])
+                ->withCount('vendoractiveproduct')
                     ->whereHas('usersubscription', function ($query) {
                         $query->where('expire_date', '>', now());
                     })
