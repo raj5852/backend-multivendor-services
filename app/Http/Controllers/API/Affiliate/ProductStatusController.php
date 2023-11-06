@@ -17,7 +17,9 @@ class ProductStatusController extends Controller
             ->where('status', 'active')
             ->when(request('search'), fn ($q, $name) => $q->where('name', 'like', "%{$name}%"))
             ->whereHas('vendor', function ($query) {
-                $query->withCount('vendoractiveproduct')
+                $query->withCount(['vendoractiveproduct' => function ($query) {
+                    $query->where('status', 1);
+                }])
                     ->withwhereHas('usersubscription', function ($query) {
                         $query->where(function ($query) {
                             $query->whereHas('subscription', function ($query) {
@@ -95,8 +97,20 @@ class ProductStatusController extends Controller
                 $query->withCount(['vendoractiveproduct' => function ($query) {
                     $query->where('status', 1);
                 }])
-                    ->whereHas('usersubscription', function ($query) {
-                        $query->where('expire_date', '>', now()->addMonth(1));
+                    ->withwhereHas('usersubscription', function ($query) {
+
+                        $query->where(function ($query) {
+                            $query->whereHas('subscription', function ($query) {
+                                $query->where('plan_type', 'freemium');
+                            })
+                                ->where('expire_date', '>', now());
+                        })
+                            ->orwhere(function ($query) {
+                                $query->whereHas('subscription', function ($query) {
+                                    $query->where('plan_type', '!=', 'freemium');
+                                })
+                                    ->where('expire_date', '>', now()->subMonth(1));
+                            });
                     });
                 // ->withSum('usersubscription', 'affiliate_request')
                 // ->having('vendoractiveproduct_count', '<=', \DB::raw('usersubscription_sum_affiliate_request'));
@@ -116,7 +130,8 @@ class ProductStatusController extends Controller
         $userId = Auth::id();
         $searchTerm = request('search');
 
-        $active = ProductDetails::with('product')->where('user_id', $userId)->where('status', 1)
+        $active = ProductDetails::with('product')->where('user_id', $userId)
+            ->where('status', 1)
             ->whereHas('product')
             ->when($searchTerm != '', function ($query) use ($searchTerm) {
                 $query->whereHas('product', function ($query) use ($searchTerm) {
@@ -125,12 +140,22 @@ class ProductStatusController extends Controller
                     ->orWhere('uniqid', 'like', '%' . $searchTerm . '%');
             })
             ->whereHas('vendor', function ($query) {
-                $query->withCount(['vendoractiveproduct' => function ($query) {
-                    $query->where('status', 1);
-                }])
-                    ->whereHas('usersubscription', function ($query) {
-                        $query->where('expire_date', '<', now());
-                    });
+
+                $query->withwhereHas('usersubscription', function ($query) {
+
+                    $query->where(function ($query) {
+                        $query->whereHas('subscription', function ($query) {
+                            $query->where('plan_type', 'freemium');
+                        })
+                            ->where('expire_date', '<', now());
+                    })
+                        ->orwhere(function ($query) {
+                            $query->whereHas('subscription', function ($query) {
+                                $query->where('plan_type', '!=', 'freemium');
+                            })
+                                ->where('expire_date', '<', now()->subMonth(1));
+                        });
+                });
             })
             ->latest()
             ->paginate(10)
@@ -198,7 +223,9 @@ class ProductStatusController extends Controller
         $existproduct = Product::query()
             ->where('status', 'active')
             ->whereHas('vendor', function ($query) {
-                $query->withCount(['vendoractiveproduct'])
+                $query->withCount(['vendoractiveproduct' => function ($query) {
+                    $query->where('status', 1);
+                }])
                     ->withwhereHas('usersubscription', function ($query) {
 
                         $query->where(function ($query) {
