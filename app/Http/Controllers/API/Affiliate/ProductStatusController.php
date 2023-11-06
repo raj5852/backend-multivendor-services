@@ -199,8 +199,20 @@ class ProductStatusController extends Controller
             ->where('status', 'active')
             ->whereHas('vendor', function ($query) {
                 $query->withCount(['vendoractiveproduct'])
-                    ->whereHas('usersubscription', function ($query) {
-                        $query->where('expire_date', '>', now());
+                    ->withwhereHas('usersubscription', function ($query) {
+
+                        $query->where(function ($query) {
+                            $query->whereHas('subscription', function ($query) {
+                                $query->where('plan_type', 'freemium');
+                            })
+                                ->where('expire_date', '>', now());
+                        })
+                            ->orwhere(function ($query) {
+                                $query->whereHas('subscription', function ($query) {
+                                    $query->where('plan_type', '!=', 'freemium');
+                                })
+                                    ->where('expire_date', '>', now()->subMonth(1));
+                            });
                     })
                     ->withSum('usersubscription', 'affiliate_request')
                     ->having('vendoractiveproduct_count', '<', \DB::raw('usersubscription_sum_affiliate_request'));
