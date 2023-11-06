@@ -23,14 +23,14 @@ class SupportBoxController extends Controller
     public function index()
     {
         $datas =  SupportBox::where('user_id', 2)
-            ->withCount(['ticketreplay as total_admin_replay' => function ($query) {
-                $query->where('user_id', 1);
-            }])
-            ->when('latest_ticketreplay' != 0, function ($query) {
-                $query->with('latestTicketreplay');
-            })
-            ->latest()
-            ->paginate(10);
+        ->withCount(['ticketreplay as total_admin_replay' => function ($query) {
+            $query->where('user_id', 1);
+        }])
+        ->when('total_admin_replay' != 0, function ($query) {
+            $query->with('latestTicketreplay');
+        })
+        ->latest()
+        ->paginate(10);
 
         return $this->response($datas);
     }
