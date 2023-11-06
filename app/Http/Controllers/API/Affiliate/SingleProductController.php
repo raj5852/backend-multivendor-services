@@ -95,7 +95,7 @@ class SingleProductController extends Controller
                             })
                                 ->where('expire_date', '>', now()->subMonth(1));
                         });
-                })
+                });
             })
             ->whereHas('productdetails', function ($query) {
                 $query->where('user_id', auth()->id());
