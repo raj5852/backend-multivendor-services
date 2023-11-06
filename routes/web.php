@@ -51,15 +51,5 @@ Route::get('seed', function () {
 
 Route::get('demo', function () {
 
-    $datas =  SupportBox::where('user_id', 2)
-            ->withCount(['ticketreplay as total_admin_replay' => function ($query) {
-                $query->where('user_id', 1);
-            }])
-            ->when('total_admin_replay' != 0, function ($query) {
-                $query->with('latestTicketreplay');
-            })
-            ->latest()
-            ->paginate(10);
 
-    return $datas;
 });
