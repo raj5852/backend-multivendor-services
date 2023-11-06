@@ -22,19 +22,15 @@ class SupportBoxController extends Controller
      */
     public function index()
     {
-        $datas =  SupportBox::where('user_id', auth()->id())
+        $datas =  SupportBox::where('user_id', 2)
             ->withCount(['ticketreplay as total_admin_replay' => function ($query) {
                 $query->where('user_id', 1);
             }])
-            ->with('latestTicketreplay')
+            ->when('latest_ticketreplay' != 0, function ($query) {
+                $query->with('latestTicketreplay');
+            })
             ->latest()
             ->paginate(10);
-
-        foreach ($datas as $data) {
-            if ($data->total_admin_replay == 0) {
-                $data->latest_ticketreplay == null;
-            }
-        }
 
         return $this->response($datas);
     }
