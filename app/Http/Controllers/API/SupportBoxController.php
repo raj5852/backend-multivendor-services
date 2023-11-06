@@ -31,7 +31,7 @@ class SupportBoxController extends Controller
             ->paginate(10);
 
         foreach ($datas as $data) {
-            if ($data->total_admin_replay <= 0) {
+            if ($data->total_admin_replay == 0) {
                 $data->latest_ticketreplay == null;
             }
         }
