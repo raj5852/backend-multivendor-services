@@ -179,12 +179,12 @@ class ProductStatusController extends Controller
         }
 
         if ($productecreateqty <=  $totalcreatedproduct) {
-            return responsejson('You can send product request more then ' . $productecreateqty . '.', 'fail');
+            return responsejson('You can not send product request more then ' . $productecreateqty . '.', 'fail');
         }
 
-        if ($getmembershipdetails?->product_approve <= $acceptableproduct) {
-            return responsejson('You product accept limit over.', 'fail');
-        }
+        // if ($getmembershipdetails?->product_approve <= $acceptableproduct) {
+        //     return responsejson('Vendor product accept limit over.', 'fail');
+        // }
 
         $existproduct = Product::query()
             ->where('status', 'active')
