@@ -36,7 +36,7 @@ class SupportBoxController extends Controller
             }
         }
 
-        return $this->response($data);
+        return $this->response($datas);
     }
 
     /**
