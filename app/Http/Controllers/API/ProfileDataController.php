@@ -18,8 +18,6 @@ class ProfileDataController extends Controller
         $user = User::find(auth()->id())
         ->load(['usersubscription.subscription:id,card_heading']);
 
-        $user->balance = number_format($user->balance);
-
         return response()->json([
             'status' => 200,
             'user' => $user
