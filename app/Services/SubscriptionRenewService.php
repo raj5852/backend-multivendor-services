@@ -113,7 +113,7 @@ class SubscriptionRenewService
         $usersubscriptionPlan = Subscription::find($userCurrentSubscription->subscription_id);
         $addMonth =  getmonth($getsubscription->subscription_package_type);
 
-        PaymentHistoryService::store($trxid, $getsubscription->subscription_amount, $payment_method, $transition_type, '-', null, $user->id);
+        PaymentHistoryService::store($trxid, $getsubscription->subscription_amount, $payment_method, $transition_type, '-', '', $user->id);
 
 
         if ($getsubscription->plan_type == $usersubscriptionPlan->plan_type) {

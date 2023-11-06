@@ -63,7 +63,7 @@ class AamarpayController extends Controller
         $subscriptionid =  $data['info']['package_id'];
         $trxid = $data->trxid;
         $payment_method = 'Aamarpay';
-        $transition_type = '-';
+        $transition_type = 'renew';
         SubscriptionRenewService::subscriptionadd($user, $subscriptionid, $trxid, $payment_method, $transition_type);
 
 
