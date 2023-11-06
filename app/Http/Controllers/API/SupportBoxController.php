@@ -22,7 +22,7 @@ class SupportBoxController extends Controller
      */
     public function index()
     {
-        $datas =  SupportBox::where('user_id', 2)
+        $datas =  SupportBox::where('user_id', auth()->id())
             ->withCount(['ticketreplay as total_admin_replay' => function ($query) {
                 $query->where('user_id', 1);
             }])
