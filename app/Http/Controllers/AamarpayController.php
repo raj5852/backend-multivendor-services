@@ -141,7 +141,7 @@ class AamarpayController extends Controller
 
     function fail()
     {
-        return response()->json('fai');
+        return redirect(config('app.maindomain'));
     }
 
     function cancel()
