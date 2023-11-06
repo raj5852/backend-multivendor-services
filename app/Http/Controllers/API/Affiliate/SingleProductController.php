@@ -40,10 +40,10 @@ class SingleProductController extends Controller
                     $query->where('status', 1);
                 }])
                     ->whereHas('usersubscription', function ($query) {
-                        $query->where('expire_date', '>', now());
-                    })
-                    ->withSum('usersubscription', 'affiliate_request')
-                    ->having('vendoractiveproduct_count', '<', \DB::raw('usersubscription_sum_affiliate_request'));
+                        $query->where('expire_date', '>', now()->addMonth(1));
+                    });
+                    // ->withSum('usersubscription', 'affiliate_request')
+                    // ->having('vendoractiveproduct_count', '<', \DB::raw('usersubscription_sum_affiliate_request'));
             })
             ->find($id);
         if ($product) {
