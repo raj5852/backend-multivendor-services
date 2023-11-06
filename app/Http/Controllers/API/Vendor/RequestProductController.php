@@ -180,7 +180,7 @@ class RequestProductController extends Controller
                             $query->where('expire_date', '>', now());
                         })
                         ->withSum('usersubscription', 'product_approve')
-                        ->having('affiliatoractiveproducts_count', '<', \DB::raw('usersubscription_sum_product_approve'));
+                        ->having('affiliatoractiveproducts_count', '<=', \DB::raw('usersubscription_sum_product_approve'));
                 });
 
             })
