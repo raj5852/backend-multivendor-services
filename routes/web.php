@@ -5,6 +5,7 @@ use App\Http\Controllers\TestController;
 use App\Models\AdminAdvertise;
 use App\Models\Coupon;
 use App\Models\Product;
+use App\Models\Subscription;
 use App\Models\SupportBox;
 use App\Models\User;
 use App\Services\SubscriptionDueService;
@@ -52,13 +53,7 @@ Route::get('seed', function () {
 
 Route::get('demo', function () {
 
-    // $userdate = Carbon::parse('06-12-2021');
-    // $currentdate = now();
-
-    // if ($userdate > now()) {
-    //  return   $totalday =  $currentdate->diffInDays($userdate);
-
-    // }
-    // SubscriptionDueService::usersubscription();
-
+    return Subscription::query()->findOr(1,function(){
+        return 0;
+    });
 });

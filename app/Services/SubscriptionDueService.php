@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Models\Subscription;
 use App\Models\User;
 use Carbon\Carbon;
 
@@ -62,8 +63,13 @@ class SubscriptionDueService
         if ($mainsubscription->plan_type == 'freemium') {
             return 0;
         }
+        $userseelctSubscription = Subscription::query()->findOr($packageId,function(){
+            return 0;
+        });
 
-
+        if($usersubscription->subscription_price  < $userseelctSubscription->subscription_amount){
+            return 0;
+        }
 
 
         $userdate = Carbon::parse($usersubscription->expire_date);
@@ -74,7 +80,6 @@ class SubscriptionDueService
             $totalday =  $currentdate->diffInDays($userdate);
 
             $userpackagetype =  $mainsubscription->subscription_package_type;
-
 
             if ($userpackagetype == 'monthly') {
                 $amount = ($mainsubscription->subscription_amount / 30);

@@ -21,42 +21,43 @@ class SubscriptionRenewService
 
 
         $user = User::find(userid());
-        if(!$user->usersubscription){
-            if($user->role_as == 2 || $user->role_as == 3){
-                return responsejson('You have not subscription.','fail');
+        if (!$user->usersubscription) {
+            if ($user->role_as == 2 || $user->role_as == 3) {
+                return responsejson('You have not subscription.', 'fail');
             }
         }
-        // subscription due balance
-        $subscriptiondue = SubscriptionDueService::subscriptiondue(auth()->id());
+
 
         $subscriptionid = $validatedData['package_id'];
         $trxid = uniqid();
         $getsubscription = Subscription::find($subscriptionid);
+
+        // subscription due balance - membership credit
+        $subscriptiondue = SubscriptionDueService::subscriptiondue(auth()->id()) - SubscriptionDueService::membership_credit(auth()->id(), $subscriptionid);
 
         $getusertype  = userrole($user->role_as);
         $servicecreated = VendorService::where('user_id', auth()->id())->count();
 
         if ($getusertype == 'vendor') {
             $productcreated = Product::where('user_id', auth()->id())->count();
-            $affiliaterequest = ProductDetails::where(['vendor_id'=> auth()->id(),'status'=>1])->count();
+            $affiliaterequest = ProductDetails::where(['vendor_id' => auth()->id(), 'status' => 1])->count();
 
 
             if ($getsubscription->service_qty < $servicecreated) {
                 $qty = $servicecreated - $getsubscription->service_qty;
-                return responsejson('You can not renew now. You should delete ' . $qty . ' service','fail');
+                return responsejson('You can not renew now. You should delete ' . $qty . ' service', 'fail');
             }
 
 
             if ($getsubscription->product_qty < $productcreated) {
                 $qty = $productcreated - $getsubscription->product_qty;
-                return responsejson('You can not renew now. You should delete ' . $qty . ' product ','fail');
+                return responsejson('You can not renew now. You should delete ' . $qty . ' product ', 'fail');
             }
 
-            if($getsubscription->affiliate_request < $affiliaterequest){
+            if ($getsubscription->affiliate_request < $affiliaterequest) {
                 $qty = $affiliaterequest - $getsubscription->affiliate_request;
-                return responsejson('You can not renew now. You should delete ' . $qty . ' product request ','fail');
+                return responsejson('You can not renew now. You should delete ' . $qty . ' product request ', 'fail');
             }
-
         }
 
 
@@ -64,23 +65,23 @@ class SubscriptionRenewService
 
             if ($getsubscription->service_create < $servicecreated) {
                 $qty = $servicecreated - $getsubscription->service_create;
-                return responsejson('You can not renew now. You should delete ' . $qty . ' service','fail');
+                return responsejson('You can not renew now. You should delete ' . $qty . ' service', 'fail');
             }
-            $product_request = ProductDetails::where('user_id',auth()->id())->count();
-            $product_approve = ProductDetails::where(['user_id'=>auth()->id(),'status'=>1])->count();
+            $product_request = ProductDetails::where('user_id', auth()->id())->count();
+            $product_approve = ProductDetails::where(['user_id' => auth()->id(), 'status' => 1])->count();
 
             if ($getsubscription->product_request < $product_request) {
-                return responsejson('You can not renew now. You should contact to admin','fail');
+                return responsejson('You can not renew now. You should contact to admin', 'fail');
             }
 
             if ($getsubscription->product_approve < $product_approve) {
-                return responsejson('You can not renew now. You should contact to admin','fail');
+                return responsejson('You can not renew now. You should contact to admin', 'fail');
             }
         }
 
 
         if ($validatedData['payment_method'] == 'my-wallet') {
-            $user->balance = convertfloat($user->balance) - ($getsubscription->subscription_amount+$subscriptiondue);
+            $user->balance = convertfloat($user->balance) - ($getsubscription->subscription_amount + $subscriptiondue);
             $user->save();
             return  self::subscriptionadd($user, $subscriptionid, $trxid, 'My wallet', 'Renew');
         }
@@ -131,6 +132,7 @@ class SubscriptionRenewService
             $userCurrentSubscription->product_request = $getsubscription->product_request;
             $userCurrentSubscription->product_approve = $getsubscription->product_approve;
             $userCurrentSubscription->service_create = $getsubscription->service_create;
+            $userCurrentSubscription->subscription_price = $getsubscription->subscription_amount;
             $userCurrentSubscription->save();
 
             return responsejson('Renew successfully');

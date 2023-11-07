@@ -23,6 +23,7 @@ class SubscriptionService
         $userSubscription->trxid = $trxid;
         $userSubscription->subscription_id = $subscription->id;
         $userSubscription->expire_date = membershipexpiredate($subscription->subscription_package_type);
+        $userSubscription->subscription_price =  $subscription->subscription_amount;
 
         if ($subscription->subscription_user_type == "vendor") {
             $userSubscription->service_qty = $subscription->service_qty;
