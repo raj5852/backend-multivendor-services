@@ -86,7 +86,6 @@ class SubscriptionRenewService
                 }
             }
         }
-        return true;
 
 
         if ($validatedData['payment_method'] == 'my-wallet') {
