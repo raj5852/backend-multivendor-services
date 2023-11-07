@@ -55,16 +55,14 @@ class CartController extends Controller
             $totalproductprice = $product_price * $totalqty;
             $total_affiliate_commission = $affi_commission * $totalqty;
 
-            if($getproduct->single_advance_payment_type == 'percent'){
-                $advancepayment = ($product_price / 100) *$getproduct->advance_payment;
-            }else{
+            if ($getproduct->single_advance_payment_type == 'percent') {
+                $advancepayment = ($product_price / 100) * $getproduct->advance_payment;
+            } else {
                 $advancepayment = $getproduct->advance_payment;
             }
 
 
             $totaladvancepayment = $getproduct->advance_payment * $totalqty;
-
-
         } else {
             $bulkdetails =  collect($getproduct->selling_details)->where('min_bulk_qty', '<=', $totalqty)->max();
             $product_price = $bulkdetails['min_bulk_price'];
@@ -72,16 +70,16 @@ class CartController extends Controller
 
             if ($bulkdetails['bulk_commission_type'] == 'percent') {
                 $bulk_commission =  ($product_price / 100) * $bulkdetails['bulk_commission'];
-            }else{
+            } else {
                 $bulk_commission =  $bulkdetails['bulk_commission'];
             }
 
             $total_affiliate_commission = $bulk_commission * $totalqty;
             $affi_commission = $bulk_commission;
 
-            if($bulkdetails['advance_payment_type'] == 'percent'){
+            if ($bulkdetails['advance_payment_type'] == 'percent') {
                 $advancepayment =  ($product_price / 100) * $bulkdetails['advance_payment'];
-            }else{
+            } else {
                 $advancepayment =   $bulkdetails['advance_payment'];
             }
 
@@ -214,8 +212,20 @@ class CartController extends Controller
 
                 $query->where('status', 'active')
                     ->whereHas('vendor', function ($query) {
-                        $query->whereHas('vendorsubscription', function ($query) {
-                            $query->where('expire_date', '>', now());
+                        $query->withwhereHas('usersubscription', function ($query) {
+
+                            $query->where(function ($query) {
+                                $query->whereHas('subscription', function ($query) {
+                                    $query->where('plan_type', 'freemium');
+                                })
+                                    ->where('expire_date', '>', now());
+                            })
+                                ->orwhere(function ($query) {
+                                    $query->whereHas('subscription', function ($query) {
+                                        $query->where('plan_type', '!=', 'freemium');
+                                    })
+                                        ->where('expire_date', '>', now()->subMonth(1));
+                                });
                         });
                     });
             })
