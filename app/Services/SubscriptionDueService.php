@@ -26,16 +26,16 @@ class SubscriptionDueService
             $usersubscription =  $user->subscription;
             $userpackagetype =  $usersubscription?->subscription_package_type;
 
-            if ($totaldueday < 30) {
+            if ($totaldueday >= 30) {
                 $totaldueday = 30;
             }
 
             if ($userpackagetype == 'monthly') {
                 $amount = ($usersubscription->subscription_amount / 30);
             } elseif ($userpackagetype == 'half_yearly') {
-                $amount = ($usersubscription->subscription_amount / 180); // 6 month;
+                $amount = ($usersubscription->subscription_amount / 180);
             } elseif ($userpackagetype == 'yearly') {
-                $amount = ($usersubscription->subscription_amount / 360); // 6 month;
+                $amount = ($usersubscription->subscription_amount / 360);
             }
 
             $totaldueable = ($totaldueday * $amount);
