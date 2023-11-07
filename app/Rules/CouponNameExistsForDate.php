@@ -34,6 +34,7 @@ class CouponNameExistsForDate implements Rule
         ->having('limitation', '>', \DB::raw('couponused_count'))
         ->exists();
     }
+
     /**
      * Get the validation error message.
      *

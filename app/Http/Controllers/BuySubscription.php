@@ -36,20 +36,10 @@ class BuySubscription extends Controller
         );
     }
 
-    function coupon()
+    function coupon(CouponApplyRequest $request)
     {
-        // $validateData = $request->validated();
-        // $coupon = ModelsCoupon::where('name', $validateData['name'])->select('id', 'amount', 'type')->first();
-        $coupon =  ModelsCoupon::query()
-            ->where(['name' => request('name'), 'status' => 'active'])
-            ->whereDate('expire_date', '>', now())
-            ->withCount('couponused')
-            ->having('limitation', '>', \DB::raw('couponused_count'))
-            ->first();
-        if (!$coupon) {
-            return responsejson('Coupon is invalid','fail');
-        }
-
+        $validateData = $request->validated();
+        $coupon = ModelsCoupon::where('name', $validateData['name'])->select('id', 'amount', 'type')->first();
         return $this->response($coupon);
     }
 

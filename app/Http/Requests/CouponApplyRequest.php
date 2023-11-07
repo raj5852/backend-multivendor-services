@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\Models\Coupon;
 use App\Rules\CouponNameExistsForDate;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
@@ -28,7 +29,17 @@ class CouponApplyRequest extends FormRequest
     public function rules()
     {
         return [
-            'name'=>['required',Rule::exists('coupons','name'),new CouponNameExistsForDate()]
+            'name' => ['required', function ($attribute, $value, $fail) {
+                $coupon =  Coupon::query()
+                    ->where(['name' => $value, 'status' => 'active'])
+                    ->whereDate('expire_date', '>', now())
+                    ->withCount('couponused')
+                    ->having('limitation', '>', \DB::raw('couponused_count'))
+                    ->exists();
+                if (!$coupon) {
+                    return $fail('Coupon is invalid!');
+                }
+            }]
         ];
     }
 
