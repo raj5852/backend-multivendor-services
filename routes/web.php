@@ -70,13 +70,12 @@ Route::get('demo', function () {
     // ->exists();
 
 
-  return  $couponmodel =  Coupon::query()
-    ->where(['name' => 'test222', 'status' => 'active'])
+  return   $coupon =  Coupon::query()
+    ->where(['name' => request('name'), 'status' => 'active'])
     ->whereDate('expire_date', '>', now())
     ->withCount('couponused')
     ->having('limitation', '>', \DB::raw('couponused_count'))
     ->first();
-
 
 
 });
