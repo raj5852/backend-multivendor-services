@@ -200,7 +200,7 @@ class OrderController extends Controller
                 }
 
 
-                $advancepayment =  AdvancePayment::where('order_id',$order->id)->exists();
+                $advancepayment =  AdvancePayment::where('order_id',$order->id)->first();
 
                 if($advancepayment){
                      CancelOrderBalance::create([
