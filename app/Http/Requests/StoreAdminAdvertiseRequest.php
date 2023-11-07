@@ -55,9 +55,13 @@ class StoreAdminAdvertiseRequest extends FormRequest
             'last_description'  => ['required'],
             'status'  => ['required', 'in:pending,progress,cancel,complited'],
 
+            // 'advertise_audience_files' => 'required|array',
+            // 'location_files'   => 'required|array',
             'advertise_audience_files' => 'required|array',
+            'advertise_audience_files.*' => 'image|mimes:jpeg,png,jpg,gif|max:20480', // You can customize the allowed image types and maximum file size.
+            'location_files' => 'required|array',
+            'location_files.*' => 'image|mimes:jpeg,png,jpg,gif|max:20480',
 
-            'location_files'   => 'required|array',
             'placements'=>'required',
             'feeds' => 'nullable',
             'story_reels' => 'nullable',
