@@ -47,7 +47,7 @@ class BuySubscription extends Controller
             ->having('limitation', '>', \DB::raw('couponused_count'))
             ->first();
         if (!$coupon) {
-            return responsejson('Coupon is invalid');
+            return responsejson('Coupon is invalid','fail');
         }
 
         return $this->response($coupon);
