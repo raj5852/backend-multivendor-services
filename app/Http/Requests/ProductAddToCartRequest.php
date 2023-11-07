@@ -37,12 +37,30 @@ class ProductAddToCartRequest extends FormRequest
                         'status' => 1
                     ]);
                 })
+                ->withwhereHas('vendor', function ($query) {
+
+                    $query->withwhereHas('usersubscription', function ($query) {
+
+                        $query->where(function ($query) {
+                            $query->whereHas('subscription', function ($query) {
+                                $query->where('plan_type', 'freemium');
+                            })
+                                ->where('expire_date', '>', now());
+                        })
+                            ->orwhere(function ($query) {
+                                $query->whereHas('subscription', function ($query) {
+                                    $query->where('plan_type', '!=', 'freemium');
+                                })
+                                    ->where('expire_date', '>', now()->subMonth(1));
+                            });
+                    });
+                })
                 ->where('status', 'active')
                 ->first();
         }
 
         return [
-            'product_id' => ['required',Rule::exists('products','id'), function ($attribute, $value, $fail) use ($getproduct) {
+            'product_id' => ['required', Rule::exists('products', 'id'), function ($attribute, $value, $fail) use ($getproduct) {
                 if (request('product_id') != '') {
                     if (!$getproduct) {
                         $fail('Product not found!');
@@ -92,7 +110,6 @@ class ProductAddToCartRequest extends FormRequest
                     if ($getproduct?->qty < $value) {
                         $fail('Product quantity not available!');
                     }
-
                 }
             ]
         ];
