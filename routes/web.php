@@ -13,7 +13,7 @@ use App\Services\SubscriptionDueService;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\DB;
+
 use Illuminate\Support\Facades\Route;
 
 
@@ -54,26 +54,20 @@ Route::get('seed', function () {
 
 Route::get('demo', function () {
 
-    // return Coupon::query()
-    // ->where('name', 'vendor0511')
-    // ->where('expire_date', '>', now())
-    // ->whereColumn('limitation', '>', 'couponused_count')
-    // ->exists();
-
-
-    return Coupon::query()
-    ->where('name', 'vendor0511')
+    return   Coupon::query()
+    ->where(['name'=> 'coupon','status'=>'active'])
     ->whereDate('expire_date', '>', now())
     ->withCount('couponused')
     ->having('limitation', '>', \DB::raw('couponused_count'))
-    ->select('id')
     ->exists();
 
-    return Coupon::where('name', 'vendor0511')
-    ->whereDate('expire_date', '>', now())
-    ->withCount('couponused')
-    ->has('couponused', '>', 'limitation')
-    ->first();
+
+    // return Coupon::query()
+    // ->where('name', 'vendor0511')
+    // ->whereDate('expire_date', '>', now())
+    // ->withCount('couponused')
+    // ->having('limitation', '>', \DB::raw('couponused_count'))
+    // ->exists();
 
 
 });
