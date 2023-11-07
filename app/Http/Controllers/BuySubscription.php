@@ -24,12 +24,14 @@ class BuySubscription extends Controller
 
         $user = User::find(auth()->id())->usersubscription;
         $proviousdue = SubscriptionDueService::subscriptiondue(auth()->id());
+        $membership_credit = SubscriptionDueService::membership_credit(auth()->id(),$subscription->id);
 
         return response()->json(
             [
                 'data' => 'success',
                 'message' => $subscription,
-                'previous_due' => $proviousdue
+                'previous_due' => $proviousdue,
+                'previous_credit' => $membership_credit,
             ]
         );
     }

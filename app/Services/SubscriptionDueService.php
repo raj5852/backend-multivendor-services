@@ -14,7 +14,10 @@ class SubscriptionDueService
     {
         $user = User::find($userid)?->usersubscription;
 
-        if(!$user){
+        if (!$user) {
+            return 0;
+        }
+        if ($user->subscription->plan_type == 'freemium') {
             return 0;
         }
 
@@ -43,5 +46,46 @@ class SubscriptionDueService
             $totaldueable = 0;
         }
         return $totaldueable;
+    }
+
+    static function membership_credit($userid, $packageId)
+    {
+        $usersubscription =  User::find($userid)?->vendorsubscription;
+        if (!$usersubscription) {
+            return 0;
+        }
+
+        if ($usersubscription->subscription_id == $packageId) {
+            return 0;
+        }
+
+        if ($usersubscription->subscription->plan_type == 'freemium') {
+            return 0;
+        }
+
+
+
+
+        $userdate = Carbon::parse($usersubscription->expire_date);
+        $currentdate = now();
+
+        if ($userdate > now()) {
+
+            $totalday =  $currentdate->diffInDays($userdate);
+
+            $userpackagetype =  $usersubscription?->subscription_package_type;
+
+
+            if ($userpackagetype == 'monthly') {
+                $amount = ($usersubscription->subscription_amount / 30);
+            } elseif ($userpackagetype == 'half_yearly') {
+                $amount = ($usersubscription->subscription_amount / 180);
+            } elseif ($userpackagetype == 'yearly') {
+                $amount = ($usersubscription->subscription_amount / 360);
+            }
+
+            return $totalday * $amount;
+        }
+       return 0;
     }
 }
