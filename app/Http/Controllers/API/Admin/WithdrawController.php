@@ -4,6 +4,7 @@ namespace App\Http\Controllers\API\Admin;
 
 use App\Enums\Status;
 use App\Http\Controllers\Controller;
+use App\Models\User;
 use App\Models\Withdraw;
 use App\Services\PaymentHistoryService;
 use Illuminate\Http\Request;
@@ -94,6 +95,8 @@ class WithdrawController extends Controller
         }
 
         PaymentHistoryService::store(uniqid(),$withdraw->amount,'My wallet','Withdraw refund','+','',$withdraw->user_id);
+        User::find($withdraw->user_id)->increment('balance',$withdraw->amount);
+
         $withdraw->status = 'reject';
         $withdraw->save();
 
