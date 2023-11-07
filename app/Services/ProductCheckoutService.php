@@ -67,7 +67,7 @@ class ProductCheckoutService
                 $status = Status::Pending->value;
                 $vendor_balance->balance = ($vendor_balance->balance - $afi_amount);
                 $vendor_balance->save();
-                PaymentHistoryService::store(uniqid(), $afi_amount, 'My wallet', 'Affiliate commission','-','',$userid);
+                PaymentHistoryService::store(uniqid(), $afi_amount, 'My wallet', 'Affiliate commission','-','',$product->user_id);
 
             } else {
                 $status = Status::Hold->value;
