@@ -73,7 +73,7 @@ class SubscriptionDueService
 
             $totalday =  $currentdate->diffInDays($userdate);
 
-            $userpackagetype =  $usersubscription?->subscription_package_type;
+            $userpackagetype =  $usersubscription->subscription->subscription_package_type;
 
 
             if ($userpackagetype == 'monthly') {
