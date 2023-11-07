@@ -4,6 +4,7 @@ use App\Enums\Status;
 use App\Http\Controllers\TestController;
 use App\Models\AdminAdvertise;
 use App\Models\Coupon;
+use App\Models\CouponUsed;
 use App\Models\Product;
 use App\Models\Subscription;
 use App\Models\SupportBox;
@@ -54,10 +55,18 @@ Route::get('seed', function () {
 
 Route::get('demo', function () {
 
-    return $coupon =  Coupon::query()
-        ->where(['name' => request('name'), 'status' => 'active'])
+    $coupon =  Coupon::query()
+        ->where(['name' => 'vendor0511', 'status' => 'active'])
         ->whereDate('expire_date', '>', now())
         ->withCount('couponused')
-        ->havingRaw('limitation > couponused_count')
-        ->exists();
+        ->first();
+
+
+
+    if ($coupon) {
+        $couponused =   $coupon->couponused()->count();
+        if($coupon->limitation > $couponused){
+            return "ok";
+        }
+    }
 });

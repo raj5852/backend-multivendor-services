@@ -34,11 +34,19 @@ class CouponApplyRequest extends FormRequest
                     ->where(['name' => $value, 'status' => 'active'])
                     ->whereDate('expire_date', '>', now())
                     ->withCount('couponused')
-                    ->havingRaw('limitation > couponused_count')
-                    ->exists();
-                if (!$coupon) {
-                    return $fail('Coupon is invalid!');
+                    ->first();
+
+
+
+                if ($coupon) {
+                    $couponused =   $coupon->couponused()->count();
+                    if ($coupon->limitation <= $couponused) {
+                        return $fail('Coupon is invalid!');
+                    }
+                    return true;
                 }
+                return $fail('Coupon is invalid!');
+
             }]
         ];
     }
