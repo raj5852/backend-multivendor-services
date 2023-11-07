@@ -167,7 +167,7 @@ class OrderController extends Controller
                 $user->balance = ($user->balance + $balance->amount);
                 $user->save();
 
-                PaymentHistoryService::store(uniqid(),$balance->amount,'My wallet' ,'Product commission','-','',$user->id);
+                PaymentHistoryService::store(uniqid(),$balance->amount,'My wallet' ,'Product commission','+','',$user->id);
 
             }
 
