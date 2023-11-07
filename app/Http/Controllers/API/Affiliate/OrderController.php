@@ -34,15 +34,26 @@ class OrderController extends Controller
             return responsejson('You do not have a membership', 'fail');
         }
 
-        if ($getmembershipdetails->expire_date <= now()) {
+        if ($getmembershipdetails->expire_date < now()) {
             return responsejson('Your membership expire', 'fail');
         }
 
         $product = Product::query()
             ->where(['id' => $cart->product_id, 'status' => 'active'])
             ->whereHas('vendor', function ($query) {
-                $query->whereHas('vendorsubscription', function ($query) {
-                    $query->where('expire_date', '>', now());
+                $query->withwhereHas('usersubscription', function ($query) {
+                    $query->where(function ($query) {
+                        $query->whereHas('subscription', function ($query) {
+                            $query->where('plan_type', 'freemium');
+                        })
+                            ->where('expire_date', '>', now());
+                    })
+                        ->orwhere(function ($query) {
+                            $query->whereHas('subscription', function ($query) {
+                                $query->where('plan_type', '!=', 'freemium');
+                            })
+                                ->where('expire_date', '>', now()->subMonth(1));
+                        });
                 });
             })
             ->whereHas('productdetails', function ($query) {
