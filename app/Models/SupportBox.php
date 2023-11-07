@@ -17,6 +17,14 @@ class SupportBox extends Model
         return $this->belongsTo(User::class);
     }
 
+    function category(){
+        return $this->hasOne(SupportBoxCategory::class);
+    }
+
+    function problem_topic(){
+        return $this->hasOne(SupportProblemTopic::class);
+    }
+
     function ticketreplay()
     {
         return $this->hasMany(TicketReply::class);

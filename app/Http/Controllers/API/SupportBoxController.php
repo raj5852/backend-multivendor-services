@@ -26,7 +26,7 @@ class SupportBoxController extends Controller
         ->withCount(['ticketreplay as total_admin_replay' => function ($query) {
             $query->where('user_id', 1);
         }])
-        ->with('latestTicketreplay')
+        ->with(['latestTicketreplay','category:id,name','problem_topic:id,name'])
         ->latest()
         ->paginate(10);
 
