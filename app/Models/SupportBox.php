@@ -18,11 +18,11 @@ class SupportBox extends Model
     }
 
     function category(){
-        return $this->hasOne(SupportBoxCategory::class);
+        return $this->belongsTo(SupportBoxCategory::class,'support_box_category_id');
     }
 
     function problem_topic(){
-        return $this->hasOne(SupportProblemTopic::class);
+        return $this->belongsTo(SupportProblemTopic::class,'support_problem_topic_id');
     }
 
     function ticketreplay()
