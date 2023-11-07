@@ -55,7 +55,7 @@ class SingleProductController extends Controller
                             });
                     })
                     ->withSum('usersubscription', 'affiliate_request')
-                    ->having('vendoractiveproduct_count', '<', \DB::raw('usersubscription_sum_affiliate_request'));
+                    ->having('vendoractiveproduct_count', '<=', \DB::raw('usersubscription_sum_affiliate_request'));
             })
             ->find($id);
         if ($product) {
