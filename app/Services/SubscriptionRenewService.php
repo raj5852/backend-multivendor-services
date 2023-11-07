@@ -78,6 +78,15 @@ class SubscriptionRenewService
                 return responsejson('You can not renew now. You should contact to admin', 'fail');
             }
         }
+        if (request('payment_method') == 'my-wallet') {
+            $userbalance = $user->balance;
+            if (request('package_id')) {
+                if ($userbalance < ($getsubscription->subscription_amount + $subscriptiondue)) {
+                    return responsejson('You have not enough balance. You should recharge', 'fail');
+                }
+            }
+        }
+        return true;
 
 
         if ($validatedData['payment_method'] == 'my-wallet') {
