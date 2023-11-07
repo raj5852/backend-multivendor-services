@@ -58,8 +58,8 @@ class SubscriptionDueService
         if ($usersubscription->subscription_id == $packageId) {
             return 0;
         }
-
-        if ($usersubscription->subscription->plan_type == 'freemium') {
+        $mainsubscription = $usersubscription->subscription;
+        if ($mainsubscription->plan_type == 'freemium') {
             return 0;
         }
 
@@ -73,15 +73,15 @@ class SubscriptionDueService
 
             $totalday =  $currentdate->diffInDays($userdate);
 
-            $userpackagetype =  $usersubscription->subscription->subscription_package_type;
+            $userpackagetype =  $mainsubscription->subscription_package_type;
 
 
             if ($userpackagetype == 'monthly') {
-                $amount = ($usersubscription->subscription_amount / 30);
+                $amount = ($mainsubscription->subscription_amount / 30);
             } elseif ($userpackagetype == 'half_yearly') {
-                $amount = ($usersubscription->subscription_amount / 180);
+                $amount = ($mainsubscription->subscription_amount / 180);
             } elseif ($userpackagetype == 'yearly') {
-                $amount = ($usersubscription->subscription_amount / 360);
+                $amount = ($mainsubscription->subscription_amount / 360);
             }
 
             return $totalday * $amount;
