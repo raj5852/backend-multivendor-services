@@ -67,6 +67,8 @@ class ProductCheckoutService
                 $status = Status::Pending->value;
                 $vendor_balance->balance = ($vendor_balance->balance - $afi_amount);
                 $vendor_balance->save();
+                PaymentHistoryService::store(uniqid(), $afi_amount, 'My wallet', 'Affiliate commission','-','',$userid);
+
             } else {
                 $status = Status::Hold->value;
             }
@@ -113,7 +115,7 @@ class ProductCheckoutService
             ]);
         }
 
-        PaymentHistoryService::store(uniqid(),($cart->advancepayment * $totalquantity),$paymentprocess,'checkout','-','',$userid);
+        PaymentHistoryService::store(uniqid(),($cart->advancepayment * $totalquantity),$paymentprocess,'Product commission','-','',$userid);
 
         DB::table('carts')->where('id', $cartId)->delete();
 
