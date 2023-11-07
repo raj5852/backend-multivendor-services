@@ -22,7 +22,10 @@ class AdminAdvertiseController extends Controller
      */
     public function index()
     {
-        $data = AdminAdvertise::with('AdvertiseAudienceFile', 'advertisePlacement', 'advertiseLocationFiles', 'files')->latest()
+        $data = AdminAdvertise::query()
+            ->with('AdvertiseAudienceFile', 'advertisePlacement', 'advertiseLocationFiles', 'files')
+            ->latest()
+            ->where('is_paid',1)
             ->when(request('order_id'), fn ($q, $orderid) => $q->where('trxid', 'like', "%{$orderid}%"))
             ->paginate(10);
 
