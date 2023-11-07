@@ -19,7 +19,7 @@ class SupportBoxController extends Controller
     public function index()
     {
         $supportData = SupportBox::query()
-            ->with(['user', 'latestTicketreplay'])
+            ->with(['user', 'latestTicketreplay','category:id,name','problem_topic:id,name'])
             ->withCount(['ticketreplay as total_admin_replay'=>function($query){
                 $query->where('user_id',1);
             }])
