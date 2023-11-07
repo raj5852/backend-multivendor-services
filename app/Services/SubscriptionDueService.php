@@ -67,7 +67,7 @@ class SubscriptionDueService
             return 0;
         });
 
-        if($usersubscription->subscription_price  < $userseelctSubscription->subscription_amount){
+        if($usersubscription->subscription_price  > $userseelctSubscription->subscription_amount){
             return 0;
         }
 

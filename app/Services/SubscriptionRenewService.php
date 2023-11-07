@@ -33,7 +33,7 @@ class SubscriptionRenewService
         $getsubscription = Subscription::find($subscriptionid);
 
         // subscription due balance - membership credit
-        $subscriptiondue = SubscriptionDueService::subscriptiondue(auth()->id()) - SubscriptionDueService::membership_credit(auth()->id(), $subscriptionid);
+        $subscriptiondue = (SubscriptionDueService::subscriptiondue(auth()->id()) - SubscriptionDueService::membership_credit(auth()->id(), $subscriptionid));
 
         $getusertype  = userrole($user->role_as);
         $servicecreated = VendorService::where('user_id', auth()->id())->count();
