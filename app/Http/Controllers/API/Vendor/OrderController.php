@@ -192,11 +192,13 @@ class OrderController extends Controller
 
 
                 if ($order->status != Status::Hold->value) {
-                    $vendor = User::find($order->vendor_id);
-                    CancelOrderBalance::create([
-                        'user_id'=>$order->vendor_id,
-                        'balance'=>$balance?->amount
-                    ]);
+                    if($balance){
+                        $vendor = User::find($order->vendor_id);
+                        CancelOrderBalance::create([
+                            'user_id'=>$order->vendor_id,
+                            'balance'=>$balance?->amount
+                        ]);
+                    }
                 }
 
 
@@ -207,6 +209,7 @@ class OrderController extends Controller
                         'user_id'=>$order->affiliator_id,
                         'balance'=>$advancepayment->amount
                     ]);
+                    $advancepayment->delete();
                 }
 
 
