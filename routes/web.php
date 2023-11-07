@@ -54,14 +54,10 @@ Route::get('seed', function () {
 
 Route::get('demo', function () {
 
-//     $coupon =  ModelsCoupon::query()
-//     ->where(['name' => request('name'), 'status' => 'active'])
-//     ->whereDate('expire_date', '>', now())
-//     ->withCount('couponused')
-//     ->having('limitation', '>', \DB::raw('couponused_count'))
-//     ->first();
-// if (!$coupon) {
-//     return responsejson('Coupon is invalid','fail');
-// }
-
+    return $coupon =  Coupon::query()
+        ->where(['name' => request('name'), 'status' => 'active'])
+        ->whereDate('expire_date', '>', now())
+        ->withCount('couponused')
+        ->havingRaw('limitation > couponused_count')
+        ->exists();
 });
