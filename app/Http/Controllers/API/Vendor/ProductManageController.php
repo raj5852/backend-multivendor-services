@@ -98,7 +98,7 @@ class ProductManageController extends Controller
                 }
 
                 if ($required_balance != '') {
-                    if ($required_balance > convertfloat(auth()->user()->balance)) {
+                    if ($required_balance > auth()->user()->balance) {
                         $validator->errors()->add('selling_price', 'At least one product should have  a commission balance');
                     }
                 }
@@ -289,7 +289,7 @@ class ProductManageController extends Controller
                 }
 
                 if ($required_balance != '') {
-                    if ($required_balance > convertfloat(auth()->user()->balance)) {
+                    if ($required_balance > auth()->user()->balance) {
                         $validator->errors()->add('selling_price', 'At least one product should have  a commission balance');
                     }
                 }

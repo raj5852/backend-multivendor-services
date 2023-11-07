@@ -83,7 +83,7 @@ class ProductController extends Controller
                 }
 
                 if ($required_balance != '') {
-                    if ($required_balance > convertfloat($vendor->balance)) {
+                    if ($required_balance > $vendor->balance) {
                         $validator->errors()->add('selling_price', 'At least one product should have  a commission balance');
                     }
                 }

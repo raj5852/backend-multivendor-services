@@ -8,6 +8,7 @@ use App\Models\Product;
 use App\Models\Subscription;
 use App\Models\SupportBox;
 use App\Models\User;
+use App\Models\Withdraw;
 use App\Services\SubscriptionDueService;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Artisan;
@@ -53,7 +54,8 @@ Route::get('seed', function () {
 
 Route::get('demo', function () {
 
-    return Subscription::query()->findOr(1,function(){
-        return 0;
-    });
+    return Withdraw::first();
+    // return Subscription::query()->findOr(1,function(){
+    //     return 0;
+    // });
 });

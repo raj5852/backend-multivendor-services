@@ -29,7 +29,7 @@ class ServicePaymentType implements Rule
     {
         if($value == 'my-wallet'){
             $user = User::find(userid());
-            $balance = convertfloat($user->balance);
+            $balance = $user->balance;
 
             $servicePackage = ServicePackage::find(request('service_package_id'));
             $price = $servicePackage->price;

@@ -86,7 +86,7 @@ class BuySubscription extends Controller
         } else {
             $balance = $user->balance;
 
-            if (convertfloat($balance) >= $amount) {
+            if ($balance >= $amount) {
 
                 if (request('payment_type') == 'free') {
                     $paymentmethod = "free";
@@ -95,7 +95,7 @@ class BuySubscription extends Controller
                 }
                 $data =  SubscriptionService::store($subscription, $user, $amount, $coupon?->id, $paymentmethod);
 
-                $user->balance = (convertfloat($user->balance) - $amount);
+                $user->balance = ($user->balance - $amount);
                 $user->save();
 
                 if ($data == '2' || $data == '3') {
