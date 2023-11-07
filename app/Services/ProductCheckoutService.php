@@ -115,7 +115,7 @@ class ProductCheckoutService
             ]);
         }
 
-        PaymentHistoryService::store(uniqid(),($cart->advancepayment * $totalquantity),$paymentprocess,'Product commission','-','',$userid);
+        PaymentHistoryService::store(uniqid(),($cart->advancepayment * $totalquantity),$paymentprocess,'Advance payment','-','',$userid);
 
         DB::table('carts')->where('id', $cartId)->delete();
 

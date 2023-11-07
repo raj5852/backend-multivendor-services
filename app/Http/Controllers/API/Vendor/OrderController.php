@@ -10,6 +10,7 @@ use App\Models\Order;
 use App\Models\PendingBalance;
 use App\Models\Product;
 use App\Models\User;
+use App\Services\PaymentHistoryService;
 use Illuminate\Http\Request;
 
 class OrderController extends Controller
@@ -150,6 +151,7 @@ class OrderController extends Controller
                     } else {
                         $vendor->balance = ($vendor->balance - $order->afi_amount);
                         $vendor->save();
+                        PaymentHistoryService::store(uniqid(), $order->afi_amount, 'My wallet', 'Affiliate commission','-','',$order->vendor_id);
                     }
                 }
             }
@@ -164,6 +166,9 @@ class OrderController extends Controller
                 $user =  User::find($balance->affiliator_id);
                 $user->balance = ($user->balance + $balance->amount);
                 $user->save();
+
+                PaymentHistoryService::store(uniqid(),$balance->amount,'My wallet' ,'Product commission','-','',$user->id);
+
             }
 
             if (($request->status == Status::Cancel->value) || ($request->status =='return')) {
@@ -173,7 +178,6 @@ class OrderController extends Controller
                 $balance = PendingBalance::where('order_id', $order->id)->first();
 
                 if ($order->status == Status::Delivered->value) {
-
                     return response()->json([
                         'status' => 401,
                         'message' => 'Not possible to update'
@@ -194,7 +198,7 @@ class OrderController extends Controller
 
                 if($advancepayment){
                      CancelOrderBalance::create([
-                        'user_id'=>$order-> affiliator_id,
+                        'user_id'=>$order->affiliator_id,
                         'balance'=>$advancepayment->amount
                     ]);
                 }
