@@ -132,6 +132,12 @@ class OrderController extends Controller
 
     function updateStatus(Request $request, $id)
     {
+
+        if(isactivemembership() != 1){
+            return responsejson('Membership Expire renew Now!');
+        }
+
+
         $order =  Order::find($id);
         if ($order) {
 
