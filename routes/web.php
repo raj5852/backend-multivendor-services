@@ -54,8 +54,26 @@ Route::get('seed', function () {
 
 Route::get('demo', function () {
 
-    return Withdraw::first();
-    // return Subscription::query()->findOr(1,function(){
-    //     return 0;
-    // });
+    // return Coupon::query()
+    // ->where('name', 'vendor0511')
+    // ->where('expire_date', '>', now())
+    // ->whereColumn('limitation', '>', 'couponused_count')
+    // ->exists();
+
+
+    return Coupon::query()
+    ->where('name', 'vendor0511')
+    ->whereDate('expire_date', '>', now())
+    ->withCount('couponused')
+    ->having('limitation', '>', \DB::raw('couponused_count'))
+    ->select('id')
+    ->exists();
+
+    return Coupon::where('name', 'vendor0511')
+    ->whereDate('expire_date', '>', now())
+    ->withCount('couponused')
+    ->has('couponused', '>', 'limitation')
+    ->first();
+
+
 });

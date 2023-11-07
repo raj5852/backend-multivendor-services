@@ -2,6 +2,7 @@
 
 namespace App\Rules;
 
+use App\Models\Coupon;
 use Illuminate\Contracts\Validation\Rule;
 use Illuminate\Support\Facades\DB;
 
@@ -15,7 +16,6 @@ class CouponNameExistsForDate implements Rule
 
     public function __construct()
     {
-
     }
 
     /**
@@ -27,9 +27,11 @@ class CouponNameExistsForDate implements Rule
      */
     public function passes($attribute, $value)
     {
-        return DB::table('coupons')
+        return Coupon::query()
             ->where('name', $value)
-            ->whereDate('expire_date', '>',now())
+            ->whereDate('expire_date', '>', now())
+            ->withCount('couponused')
+            ->having('limitation', '>', \DB::raw('couponused_count'))
             ->exists();
     }
     /**
@@ -39,6 +41,6 @@ class CouponNameExistsForDate implements Rule
      */
     public function message()
     {
-        return 'Coupon name is not valid for the specified date.';
+        return 'Coupon name is not valid.';
     }
 }

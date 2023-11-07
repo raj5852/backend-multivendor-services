@@ -188,6 +188,6 @@ function paymentredirect($role)
         return 'affiliates-dashboard';
     }
     if (userrole($role) == 'user') {
-        return 'user-dashboard';
+        return 'users-dashboard';
     }
 }
