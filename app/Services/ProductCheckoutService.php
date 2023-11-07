@@ -63,7 +63,7 @@ class ProductCheckoutService
 
             $afi_amount = $totalqty * $cart->amount;
 
-            if ($vendor_balance->balance > $afi_amount) {
+            if ($vendor_balance->balance >= $afi_amount) {
                 $status = Status::Pending->value;
                 $vendor_balance->balance = ($vendor_balance->balance - $afi_amount);
                 $vendor_balance->save();
