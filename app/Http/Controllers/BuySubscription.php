@@ -39,19 +39,6 @@ class BuySubscription extends Controller
     function coupon(CouponApplyRequest $request)
     {
         $validateData = $request->validated();
-
-        $couponmodel =  ModelsCoupon::query()
-        ->where(['name' => 'coupon', 'status' => 'active'])
-        ->whereDate('expire_date', '>', now())
-        ->withCount('couponused')
-        ->having('limitation', '>', \DB::raw('couponused_count'))
-        ->exists();
-
-        if(!$couponmodel){
-            return response('Coupon not valid');
-        }
-
-
         $coupon = ModelsCoupon::where('name', $validateData['name'])->select('id', 'amount', 'type')->first();
         return $this->response($coupon);
     }

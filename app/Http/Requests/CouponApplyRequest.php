@@ -28,7 +28,7 @@ class CouponApplyRequest extends FormRequest
     public function rules()
     {
         return [
-            'name'=>['required',Rule::exists('coupons','name')]
+            'name'=>['required',Rule::exists('coupons','name'),new CouponNameExistsForDate()]
         ];
     }
 

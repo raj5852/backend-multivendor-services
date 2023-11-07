@@ -54,12 +54,12 @@ Route::get('seed', function () {
 
 Route::get('demo', function () {
 
-    return   Coupon::query()
-    ->where(['name'=> 'coupon','status'=>'active'])
-    ->whereDate('expire_date', '>', now())
-    ->withCount('couponused')
-    ->having('limitation', '>', \DB::raw('couponused_count'))
-    ->exists();
+    // return   Coupon::query()
+    // ->where(['name'=> 'coupon','status'=>'active'])
+    // ->whereDate('expire_date', '>', now())
+    // ->withCount('couponused')
+    // ->having('limitation', '>', \DB::raw('couponused_count'))
+    // ->exists();
 
 
     // return Coupon::query()
@@ -68,6 +68,15 @@ Route::get('demo', function () {
     // ->withCount('couponused')
     // ->having('limitation', '>', \DB::raw('couponused_count'))
     // ->exists();
+
+
+  return  $couponmodel =  Coupon::query()
+    ->where(['name' => 'test222', 'status' => 'active'])
+    ->whereDate('expire_date', '>', now())
+    ->withCount('couponused')
+    ->having('limitation', '>', \DB::raw('couponused_count'))
+    ->first();
+
 
 
 });
