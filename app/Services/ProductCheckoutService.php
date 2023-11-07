@@ -113,7 +113,7 @@ class ProductCheckoutService
             ]);
         }
 
-        PaymentHistoryService::store(uniqid(),($cart->amount * $totalquantity),$paymentprocess,'checkout','-','',$userid);
+        PaymentHistoryService::store(uniqid(),($cart->advancepayment * $totalquantity),$paymentprocess,'checkout','-','',$userid);
 
         DB::table('carts')->where('id', $cartId)->delete();
 
