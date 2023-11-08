@@ -11,8 +11,10 @@ class AdvertiseController extends Controller
     {
 
         $data = AdminAdvertise::query()
-         ->where('user_id', userid())->where('is_paid', 1)->latest()
+            ->where(['user_id' => userid(), 'is_paid' => 1])
+            ->latest()
             ->when(request('order_id'), fn ($q, $orderid) => $q->where('trxid', 'like', "%{$orderid}%"))
+            ->select('id', 'campaign_name', 'campaign_objective', 'budget_amount', 'start_date', 'end_date', 'is_paid', 'created_at', 'status')
             ->paginate(10);
 
         return $this->response($data);
@@ -20,12 +22,12 @@ class AdvertiseController extends Controller
 
     function show($id)
     {
-        $data =  AdminAdvertise::where(['user_id' => userid()])
-            ->where('is_paid', 1)
-            ->with('AdvertiseAudienceFile', 'advertiseLocationFiles')->find($id);
-
-
+        $data =  AdminAdvertise::query()
+            ->where(['user_id' => userid(), 'is_paid' => 1])
+            ->with('AdvertiseAudienceFile', 'advertiseLocationFiles', 'files')
+            ->find($id);
 
         return $this->response($data);
+
     }
 }
