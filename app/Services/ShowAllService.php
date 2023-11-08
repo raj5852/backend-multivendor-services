@@ -12,18 +12,18 @@ class ShowAllService
 
     static function show()
     {
-        $datas =  VendorService::query()
+        $datas = VendorService::query()
             ->where('status', 'active')
             ->latest()
-            ->withAvg('servicerating','rating')
-            ->with(['user:id,name,image','firstpackage:id,price,vendor_service_id'])
-            ->select('id','title','user_id','image')
+            ->with(['user:id,name,image', 'firstpackage:id,price,vendor_service_id'])
+            ->select('id', 'title', 'user_id', 'image')
+            ->withAvg('servicerating', 'rating')
             ->paginate(12);
-        foreach($datas as $data){
-            if($data->servicerating_avg_rating == null){
-                $data->servicerating_avg_rating = '0.00';
-            }
-        }
+
+
+        $datas->each(function ($item) {
+            $item->servicerating_avg_rating = number_format($item->servicerating_avg_rating ?? 0, 2);
+        });
         return $datas;
     }
 }
