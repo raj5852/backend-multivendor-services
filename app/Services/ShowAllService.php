@@ -18,8 +18,12 @@ class ShowAllService
             ->with(['user:id,name,image', 'firstpackage:id,price,vendor_service_id'])
             ->select('id', 'title', 'user_id', 'image')
             ->withAvg('servicerating', 'rating')
+            ->when(request('search') != '', function ($query) {
+                $query->latest();
+            }, function ($query) {
+                $query->inRandomOrder();
+            })
             ->paginate(12);
-
 
         $datas->each(function ($item) {
             $item->servicerating_avg_rating = number_format($item->servicerating_avg_rating ?? 0, 2);

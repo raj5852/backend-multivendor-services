@@ -62,7 +62,6 @@ Route::get('demo', function () {
         ->first();
 
 
-
     if ($coupon) {
         $couponused =   $coupon->couponused()->count();
         if($coupon->limitation > $couponused){

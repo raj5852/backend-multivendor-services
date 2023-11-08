@@ -27,7 +27,7 @@ class VendorServiceController extends Controller
     {
         $vendorService =  VendorService::where(['user_id' => userid()])
             ->with(['servicepackages', 'serviceimages'])
-            ->when(request('order_id'),fn($q,$orderid)=>$q->where('trxid','like',"%{$orderid}%"))
+            ->when(request('order_id'), fn ($q, $orderid) => $q->where('trxid', 'like', "%{$orderid}%"))
             ->paginate(10);
         return $this->response($vendorService);
     }
@@ -59,7 +59,7 @@ class VendorServiceController extends Controller
             return responsejson('You do not have membership', 'fail');
         }
 
-        if (isactivemembership() != 1)  {
+        if (isactivemembership() != 1) {
             return responsejson('Membership expired!', 'fail');
         }
 
@@ -123,9 +123,9 @@ class VendorServiceController extends Controller
 
     function serviceorders()
     {
-        $order = ServiceOrder::where(['vendor_id'=> userid(),'is_paid'=>1])
+        $order = ServiceOrder::where(['vendor_id' => userid(), 'is_paid' => 1])
             ->with(['customerdetails', 'servicedetails', 'packagedetails'])
-            ->when(request('order_id'),fn($q,$orderid)=>$q->where('trxid','like',"%{$orderid}%"))
+            ->when(request('order_id'), fn ($q, $orderid) => $q->where('trxid', 'like', "%{$orderid}%"))
             ->latest()
             ->paginate(10);
 
@@ -161,7 +161,7 @@ class VendorServiceController extends Controller
         }
 
         $order = ServiceOrder::where(['vendor_id' => userid(), 'is_paid' => 1])
-            ->with(['customerdetails', 'servicedetails', 'packagedetails', 'files', 'servicerating','orderdelivery' => function ($query) {
+            ->with(['customerdetails', 'servicedetails', 'packagedetails', 'files', 'servicerating', 'orderdelivery' => function ($query) {
                 $query->with('deliveryfiles');
             }])
             ->find($id);
@@ -178,7 +178,7 @@ class VendorServiceController extends Controller
         }
 
         $order = ServiceOrder::where(['user_id' => userid(), 'is_paid' => 1])
-            ->with(['customerdetails', 'servicedetails', 'packagedetails', 'files','servicerating' ,'orderdelivery' => function ($query) {
+            ->with(['customerdetails', 'servicedetails', 'packagedetails', 'files', 'servicerating', 'orderdelivery' => function ($query) {
                 $query->with('deliveryfiles');
             }])
             ->find($id);
@@ -208,14 +208,30 @@ class VendorServiceController extends Controller
 
         return  VendorService::query()
             ->where(['id' => $id, 'status' => 'active'])
-            ->select('id','user_id','service_category_id','service_sub_category_id','title','description','tags','image')
-            ->with(['servicepackages', 'serviceimages', 'user:id,name,image','servicecategory:id,name','servicesubcategory:id,name'])
+            ->select('id', 'user_id', 'service_category_id', 'service_sub_category_id', 'title', 'description', 'tags', 'image')
+            ->with(['servicepackages', 'serviceimages', 'user:id,name,image', 'servicecategory:id,name', 'servicesubcategory:id,name'])
             ->first();
 
-    //   return  $vendorService = VendorService::query()
-    // ->where(['id' => $id, 'status' => 'active'])
-    // // ->select('id','user_id','service_category_id','service_sub_category_id','title','description','tags','image')
-    // ->with(['servicepackages', 'serviceimages', 'user:id,name,image', 'servicerating.user:id,name,image','servicecategory:id,name','servicesubcategory:id,name'])
-    // ->first();
+        //   return  $vendorService = VendorService::query()
+        // ->where(['id' => $id, 'status' => 'active'])
+        // // ->select('id','user_id','service_category_id','service_sub_category_id','title','description','tags','image')
+        // ->with(['servicepackages', 'serviceimages', 'user:id,name,image', 'servicerating.user:id,name,image','servicecategory:id,name','servicesubcategory:id,name'])
+        // ->first();
+    }
+    function servicerating($id)
+    {
+        $data = VendorService::where(['id' => $id, 'status' => 'active'])->first()
+            ->servicerating()
+            ->when(
+                request('search') == 'top_review',
+                function ($query) {
+                    $query->orderBy('rating', 'desc');
+                },
+                function ($query) {
+                    $query->latest();
+                }
+            )->paginate(20);
+
+        return $this->response($data);
     }
 }
