@@ -27,6 +27,7 @@ class AdminAdvertiseController extends Controller
             ->latest()
             ->where('is_paid',1)
             ->when(request('order_id'), fn ($q, $orderid) => $q->where('trxid', 'like', "%{$orderid}%"))
+            ->select('id','campaign_name','campaign_objective','budget_amount','start_date','end_date','is_paid','created_at')
             ->paginate(10);
 
         return $this->response($data);
