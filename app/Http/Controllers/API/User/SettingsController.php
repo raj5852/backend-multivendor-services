@@ -11,8 +11,8 @@ class SettingsController extends Controller
 {
     public function index()
     {
-        $users = DB::table('settings')->where('deleted_at', null)->first();
-        return $this->response($users);
+        $strring = DB::table('settings')->where('deleted_at', null)->first();
+        return $this->response($strring);
     }
 
     public function companion()
