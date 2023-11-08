@@ -55,7 +55,7 @@ class AdminAdvertiseService
         $adminadvaertise->number   =  $validatData['number'];
         $adminadvaertise->last_description   =  $validatData['last_description'];
         $adminadvaertise->status   =  Status::Pending->value;
-
+        $adminadvaertise->audience = request('audience');
         $adminadvaertise->save();
 
 
