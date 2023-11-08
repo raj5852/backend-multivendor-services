@@ -68,7 +68,7 @@ class UpdateAdminAdvertiseRequest extends FormRequest
             'messages' => 'nullable',
             'apps_and_sites' => 'nullable',
             // 'paymethod' => ['required', Rule::in(['aamarpay', 'my-wallet'])],
-            'audience'=>['required']
+            'audience'=>['nullable']
 
         ];
     }
