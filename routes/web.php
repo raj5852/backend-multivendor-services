@@ -9,6 +9,7 @@ use App\Models\Product;
 use App\Models\Subscription;
 use App\Models\SupportBox;
 use App\Models\User;
+use App\Models\VendorService;
 use App\Models\Withdraw;
 use App\Services\SubscriptionDueService;
 use Carbon\Carbon;
@@ -55,17 +56,36 @@ Route::get('seed', function () {
 
 Route::get('demo', function () {
 
-    $coupon =  Coupon::query()
-        ->where(['name' => 'vendor0511', 'status' => 'active'])
-        ->whereDate('expire_date', '>', now())
-        ->withCount('couponused')
-        ->first();
+    // $datas = VendorService::query()
+    //         ->where('status', 'active')
+    //         ->with(['user:id,name,image', 'firstpackage:id,price,vendor_service_id'])
+    //         ->select('id', 'title', 'user_id', 'image','tags')
+    //         ->withAvg('servicerating', 'rating')
+    //         ->when(request('tags') != '', function ($query) {
+    //             $query->whereJsonContains('tags', request('tag'));
+    //         })
+    //         ->inRandomOrder()
+    //         ->paginate(12);
 
+    //     $datas->each(function ($item) {
+    //         $item->servicerating_avg_rating = number_format($item->servicerating_avg_rating ?? 0, 2);
+    //     });
+    //     return $datas;
 
-    if ($coupon) {
-        $couponused =   $coupon->couponused()->count();
-        if($coupon->limitation > $couponused){
-            return "ok";
-        }
-    }
+    $datas = VendorService::query()
+        ->where('status', 'active')
+        ->with(['user:id,name,image', 'firstpackage:id,price,vendor_service_id'])
+        ->select('id', 'title', 'user_id', 'image', 'tags')
+        ->withAvg('servicerating', 'rating')
+        ->when(request('tags') != '', function ($query) {
+            $query->whereJsonContains('tags', request('tags')); // Use 'tags' here
+        })
+        ->inRandomOrder()
+        ->paginate(12);
+
+    $datas->each(function ($item) {
+        $item->servicerating_avg_rating = number_format($item->servicerating_avg_rating ?? 0, 2);
+    });
+
+    return $datas;
 });

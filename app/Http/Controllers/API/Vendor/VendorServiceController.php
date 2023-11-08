@@ -194,7 +194,7 @@ class VendorServiceController extends Controller
 
     function allservice()
     {
-        return   ShowAllService::show();
+        return ShowAllService::show();
     }
 
     function serviceshow($id)
