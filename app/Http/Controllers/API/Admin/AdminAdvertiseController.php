@@ -27,7 +27,7 @@ class AdminAdvertiseController extends Controller
             ->latest()
             ->where('is_paid',1)
             ->when(request('order_id'), fn ($q, $orderid) => $q->where('trxid', 'like', "%{$orderid}%"))
-            ->select('id','campaign_name','campaign_objective','budget_amount','start_date','end_date','is_paid','created_at')
+            ->select('id','campaign_name','campaign_objective','budget_amount','start_date','end_date','is_paid','created_at','status')
             ->paginate(10);
 
         return $this->response($data);
@@ -68,7 +68,7 @@ class AdminAdvertiseController extends Controller
         // $userID = userid();
 
         $userID = userid();
-        $adminAdvertise = AdminAdvertise::with('AdvertiseAudienceFile', 'advertisePlacement', 'advertiseLocationFiles')->find($id);
+        $adminAdvertise = AdminAdvertise::with('AdvertiseAudienceFile', 'advertisePlacement', 'advertiseLocationFiles','files')->find($id);
         if ($adminAdvertise) {
             return response()->json([
                 'status' => 200,
