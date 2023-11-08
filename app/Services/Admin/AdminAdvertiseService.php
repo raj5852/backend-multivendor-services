@@ -87,7 +87,7 @@ class AdminAdvertiseService
         if (request('paymethod') == 'my-wallet') {
             $user = User::find(userid());
             $user->decrement('balance',$totalprice);
-
+            $adminadvaertise->is_paid = 1;
             PaymentHistoryService::store($trxid, $totalprice, 'My wallet', 'Advertise', '-', '', userid());
             return responsejson('Successfull!');
 
