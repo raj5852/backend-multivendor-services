@@ -201,14 +201,21 @@ class VendorServiceController extends Controller
     {
         $service = VendorService::query()
             ->where(['id' => $id, 'status' => 'active'])
-            ->first();
+            ->exists();
         if (!$service) {
             return responsejson('Not found', 'fail');
         }
 
         return  VendorService::query()
             ->where(['id' => $id, 'status' => 'active'])
-            ->with(['servicepackages', 'serviceimages', 'user:id,name,image', 'servicerating.user:id,name,image','servicecategory:id,name','servicesubcategory:id,name'])
+            ->select('id','user_id','service_category_id','service_sub_category_id','title','description','tags','image')
+            ->with(['servicepackages', 'serviceimages', 'user:id,name,image','servicecategory:id,name','servicesubcategory:id,name'])
             ->first();
+
+    //   return  $vendorService = VendorService::query()
+    // ->where(['id' => $id, 'status' => 'active'])
+    // // ->select('id','user_id','service_category_id','service_sub_category_id','title','description','tags','image')
+    // ->with(['servicepackages', 'serviceimages', 'user:id,name,image', 'servicerating.user:id,name,image','servicecategory:id,name','servicesubcategory:id,name'])
+    // ->first();
     }
 }
