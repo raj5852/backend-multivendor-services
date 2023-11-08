@@ -23,7 +23,6 @@ class AdminAdvertiseController extends Controller
     public function index()
     {
         $data = AdminAdvertise::query()
-            // ->with('AdvertiseAudienceFile', 'advertisePlacement', 'advertiseLocationFiles', 'files')
             ->latest()
             ->where('is_paid',1)
             ->when(request('order_id'), fn ($q, $orderid) => $q->where('trxid', 'like', "%{$orderid}%"))
@@ -99,9 +98,9 @@ class AdminAdvertiseController extends Controller
      */
     public function update(UpdateAdminAdvertiseRequest $request,  $id)
     {
-        // $validatData = $request->validated();
-        // AdminAdvertiseService::update($validatData, $id);
-        // return $this->response('Advertise Updated Successfully');
+        $validatData = $request->validated();
+        AdminAdvertiseService::update($validatData, $id);
+        return $this->response('Advertise Updated Successfully');
     }
 
     /**

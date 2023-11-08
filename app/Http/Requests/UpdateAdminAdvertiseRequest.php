@@ -5,6 +5,7 @@ namespace App\Http\Requests;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
+use Illuminate\Validation\Rule;
 
 class UpdateAdminAdvertiseRequest extends FormRequest
 {
@@ -30,8 +31,10 @@ class UpdateAdminAdvertiseRequest extends FormRequest
             'campaign_name'  => ['required', 'max:256'],
             'conversion_location'  => ['required'],
             'performance_goal'  => ['required'],
-            'platforms'  => ['required'],
-            'budget_amount'  => ['required'],
+            // 'platforms'  => ['required'],
+            'ad_creative' => 'required|array',
+            'budget' => ['required'],
+            'budget_amount' => ['required', 'numeric', 'min:0'],
             'start_date'  => ['required'],
             'end_date'  => ['required'],
             'age'  => ['required', 'numeric'],
@@ -43,27 +46,29 @@ class UpdateAdminAdvertiseRequest extends FormRequest
             'platform'  => ['required'],
             'inventory'  => ['required'],
             'format'  => ['required'],
-            'primary_text'  => ['required'],
-            'media'  => ['required', 'url'],
-            'heading'  => ['required'],
-            'description'  => ['required'],
-            'call_to_action'  => ['required'],
+
             'destination'  => ['required'],
             'tracking'  => ['required'],
             'url_perimeter'  => ['required', 'url'],
-            'number'  => ['required','numeric'],
+            'number'  => ['required', 'numeric'],
             'last_description'  => ['required'],
-            'status'  => ['required','in:pending,progress,cancel,complited'],
+            // 'status'  => ['required', 'in:pending,progress,cancel,complited'],
 
-            'advertise_audience_files' => 'nullable',
-            'location_files'   => 'nullable',
 
+            'advertise_audience_files' => 'nullable|array',
+            'advertise_audience_files.*' => 'image|mimes:jpeg,png,jpg,gif|max:20480',
+            'location_files' => 'nullable|array',
+            'location_files.*' => 'image|mimes:jpeg,png,jpg,gif|max:20480',
+
+            'placements'=>'required',
             'feeds' => 'nullable',
             'story_reels' => 'nullable',
             'adds_video_and_reels' => 'nullable',
             'search_result' => 'nullable',
             'messages' => 'nullable',
             'apps_and_sites' => 'nullable',
+            // 'paymethod' => ['required', Rule::in(['aamarpay', 'my-wallet'])],
+            'audience'=>['required']
 
         ];
     }
