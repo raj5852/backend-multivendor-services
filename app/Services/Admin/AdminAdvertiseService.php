@@ -86,18 +86,15 @@ class AdminAdvertiseService
         $totalprice = ($validatData['budget_amount'] * $dollerRate);
         if (request('paymethod') == 'my-wallet') {
             $user = User::find(userid());
-            $user->decrement('balance',$totalprice);
+            $user->decrement('balance', $totalprice);
             $adminadvaertise->is_paid = 1;
             $adminadvaertise->save();
             PaymentHistoryService::store($trxid, $totalprice, 'My wallet', 'Advertise', '-', '', userid());
             return responsejson('Successfull!');
-
-        }else{
+        } else {
 
             $successurl =  url('api/aaparpay/advertise-success');
-            return AamarPayService::gateway($totalprice, $trxid,'advertise',$successurl);
+            return AamarPayService::gateway($totalprice, $trxid, 'advertise', $successurl);
         }
     }
-
-
 }

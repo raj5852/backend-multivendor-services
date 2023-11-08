@@ -69,7 +69,8 @@ class StoreAdminAdvertiseRequest extends FormRequest
             'search_result' => 'nullable',
             'messages' => 'nullable',
             'apps_and_sites' => 'nullable',
-            'paymethod' => ['required', Rule::in(['aamarpay', 'my-wallet'])]
+            'paymethod' => ['required', Rule::in(['aamarpay', 'my-wallet'])],
+            'audience'=>['required']
 
         ];
     }
