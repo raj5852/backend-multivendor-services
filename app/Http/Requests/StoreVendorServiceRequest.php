@@ -41,7 +41,7 @@ class StoreVendorServiceRequest extends FormRequest
             'description'=>'required',
             'tags'=>'required',
             'contract'=>'required',
-            'commission'=>['required','numeric'],
+            'commission'=>['required','numeric','min:0'],
             'commission_type'=>['required',Rule::in(['flat','percentage'])],
             'image'=> ['required', 'image', 'mimes:png,jpg,jpeg'],
 

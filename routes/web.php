@@ -5,6 +5,7 @@ use App\Http\Controllers\TestController;
 use App\Models\AdminAdvertise;
 use App\Models\Coupon;
 use App\Models\CouponUsed;
+use App\Models\Order;
 use App\Models\Product;
 use App\Models\Subscription;
 use App\Models\SupportBox;
@@ -56,43 +57,24 @@ Route::get('seed', function () {
 
 Route::get('demo', function () {
 
-    // $datas = VendorService::query()
-    //         ->where('status', 'active')
-    //         ->with(['user:id,name,image', 'firstpackage:id,price,vendor_service_id'])
-    //         ->select('id', 'title', 'user_id', 'image','tags')
-    //         ->withAvg('servicerating', 'rating')
-    //         ->when(request('tags') != '', function ($query) {
-    //             $query->whereJsonContains('tags', request('tag'));
-    //         })
-    //         ->inRandomOrder()
-    //         ->paginate(12);
 
-    //     $datas->each(function ($item) {
-    //         $item->servicerating_avg_rating = number_format($item->servicerating_avg_rating ?? 0, 2);
-    //     });
-    //     return $datas;
+    // $order =  Order::find(97);
+    // $order->update(['status'=>'hold']);
 
-    $datas = VendorService::query()
-        ->where('status', 'active')
-        ->with(['user:id,name,image', 'firstpackage:id,price,vendor_service_id'])
-        // ->select('id', 'title', 'user_id', 'image', 'tags')
-        ->withAvg('servicerating', 'rating')
-        ->when(request('tags') != '', function ($query) {
-            $query->whereJsonContains('tags', request('tags'));
-        })
-        ->when(request('category_id') != '', function ($query) {
-            $query->where('service_category_id',request('category_id'));
-        })
-        ->when(request('type') == 'latest', function ($query) {
-            $query->latest();
-        })
+    // return Product::find(65);
+    // return $order;
+    // return User::find(323);
 
-        ->inRandomOrder()
-        ->paginate(12);
+// return Order::where('order_id',97)->first();
 
-    $datas->each(function ($item) {
-        $item->servicerating_avg_rating = number_format($item->servicerating_avg_rating ?? 0, 2);
-    });
+//    $user = User::find(323);
+//    $user->increment('balance',15);
+//    return $user->balance;
 
-    return $datas;
+// return couponget('perves');
+    $a = 5;
+    $a+=10;
+
+    return $a;
+
 });

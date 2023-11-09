@@ -30,10 +30,9 @@ class RenewRequest extends FormRequest
     public function rules()
     {
         return [
-            // 'renew_time'=>['required',Rule::in(['monthly','half_yearly','yearly'])],
-            // 'subscription_type'=>['required',Rule::in(['vendor','affiliate']), new SubscriptionTypeRule() ],
             'package_id'=>['required','integer', new RenewPackageId()],
-            'payment_method'=>['required',Rule::in('my-wallet','aamarpay')]
+            'payment_method'=>['required',Rule::in('my-wallet','aamarpay')],
+            'coupon_id'=>['nullable', ]
         ];
     }
 

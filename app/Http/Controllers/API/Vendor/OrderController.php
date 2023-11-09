@@ -4,6 +4,7 @@ namespace App\Http\Controllers\API\Vendor;
 
 use App\Enums\Status;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\ProductOrderRequest;
 use App\Models\AdvancePayment;
 use App\Models\CancelOrderBalance;
 use App\Models\Order;
@@ -11,6 +12,7 @@ use App\Models\PendingBalance;
 use App\Models\Product;
 use App\Models\User;
 use App\Services\PaymentHistoryService;
+use App\Services\ProductOrderService;
 use Illuminate\Http\Request;
 
 class OrderController extends Controller
@@ -130,149 +132,15 @@ class OrderController extends Controller
         ]);
     }
 
-    function updateStatus(Request $request, $id)
+    function productorderstatus(ProductOrderRequest $request, $id)
     {
-
-        if(isactivemembership() != 1){
+        if (isactivemembership() != 1) {
             return responsejson('Membership Expire renew Now!');
         }
+        $validatedData = $request->validated();
 
+        return   ProductOrderService::orderStatus($validatedData, $id);
 
-        $order =  Order::find($id);
-        if ($order) {
-
-            if ($order->reason) {
-                $order->reason = $request->reason;
-            }
-
-
-            if ($order->status == Status::Hold->value) {
-                if ($request->status != Status::Cancel->value) {
-                    $vendor = User::find($order->vendor_id);
-                    if ($order->afi_amount > $vendor->balance) {
-                        return response()->json([
-                            'status' => 401,
-                            'message' => 'Vendor balance not available'
-                        ]);
-                    } else {
-                        $vendor->balance = ($vendor->balance - $order->afi_amount);
-                        $vendor->save();
-                        PaymentHistoryService::store(uniqid(), $order->afi_amount, 'My wallet', 'Affiliate commission','-','',$order->vendor_id);
-                    }
-                }
-            }
-
-            if ($request->status == Status::Delivered->value) {
-                $vendor = User::find($order->vendor_id);
-
-                $balance = PendingBalance::where('order_id', $order->id)->first();
-                $balance->status = Status::Success->value;
-                $balance->save();
-
-                $user =  User::find($balance->affiliator_id);
-                $user->balance = ($user->balance + $balance->amount);
-                $user->save();
-
-                PaymentHistoryService::store(uniqid(),$balance->amount,'My wallet' ,'Product commission','+','',$user->id);
-
-            }
-
-            if (($request->status == Status::Cancel->value) || ($request->status =='return')) {
-
-
-
-                $balance = PendingBalance::where('order_id', $order->id)->first();
-
-                if ($order->status == Status::Delivered->value) {
-                    return response()->json([
-                        'status' => 401,
-                        'message' => 'Not possible to update'
-                    ]);
-                }
-
-
-                if ($order->status != Status::Hold->value) {
-                    if($balance){
-                        $vendor = User::find($order->vendor_id);
-                        CancelOrderBalance::create([
-                            'user_id'=>$order->vendor_id,
-                            'balance'=>$balance?->amount
-                        ]);
-                    }
-                }
-
-
-                $advancepayment =  AdvancePayment::where('order_id',$order->id)->first();
-
-                if($advancepayment){
-                     CancelOrderBalance::create([
-                        'user_id'=>$order->affiliator_id,
-                        'balance'=>$advancepayment->amount
-                    ]);
-                    $advancepayment->delete();
-                }
-
-
-
-                $balance->status = Status::Cancel->value;
-                $balance->save();
-
-                if ($order->is_unlimited != 1) {
-                    $product =  Product::find($order->product_id);
-                    $product->qty = ($product->qty + $balance->qty);
-
-                    $variants = json_decode($order->variants);
-                    $data = collect($variants)->pluck('qty', 'variant_id');
-
-
-                    $result = [];
-
-                    foreach ($data as $variantId => $qty) {
-                        $result[] = [
-                            "variant_id" => $variantId,
-                            "qty" => $qty
-                        ];
-                    }
-
-
-                    $databaseValues = $product->variants;
-                    $userValues = $result;
-
-
-
-                    if ($databaseValues != '') {
-                        foreach ($databaseValues as &$databaseItem) {
-                            $variantId = $databaseItem['id'];
-                            $matchingUserValue = collect($userValues)->firstWhere('variant_id', $variantId);
-
-                            if ($matchingUserValue) {
-                                $userQty = $matchingUserValue['qty'];
-                                $databaseItem['qty'] += $userQty;
-                            }
-                        }
-
-                        $product->variants = $databaseValues;
-                    }
-
-                    $product->save();
-                }
-            }
-
-
-
-            $order->status = $request->status;
-            $order->save();
-
-            return response()->json([
-                'status' => 200,
-                'message' => 'Updated Successfully!'
-            ]);
-        } else {
-            return response()->json([
-                'status' => 404,
-                'message' => 'Not found'
-            ]);
-        }
     }
 
 

@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\Coupon;
 use App\Models\Subscription;
 use App\Models\UserSubscription;
 use Carbon\Carbon;
@@ -189,5 +190,24 @@ function paymentredirect($role)
     }
     if (userrole($role) == 'user') {
         return 'users-dashboard';
+    }
+}
+
+
+function couponget($coupon_id)
+{
+    $coupon =  Coupon::query()
+        ->where(['id' => $coupon_id, 'status' => 'active'])
+        ->whereDate('expire_date', '>', now())
+        ->withCount('couponused')
+        ->first();
+
+
+    if ($coupon) {
+        $couponused =  $coupon->couponused()->count();
+        if ($coupon->limitation <= $couponused) {
+            return;
+        }
+        return $coupon;
     }
 }

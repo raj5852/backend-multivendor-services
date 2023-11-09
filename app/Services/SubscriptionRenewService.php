@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Models\Coupon;
 use App\Models\PaymentStore;
 use App\Models\Product;
 use App\Models\ProductDetails;
@@ -32,8 +33,32 @@ class SubscriptionRenewService
         $trxid = uniqid();
         $getsubscription = Subscription::find($subscriptionid);
 
+
+
+
+
+
         // subscription due balance - membership credit
         $subscriptiondue = (SubscriptionDueService::subscriptiondue(auth()->id()) - SubscriptionDueService::membership_credit(auth()->id(), $subscriptionid));
+
+        if(request('coupon_id') != ''){
+
+           $coupondata = couponget(request('coupon_id'));
+            if(!$coupondata){
+                return responsejson('Invaild coupon', 'fail');
+            }
+
+            if($coupondata->type == 'flat'){
+                $total = ($subscriptiondue - $coupondata->amount);
+            }else{
+                $total = (($subscriptiondue / 100 ) * $coupondata->amount);
+            }
+
+            if($total < 1){
+                return responsejson('You can not use this coupon!', 'fail');
+            }
+            $subscriptiondue += $total;
+        }
 
         $getusertype  = userrole($user->role_as);
         $servicecreated = VendorService::where('user_id', auth()->id())->count();
@@ -124,9 +149,9 @@ class SubscriptionRenewService
 
         PaymentHistoryService::store($trxid, $getsubscription->subscription_amount, $payment_method, $transition_type, '-', '', $user->id);
 
+        $userCurrentSubscription->subscription_price = $getsubscription->subscription_amount;
 
         if ($getsubscription->plan_type == $usersubscriptionPlan->plan_type) {
-
             if ($userCurrentSubscription->expire_date > now()) {
                 $expiretime = Carbon::parse($userCurrentSubscription->expire_date)->addMonth($addMonth);
             } else {
@@ -140,7 +165,6 @@ class SubscriptionRenewService
             $userCurrentSubscription->product_request = $getsubscription->product_request;
             $userCurrentSubscription->product_approve = $getsubscription->product_approve;
             $userCurrentSubscription->service_create = $getsubscription->service_create;
-            $userCurrentSubscription->subscription_price = $getsubscription->subscription_amount;
             $userCurrentSubscription->save();
 
             return responsejson('Renew successfully');
@@ -154,6 +178,7 @@ class SubscriptionRenewService
                 $userCurrentSubscription->service_qty =  $getsubscription->service_qty;
                 $userCurrentSubscription->product_qty =  $getsubscription->product_qty;
                 $userCurrentSubscription->affiliate_request =  $getsubscription->affiliate_request;
+
             }
 
             if (userrole($user->role_as) == 'affiliate') {
