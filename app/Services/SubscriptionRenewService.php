@@ -86,14 +86,8 @@ class SubscriptionRenewService
                 return responsejson('You can not renew now. You should contact to admin', 'fail');
             }
         }
-        if (request('payment_method') == 'my-wallet') {
-            $userbalance = $user->balance;
-            if (request('package_id')) {
-                if ($userbalance < ($getsubscription->subscription_amount + $subscriptiondue)) {
-                    return responsejson('You have not enough balance. You should recharge', 'fail');
-                }
-            }
-        }
+
+
         $totalprice = $getsubscription->subscription_amount + $subscriptiondue;
 
 
@@ -105,16 +99,26 @@ class SubscriptionRenewService
             }
 
             if ($coupondata->type == 'flat') {
-                $total = ($totalprice - $coupondata->amount);
+                $totalprice = ($totalprice - $coupondata->amount);
             } else {
-                $total = $totalprice - (($totalprice / 100) * $coupondata->amount);
+                $totalprice = ($totalprice - (($totalprice / 100) * $coupondata->amount));
             }
 
-            if ($total < 1) {
+            if ($totalprice < 1) {
                 return responsejson('You can not use this coupon!', 'fail');
             }
-            $totalprice = ($totalprice - $total);
         }
+
+
+        if (request('payment_method') == 'my-wallet') {
+            $userbalance = $user->balance;
+            if (request('package_id')) {
+                if ($userbalance < ($totalprice)) {
+                    return responsejson('You have not enough balance. You should recharge', 'fail');
+                }
+            }
+        }
+
 
 
 
