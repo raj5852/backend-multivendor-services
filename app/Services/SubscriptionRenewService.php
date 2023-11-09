@@ -41,24 +41,7 @@ class SubscriptionRenewService
         // subscription due balance - membership credit
         $subscriptiondue = (SubscriptionDueService::subscriptiondue(auth()->id()) - SubscriptionDueService::membership_credit(auth()->id(), $subscriptionid));
 
-        if(request('coupon_id') != ''){
 
-           $coupondata = couponget(request('coupon_id'));
-            if(!$coupondata){
-                return responsejson('Invaild coupon', 'fail');
-            }
-
-            if($coupondata->type == 'flat'){
-                $total = ($subscriptiondue - $coupondata->amount);
-            }else{
-                $total = $subscriptiondue - (($subscriptiondue / 100) * $coupondata->amount);
-            }
-
-            if($total < 1){
-                return responsejson('You can not use this coupon!', 'fail');
-            }
-            $subscriptiondue += $total;
-        }
 
         $getusertype  = userrole($user->role_as);
         $servicecreated = VendorService::where('user_id', auth()->id())->count();
@@ -111,10 +94,32 @@ class SubscriptionRenewService
                 }
             }
         }
+        $totalprice = $getsubscription->subscription_amount + $subscriptiondue;
+
+
+        if (request('coupon_id') != '') {
+
+            $coupondata = couponget(request('coupon_id'));
+            if (!$coupondata) {
+                return responsejson('Invaild coupon', 'fail');
+            }
+
+            if ($coupondata->type == 'flat') {
+                $total = ($totalprice - $coupondata->amount);
+            } else {
+                $total = $totalprice - (($totalprice / 100) * $coupondata->amount);
+            }
+
+            if ($total < 1) {
+                return responsejson('You can not use this coupon!', 'fail');
+            }
+            $totalprice += $total;
+        }
+
 
 
         if ($validatedData['payment_method'] == 'my-wallet') {
-            $user->balance = convertfloat($user->balance) - ($getsubscription->subscription_amount + $subscriptiondue);
+            $user->balance = convertfloat($user->balance) - ($totalprice);
             $user->save();
             return  self::subscriptionadd($user, $subscriptionid, $trxid, 'My wallet', 'Renew');
         }
@@ -132,8 +137,7 @@ class SubscriptionRenewService
                 'info' => $validatedData,
             ]);
 
-            $price = $getsubscription->subscription_amount + $subscriptiondue;
-            return AamarPayService::gateway($price, $trxid, 'renew', $successurl);
+            return AamarPayService::gateway($totalprice, $trxid, 'renew', $successurl);
         }
     }
 
@@ -178,7 +182,6 @@ class SubscriptionRenewService
                 $userCurrentSubscription->service_qty =  $getsubscription->service_qty;
                 $userCurrentSubscription->product_qty =  $getsubscription->product_qty;
                 $userCurrentSubscription->affiliate_request =  $getsubscription->affiliate_request;
-
             }
 
             if (userrole($user->role_as) == 'affiliate') {
