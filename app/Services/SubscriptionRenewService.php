@@ -51,7 +51,7 @@ class SubscriptionRenewService
             if($coupondata->type == 'flat'){
                 $total = ($subscriptiondue - $coupondata->amount);
             }else{
-                $total = (($subscriptiondue / 100 ) * $coupondata->amount);
+                $total = $subscriptiondue - (($subscriptiondue / 100) * $coupondata->amount);
             }
 
             if($total < 1){
