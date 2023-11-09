@@ -13,7 +13,7 @@ class ServiceCategory
 {
     static function index()
     {
-        return  ModelsServiceCategory::select('id', 'name', 'slug','status')->get();
+        return  ModelsServiceCategory::where('status','active')->select('id', 'name', 'slug','status')->get();
     }
 
     static  function create($serviceCategory)
