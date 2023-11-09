@@ -75,11 +75,18 @@ Route::get('demo', function () {
     $datas = VendorService::query()
         ->where('status', 'active')
         ->with(['user:id,name,image', 'firstpackage:id,price,vendor_service_id'])
-        ->select('id', 'title', 'user_id', 'image', 'tags')
+        // ->select('id', 'title', 'user_id', 'image', 'tags')
         ->withAvg('servicerating', 'rating')
         ->when(request('tags') != '', function ($query) {
-            $query->whereJsonContains('tags', request('tags')); // Use 'tags' here
+            $query->whereJsonContains('tags', request('tags'));
         })
+        ->when(request('category_id') != '', function ($query) {
+            $query->where('service_category_id',request('category_id'));
+        })
+        ->when(request('type') == 'latest', function ($query) {
+            $query->latest();
+        })
+
         ->inRandomOrder()
         ->paginate(12);
 
