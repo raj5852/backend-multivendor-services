@@ -113,7 +113,7 @@ class SubscriptionRenewService
             if ($total < 1) {
                 return responsejson('You can not use this coupon!', 'fail');
             }
-            $totalprice += $total;
+            $totalprice -= $total;
         }
 
 
