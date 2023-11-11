@@ -159,7 +159,7 @@ class SubscriptionRenewService
 
         $userCurrentSubscription->subscription_price = $getsubscription->subscription_amount;
 
-        if ($getsubscription->plan_type == $usersubscriptionPlan->plan_type) {
+        if ($getsubscription->id == $usersubscriptionPlan->id) {
             if ($userCurrentSubscription->expire_date > now()) {
                 $expiretime = Carbon::parse($userCurrentSubscription->expire_date)->addMonth($addMonth);
             } else {
