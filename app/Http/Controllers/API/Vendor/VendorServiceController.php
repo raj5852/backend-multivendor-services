@@ -231,7 +231,7 @@ class VendorServiceController extends Controller
                 function ($query) {
                     $query->latest();
                 }
-            )->paginate(20);
+            )->paginate(10);
 
         return $this->response($data);
     }

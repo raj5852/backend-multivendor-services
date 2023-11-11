@@ -25,7 +25,7 @@ class ProductController extends Controller
         $product = Product::when(request('status') == 'pending', function ($q) {
             return $q->where('status', 'pending');
         })
-            ->when(request('search'), fn ($q, $name) => $q->where('name', 'like', "%{$name}%")->orWhere('id', 'like', "%{$name}%") )
+            ->when(request('search'), fn ($q, $name) => $q->where('name', 'like', "%{$name}%")->orWhere('uniqid', 'like', "%{$name}%") )
 
             ->when(request('status') == 'active', function ($q) {
                 return $q->where('status', 'active');
@@ -33,7 +33,7 @@ class ProductController extends Controller
             ->when(request('status') == 'rejected', function ($q) {
                 return $q->where('status', 'rejected');
             })
-            ->with('category', 'brand', 'subcategory', 'productImage','vendor:id,name')
+            ->with('vendor:id,name')
             ->latest()->paginate(10)
             ->withQueryString();
 

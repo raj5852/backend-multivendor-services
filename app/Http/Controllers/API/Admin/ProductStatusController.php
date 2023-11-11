@@ -60,7 +60,7 @@ class ProductStatusController extends Controller
     {
         $search = request('search');
         $product = ProductDetails::query()
-            ->with(['vendor', 'affiliator', 'product'])
+            ->with(['vendor:id,name', 'affiliator,id,name', 'product'])
             ->when($search != '', function ($query) use ($search) {
                 $query->whereHas('product', function ($query) use ($search) {
                     $query->where('name', 'like', '%' . $search . '%');
@@ -68,6 +68,7 @@ class ProductStatusController extends Controller
                     ->orWhere('uniqid', 'like', '%' . $search . '%');
             })
             ->latest()
+            ->select('')
             ->paginate(10)
             ->withQueryString();
 
