@@ -20,13 +20,12 @@ class ProductService
             ->when(request('status') == 'rejected', function ($q) {
                 return $q->where('status', 'rejected');
             })
-            ->when(request('search'),fn($q, $name)=>$q->where('name','like',"%{$name}%"))
+            ->when(request('search'),fn($q, $search)=>$q->search($search))
 
             ->when(request('status') == 'active', function ($q) {
                 return $q->where('status', 'active');
             })
             ->with([
-
                 'category:id,name,slug,image',
                 'subcategory:id,name',
                 'brand:id,name',

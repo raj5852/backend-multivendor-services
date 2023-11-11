@@ -27,7 +27,7 @@ class Product extends Model
 
     public function colors()
     {
-        return $this->belongsToMany('App\Models\Color','color_product','product_id','color_id')->withPivot('qnt');
+        return $this->belongsToMany('App\Models\Color', 'color_product', 'product_id', 'color_id')->withPivot('qnt');
     }
 
 
@@ -52,30 +52,37 @@ class Product extends Model
         return $this->belongsTo(User::class, 'user_id', 'id');
     }
 
-    function specifications(){
-        return $this->hasMany(specification::class,'product_id','id');
+    function specifications()
+    {
+        return $this->hasMany(specification::class, 'product_id', 'id');
     }
 
-    function orders(){
-        return $this->hasMany(Order::class,'product_id','id');
+    function orders()
+    {
+        return $this->hasMany(Order::class, 'product_id', 'id');
     }
 
-    function pendingproduct(){
-        return $this->hasOne(PendingProduct::class,'product_id');
+    function pendingproduct()
+    {
+        return $this->hasOne(PendingProduct::class, 'product_id');
     }
 
-    function productrating(){
-        return $this->hasMany(ProductRating::class,'product_id');
+    function productrating()
+    {
+        return $this->hasMany(ProductRating::class, 'product_id');
     }
 
     protected $casts = [
-        'tags'=>'array',
-        'variants'=>'array',
-        'meta_keyword'=>'array',
-        'selling_details'=>'array',
-        'specifications'=>'array'
+        'tags' => 'array',
+        'variants' => 'array',
+        'meta_keyword' => 'array',
+        'selling_details' => 'array',
+        'specifications' => 'array'
     ];
 
-
-
+    function scopeSearch($query, $value)
+    {
+        $query->where('name', 'like', "%{$value}%")
+            ->orWhere('uniqid', $value);
+    }
 }
