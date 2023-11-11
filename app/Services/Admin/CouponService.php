@@ -19,6 +19,7 @@ class CouponService
             $couponrequest->status = 'active';
             $couponrequest->save();
         }
+        $couponrequest->delete();
 
         return $coupon;
     }

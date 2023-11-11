@@ -37,7 +37,8 @@ class AuthController extends Controller
                 'number'=>$request->number,
                 'status' => 'pending',
                 'password' => Hash::make($request->password),
-                'status'=> 'active'
+                'status'=> 'active',
+                'uniqid'=>uniqid()
             ]);
 
             $token = $user->createToken('API TOKEN')->plainTextToken;
