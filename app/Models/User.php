@@ -29,7 +29,8 @@ class User extends Authenticatable
         'number',
         'image',
         'status',
-        'balance'
+        'balance',
+        'uniqid'
     ];
 
     /**
