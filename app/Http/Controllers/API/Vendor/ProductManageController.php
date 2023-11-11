@@ -182,6 +182,7 @@ class ProductManageController extends Controller
             })->toArray();
 
             $product->specifications = $specificationdata;
+            $product->uniqid = uniqid();
             $product->save();
 
 
