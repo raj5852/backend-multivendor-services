@@ -130,6 +130,7 @@ class UserController extends Controller
             $vendor->number = $request->input('number');
             $vendor->balance = $request->balance ?? 0;
             $vendor->role_as = '2';
+            $vendor->uniqid =  uniqid();
 
             if ($request->hasFile('image')) {
                 $img =  fileUpload($request->file('image'), 'uploads/vendor', 125, 125);
