@@ -23,7 +23,8 @@ class ProductOrderService
             'cancel' => self::canceldOrder($order),
             'progress' => self::progressOrder($order),
             'delivered' => self::deliveredOrder($order),
-            'return' => self::returnOrder($order)
+            'return' => self::returnOrder($order),
+            'received'=> self::receivedOrder($order)
         };
     }
 
@@ -85,7 +86,7 @@ class ProductOrderService
 
     static function receivedOrder($order)
     {
-        $order->update(['status' => 'progress']);
+        $order->update(['status' => 'received']);
         return self::response('Order received successfull!');
     }
 
