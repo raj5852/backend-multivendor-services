@@ -55,8 +55,7 @@ class UserController extends Controller
             })
             ->when(
                 $request->email,
-                fn ($q, $email) => $q->where('email', 'like', "%{$email}%")
-                    ->orWhere('id', 'like', "%{$email}%")
+                fn ($q, $email) => $q->search($email)
             )
             ->latest()
             ->paginate(10)
@@ -92,7 +91,7 @@ class UserController extends Controller
             })
             ->when(
                 request('email'),
-                fn ($q, $email) => $q->Search($email)
+                fn ($q, $email) => $q->search($email)
             )
             ->latest()
             ->paginate(10)
@@ -270,8 +269,7 @@ class UserController extends Controller
             })
             ->when(
                 $request->email,
-                fn ($q, $email) => $q->where('email', 'like', "%{$email}%")
-                    ->orWhere('id', 'like', "%{$email}%")
+                fn ($q, $email) => $q->search($email)
             )
             ->latest()
             ->paginate(10)
