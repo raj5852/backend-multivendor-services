@@ -25,12 +25,7 @@ class ProductService
             ->when(request('status') == 'active', function ($q) {
                 return $q->where('status', 'active');
             })
-            ->with([
-                'category:id,name,slug,image',
-                'subcategory:id,name',
-                'brand:id,name',
-                'productImage',
-            ])
+            ->select('id','uniqid','image','selling_price','qty','status','created_at')
             ->latest()
             ->paginate(10)
             ->withQueryString();
