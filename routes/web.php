@@ -72,9 +72,5 @@ Route::get('demo', function () {
 //    return $user->balance;
 
 // return couponget('perves');
-    $a = 5;
-    $a+=10;
-
-    return $a;
 
 });

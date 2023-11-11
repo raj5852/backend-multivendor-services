@@ -55,4 +55,14 @@ class CouponRequestController extends Controller
         $couponrequest->save();
         return $this->response('success');
     }
+    function deleterequest($id)
+    {
+        $couponrequest =  CouponRequest::find($id);
+        if (!$couponrequest) {
+            return $this->response('Not found', 'fail');
+        }
+
+        $couponrequest->delete();
+        return $this->response('Coupon request deleted successfull');
+    }
 }

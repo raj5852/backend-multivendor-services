@@ -247,6 +247,7 @@ Route::middleware(['auth:sanctum', 'isAPIAdmin'])->group(function () {
         Route::get('membership-details/vendor',[MembershipDetailsController::class,'vendormembership']);
         Route::get('all-coupon-request',[CouponRequestController::class,'allcouponrequest']);
         Route::post('coupon-request-status-change/{id}',[CouponRequestController::class,'changestatus']);
+        Route::get('coupon-request-delete',[CouponRequestController::class,'deleterequest']);
 
         Route::post('contact-page',[ContactPageController::class,'store']);
         Route::get('contact-page-data',[ContactPageController::class,'index']);
