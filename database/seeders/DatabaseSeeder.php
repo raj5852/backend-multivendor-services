@@ -16,9 +16,9 @@ class DatabaseSeeder extends Seeder
     {
         // SubscriptionSedder::run();
 
-        // $this->call(UserSeeder::class);
+        $this->call(UserSeeder::class);
         // $this->call(SubscriptionSedder::class);
-        $this->call(PlanTypeSeeder::class);
+        // $this->call(PlanTypeSeeder::class);
 
 
     }
