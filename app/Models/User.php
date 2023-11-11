@@ -12,8 +12,9 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class User extends Authenticatable
 {
     use HasApiTokens,
-     HasFactory,SoftDeletes,
-      Notifiable;
+        HasFactory,
+        SoftDeletes,
+        Notifiable;
 
     /**
      * The attributes that are mass assignable.
@@ -49,36 +50,49 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
-    function brands(){
-        return $this->hasMany(Brand::class,'user_id','id');
+    function brands()
+    {
+        return $this->hasMany(Brand::class, 'user_id', 'id');
     }
-    function getVendorBrands(){
-        return $this->hasMany(Brand::class,'user_id','id')->where('status','active');
-
-    }
-
-    function usersubscription(){
-        return $this->hasOne(UserSubscription::class,'user_id');
+    function getVendorBrands()
+    {
+        return $this->hasMany(Brand::class, 'user_id', 'id')->where('status', 'active');
     }
 
-    function vendorsubscription(){
-        return $this->hasOne(UserSubscription::class,'user_id');
+    function usersubscription()
+    {
+        return $this->hasOne(UserSubscription::class, 'user_id');
+    }
+
+    function vendorsubscription()
+    {
+        return $this->hasOne(UserSubscription::class, 'user_id');
     }
 
 
-    function usersubscriptions(){
-        return $this->hasMany(UserSubscription::class,'user_id');
+    function usersubscriptions()
+    {
+        return $this->hasMany(UserSubscription::class, 'user_id');
     }
 
-    function paymenthistories(){
-        return $this->hasMany(PaymentHistory::class,'user_id');
+    function paymenthistories()
+    {
+        return $this->hasMany(PaymentHistory::class, 'user_id');
     }
 
-    function affiliatoractiveproducts(){
-        return $this->hasMany(ProductDetails::class,'user_id');
+    function affiliatoractiveproducts()
+    {
+        return $this->hasMany(ProductDetails::class, 'user_id');
     }
 
-    function vendoractiveproduct(){
-        return $this->hasMany(ProductDetails::class,'vendor_id');
+    function vendoractiveproduct()
+    {
+        return $this->hasMany(ProductDetails::class, 'vendor_id');
+    }
+
+    function scopeSearch($query,$value)
+    {
+        $query->where('email', 'like', "%{$value}%")
+            ->orWhere('id', 'like', "%{$value}%");
     }
 }
