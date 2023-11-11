@@ -4,11 +4,13 @@ namespace App\Http\Controllers\API\Admin;
 
 use App\Enums\Status;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\ProductOrderRequest;
 use App\Models\CancelOrderBalance;
 use App\Models\Order;
 use App\Models\PendingBalance;
 use App\Models\Product;
 use App\Models\User;
+use App\Services\ProductOrderService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 
@@ -128,126 +130,13 @@ class OrderController extends Controller
         ]);
     }
 
-    function updateStatus(Request $request, $id)
+    function updateStatus(ProductOrderRequest $request, $id)
     {
-        $order =  Order::find($id);
-        if ($order) {
 
-            if ($order->reason) {
-                $order->reason = $request->reason;
-            }
+        $validatedData = $request->validated();
 
+        return   ProductOrderService::orderStatus($validatedData, $id);
 
-            if ($order->status == Status::Hold->value) {
-                if ($request->status != Status::Cancel->value) {
-                    $vendor = User::find($order->vendor_id);
-                    if ($order->afi_amount > $vendor->balance) {
-                        return response()->json([
-                            'status' => 401,
-                            'message' => 'Vendor balance not available'
-                        ]);
-                    } else {
-                        $vendor->balance = ($vendor->balance - $order->afi_amount);
-                        $vendor->save();
-                    }
-                }
-            }
-
-            if ($request->status == Status::Delivered->value) {
-                $vendor = User::find($order->vendor_id);
-
-                $balance = PendingBalance::where('order_id', $order->id)->first();
-                $balance->status = Status::Success->value;
-                $balance->save();
-
-                $user =  User::find($balance->affiliator_id);
-                $user->balance = ($user->balance + $balance->amount);
-                $user->save();
-            }
-
-            if ($request->status == Status::Cancel->value || $request->status =='return') {
-
-
-
-                $balance = PendingBalance::where('order_id', $order->id)->first();
-
-                if ($order->status == Status::Delivered->value) {
-
-                    return response()->json([
-                        'status' => 401,
-                        'message' => 'Not possible to update'
-                    ]);
-                }
-
-
-                if ($order->status != Status::Hold->value) {
-                    $vendor = User::find($order->vendor_id);
-                    CancelOrderBalance::create([
-                        'user_id'=>$order->vendor_id,
-                        'balance'=>$balance->amount
-                    ]);
-                }
-
-
-                $balance->status = $request->status;
-                $balance->save();
-
-                if ($order->is_unlimited != 1) {
-                    $product =  Product::find($order->product_id);
-                    $product->qty = ($product->qty + $balance->qty);
-
-                    $variants = json_decode($order->variants);
-                    $data = collect($variants)->pluck('qty', 'variant_id');
-
-
-                    $result = [];
-
-                    foreach ($data as $variantId => $qty) {
-                        $result[] = [
-                            "variant_id" => $variantId,
-                            "qty" => $qty
-                        ];
-                    }
-
-
-                    $databaseValues = $product->variants;
-                    $userValues = $result;
-
-
-
-                    if ($databaseValues != '') {
-                        foreach ($databaseValues as &$databaseItem) {
-                            $variantId = $databaseItem['id'];
-                            $matchingUserValue = collect($userValues)->firstWhere('variant_id', $variantId);
-
-                            if ($matchingUserValue) {
-                                $userQty = $matchingUserValue['qty'];
-                                $databaseItem['qty'] += $userQty;
-                            }
-                        }
-
-                        $product->variants = $databaseValues;
-                    }
-
-                    $product->save();
-                }
-            }
-
-
-
-            $order->status = $request->status;
-            $order->save();
-
-            return response()->json([
-                'status' => 200,
-                'message' => 'Updated Successfully!'
-            ]);
-        } else {
-            return response()->json([
-                'status' => 404,
-                'message' => 'Not found'
-            ]);
-        }
     }
     function orderView($id)
     {
