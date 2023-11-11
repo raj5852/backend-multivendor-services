@@ -329,6 +329,7 @@ class UserController extends Controller
             $affiliator->status = $request->input('status');
             $affiliator->number = $request->input('number');
             $affiliator->role_as = '4';
+            $affiliator->uniqid = uniqid() ;
 
             if ($request->hasFile('image')) {
 
@@ -370,6 +371,7 @@ class UserController extends Controller
             $affiliator->number = $request->input('number');
             $affiliator->balance = 0;
             $affiliator->role_as = '3';
+            $affiliator->uniqid =  uniqid();
 
             if ($request->hasFile('image')) {
 
