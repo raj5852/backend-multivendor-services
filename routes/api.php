@@ -13,6 +13,7 @@ use App\Http\Controllers\API\CouponRequestController;
 use App\Http\Controllers\API\HistoryController;
 use App\Http\Controllers\API\ProfileDataController;
 use App\Http\Controllers\API\RechargeController;
+use App\Http\Controllers\API\ServiceBuyStatusController;
 use App\Http\Controllers\API\ServiceOrderController;
 use App\Http\Controllers\API\ServiceRatingController;
 use App\Http\Controllers\API\SubscriptionAlertController;
@@ -56,7 +57,6 @@ Route::middleware('auth:sanctum')->group(function () {
 
     Route::get('service/orders/view/{id}', [VendorServiceController::class, 'ordersview']);
 
-    // Route::post('service/delivery-to-customer',[VendorServiceController::class,'deliverytocustomer']);
     Route::resource('service/delivery-to-customer', OrderDeliveryController::class);
     Route::get('service-category-subcategory', [VendorServiceController::class, 'categorysubcategory']);
 
@@ -102,7 +102,9 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('profile-data',[ProfileDataController::class,'profile']);
     Route::post('profile-data-update',[ProfileDataController::class,'profileupdate']);
     Route::get('subscription-notification',[SubscriptionAlertController::class,'index']);
-
+    Route::post('service-buy-status',[ServiceBuyStatusController::class,'index']);
+    Route::post('cancel-own-serviceorder-request',[ServiceBuyStatusController::class,'cancelownserviceorderrequest']);
+    Route::post('cancel-other-serviceorder-request',[ServiceBuyStatusController::class,'cancelotherserviceorderrequest']);
 });
 
 Route::prefix('aaparpay')->group(function () {

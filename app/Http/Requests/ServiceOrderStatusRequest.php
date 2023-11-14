@@ -3,13 +3,12 @@
 namespace App\Http\Requests;
 
 use App\Models\ServiceOrder;
-use App\Rules\VendorOrderStatus;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Validation\Rule;
 
-class VendorOrderStatusRequest extends FormRequest
+class ServiceOrderStatusRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -26,11 +25,12 @@ class VendorOrderStatusRequest extends FormRequest
      *
      * @return array<string, mixed>
      */
+
     public function rules()
     {
         $rulestatus = [
-            'pending' => ['progress', 'cancel_request'],
-            'progress' => ['cancel_request', 'delivered'],
+            'pending' => ['cancel_request'],
+            'progress' => ['cancel_request'],
             'delivered' => ['cancel_request'],
         ];
 
@@ -40,7 +40,8 @@ class VendorOrderStatusRequest extends FormRequest
             'service_order_id' => [
                 'required',
                 'integer',
-                Rule::exists('service_orders', 'id')->where('vendor_id', userid())
+                Rule::exists('service_orders', 'id')
+                    ->where('user_id', userid())
             ],
             'status' => [
                 'required',
@@ -49,9 +50,6 @@ class VendorOrderStatusRequest extends FormRequest
             'reason' => 'required_if:status,cancel_request'
         ];
     }
-
-
-
 
     public function failedValidation(Validator $validator)
     {

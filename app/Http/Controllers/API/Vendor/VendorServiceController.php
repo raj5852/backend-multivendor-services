@@ -2,19 +2,19 @@
 
 namespace App\Http\Controllers\API\Vendor;
 
+use Carbon\Carbon;
+use App\Models\User;
+use App\Models\Category;
+use App\Models\ServiceOrder;
 use App\Models\VendorService;
+use App\Models\ServiceCategory;
+use App\Services\ShowAllService;
 use App\Http\Controllers\Controller;
+use App\Services\Vendor\ProductService;
 use App\Http\Requests\ServiceDeliveryRequest;
+use App\Http\Requests\VendorOrderStatusRequest;
 use App\Http\Requests\StoreVendorServiceRequest;
 use App\Http\Requests\UpdateVendorServiceRequest;
-use App\Http\Requests\VendorOrderStatusRequest;
-use App\Models\Category;
-use App\Models\ServiceCategory;
-use App\Models\ServiceOrder;
-use App\Models\User;
-use App\Services\ShowAllService;
-use App\Services\Vendor\ProductService;
-use Carbon\Carbon;
 
 class VendorServiceController extends Controller
 {
@@ -136,13 +136,26 @@ class VendorServiceController extends Controller
     function statusChange(VendorOrderStatusRequest $request)
     {
         $validateData = $request->validated();
+
         $serviceOrder = ServiceOrder::find($validateData['service_order_id']);
-        $serviceOrder->status = $validateData['status'];
-        $time = $serviceOrder->packagedetails->time;
+        $status = $validateData['status'];
 
-        $timer = Carbon::now()->addDay($time);
+        if ($status != 'cancel_request') {
+            $serviceOrder->status = $validateData['status'];
+        }
 
-        $serviceOrder->timer = $timer;
+        if (request('status') == 'progress') {
+            $time = $serviceOrder->packagedetails->time;
+            $timer = Carbon::now()->addDay($time);
+            $serviceOrder->timer = $timer;
+        }
+
+        if($status == 'cancel_request'){
+            $serviceOrder->is_rejected = 1;
+            $serviceOrder->reason = request('reason');
+            $serviceOrder->rejected_user_id = auth()->id();
+        }
+
         $serviceOrder->save();
 
         return $this->response('Updated successfull');

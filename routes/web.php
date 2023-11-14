@@ -3,10 +3,12 @@
 use App\Enums\Status;
 use App\Http\Controllers\TestController;
 use App\Models\AdminAdvertise;
+use App\Models\CancelOrderBalance;
 use App\Models\Coupon;
 use App\Models\CouponUsed;
 use App\Models\Order;
 use App\Models\Product;
+use App\Models\ServiceOrder;
 use App\Models\Subscription;
 use App\Models\SupportBox;
 use App\Models\User;
@@ -56,21 +58,5 @@ Route::get('seed', function () {
 
 
 Route::get('demo', function () {
-
-
-    // $order =  Order::find(97);
-    // $order->update(['status'=>'hold']);
-
-    // return Product::find(65);
-    // return $order;
-    // return User::find(323);
-
-// return Order::where('order_id',97)->first();
-
-//    $user = User::find(323);
-//    $user->increment('balance',15);
-//    return $user->balance;
-
-// return couponget('perves');
-
+    // return ServiceOrder::where('user_id',2)->where('status','pending')->get();
 });

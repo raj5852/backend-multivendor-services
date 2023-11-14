@@ -3,6 +3,8 @@
 namespace App\Console\Commands;
 
 use App\Models\CancelOrderBalance;
+use App\Models\User;
+use App\Services\PaymentHistoryService;
 use Illuminate\Console\Command;
 use Illuminate\Support\Carbon;
 
@@ -29,8 +31,13 @@ class OrderCancelBalance extends Command
      */
     public function handle()
     {
-        CancelOrderBalance::where('created_at', '>', Carbon::now()->subHours(24))->chunk(100,function ($data) {
-            info($data);
+        CancelOrderBalance::where('created_at', '<', now()->subHour(24))->chunk(100, function ($datas) {
+            foreach ($datas as $data) {
+                $trxid = uniqid();
+                PaymentHistoryService::store($trxid, $data->amount, 'My wallet', 'Cancel order', '+', '', $data->user_id);
+                User::find($data->user_id)->increment('balance', $data->balance);
+                $data->delete();
+            }
         });
     }
 }

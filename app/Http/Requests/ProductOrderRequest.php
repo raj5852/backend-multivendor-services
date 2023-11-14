@@ -49,8 +49,10 @@ class ProductOrderRequest extends FormRequest
         $vendorbalance = function ($attribute, $value, $fail) use ($order) {
             if ($order->status == 'hold') {
                 $balance = User::find($order->vendor_id)->balance;
-                if ($balance <  $order->afi_amount) {
-                    $fail('Balance not available!');
+                if (request('status') != 'cancel') {
+                    if ($balance <  $order->afi_amount) {
+                        $fail('Balance not available!');
+                    }
                 }
             }
         };

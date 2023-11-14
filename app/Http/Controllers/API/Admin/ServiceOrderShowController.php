@@ -5,6 +5,8 @@ namespace App\Http\Controllers\API\Admin;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\CustomerServiceShow;
 use App\Models\ServiceOrder;
+use App\Models\User;
+use App\Services\PaymentHistoryService;
 use Illuminate\Http\Request;
 
 class ServiceOrderShowController extends Controller
@@ -18,8 +20,8 @@ class ServiceOrderShowController extends Controller
     public function index()
     {
         $serviceOrderDetails  = ServiceOrder::with(['customerdetails', 'vendor', 'servicedetails'])->latest()
-        ->when(request('order_id'),fn($q,$orderid)=>$q->where('trxid','like',"%{$orderid}%"))
-        ->paginate(10);
+            ->when(request('order_id'), fn ($q, $orderid) => $q->where('trxid', 'like', "%{$orderid}%"))
+            ->paginate(10);
         return $this->response($serviceOrderDetails);
     }
 
@@ -31,7 +33,6 @@ class ServiceOrderShowController extends Controller
      */
     public function store(Request $request)
     {
-
     }
 
     /**
@@ -46,7 +47,6 @@ class ServiceOrderShowController extends Controller
             $query->with('deliveryfiles');
         }])->find($id);
         return $this->response($data);
-
     }
 
     /**
@@ -56,13 +56,17 @@ class ServiceOrderShowController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(CustomerServiceShow $request,$id)
+    public function update(CustomerServiceShow $request, $id)
     {
         $validatedData = $request->validated();
         $serviceOrder = ServiceOrder::find($id);
         $serviceOrder->status = $validatedData['status'];
         $serviceOrder->save();
 
+        if ($validatedData['status'] == 'canceled') {
+            User::find($serviceOrder->user_id)->increment('balance', $serviceOrder->amount);
+            PaymentHistoryService::store(uniqid(), $serviceOrder->amount, 'My wallet', 'Service cancel', '+', '', $serviceOrder->user_id);
+        }
         return $this->response('Updated successful');
     }
 
