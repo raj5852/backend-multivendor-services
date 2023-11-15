@@ -1,10 +1,13 @@
 <?php
 
 use App\Http\Controllers\API\Admin\AdminAdvertiseController;
+use App\Http\Controllers\Api\Admin\AudienceAgeController;
 use App\Http\Controllers\API\Admin\BankController;
+use App\Http\Controllers\Api\Admin\CampaignCategoryController;
 use App\Http\Controllers\API\Admin\CompanionController;
 use App\Http\Controllers\API\Admin\ContactController;
 use App\Http\Controllers\API\Admin\ContactPageController;
+use App\Http\Controllers\Api\Admin\ConversionLocationController;
 use App\Http\Controllers\API\Admin\CouponController;
 use App\Http\Controllers\API\Admin\DashboardController;
 use App\Http\Controllers\API\Admin\DollerPriceController;
@@ -20,6 +23,10 @@ use App\Http\Controllers\API\Admin\OrganizationTwoController;
 use App\Http\Controllers\API\Admin\OurServiceController;
 use App\Http\Controllers\API\Admin\PartnerController;
 use App\Http\Controllers\API\Admin\PaymentHistoryController;
+use App\Http\Controllers\Api\Admin\PerformanceGoalController;
+use App\Http\Controllers\Api\Admin\PlacementController;
+use App\Http\Controllers\Api\Admin\PlacementDeviceController;
+use App\Http\Controllers\Api\Admin\PlacementPlatformController;
 use App\Http\Controllers\API\Admin\ProductController as AdminProductController;
 use App\Http\Controllers\API\Admin\ProductStatusController;
 use App\Http\Controllers\API\Admin\ProfileController;
@@ -258,6 +265,22 @@ Route::middleware(['auth:sanctum', 'isAPIAdmin'])->group(function () {
         Route::post('vendor-products-edit-request-status/{id}',[VendorProductController::class,'productstatus']);
         Route::post('product-update/{productid}',[AdminProductController::class,'productupdate']);
         Route::delete('product-image-delete/{id}',[AdminProductController::class,'deleteproductimage']);
+
+
+        Route::resource('campaign/category', CampaignCategoryController::class);
+        Route::resource('conversion/location', ConversionLocationController::class);
+        Route::resource('performance/goal', PerformanceGoalController::class);
+
+
+
+
+        Route::get('dynamic-colum/{colum}', [PlacementController::class, 'index']);
+        Route::post('dynamic-colum/{colum}', [PlacementController::class, 'store']);
+        Route::get('dynamic-colum/view/{id}/{colum}', [PlacementController::class, 'show']);
+        Route::post('dynamic-colum/update/{id}/{colum}', [PlacementController::class, 'update']);
+        Route::delete('dynamic-colum/delete/{id}', [PlacementController::class, 'delete']);
+
+
     });
 
 });
