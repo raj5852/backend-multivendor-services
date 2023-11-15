@@ -1,13 +1,12 @@
 <?php
 
 use App\Http\Controllers\API\Admin\AdminAdvertiseController;
-use App\Http\Controllers\Api\Admin\AudienceAgeController;
 use App\Http\Controllers\API\Admin\BankController;
-use App\Http\Controllers\Api\Admin\CampaignCategoryController;
+use App\Http\Controllers\API\Admin\CampaignCategoryController;
 use App\Http\Controllers\API\Admin\CompanionController;
 use App\Http\Controllers\API\Admin\ContactController;
 use App\Http\Controllers\API\Admin\ContactPageController;
-use App\Http\Controllers\Api\Admin\ConversionLocationController;
+use App\Http\Controllers\API\Admin\ConversionLocationController;
 use App\Http\Controllers\API\Admin\CouponController;
 use App\Http\Controllers\API\Admin\DashboardController;
 use App\Http\Controllers\API\Admin\DollerPriceController;
@@ -23,10 +22,8 @@ use App\Http\Controllers\API\Admin\OrganizationTwoController;
 use App\Http\Controllers\API\Admin\OurServiceController;
 use App\Http\Controllers\API\Admin\PartnerController;
 use App\Http\Controllers\API\Admin\PaymentHistoryController;
-use App\Http\Controllers\Api\Admin\PerformanceGoalController;
-use App\Http\Controllers\Api\Admin\PlacementController;
-use App\Http\Controllers\Api\Admin\PlacementDeviceController;
-use App\Http\Controllers\Api\Admin\PlacementPlatformController;
+use App\Http\Controllers\API\Admin\PerformanceGoalController;
+use App\Http\Controllers\API\Admin\PlacementController;
 use App\Http\Controllers\API\Admin\ProductController as AdminProductController;
 use App\Http\Controllers\API\Admin\ProductStatusController;
 use App\Http\Controllers\API\Admin\ProfileController;
@@ -42,7 +39,6 @@ use App\Http\Controllers\API\Admin\UserEmailSubscribeControllerList;
 use App\Http\Controllers\API\Admin\VendorProductController;
 use App\Http\Controllers\API\Admin\VendorServiceController;
 use App\Http\Controllers\API\Admin\WithdrawController as AdminWithdrawController;
-use App\Http\Controllers\API\AuthController;
 use App\Http\Controllers\API\CategoryController;
 use App\Http\Controllers\API\SubCategoryController;
 use App\Http\Controllers\API\BrandController;
