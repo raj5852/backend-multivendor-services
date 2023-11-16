@@ -107,7 +107,7 @@ class SettingsController extends Controller
     }
 
     public function campaignDynamicData($colum) {
-        $data = Placement::select('id', $colum)->where($colum,$colum)->latest()->paginate(10);
+        $data = Placement::select('id', $colum)->where($colum, '!=','')->latest()->paginate(10);
         return $this->response($data);
     }
 }
