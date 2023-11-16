@@ -9,8 +9,8 @@ use Illuminate\Http\Request;
 class PlacementController extends Controller
 {
 
-    public function index($colum) {
-        $placements = Placement::select('id', $colum)->where($colum, '!=', '')->latest()->paginate(10);
+public function index($colum) {
+        $placements = Placement::select('id', $colum)->where($colum, $colum)->latest()->paginate(10);
 
         return $this->response($placements);
     }
