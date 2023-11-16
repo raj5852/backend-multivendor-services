@@ -10,7 +10,7 @@ class PlacementController extends Controller
 {
 
 public function index($colum) {
-        $placements = Placement::select('id', $colum)->where($colum, $colum)->latest()->paginate(10);
+        $placements = Placement::select('id', $colum)->where($colum, '!=', '')->get();
 
         return $this->response($placements);
     }
