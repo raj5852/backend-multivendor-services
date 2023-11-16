@@ -3,6 +3,10 @@
 namespace App\Http\Controllers\API\User;
 
 use App\Http\Controllers\Controller;
+use App\Models\CampaignCategory;
+use App\Models\ConversionLocation;
+use App\Models\PerfomanceGoal;
+use App\Models\Placement;
 use App\Models\Settings;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -81,5 +85,30 @@ class SettingsController extends Controller
         return $this->response($testimonial);
     }
 
+
+    public function campaignCategory() {
+        $categories = CampaignCategory::all();
+        return $this->response($categories);
+    }
+
+
+    public function campaignConverstionLocation($id) {
+
+        $locations = ConversionLocation::where('campaign_category_id', $id)->get();
+
+        return $this->response($locations);
+
+    }
+
+    public function campaignPerformanceGoal($id) {
+        $goals = PerfomanceGoal::where('campaign_category_id', $id)->get();
+
+        return $this->response($goals);
+    }
+
+    public function campaignDynamicData($colum) {
+        $data = Placement::select('id', $colum)->where($colum,'!=', $colum)->latest()->paginate(10);
+
+    }
 }
 
