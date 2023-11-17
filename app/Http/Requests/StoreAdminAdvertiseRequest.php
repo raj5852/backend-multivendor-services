@@ -38,7 +38,7 @@ class StoreAdminAdvertiseRequest extends FormRequest
             'budget_amount' => ['required', 'numeric', 'min:1', new AdvertiseBudgetRule()],
             'start_date'  => ['required'],
             'end_date'  => ['required'],
-            'age'  => ['required', 'numeric'],
+            'age'  => ['required', 'string'],
             'gender'  => ['required'],
             'detail_targeting'  => ['required'],
             'country'  => ['required'],
