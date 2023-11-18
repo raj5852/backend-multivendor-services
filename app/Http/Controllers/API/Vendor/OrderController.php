@@ -86,6 +86,28 @@ class OrderController extends Controller
             'message' => $orders
         ]);
     }
+    function receivedOrders()
+    {
+        $orders = Order::searchProduct()
+            ->where('vendor_id', auth()->user()->id)
+            ->where('status', 'received')
+            ->with(['affiliator:id,name', 'vendor:id,name', 'product:id,name'])
+            ->latest()
+            ->paginate(10)
+            ->withQueryString();
+
+
+
+        $orders->map(function ($order) {
+            $order->variants = json_decode($order->variants);
+            return $order;
+        });
+
+        return response()->json([
+            'status' => 200,
+            'message' => $orders
+        ]);
+    }
     function DeliveredOrders()
     {
         $orders = Order::searchProduct()

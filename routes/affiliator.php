@@ -52,6 +52,7 @@ Route::middleware(['auth:sanctum','isAPIaffiliator','userOnline'])->group(functi
     Route::get('affiliator/all-orders',[OrderController::class,'AllOrders']);
     Route::get('affiliator/pending-orders',[OrderController::class,'pendingOrders']);
     Route::get('affiliator/progress-orders',[OrderController::class,'ProgressOrders']);
+    Route::get('affiliator/received-orders',[OrderController::class,'receivedOrders']);
     Route::get('affiliator/delivered-orders',[OrderController::class,'DeliveredOrders']);
     Route::get('affiliator/cancel-orders',[OrderController::class,'CanceldOrders']);
     Route::get('affiliator/hold-orders',[OrderController::class,'HoldOrders']);
