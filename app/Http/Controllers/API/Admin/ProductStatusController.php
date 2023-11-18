@@ -37,7 +37,7 @@ class ProductStatusController extends Controller
     {
         $search = request('search');
         $product = ProductDetails::query()
-            ->with(['vendor:id,name', 'affiliator:id,name', 'product:id,name,image, discount_rate',])
+            ->with(['vendor:id,name', 'affiliator:id,name', 'product:id,name,image,discount_rate',])
             ->where('status', '1')
             ->when($search != '', function ($query) use ($search) {
                 $query->whereHas('product', function ($query) use ($search) {
@@ -60,7 +60,7 @@ class ProductStatusController extends Controller
     {
         $search = request('search');
         $product = ProductDetails::query()
-            ->with(['vendor:id,name', 'affiliator:id,name', 'product:id,name,image, discount_rate',])
+            ->with(['vendor:id,name', 'affiliator:id,name', 'product:id,name,image,discount_rate',])
             ->when($search != '', function ($query) use ($search) {
                 $query->whereHas('product', function ($query) use ($search) {
                     $query->where('name', 'like', '%' . $search . '%');
