@@ -65,6 +65,7 @@ Route::middleware(['auth:sanctum', 'isAPIAdmin'])->group(function () {
     Route::get('admin/request/product/pending', [ProductStatusController::class, 'AdminRequestPending']);
     Route::get('admin/request/product/active', [ProductStatusController::class, 'AdminRequestActive']);
     Route::get('admin/request/product/all', [ProductStatusController::class, 'AdminRequestAll']);
+    Route::get('admin/request/product/received', [ProductStatusController::class, 'AdminRequestReceived']);
 
     Route::get('admin/request/product/rejected', [ProductStatusController::class, 'RequestRejected']);
     // Route::get('admin/request/product/view/{id}',[AdminController::class,'RequestView']);
@@ -160,6 +161,7 @@ Route::middleware(['auth:sanctum', 'isAPIAdmin'])->group(function () {
     Route::get('admin/delivered-orders', [AdminOrderController::class, 'DeliveredOrders']);
     Route::get('admin/cancel-orders', [AdminOrderController::class, 'CanceldOrders']);
     Route::get('admin/hold-orders', [AdminOrderController::class, 'HoldOrders']);
+    Route::get('admin/received-orders', [AdminOrderController::class, 'ReceivedOrders']);
 
     Route::post('admin/order/update/{id}', [AdminOrderController::class, 'updateStatus']);
     Route::get('admin/order/view/{id}', [AdminOrderController::class, 'orderView']);
