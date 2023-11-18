@@ -102,6 +102,7 @@ Route::middleware(['auth:sanctum','isAPIVendor','userOnline'])->group(function (
     Route::get('vendor/all-orders',[VendorOrderController::class,'AllOrders']);
     Route::get('vendor/pending-orders',[VendorOrderController::class,'pendingOrders']);
     Route::get('vendor/progress-orders',[VendorOrderController::class,'ProgressOrders']);
+    Route::get('vendor/received-orders',[VendorOrderController::class,'receivedOrders']);
     Route::get('vendor/delivered-orders',[VendorOrderController::class,'DeliveredOrders']);
     Route::get('vendor/cancel-orders',[VendorOrderController::class,'CanceldOrders']);
     Route::get('vendor/hold-orders',[VendorOrderController::class,'HoldOrders']);

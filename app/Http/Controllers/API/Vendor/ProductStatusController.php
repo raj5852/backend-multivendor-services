@@ -72,6 +72,7 @@ class ProductStatusController extends Controller
     }
 
 
+
     public function Accepted($id)
     {
         $product = ProductDetails::find($id);
