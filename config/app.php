@@ -17,8 +17,8 @@ return [
 
     'name' => env('APP_NAME', 'Laravel'),
     'aamarpay'=>'https://sandbox.aamarpay.com/index.php',
-    'redirecturl'=>'https://dasboard.bazar64.xyz/',
-    'maindomain'=>'https://bazar64.xyz/',
+    'redirecturl'=>'https://dashboard.startownstartup.com/',
+    'maindomain'=>'https://startownstartup.com/',
 
     /*
     |--------------------------------------------------------------------------
