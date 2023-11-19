@@ -92,7 +92,8 @@ class ProductOrderService
 
     static function progressOrder($order)
     {
-        $order->update(['status' => 'progress']);
+
+        $order->update(['status' => 'progress', 'delivery_id' => request('delivery_id')]);
         return self::response('Order progress successfull!');
     }
 

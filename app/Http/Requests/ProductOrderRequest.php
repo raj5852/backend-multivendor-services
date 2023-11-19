@@ -65,7 +65,8 @@ class ProductOrderRequest extends FormRequest
                 $invalidstatus,
                 $vendorbalance,
             ],
-            'reason' => 'required_if:status,cancel,return'
+            'reason' => 'required_if:status,cancel,return',
+            'delivery_id' => 'required_if:status,progress'
         ];
     }
 

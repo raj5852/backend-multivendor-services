@@ -16,6 +16,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
 use App\Models\PendingProduct;
+use App\Models\Settings;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\File;
 use App\Service\Vendor\ProductService;
@@ -36,12 +37,14 @@ class ProductManageController extends Controller
     public function VendorProductStore(Request $request)
     {
 
+
         // $request->validate([
         //     'd'=>'required_if:dsdd'
         // ])
 
         $validator = Validator::make($request->all(), [
             'name' => 'required|max:255',
+            'sku' => 'required|unique:products',
             'category_id' => ['required', 'integer', 'min:1', new CategoryRule],
             'subcategory_id' => ['nullable', new SubCategorydRule],
             'qty' => ['required', 'integer', 'min:1'],
@@ -82,7 +85,6 @@ class ProductManageController extends Controller
             }]
         ]);
 
-
         if (request('selling_type') == 'single') {
             $validator->after(function ($validator) {
                 $discount_type = request('discount_type');
@@ -96,10 +98,11 @@ class ProductManageController extends Controller
                 if ($discount_type == 'percent') {
                     $required_balance =  (request('selling_price') / 100) * $discount_rate;
                 }
-
-                if ($required_balance != '') {
-                    if ($required_balance > auth()->user()->balance) {
-                        $validator->errors()->add('selling_price', 'At least one product should have  a commission balance');
+                if (Settings::find(1)->is_advance == 1) {
+                    if ($required_balance != '') {
+                        if ($required_balance > auth()->user()->balance) {
+                            $validator->errors()->add('selling_price', 'At least one product should have  a commission balance');
+                        }
                     }
                 }
             });
@@ -138,6 +141,7 @@ class ProductManageController extends Controller
 
 
             $product->category_id = $request->category_id;
+            $product->sku = $request->sku;
             $product->subcategory_id = $request->subcategory_id;
             $product->brand_id = $request->brand_id;
             $product->user_id = Auth::user()->id;
@@ -236,6 +240,7 @@ class ProductManageController extends Controller
 
 
             'name' => 'required|max:255',
+            'sku' => 'required|unique:products,sku,' . $id,
             'category_id' => ['required', 'integer', 'min:1', new CategoryRule],
             'subcategory_id' => ['nullable', new SubCategorydRule],
             'qty' => ['required', 'integer', 'min:1'],
@@ -289,9 +294,11 @@ class ProductManageController extends Controller
                     $required_balance =  (request('selling_price') / 100) * $discount_rate;
                 }
 
-                if ($required_balance != '') {
-                    if ($required_balance > auth()->user()->balance) {
-                        $validator->errors()->add('selling_price', 'At least one product should have  a commission balance');
+                if (Settings::find(1)->is_advance == 1) {
+                    if ($required_balance != '') {
+                        if ($required_balance > auth()->user()->balance) {
+                            $validator->errors()->add('selling_price', 'At least one product should have  a commission balance');
+                        }
                     }
                 }
             });
@@ -309,6 +316,7 @@ class ProductManageController extends Controller
             if ($product) {
 
                 $product->category_id = $request->input('category_id');
+                $product->sku = $request->input('sku');
                 $product->subcategory_id = $request->input('subcategory_id');
                 $product->brand_id = $request->input('brand_id');
                 $product->user_id = auth()->id();
