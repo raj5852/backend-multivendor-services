@@ -110,6 +110,7 @@ class Settings extends Model
         'chose_card_two_description',
         'chose_card_three_description',
         'mission_image',
-        'tag_manager'
+        'tag_manager',
+        'is_advance'
     ];
 }
