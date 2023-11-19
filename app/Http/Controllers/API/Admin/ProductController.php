@@ -29,6 +29,7 @@ class ProductController extends Controller
 
 
             'name' => 'required|max:255',
+            'sku' => 'required|unique:products,sku,' . $productid,
             'category_id' => ['required', 'integer', 'min:1', new CategoryRule],
             'subcategory_id' => ['nullable', new SubCategorydRule],
             'qty' => ['required', 'integer', 'min:1'],
@@ -101,6 +102,7 @@ class ProductController extends Controller
 
         if ($product) {
 
+            $product->sku = $request->input('sku');
             $product->category_id = $request->input('category_id');
             $product->subcategory_id = $request->input('subcategory_id');
             $product->brand_id = $request->input('brand_id');
