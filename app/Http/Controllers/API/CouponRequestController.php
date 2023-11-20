@@ -35,7 +35,13 @@ class CouponRequestController extends Controller
 
     function allcouponrequest()
     {
-        return CouponRequest::with('user')
+        return CouponRequest::query()
+            ->with('user')
+            ->when(request('status'), '==', 'reject', function ($query) {
+                $query->where('status', 'reject');
+            }, function ($query) {
+                $query->where('status', '!=', 'reject');
+            })
             ->latest()
             ->paginate(10);
     }
