@@ -125,7 +125,7 @@ class SubscriptionRenewService
         if ($validatedData['payment_method'] == 'my-wallet') {
             $user->balance = convertfloat($user->balance) - ($totalprice);
             $user->save();
-            return  self::subscriptionadd($user, $subscriptionid, $trxid, 'My wallet', 'Renew');
+            return  self::subscriptionadd($user, $subscriptionid, $trxid, 'My wallet', 'Renew',$totalsubscriptionamount = $totalprice,$couponName = request('coupon_id'));
         }
 
         if ($validatedData['payment_method'] == 'aamarpay') {
@@ -148,14 +148,14 @@ class SubscriptionRenewService
 
 
     // $trxid, $amount, $payment_method, $transition_type, $balance_type, $coupon, $userid
-    static function subscriptionadd($user, $subscriptionid, $trxid, $payment_method, $transition_type)
+    static function subscriptionadd($user, $subscriptionid, $trxid, $payment_method, $transition_type, $totalsubscriptionamount = null, $couponName = '')
     {
         $userCurrentSubscription = $user->usersubscription;
         $getsubscription = Subscription::find($subscriptionid);
         $usersubscriptionPlan = Subscription::find($userCurrentSubscription->subscription_id);
         $addMonth =  getmonth($getsubscription->subscription_package_type);
 
-        PaymentHistoryService::store($trxid, $getsubscription->subscription_amount, $payment_method, $transition_type, '-', '', $user->id);
+        PaymentHistoryService::store($trxid, ($totalsubscriptionamount ?? $getsubscription->subscription_amount), $payment_method, $transition_type, '-', ($couponName), $user->id);
 
         $userCurrentSubscription->subscription_price = $getsubscription->subscription_amount;
 
