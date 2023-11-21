@@ -64,7 +64,7 @@ class AamarpayController extends Controller
         $trxid = $data->trxid;
         $payment_method = 'Aamarpay';
         $transition_type = 'renew';
-        SubscriptionRenewService::subscriptionadd($user, $subscriptionid, $trxid, $payment_method, $transition_type);
+        SubscriptionRenewService::subscriptionadd($user, $subscriptionid, $trxid, $payment_method, $transition_type, $totalsubscriptionamount = $response['amount_original'], $couponName = $data['info']['coupon']);
 
 
         $path = paymentredirect($user->role_as);

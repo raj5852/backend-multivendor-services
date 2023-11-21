@@ -132,7 +132,7 @@ class SubscriptionRenewService
             $successurl = url('api/aaparpay/renew-success');
 
             $validatedData['user_id'] = auth()->id();
-
+            $validatedData['coupon'] = request('coupon_id');
             PaymentStore::create([
                 'payment_gateway' => 'aamarpay',
                 'trxid' => $trxid,
