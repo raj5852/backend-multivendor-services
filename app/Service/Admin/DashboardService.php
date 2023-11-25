@@ -158,44 +158,28 @@ class DashboardService
         $currentMonthStart = Carbon::now()->startOfMonth();
         $currentMonthEnd = Carbon::now()->endOfMonth();
 
-        $categories = Category::withCount([
-            'order as total_qty_last_month' => function ($query) use ($lastMonthStart, $lastMonthEnd) {
-                $query->select(DB::raw('sum(qty)'))
-                    ->whereBetween('created_at', [$lastMonthStart, $lastMonthEnd])
-                    ->where('status', 'delivered');
-            },
-            'order as total_qty_current_month' => function ($query) use ($currentMonthStart, $currentMonthEnd) {
-                $query->select(DB::raw('sum(qty)'))
-                    ->whereBetween('created_at', [$currentMonthStart, $currentMonthEnd])
-                    ->where('status', 'delivered');
-            },
-            'order as sold_qty' => function ($query) {
-                $query->select(DB::raw('sum(qty)'))
-                    ->where('status', 'delivered');
-            },
-            'products as product_qty' => function ($query) {
-                $query->withCount('products')
-                    ->where('status', 'active');
-            }
-        ])
-
+        return   Category::query()
+            ->withCount([
+                'products as product_qty' => function ($query) {
+                    $query->where('status', 'active');
+                },
+                'order as total_qty_last_month' => function ($query) use ($lastMonthStart, $lastMonthEnd) {
+                    $query->select(DB::raw('sum(qty)'))
+                        ->whereBetween('created_at', [$lastMonthStart, $lastMonthEnd])
+                        ->where('status', 'delivered');
+                },
+                'order as total_qty_current_month' => function ($query) use ($currentMonthStart, $currentMonthEnd) {
+                    $query->select(DB::raw('sum(qty)'))
+                        ->whereBetween('created_at', [$currentMonthStart, $currentMonthEnd])
+                        ->where('status', 'delivered');
+                },
+                'order as sold_qty' => function ($query) {
+                    $query->select(DB::raw('sum(qty)'))
+                        ->where('status', 'delivered');
+                }
+            ])
             ->orderByDesc('sold_qty')
             ->take(10)
             ->get();
-
-        $categories = $categories->map(function ($category) {
-            $category->is_up = $category->total_qty_last_month < $category->total_qty_current_month;
-
-            $total_qty = $category->sold_qty + $category->product_qty;
-            if ($total_qty != 0) {
-                $category->sale_percentage = ($category->sold_qty / $total_qty) * 100;
-            } else {
-                $category->sale_percentage = 0; // or any other value you prefer when division by zero occurs
-            }
-
-            return $category;
-        });
-
-        return $categories;
     }
 }
