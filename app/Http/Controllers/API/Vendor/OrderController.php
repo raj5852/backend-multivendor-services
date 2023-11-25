@@ -174,7 +174,6 @@ class OrderController extends Controller
             }])
             ->first();
 
-
         if ($order) {
 
             $allData =   $order->load([

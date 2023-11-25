@@ -32,7 +32,7 @@ class CouponApplyRequest extends FormRequest
             'name' => ['required', function ($attribute, $value, $fail) {
                 $coupon =  Coupon::query()
                     ->where(['name' => $value, 'status' => 'active'])
-                    ->whereDate('expire_date', '>', now())
+                    ->whereDate('expire_date', '>=', now())
                     ->withCount('couponused')
                     ->first();
 
