@@ -56,6 +56,8 @@ class AdminAdvertiseService
         $adminadvaertise->last_description   =  request('last_description');
         $adminadvaertise->status   =  Status::Pending->value;
         $adminadvaertise->audience = request('audience');
+        $adminadvaertise->unique_id = uniqid();
+
         $adminadvaertise->save();
 
 
