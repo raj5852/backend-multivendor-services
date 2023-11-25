@@ -59,32 +59,5 @@ Route::get('seed', function () {
 
 
 Route::get('demo', function () {
-    $lastMonthStart = Carbon::now()->subMonth()->startOfMonth();
-    $lastMonthEnd = Carbon::now()->subMonth()->endOfMonth();
-    $currentMonthStart = Carbon::now()->startOfMonth();
-    $currentMonthEnd = Carbon::now()->endOfMonth();
 
-    return   Category::query()
-        ->withCount([
-            'products as product_qty' => function ($query) {
-                $query->where('status', 'active');
-            },
-            'order as total_qty_last_month' => function ($query) use ($lastMonthStart, $lastMonthEnd) {
-                $query->select(DB::raw('sum(qty)'))
-                    ->whereBetween('created_at', [$lastMonthStart, $lastMonthEnd])
-                    ->where('status', 'delivered');
-            },
-            'order as total_qty_current_month' => function ($query) use ($currentMonthStart, $currentMonthEnd) {
-                $query->select(DB::raw('sum(qty)'))
-                    ->whereBetween('created_at', [$currentMonthStart, $currentMonthEnd])
-                    ->where('status', 'delivered');
-            },
-            'order as sold_qty' => function ($query) {
-                $query->select(DB::raw('sum(qty)'))
-                    ->where('status', 'delivered');
-            }
-        ])
-        ->orderByDesc('sold_qty')
-        ->take(10)
-        ->get();
 });
