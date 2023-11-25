@@ -158,7 +158,7 @@ class DashboardService
         $currentMonthStart = Carbon::now()->startOfMonth();
         $currentMonthEnd = Carbon::now()->endOfMonth();
 
-        return   Category::query()
+        $categories =   Category::query()
             ->withCount([
                 'products as product_qty' => function ($query) {
                     $query->where('status', 'active');
@@ -181,5 +181,22 @@ class DashboardService
             ->orderByDesc('sold_qty')
             ->take(10)
             ->get();
+
+
+        $categories = $categories->map(function ($category) {
+            $category->is_up = $category->total_qty_last_month < $category->total_qty_current_month;
+
+            $total_qty = $category->sold_qty + $category->product_qty;
+            if ($total_qty != 0) {
+                $category->sale_percentage = ($category->sold_qty / $total_qty) * 100;
+            } else {
+                $category->sale_percentage = 0; // or any other value you prefer when division by zero occurs
+            }
+
+            return $category;
+        });
+
+
+        return $categories;
     }
 }
