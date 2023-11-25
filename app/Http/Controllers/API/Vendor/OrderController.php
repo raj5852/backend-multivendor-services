@@ -168,17 +168,22 @@ class OrderController extends Controller
 
     function  orderView($id)
     {
-        $order  = Order::where('id', $id)->where('vendor_id', auth()->user()->id)->first();
+        $order  = Order::where('id', $id)->where('vendor_id', auth()->user()->id)
+            ->with(['product', 'product.category:id,name', 'product.subcategory:id,name', 'product.brand:id,name', 'vendor:id,uniqid','productrating'=>function($query){
+                $query->with('affiliate:id,name');
+            }])
+            ->first();
+
+
         if ($order) {
-            $allData =    $order->load([
+
+            $allData =   $order->load([
                 'product',
                 'product.category:id,name',
                 'product.subcategory:id,name',
                 'product.brand:id,name',
                 'vendor:id,uniqid'
             ]);
-
-
 
             $allData->variants = json_decode($allData->variants);
             if ($allData->status == 'pending' || $allData->status == 'hold' || $allData->status == 'cancel') {
