@@ -65,7 +65,7 @@ class BuySubscription extends Controller
                 ->where('id', request('coupon_id'))
                 ->where('status', 'active')
                 ->where('limitation', '>', $couponUsed->couponused_count)
-                ->whereDate('expire_date', '>', now())
+                ->whereDate('expire_date', '>=', now())
                 ->first();
 
             if (!$coupon) {
