@@ -40,7 +40,7 @@ class VendorOrderStatusRequest extends FormRequest
             'service_order_id' => [
                 'required',
                 'integer',
-                Rule::exists('service_orders', 'id')->where('vendor_id', userid())
+                Rule::exists('service_orders', 'id')
             ],
             'status' => [
                 'required',
