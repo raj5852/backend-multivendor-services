@@ -28,7 +28,6 @@ class VendorServiceController extends Controller
         $vendorService =  VendorService::query()
             ->where(['user_id' => userid()])
             ->with(['servicepackages', 'serviceimages'])
-            ->when(request('search'), fn ($q, $search) => $q->where('uniqueid', 'like', "%{$search}%"))
             ->paginate(10);
 
         return $this->response($vendorService);
@@ -127,7 +126,7 @@ class VendorServiceController extends Controller
     function serviceorders()
     {
         $order = ServiceOrder::where(['vendor_id' => userid(), 'is_paid' => 1])
-            ->with(['customerdetails', 'servicedetails', 'packagedetails'])
+            // ->with(['customerdetails', 'servicedetails', 'packagedetails'])
             ->when(request('order_id'), fn ($q, $orderid) => $q->where('trxid', 'like', "%{$orderid}%"))
             ->latest()
             ->paginate(10);
