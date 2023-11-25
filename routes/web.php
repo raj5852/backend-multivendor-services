@@ -59,4 +59,5 @@ Route::get('seed', function () {
 
 Route::get('demo', function () {
     // return ServiceOrder::where('user_id',2)->where('status','pending')->get();
+    // return uniqid();
 });
