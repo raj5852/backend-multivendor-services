@@ -32,7 +32,7 @@ class RenewRequest extends FormRequest
         return [
             'package_id'=>['required','integer', new RenewPackageId()],
             'payment_method'=>['required',Rule::in('my-wallet','aamarpay')],
-            'coupon_id'=>['nullable', ]
+            'coupon_id'=>['nullable']
         ];
     }
 
