@@ -126,8 +126,7 @@ class VendorServiceController extends Controller
     function serviceorders()
     {
         $order = ServiceOrder::where(['vendor_id' => userid(), 'is_paid' => 1])
-            // ->with(['customerdetails', 'servicedetails', 'packagedetails'])
-            ->when(request('order_id'), fn ($q, $orderid) => $q->where('trxid', 'like', "%{$orderid}%"))
+            ->when(request('search'), fn ($q, $orderid) => $q->where('trxid', 'like', "%{$orderid}%"))
             ->latest()
             ->paginate(10);
 

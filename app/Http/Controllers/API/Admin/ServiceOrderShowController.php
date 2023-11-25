@@ -20,7 +20,7 @@ class ServiceOrderShowController extends Controller
     public function index()
     {
         $serviceOrderDetails  = ServiceOrder::with(['customerdetails', 'vendor', 'servicedetails'])->latest()
-            ->when(request('order_id'), fn ($q, $orderid) => $q->where('trxid', 'like', "%{$orderid}%"))
+            ->when(request('search'), fn ($q, $orderid) => $q->where('trxid', 'like', "%{$orderid}%"))
             ->paginate(10);
         return $this->response($serviceOrderDetails);
     }
