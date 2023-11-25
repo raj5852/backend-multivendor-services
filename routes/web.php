@@ -59,5 +59,9 @@ Route::get('seed', function () {
 
 
 Route::get('demo', function () {
+    // if(request('search')){
+    //     return "ok";
+
+    // }
 
 });

@@ -14,7 +14,7 @@ class AdvertiseController extends Controller
             ->where(['user_id' => userid(), 'is_paid' => 1])
             ->latest()
             ->when(request('order_id'), fn ($q, $orderid) => $q->where('trxid', 'like', "%{$orderid}%"))
-            ->select('id', 'campaign_name', 'campaign_objective', 'budget_amount', 'start_date', 'end_date', 'is_paid', 'created_at', 'status')
+            ->select('id', 'campaign_name', 'campaign_objective', 'budget_amount', 'start_date', 'end_date', 'is_paid', 'created_at', 'status','unique_id')
             ->paginate(10);
 
         return $this->response($data);
