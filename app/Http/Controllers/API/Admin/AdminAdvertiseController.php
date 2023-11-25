@@ -27,6 +27,7 @@ class AdminAdvertiseController extends Controller
             ->when(request('search'), fn ($q, $search) => $q->where('unique_id', 'like', "%{$search}%"))
             ->where('is_paid',1)
             ->select('id','campaign_name','campaign_objective','budget_amount','start_date','end_date','is_paid','created_at','status','unique_id')
+            ->with('user:id,name,email')
             ->paginate(10);
 
         return $this->response($data);
