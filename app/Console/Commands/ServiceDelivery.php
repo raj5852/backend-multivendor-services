@@ -4,22 +4,24 @@ namespace App\Console\Commands;
 
 use App\Models\ServiceOrder;
 use App\Models\User;
+use App\Services\PaymentHistoryService;
 use Illuminate\Console\Command;
 
-class ServiceCancel extends Command
+class ServiceDelivery extends Command
 {
     /**
      * The name and signature of the console command.
      *
      * @var string
      */
-    protected $signature = 'service:cancel';
+    protected $signature = 'service:delivery';
 
     /**
      * The console command description.
      *
      * @var string
      */
+
     protected $description = 'Command description';
 
     /**
@@ -30,9 +32,14 @@ class ServiceCancel extends Command
     public function handle()
     {
         ServiceOrder::where('status', 'delivered')
-            ->where('updated_at', '<', now()->subHour(48))
+            ->where('updated_at', '>', now()->addHour(48))
             ->chunk(100, function ($order) {
-                // User::find($order->user_id)->
+                $order->update([
+                    'success' => 'success'
+                ]);
+
+                User::find($order->vendor_id)->increment(['balance' => $order->amount]);
+                PaymentHistoryService::store(uniqid(), $order->amount, 'My wallet', 'Service sell', '+', '', $order->vendor_id);
             });
     }
 }
