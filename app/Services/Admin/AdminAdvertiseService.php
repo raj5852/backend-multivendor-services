@@ -49,11 +49,11 @@ class AdminAdvertiseService
         $adminadvaertise->placements   =  $validatData['placements'];
 
 
-        $adminadvaertise->destination   =  $validatData['destination'];
-        $adminadvaertise->tracking   =  $validatData['tracking'];
-        $adminadvaertise->url_perimeter   =  $validatData['url_perimeter'];
-        $adminadvaertise->number   =  $validatData['number'];
-        $adminadvaertise->last_description   =  $validatData['last_description'];
+        $adminadvaertise->destination   =  request('destination');
+        $adminadvaertise->tracking   =  request('tracking');
+        $adminadvaertise->url_perimeter   =  request('url_perimeter');
+        $adminadvaertise->number   =  request('number');
+        $adminadvaertise->last_description   =  request('last_description');
         $adminadvaertise->status   =  Status::Pending->value;
         $adminadvaertise->audience = request('audience');
         $adminadvaertise->save();
