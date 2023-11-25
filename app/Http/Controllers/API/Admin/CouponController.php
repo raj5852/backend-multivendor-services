@@ -26,7 +26,7 @@ class CouponController extends Controller
             ->with('user:id,name,email')
             ->when((request('form') != '') && request('to') != '', function ($query) {
                 $fromDate = Carbon::parse(request('form'));
-                $toDate = Carbon::parse(request('to'));
+                $toDate = Carbon::parse(request('to'))->addDay(1);
 
                 $query->withCount(['couponused' => function ($query) use ($fromDate, $toDate) {
                     $query->whereBetween('created_at', [$fromDate, $toDate]);
