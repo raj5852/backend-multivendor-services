@@ -16,7 +16,9 @@ class ConversionLocationController extends Controller
      */
     public function index()
     {
-        $locations = ConversionLocation::latest()->paginate(10);
+        $locations = ConversionLocation::latest()
+        ->with('category')
+        ->paginate(10);
         return $this->response($locations);
     }
 
