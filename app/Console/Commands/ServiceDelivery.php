@@ -39,8 +39,14 @@ class ServiceDelivery extends Command
                         'success' => 'success'
                     ]);
 
-                    User::find($order->vendor_id)->increment(['balance' => $order->amount]);
-                    PaymentHistoryService::store(uniqid(), $order->amount, 'My wallet', 'Service sell', '+', '', $order->vendor_id);
+                    if ($orders->commission_type == 'flat') {
+                        $amount = $orders->commission_amount;
+                    } else {
+                        $amount =  ($orders->amount / 100) * $orders->commission_amount;
+                    }
+
+                    User::find($order->vendor_id)->increment(['balance' => ($order->amount - $amount)]);
+                    PaymentHistoryService::store(uniqid(), ($order->amount - $amount), 'My wallet', 'Service sell', '+', '', $order->vendor_id);
                 }
             });
     }
