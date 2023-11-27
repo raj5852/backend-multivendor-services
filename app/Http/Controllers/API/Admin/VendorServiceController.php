@@ -18,7 +18,7 @@ class VendorServiceController extends Controller
      */
     public function index()
     {
-        if(checkpermission('vendor-service') != 1){
+        if(checkpermission('manage-service') != 1){
             return $this->permissionmessage();
         }
 
