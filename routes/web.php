@@ -59,7 +59,7 @@ Route::get('seed', function () {
 
 Route::get('role-permission', function () {
     $user = User::find(1);
-    $role = Role::create(['name' => 'Admin']);
+    $role = Role::first();
 
     $permissions = Permission::pluck('id','id')->all();
 
