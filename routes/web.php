@@ -57,13 +57,21 @@ Route::get('seed', function () {
     Artisan::call('db:seed');
 });
 
+Route::get('role-permission', function () {
+    $user = User::find(1);
+    $role = Role::create(['name' => 'Admin']);
 
+    $permissions = Permission::pluck('id','id')->all();
+
+    $role->syncPermissions($permissions);
+
+    $user->assignRole([$role->id]);
+
+});
 
 
 // Route::get('demo',[DashboardController::class,'index']);
 Route::get('demo', function () {
 
-    // return Role::first()->permissions;
-    return User::latest()->first()->load('roles');
 
 });

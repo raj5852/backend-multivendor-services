@@ -213,9 +213,10 @@ function couponget($coupon_id)
     }
 }
 
-function checkpermission($permission)
+function
+checkpermission($permission)
 {
-    // return auth()->user()->hasPermissionTo($permission);
-    return User::find(1)->hasPermissionTo($permission);
+    return auth()->user()->hasPermissionTo($permission);
+    // return User::find(1)->hasPermissionTo($permission);
 
 }
