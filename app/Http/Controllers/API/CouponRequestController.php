@@ -35,6 +35,21 @@ class CouponRequestController extends Controller
 
     function allcouponrequest()
     {
+
+        if (request('status') == 'reject') {
+            if (checkpermission('rejected-coupon') != 1) {
+                return $this->permissionmessage();
+            }
+        }
+
+        if (request('status') != 'reject') {
+            if (checkpermission('request-coupon') != 1) {
+                return $this->permissionmessage();
+            }
+        }
+
+
+
         return CouponRequest::query()
             ->with('user')
             ->when(request('status') == 'reject', function ($query) {

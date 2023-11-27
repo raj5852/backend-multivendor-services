@@ -16,6 +16,10 @@ class MissionController extends Controller
      */
     public function index()
     {
+        if(checkpermission('mission') != 1){
+            return $this->permissionmessage();
+        }
+
         $missions = Mission::latest()->get();
         if($missions){
            return response()->json([

@@ -68,5 +68,8 @@ class Kernel extends HttpKernel
         'isAPIaffiliator'=> \App\Http\Middleware\ApiAffiliatorMiddleware::class,
         'userOnline'=> \App\Http\Middleware\UserOnlineMiddleware::class,
         'isUser'=> \App\Http\Middleware\UserMiddleware::class,
+        'role' => \Spatie\Permission\Middlewares\RoleMiddleware::class,
+        'permission' => \Spatie\Permission\Middlewares\PermissionMiddleware::class,
+        'role_or_permission' => \Spatie\Permission\Middlewares\RoleOrPermissionMiddleware::class,
     ];
 }

@@ -44,6 +44,23 @@ class UserController extends Controller
     }
     public function VendorView(Request $request)
     {
+        if (!in_array(request('name'),['active','pending'])) {
+            if (!checkpermission('all-vendor')) {
+                return $this->permissionmessage();
+            }
+        }
+
+        if(request('name') == 'active'){
+            if (!checkpermission('active-vendor')) {
+                return $this->permissionmessage();
+            }
+        }
+
+        if(request('name') == 'pending'){
+            if (!checkpermission('pending-vendor')) {
+                return $this->permissionmessage();
+            }
+        }
 
 
         $vendor = User::where('role_as', '2')
@@ -69,6 +86,9 @@ class UserController extends Controller
 
     function alluserlist($status)
     {
+        if (!checkpermission('alluser')) {
+            return $this->permissionmessage();
+        }
 
         $vendor = User::where('role_as', '!=', '1')
             ->when($status == 'active', function ($q) {
@@ -77,17 +97,17 @@ class UserController extends Controller
             ->when($status == 'pending', function ($q) {
                 return $q->where('status', 'pending');
             })
-            ->when(request('type') == 'vendor' , function ($q) {
+            ->when(request('type') == 'vendor', function ($q) {
                 return $q->where('role_as', '2');
             })
-            ->when(request('type') == 'affiliate' , function ($q) {
+            ->when(request('type') == 'affiliate', function ($q) {
                 return $q->where('role_as', '3');
             })
-            ->when(request('type') == 'user' , function ($q) {
+            ->when(request('type') == 'user', function ($q) {
                 return $q->where('role_as', '4');
             })
-            ->when(request('from') != '' && request('to') != '' , function ($q) {
-                return $q->whereBetween('created_at',[Carbon::parse(request('from')), Carbon::parse(request('to'))]);
+            ->when(request('from') != '' && request('to') != '', function ($q) {
+                return $q->whereBetween('created_at', [Carbon::parse(request('from')), Carbon::parse(request('to'))]);
             })
             ->when(
                 request('email'),
@@ -105,6 +125,10 @@ class UserController extends Controller
 
     public function VendorStore(Request $request)
     {
+
+        if (!checkpermission('add-vendor')) {
+            return $this->permissionmessage();
+        }
 
         $validator = Validator::make($request->all(), [
             'email' => 'required|unique:users|max:255',
@@ -197,8 +221,11 @@ class UserController extends Controller
                 $vendor->email = $request->input('email');
                 $vendor->status = $request->input('status');
                 $vendor->number = $request->input('number');
-                // $vendor->image = $request->input('image');
+
                 $vendor->balance = $request->input('balance');
+                if (request('password')) {
+                    $vendor->password = bcrypt(request('password'));
+                }
 
 
 
@@ -214,8 +241,6 @@ class UserController extends Controller
 
 
                 $vendor->update();
-
-
 
                 return response()->json([
                     'status' => 200,
@@ -261,6 +286,24 @@ class UserController extends Controller
 
     public function AffiliatorView(Request $request)
     {
+        if (!in_array(request('name'),['active','pending'])) {
+            if (!checkpermission('all-affiliate')) {
+                return $this->permissionmessage();
+            }
+        }
+
+        if(request('name') == 'active'){
+            if (!checkpermission('active-affiliate')) {
+                return $this->permissionmessage();
+            }
+        }
+
+        if(request('name') == 'pending'){
+            if (!checkpermission('pending-affiliate')) {
+                return $this->permissionmessage();
+            }
+        }
+
         $affiliator = User::where('role_as', '3')
             ->when(request('name') == 'pending', function ($q) {
                 return $q->where('status', 'pending');
@@ -285,6 +328,25 @@ class UserController extends Controller
 
     public function user(Request $request)
     {
+
+        if (!in_array(request('name'),['active','pending'])) {
+            if (!checkpermission('all-user')) {
+                return $this->permissionmessage();
+            }
+        }
+
+        if(request('name') == 'active'){
+            if (!checkpermission('active-user')) {
+                return $this->permissionmessage();
+            }
+        }
+
+        if(request('name') == 'pending'){
+            if (!checkpermission('pending-user')) {
+                return $this->permissionmessage();
+            }
+        }
+
         $user = User::where('role_as', '4')
             ->when(request('name') == 'pending', function ($q) {
                 return $q->where('status', 'pending');
@@ -308,6 +370,10 @@ class UserController extends Controller
 
     public function UserStore(Request $request)
     {
+        if (!checkpermission('add-user')) {
+            return $this->permissionmessage();
+        }
+
         $validator = Validator::make($request->all(), [
             'email' => 'required|unique:users|max:255',
             'name' => 'required',
@@ -330,7 +396,7 @@ class UserController extends Controller
             $affiliator->status = $request->input('status');
             $affiliator->number = $request->input('number');
             $affiliator->role_as = '4';
-            $affiliator->uniqid = uniqid() ;
+            $affiliator->uniqid = uniqid();
 
             if ($request->hasFile('image')) {
 
@@ -349,6 +415,10 @@ class UserController extends Controller
 
     public function AffiliatorStore(Request $request)
     {
+        if (!checkpermission('add-affiliate')) {
+            return $this->permissionmessage();
+        }
+
         $validator = Validator::make($request->all(), [
             'email' => 'required|unique:users|max:255',
             'name' => 'required',
@@ -437,7 +507,7 @@ class UserController extends Controller
         $validator = Validator::make($request->all(), [
             'name' => 'required|max:191',
             'status' => 'required|max:191',
-            'balance'=>['numeric']
+            'balance' => ['numeric']
         ]);
 
         if ($validator->fails()) {

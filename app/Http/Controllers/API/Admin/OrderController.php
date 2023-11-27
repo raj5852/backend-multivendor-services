@@ -18,6 +18,10 @@ class OrderController extends Controller
 {
     function allOrders()
     {
+        if(checkpermission('all-order')){
+            return $this->permissionmessage();
+        }
+
         $orders = Order::searchProduct()
             ->with(['affiliator:id,name', 'vendor:id,name', 'product:id,name'])
             ->latest()
@@ -40,6 +44,10 @@ class OrderController extends Controller
 
     function pendingOrders()
     {
+        if(checkpermission('order-pending') != 1){
+            return $this->permissionmessage();
+        }
+
         $orders = Order::searchProduct()
             ->where('status', Status::Pending->value)
             ->with(['affiliator:id,name', 'vendor:id,name', 'product:id,name'])
@@ -62,6 +70,10 @@ class OrderController extends Controller
 
     function ProgressOrders()
     {
+        if(checkpermission('delivery-processing') != 1){
+            return $this->permissionmessage();
+        }
+
         $orders = Order::searchProduct()
             ->where('status', Status::Progress->value)
             ->with(['affiliator:id,name', 'vendor:id,name', 'product:id,name'])
@@ -85,6 +97,10 @@ class OrderController extends Controller
     }
     function ReceivedOrders()
     {
+        if(checkpermission('order-received') != 1){
+            return $this->permissionmessage();
+        }
+
         $orders = Order::searchProduct()
             ->where('status', 'received')
             ->with(['affiliator:id,name', 'vendor:id,name', 'product:id,name'])
@@ -109,6 +125,10 @@ class OrderController extends Controller
 
     function DeliveredOrders()
     {
+        if(checkpermission('product-delivered') != 1){
+            return $this->permissionmessage();
+        }
+
         $orders = Order::searchProduct()
             ->where('status', Status::Delivered->value)
             ->with(['affiliator:id,name', 'vendor:id,name', 'product:id,name'])
@@ -132,6 +152,10 @@ class OrderController extends Controller
 
     function CanceldOrders()
     {
+        if(checkpermission('order-cancel') != 1){
+            return $this->permissionmessage();
+        }
+
         $orders = Order::searchProduct()
             ->where('status', Status::Cancel->value)
             ->with(['affiliator:id,name', 'vendor:id,name', 'product:id,name'])
@@ -192,6 +216,10 @@ class OrderController extends Controller
 
     function HoldOrders()
     {
+        if(checkpermission('order-hold') != 1){
+            return $this->permissionmessage();
+        }
+
         $orders = Order::searchProduct()
             ->where('status', Status::Hold->value)
             ->with(['affiliator:id,name', 'vendor:id,name', 'product:id,name'])

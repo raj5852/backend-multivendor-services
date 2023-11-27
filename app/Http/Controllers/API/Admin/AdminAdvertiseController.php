@@ -22,6 +22,11 @@ class AdminAdvertiseController extends Controller
      */
     public function index()
     {
+
+        if(checkpermission('all-advertiser') != 1){
+            return $this->permissionmessage();
+        }
+
         $data = AdminAdvertise::query()
             ->latest()
             ->when(request('search'), fn ($q, $search) => $q->where('unique_id', 'like', "%{$search}%"))

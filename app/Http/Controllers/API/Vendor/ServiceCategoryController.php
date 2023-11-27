@@ -18,6 +18,9 @@ class ServiceCategoryController extends Controller
      */
     public function index()
     {
+        if(checkpermission('service-category') != 1){
+            return $this->permissionmessage();
+        }
 
         $serviceCategory = VendorServiceCategory::index();
         return $this->response($serviceCategory);

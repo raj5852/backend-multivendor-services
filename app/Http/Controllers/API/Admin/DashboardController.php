@@ -11,21 +11,40 @@ use Illuminate\Support\Carbon;
 
 class DashboardController extends Controller
 {
-    //
-    function index(){
-
-     return  DashboardService::index();
-
+    public $message = 0;
+    function __construct()
+    {
+        if (!checkpermission('dashboard')) {
+            $this->message = 1;
+        }
     }
-    function orderVsRevenue(){
+
+    function index()
+    {
+        if ($this->message == 1) {
+            return $this->permissionmessage();
+        }
+        return  DashboardService::index();
+    }
+    function orderVsRevenue()
+    {
+        if ($this->message == 1) {
+            return $this->permissionmessage();
+        }
         return  DashboardService::orderVsRevenue();
     }
-    function recentOrder(){
+    function recentOrder()
+    {
+        if ($this->message == 1) {
+            return $this->permissionmessage();
+        }
         return  DashboardService::recentOrder();
-
     }
-    function categoryStatus(){
+    function categoryStatus()
+    {
+        if ($this->message == 1) {
+            return $this->permissionmessage();
+        }
         return  DashboardService::categoryStatus();
-
     }
 }

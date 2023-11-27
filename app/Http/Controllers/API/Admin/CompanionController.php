@@ -11,6 +11,10 @@ class CompanionController extends Controller
 {
     public function index()
     {
+        if(checkpermission('companions') != 1){
+            return $this->permissionmessage();
+        }
+
         $companion = Companion::latest()->get();
         return response()->json([
             'status' => 200,

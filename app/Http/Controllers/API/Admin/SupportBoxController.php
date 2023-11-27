@@ -18,6 +18,10 @@ class SupportBoxController extends Controller
      */
     public function index()
     {
+        if(checkpermission('support') != 1){
+            return $this->permissionmessage();
+        }
+
         $supportData = SupportBox::query()
             ->with(['user', 'latestTicketreplay','category:id,name','problem_topic:id,name'])
             ->withCount(['ticketreplay as total_admin_replay'=>function($query){
@@ -49,6 +53,10 @@ class SupportBoxController extends Controller
      */
     public function show($id)
     {
+        if(checkpermission('support') != 1){
+            return $this->permissionmessage();
+        }
+
         $supportBox = SupportBox::find($id);
         if (!$supportBox) {
             return responsejson('Not found', 'fail');

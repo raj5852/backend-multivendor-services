@@ -30,10 +30,13 @@ class ServiceHold extends Command
     {
         ServiceOrder::where('is_rejected', '1')
         ->where('updated_at', '>', now()->addHour(48))
-        ->chunk(100, function ($order) {
-            $order->update([
-                'success' => 'holde'
-            ]);
+        ->chunk(100, function ($orders) {
+            foreach($orders as $order){
+                $order->update([
+                    'success' => 'holde'
+                ]);
+            }
+
         });
 
     }

@@ -1,6 +1,7 @@
 <?php
 
 use App\Enums\Status;
+use App\Http\Controllers\API\Admin\DashboardController;
 use App\Http\Controllers\TestController;
 use App\Models\AdminAdvertise;
 use App\Models\CancelOrderBalance;
@@ -21,7 +22,8 @@ use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Route;
-
+use Spatie\Permission\Models\Permission;
+use Spatie\Permission\Models\Role;
 
 /*
 |--------------------------------------------------------------------------
@@ -58,10 +60,10 @@ Route::get('seed', function () {
 
 
 
+// Route::get('demo',[DashboardController::class,'index']);
 Route::get('demo', function () {
-    // if(request('search')){
-    //     return "ok";
 
-    // }
+    // return Role::first()->permissions;
+    return User::latest()->first()->load('roles');
 
 });

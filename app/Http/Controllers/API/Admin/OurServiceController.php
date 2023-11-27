@@ -10,6 +10,10 @@ use Illuminate\Support\Facades\Validator;
 class OurServiceController extends Controller
 {
     public function index(){
+        if(checkpermission('home-service') != 1){
+            return $this->permissionmessage();
+        }
+
         $services = OurService::latest()->get();
         return response()->json([
             'status' => 200,

@@ -32,9 +32,7 @@ use App\Http\Controllers\API\Vendor\OrderDeliveryController;
 use App\Http\Controllers\API\Vendor\ServiceCategoryController;
 use App\Http\Controllers\DollerRateController;
 use App\Http\Controllers\RenewController;
-use App\Models\User;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Validator;
+
 
 //register
 Route::post('register', [AuthController::class, 'Register']);
