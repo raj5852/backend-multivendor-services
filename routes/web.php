@@ -14,6 +14,7 @@ use App\Models\ServiceOrder;
 use App\Models\Subscription;
 use App\Models\SupportBox;
 use App\Models\User;
+use App\Models\UserSubscription;
 use App\Models\VendorService;
 use App\Models\Withdraw;
 use App\Services\SubscriptionDueService;
@@ -61,17 +62,25 @@ Route::get('role-permission', function () {
     $user = User::find(1);
     $role = Role::first();
 
-    $permissions = Permission::pluck('id','id')->all();
+    $permissions = Permission::pluck('id', 'id')->all();
 
     $role->syncPermissions($permissions);
 
     $user->assignRole([$role->id]);
-
 });
 
 
 // Route::get('demo',[DashboardController::class,'index']);
 Route::get('demo', function () {
+
+ return   UserSubscription::query()
+    ->where('subscription_price', 0)
+    ->whereDate('expire_date', '<', now()->addDay(12))
+    ->first()
+    ->update([
+        'expire_date'=>now()->addDay(2)
+    ]);
+
 
 
 });
