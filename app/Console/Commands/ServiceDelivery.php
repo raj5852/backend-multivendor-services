@@ -33,13 +33,15 @@ class ServiceDelivery extends Command
     {
         ServiceOrder::where('status', 'delivered')
             ->where('updated_at', '>', now()->addHour(48))
-            ->chunk(100, function ($order) {
-                $order->update([
-                    'success' => 'success'
-                ]);
+            ->chunk(100, function ($orders) {
+                foreach ($orders as $order) {
+                    $order->update([
+                        'success' => 'success'
+                    ]);
 
-                User::find($order->vendor_id)->increment(['balance' => $order->amount]);
-                PaymentHistoryService::store(uniqid(), $order->amount, 'My wallet', 'Service sell', '+', '', $order->vendor_id);
+                    User::find($order->vendor_id)->increment(['balance' => $order->amount]);
+                    PaymentHistoryService::store(uniqid(), $order->amount, 'My wallet', 'Service sell', '+', '', $order->vendor_id);
+                }
             });
     }
 }

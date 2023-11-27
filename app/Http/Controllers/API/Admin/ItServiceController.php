@@ -16,6 +16,10 @@ class ItServiceController extends Controller
      */
     public function index()
     {
+        if(checkpermission('it-service') != 1){
+            return $this->permissionmessage();
+        }
+
         $data = Itservice::latest()->paginate(8);
         return response()->json([
             'status' => 200,

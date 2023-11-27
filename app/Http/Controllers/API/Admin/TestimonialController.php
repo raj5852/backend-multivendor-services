@@ -18,6 +18,10 @@ class TestimonialController extends Controller
      */
     public function index()
     {
+        if (checkpermission('testimonial') != 1) {
+            return $this->permissionmessage();
+        }
+
         $testimonial = Testimonial::latest()->get();
         return response()->json([
             'status' => 200,
@@ -46,12 +50,12 @@ class TestimonialController extends Controller
                 'status' => 400,
                 'errors' => $validator->messages(),
             ]);
-        }else{
+        } else {
             $data = $request->all();
-            if($request->image){
+            if ($request->image) {
                 $data['image'] = fileUpload($request->image, 'uploads/testimonials/', 60, 60);
             }
-            Testimonial ::create($data);
+            Testimonial::create($data);
             return response()->json([
                 'status'  => 200,
                 'message' => 'Testimonial Infos Saved Successfully !',
@@ -68,12 +72,12 @@ class TestimonialController extends Controller
     public function show($id)
     {
         $testimonial = Testimonial::find($id);
-        if($testimonial){
+        if ($testimonial) {
             return response()->json([
                 'status' => 200,
                 'datas'  => $testimonial,
             ]);
-        }else{
+        } else {
             return response()->json([
                 'status'  => 404,
                 'message' => 'No testimonial data Found',
@@ -102,7 +106,7 @@ class TestimonialController extends Controller
                 'status' => 400,
                 'errors' => $validator->messages(),
             ]);
-        }else{
+        } else {
             $old_image = Testimonial::find($id);
             $data = $request->all();
             if ($request->image) {
@@ -131,10 +135,10 @@ class TestimonialController extends Controller
         if ($data->image) {
             unlink($data->image);
         }
-    $data->delete();
-    return response()->json([
-        'status' => 200,
-        'message' => 'Testimonial Deleted Successfully !',
-    ]);
+        $data->delete();
+        return response()->json([
+            'status' => 200,
+            'message' => 'Testimonial Deleted Successfully !',
+        ]);
     }
 }

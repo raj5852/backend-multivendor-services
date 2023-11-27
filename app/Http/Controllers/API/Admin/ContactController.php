@@ -11,6 +11,10 @@ class ContactController extends Controller
 {
     public function index()
     {
+        if(checkpermission('users-response') != 1){
+            return $this->permissionmessage();
+        }
+
         $contact = Contact::latest()->get();
         return response()->json([
             'status' => 200,

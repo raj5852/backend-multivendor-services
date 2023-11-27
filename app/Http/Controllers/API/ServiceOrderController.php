@@ -23,6 +23,9 @@ class ServiceOrderController extends Controller
     {
         $serviceOrder = ServiceOrder::query()
             ->where(['user_id' => userid(), 'is_paid' => 1])
+            ->when(request('search') != '', function ($query) {
+                $query->where('trxid', 'like', '%' . request('search') . '%');
+            })
             ->with(['servicedetails', 'packagedetails', 'vendor'])
             ->when(request('status'),function($request){
                 $request->where('status',request('status'));

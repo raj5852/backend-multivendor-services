@@ -16,6 +16,10 @@ class ServiceSubCategoryController extends Controller
      */
     public function index()
     {
+        if(checkpermission('service-sub-category') != 1){
+            return $this->permissionmessage();
+        }
+
         $data = ServiceSubCategory::query()->get();
         return $this->response($data);
     }

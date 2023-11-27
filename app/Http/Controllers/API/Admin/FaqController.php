@@ -16,6 +16,10 @@ class FaqController extends Controller
      */
     public function index()
     {
+        if(checkpermission('faq') != 1){
+            return $this->permissionmessage();
+        }
+
         $faqs = Faq::latest()->get();
         if($faqs){
             return response()->json([

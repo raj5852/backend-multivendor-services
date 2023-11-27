@@ -14,14 +14,13 @@ class BrandController extends Controller
 {
     public function BrandIndex()
     {
+        if(checkpermission('brand') != 1){
+            return $this->permissionmessage();
+        }
         $brand = Brand::where('created_by',Status::Admin->value)
         ->when(request('search'),fn($q, $name)=>$q->where('name','like',"%{$name}%"))
         ->latest()->paginate(12);
 
-        // return response()->json([
-        //     'status' => 200,
-        //     'brand' => $brand,
-        // ]);
         return $this->response($brand);
     }
 

@@ -22,10 +22,36 @@ class ProductController extends Controller
 {
     public function ProductIndex()
     {
+
+        if (!in_array(request('status'), ['pending', 'active', 'rejected'])) {
+            if (checkpermission('all-products') != 1) {
+                return $this->permissionmessage();
+            }
+        }
+
+        if (request('status') == 'pending') {
+            if (checkpermission('pending-products') != 1) {
+                return $this->permissionmessage();
+            }
+        }
+
+        if (request('status') == 'active') {
+            if (checkpermission('active-products') != 1) {
+                return $this->permissionmessage();
+            }
+        }
+
+        if (request('status') == 'rejected') {
+            if (checkpermission('rejected-product') != 1) {
+                return $this->permissionmessage();
+            }
+        }
+
+
         $product = Product::when(request('status') == 'pending', function ($q) {
             return $q->where('status', 'pending');
         })
-            ->when(request('search'), fn ($q, $name) => $q->where('name', 'like', "%{$name}%")->orWhere('uniqid', 'like', "%{$name}%") )
+            ->when(request('search'), fn ($q, $name) => $q->where('name', 'like', "%{$name}%")->orWhere('uniqid', 'like', "%{$name}%"))
 
             ->when(request('status') == 'active', function ($q) {
                 return $q->where('status', 'active');
@@ -43,25 +69,26 @@ class ProductController extends Controller
             'product' => $product,
         ]);
     }
-    function catecoryToSubcategory($id){
+    function catecoryToSubcategory($id)
+    {
         $category = Category::where([
-            'status'=>'active',
-            'id'=>$id
+            'status' => 'active',
+            'id' => $id
         ])->first();
 
 
-        if($category){
+        if ($category) {
             return response()->json([
-                'status'=>200,
-                'message'=>Subcategory::where([
-                    'category_id'=>$category->id,
-                    'status'=>'active'
+                'status' => 200,
+                'message' => Subcategory::where([
+                    'category_id' => $category->id,
+                    'status' => 'active'
                 ])->latest()->get()
             ]);
-        }else{
+        } else {
             return response()->json([
-                'status'=>400,
-                'message'=>[]
+                'status' => 400,
+                'message' => []
             ]);
         }
     }
@@ -85,7 +112,7 @@ class ProductController extends Controller
         } else {
             $product = Product::findOrFail($id);
             $product->status = $request->status;
-            $product->rejected_details = $request ?->rejected_details ?? '';
+            $product->rejected_details = $request?->rejected_details ?? '';
             $product->save();
 
             return response()->json([
@@ -170,21 +197,53 @@ class ProductController extends Controller
 
     public function ProductEdit($id)
     {
+
+
         $product = Product::find($id);
         if ($product) {
             $vendorproduct = Product::query()
-            ->with('category','subcategory','brand','productImage','productdetails','vendor','productrating.affiliate:id,name,image')
-            ->withAvg('productrating', 'rating')
-            ->find($id);
+                ->with('category', 'subcategory', 'brand', 'productImage', 'productdetails', 'vendor', 'productrating.affiliate:id,name,image')
+                ->withAvg('productrating', 'rating')
+                ->find($id);
+
+            if ($vendorproduct->status == 'active') {
+                if ((checkpermission('all-products') != 1)) {
+
+                    if (checkpermission('active-products') != 1) {
+                        return $this->permissionmessage();
+                    }
+                }
+            }
+
+            if ($vendorproduct->status == 'pending') {
+                if ((checkpermission('all-products') != 1)) {
+
+                    if (checkpermission('pending-products') != 1) {
+                        return $this->permissionmessage();
+                    }
+                }
+            }
+
+            if ($vendorproduct->status == 'rejected') {
+                if ((checkpermission('all-products') != 1)) {
+
+                    if (checkpermission('rejected-product') != 1) {
+                        return $this->permissionmessage();
+                    }
+                }
+            }
+
+
+
 
             return response()->json([
                 'status' => 200,
                 'product' => $vendorproduct,
-                'vendor_all_color'=>Color::where(['user_id'=> $product->user_id,'status'=>'active'])->get(),
-                'vendor_all_size'=>Size::where(['user_id'=> $product->user_id,'status'=>'active'])->get(),
-                'all_category_list'=>Category::where('status','active')->get(),
-                'all_subcategory_list'=>Subcategory::where('status','active')->get(),
-                'all_brand_list'=>Brand::where('status','active')->get()
+                'vendor_all_color' => Color::where(['user_id' => $product->user_id, 'status' => 'active'])->get(),
+                'vendor_all_size' => Size::where(['user_id' => $product->user_id, 'status' => 'active'])->get(),
+                'all_category_list' => Category::where('status', 'active')->get(),
+                'all_subcategory_list' => Subcategory::where('status', 'active')->get(),
+                'all_brand_list' => Brand::where('status', 'active')->get()
             ]);
         } else {
             return response()->json([
@@ -244,7 +303,7 @@ class ProductController extends Controller
                 $product->brand_id = $request->input('brand_id');
                 $product->user_id = $request->input('user_id');
                 // $product->user_id=Auth::user()->id;
-                $product->slug =  slugUpdate(Product::class,$request->name,$id);
+                $product->slug =  slugUpdate(Product::class, $request->name, $id);
                 $product->name = $request->input('name');
                 $product->short_description = $request->input('short_description');
                 $product->long_description = $request->input('long_description');
@@ -319,8 +378,8 @@ class ProductController extends Controller
 
     public function AllCategory()
     {
-        $category = Category::when(request('search'),fn($q, $name)=>$q->where('name','like',"%{$name}%"))
-        ->latest()->paginate(15);
+        $category = Category::when(request('search'), fn ($q, $name) => $q->where('name', 'like', "%{$name}%"))
+            ->latest()->paginate(15);
         return response()->json([
             'status' => 200,
             'category' => $category,
@@ -392,7 +451,7 @@ class ProductController extends Controller
         }
     }
 
-    function producteditrequest(){
-
+    function producteditrequest()
+    {
     }
 }

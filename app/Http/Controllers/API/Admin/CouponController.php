@@ -20,6 +20,9 @@ class CouponController extends Controller
      */
     public function index()
     {
+        if(checkpermission('active-coupon') != 1){
+            return $this->permissionmessage();
+        }
 
         $data = Coupon::query()
             ->latest()
@@ -51,6 +54,10 @@ class CouponController extends Controller
      */
     public function store(StoreCouponRequest $request)
     {
+        if(checkpermission('create-coupon') != 1){
+            return $this->permissionmessage();
+        }
+
         $validatedData = $request->validated();
 
         CouponService::create($validatedData);

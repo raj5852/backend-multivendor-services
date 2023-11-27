@@ -11,6 +11,10 @@ class ContactPageController extends Controller
 {
     //
     function store(ContactPageRequest $request){
+        if(checkpermission('content') != 1){
+            return $this->permissionmessage();
+        }
+
         $contactpage = ContactPage::first();
         if($contactpage){
             $contactpage->title = request('title');
@@ -32,6 +36,9 @@ class ContactPageController extends Controller
         return $this->response('Successfull!');
     }
     function index(){
+        if(checkpermission('content') != 1){
+            return $this->permissionmessage();
+        }
         return $this->response(ContactPage::first());
     }
 }

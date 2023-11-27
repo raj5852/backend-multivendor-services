@@ -2,6 +2,7 @@
 
 use App\Models\Coupon;
 use App\Models\Subscription;
+use App\Models\User;
 use App\Models\UserSubscription;
 use Carbon\Carbon;
 use Illuminate\Support\Str;
@@ -210,4 +211,12 @@ function couponget($coupon_id)
         }
         return $coupon;
     }
+}
+
+function
+checkpermission($permission)
+{
+    return auth()->user()->hasPermissionTo($permission);
+    // return User::find(1)->hasPermissionTo($permission);
+
 }

@@ -11,6 +11,9 @@ class PartnerController extends Controller
 {
     public function index()
     {
+        if(checkpermission('partner') != 1){
+            return $this->permissionmessage();
+        }
         $pertner = Partner::latest()->get();
         return response()->json([
             'status' => 200,
