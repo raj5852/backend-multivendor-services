@@ -63,6 +63,7 @@ Route::middleware(['auth:sanctum','isAPIVendor','userOnline'])->group(function (
     Route::get('vendor-product-approval/{id}', [ProductStatusController::class, 'approval']);
     Route::get('vendor-product-reject/{id}', [ProductStatusController::class, 'reject']);
     Route::get('vendor-all/product-accepted/{id}', [ProductStatusController::class, 'Accepted']);
+    Route::get('vendor-product-status-count', [ProductStatusController::class, 'statusCount']);
 
 
     //color
