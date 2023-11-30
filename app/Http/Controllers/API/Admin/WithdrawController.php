@@ -51,7 +51,8 @@ class WithdrawController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'admin_transition_id' => 'required',
-            'admin_bank_name' => 'required'
+            'admin_bank_name' => 'required',
+            'text' => 'required',
 
         ]);
         if ($validator->fails()) {
