@@ -91,5 +91,9 @@ class ProductStatusController extends Controller
         }
     }
 
+    public function statusCount() {
+        //
+    }
+
 
 }
