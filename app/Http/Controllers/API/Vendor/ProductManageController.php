@@ -32,6 +32,12 @@ class ProductManageController extends Controller
             'product' => ProductService::index(),
         ]);
     }
+    public function VendorProductCount() {
+        return response()->json([
+            'status' => 200,
+            'count' => ProductService::countThis(),
+        ]);
+    }
 
 
     public function VendorProductStore(Request $request)
@@ -456,6 +462,17 @@ class ProductManageController extends Controller
             ->latest()
             ->paginate(10)
             ->withQueryString();
+    }
+    function vendorproducteditrequestCount()
+    {
+        $requestCount = Product::query()
+            ->where('user_id', auth()->id())
+            ->withwhereHas('pendingproduct:id,product_id,is_reject')
+            ->count();
+            return response()->json([
+                'status' =>200,
+                'requestCount' => $requestCount
+            ]);
     }
 
 

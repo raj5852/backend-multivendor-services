@@ -276,4 +276,45 @@ class RequestProductController extends Controller
             'message' => 'updated successfully',
         ]);
     }
+
+
+
+    public function affiliateRequestCount() {
+
+        $count = ProductDetails::where('vendor_id', auth()->user()->id)
+            ->when(request('status') == 'pending', function ($q) {
+                return $q->where('status', '2');
+            })
+            ->when(request('status') == 'rejected', function ($q) {
+                return $q->where('status', '3');
+            })
+            ->when(request('status') == 'active', function ($q) {
+                return $q->where('status', '1');
+            })->count();
+        return response()->json([
+            'status' => 200,
+            'count' => $count
+        ]);
+    }
+
+    function membershipexpireactiveproductCount()
+    {
+        $expire_request_count = ProductDetails::query()
+            ->where(['vendor_id'=> auth()->id(), 'status' => 1])
+            ->whereHas('affiliator', function ($query) {
+                $query->withCount(['affiliatoractiveproducts' => function ($query) {
+                    $query->where('status', 1);
+                }])
+                    ->whereHas('usersubscription', function ($query) {
+                        $query->where('expire_date', '<=', now());
+                    });
+            })
+            ->count();
+
+
+        return response()->json([
+            'status' => 200,
+            'expire_request_count' => $expire_request_count,
+        ]);
+    }
 }
