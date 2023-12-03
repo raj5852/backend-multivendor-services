@@ -8,7 +8,12 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class ConversionLocation extends Model
 {
-    use HasFactory,SoftDeletes;
+    use HasFactory, SoftDeletes;
 
     protected $guarded = [];
+
+    function   category()
+    {
+        return $this->belongsTo(CampaignCategory::class, 'campaign_category_id');
+    }
 }

@@ -22,11 +22,17 @@ class AdminAdvertiseController extends Controller
      */
     public function index()
     {
+
+        if(checkpermission('all-advertiser') != 1){
+            return $this->permissionmessage();
+        }
+
         $data = AdminAdvertise::query()
             ->latest()
+            ->when(request('search'), fn ($q, $search) => $q->where('unique_id', 'like', "%{$search}%"))
             ->where('is_paid',1)
-            ->when(request('order_id'), fn ($q, $orderid) => $q->where('trxid', 'like', "%{$orderid}%"))
-            ->select('id','campaign_name','campaign_objective','budget_amount','start_date','end_date','is_paid','created_at','status')
+            ->select('id','campaign_name','campaign_objective','budget_amount','start_date','end_date','is_paid','created_at','status','unique_id')
+            ->with('user:id,name,email')
             ->paginate(10);
 
         return $this->response($data);

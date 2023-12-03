@@ -17,6 +17,10 @@ class SupportProblemTopicController extends Controller
      */
     public function index()
     {
+        if(checkpermission('support-problem-topic') != 1){
+            return $this->permissionmessage();
+        }
+
         $data = DB::table('support_problem_topics')->where('deleted_at', null)->get();
         return responsejson($data);
     }

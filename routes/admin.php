@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\Admin\RolePermissionController;
+use App\Http\Controllers\Admin\UserRegisterChartController;
 use App\Http\Controllers\API\Admin\AdminAdvertiseController;
 use App\Http\Controllers\API\Admin\BankController;
 use App\Http\Controllers\API\Admin\CampaignCategoryController;
@@ -44,11 +46,9 @@ use App\Http\Controllers\API\SubCategoryController;
 use App\Http\Controllers\API\BrandController;
 use App\Http\Controllers\API\CouponRequestController;
 use App\Http\Controllers\API\ProductController;
-use App\Http\Controllers\API\User\MemberController;
 use App\Http\Controllers\API\UserController;
 use App\Http\Controllers\API\Vendor\ServiceCategoryController;
 use App\Http\Controllers\API\Vendor\ServiceSubCategoryController;
-use App\Models\OrganizationTwo;
 // use App\Http\Controllers\HomeController;
 use Illuminate\Support\Facades\Route;
 
@@ -268,7 +268,7 @@ Route::middleware(['auth:sanctum', 'isAPIAdmin'])->group(function () {
         Route::resource('campaign/category', CampaignCategoryController::class);
         Route::resource('conversion/location', ConversionLocationController::class);
         Route::resource('performance/goal', PerformanceGoalController::class);
-
+        Route::get('user-register-chart',[UserRegisterChartController::class,'index']);
 
 
 
@@ -277,6 +277,20 @@ Route::middleware(['auth:sanctum', 'isAPIAdmin'])->group(function () {
         Route::get('dynamic-colum/view/{id}/{colum}', [PlacementController::class, 'show']);
         Route::post('dynamic-colum/update/{id}/{colum}', [PlacementController::class, 'update']);
         Route::delete('dynamic-colum/delete/{id}', [PlacementController::class, 'delete']);
+
+        // Route::get('get-user-permission',[RolePermissionController::class,'permission']);
+
+        Route::get('all-permission',[RolePermissionController::class,'allpermission']);
+        Route::get('all-roll',[RolePermissionController::class,'allroll']);
+
+        Route::post('create-role',[RolePermissionController::class,'rolepermission']);
+        Route::post('update-role/{id}',[RolePermissionController::class,'rolepermissionupdate']);
+        Route::get('role-with-permission/{id}',[RolePermissionController::class,'rolewithpermission']);
+
+        Route::post('add-manager',[RolePermissionController::class,'addmanager']);
+        Route::get('get-manager-data/{id}',[RolePermissionController::class,'getaddmanager']);
+
+        Route::post('update-manager-data/{id}',[RolePermissionController::class,'updateamanager']);
 
 
     });

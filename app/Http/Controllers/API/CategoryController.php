@@ -14,6 +14,10 @@ class CategoryController extends Controller
 
     public function CategoryIndex()
     {
+        if(checkpermission('category') != 1){
+            return $this->permissionmessage();
+        }
+
         $category = Category::latest()->paginate(10);
         return response()->json([
             'status' => 200,

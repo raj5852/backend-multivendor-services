@@ -11,6 +11,9 @@ class MembersController extends Controller
 {
     public function index()
     {
+        if(checkpermission('members') != 1){
+            return $this->permissionmessage();
+        }
         $member = Member::latest()->get();
         return response()->json([
             'status' => 200,

@@ -12,6 +12,9 @@ class VendorProductController extends Controller
 {
     function index()
     {
+        if(checkpermission('edit-products')){
+            return $this->permissionmessage();
+        }
         return Product::query()
             ->with('vendor')
             ->withwhereHas('pendingproduct',function($query){
@@ -24,6 +27,9 @@ class VendorProductController extends Controller
 
     function productview(int $id)
     {
+        if(checkpermission('edit-products')){
+            return $this->permissionmessage();
+        }
 
         $product = Product::query()
             ->where('id', $id)

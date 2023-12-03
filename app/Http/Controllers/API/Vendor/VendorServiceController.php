@@ -25,10 +25,11 @@ class VendorServiceController extends Controller
      */
     public function index()
     {
-        $vendorService =  VendorService::where(['user_id' => userid()])
+        $vendorService =  VendorService::query()
+            ->where(['user_id' => userid()])
             ->with(['servicepackages', 'serviceimages'])
-            ->when(request('order_id'), fn ($q, $orderid) => $q->where('trxid', 'like', "%{$orderid}%"))
             ->paginate(10);
+
         return $this->response($vendorService);
     }
 
@@ -125,8 +126,7 @@ class VendorServiceController extends Controller
     function serviceorders()
     {
         $order = ServiceOrder::where(['vendor_id' => userid(), 'is_paid' => 1])
-            ->with(['customerdetails', 'servicedetails', 'packagedetails'])
-            ->when(request('order_id'), fn ($q, $orderid) => $q->where('trxid', 'like', "%{$orderid}%"))
+            ->when(request('search'), fn ($q, $orderid) => $q->where('trxid', 'like', "%{$orderid}%"))
             ->latest()
             ->paginate(10);
 
@@ -150,7 +150,7 @@ class VendorServiceController extends Controller
             $serviceOrder->timer = $timer;
         }
 
-        if($status == 'cancel_request'){
+        if ($status == 'cancel_request') {
             $serviceOrder->is_rejected = 1;
             $serviceOrder->reason = request('reason');
             $serviceOrder->rejected_user_id = auth()->id();

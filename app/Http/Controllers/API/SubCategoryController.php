@@ -13,6 +13,10 @@ class SubCategoryController extends Controller
 {
     public function SubCategoryIndex()
     {
+        if(checkpermission('sub-category') != 1){
+            return $this->permissionmessage();
+        }
+
         $subcategory = Subcategory::with('category')->latest()->paginate(10);
         return response()->json([
             'status' => 200,
@@ -114,7 +118,7 @@ class SubCategoryController extends Controller
             ]);
         }
     }
-    
+
     function status(Request $request, $id)
     {
 

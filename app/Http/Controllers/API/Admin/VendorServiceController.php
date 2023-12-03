@@ -18,7 +18,17 @@ class VendorServiceController extends Controller
      */
     public function index()
     {
-        $data = VendorService::with('servicepackages', 'serviceimages', 'user')->latest()->paginate(10);
+        if(checkpermission('manage-service') != 1){
+            return $this->permissionmessage();
+        }
+
+        $data = VendorService::query()
+        ->when(request('search'), function ($query) {
+            $query->where('uniqueid', 'like', '%' . request('search') . '%');
+        })
+        ->with('servicepackages', 'serviceimages', 'user')->latest()
+
+        ->paginate(10);
         return $this->response($data);
     }
 

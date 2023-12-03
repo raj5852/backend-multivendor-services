@@ -19,8 +19,12 @@ class ServiceOrderShowController extends Controller
 
     public function index()
     {
+        if(checkpermission('service-order') != 1){
+            return $this->permissionmessage();
+        }
+
         $serviceOrderDetails  = ServiceOrder::with(['customerdetails', 'vendor', 'servicedetails'])->latest()
-            ->when(request('order_id'), fn ($q, $orderid) => $q->where('trxid', 'like', "%{$orderid}%"))
+            ->when(request('search'), fn ($q, $orderid) => $q->where('trxid', 'like', "%{$orderid}%"))
             ->paginate(10);
         return $this->response($serviceOrderDetails);
     }
@@ -43,6 +47,10 @@ class ServiceOrderShowController extends Controller
      */
     public function show($id)
     {
+        if(checkpermission('service-order') != 1){
+            return $this->permissionmessage();
+        }
+
         $data = ServiceOrder::with(['customerdetails', 'servicedetails', 'packagedetails', 'requirementsfiles', 'vendor', 'orderdelivery' => function ($query) {
             $query->with('deliveryfiles');
         }])->find($id);
@@ -58,6 +66,9 @@ class ServiceOrderShowController extends Controller
      */
     public function update(CustomerServiceShow $request, $id)
     {
+        if(checkpermission('service-order') != 1){
+            return $this->permissionmessage();
+        }
         $validatedData = $request->validated();
         $serviceOrder = ServiceOrder::find($id);
         $serviceOrder->status = $validatedData['status'];
@@ -67,6 +78,12 @@ class ServiceOrderShowController extends Controller
             User::find($serviceOrder->user_id)->increment('balance', $serviceOrder->amount);
             PaymentHistoryService::store(uniqid(), $serviceOrder->amount, 'My wallet', 'Service cancel', '+', '', $serviceOrder->user_id);
         }
+
+        if ($validatedData['status'] == 'success') {
+            User::find($serviceOrder->vendor_id)->increment('balance', $serviceOrder->amount);
+            PaymentHistoryService::store(uniqid(), $serviceOrder->amount, 'My wallet', 'Service sell', '+', '', $serviceOrder->vendor_id);
+        }
+
         return $this->response('Updated successful');
     }
 

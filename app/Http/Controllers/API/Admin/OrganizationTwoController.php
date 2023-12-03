@@ -16,6 +16,10 @@ class OrganizationTwoController extends Controller
      */
     public function index()
     {
+        if(checkpermission('organization-two') != 1){
+            return $this->permissionmessage();
+        }
+
         $orgtwo = OrganizationTwo::latest()->get();
         return response()->json([
             'status' => 200,

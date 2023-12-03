@@ -31,13 +31,18 @@ class CustomerService
                 $amount =  ($serviceOrder->amount / 100) * $serviceOrder->commission_amount;
             }
 
-            $admin =  User::where('role_as', 1)->first();
-            $admin->balance = $amount;
-            $admin->save();
+            // $admin =  User::where('role_as', 1)->first();
+            // $admin->balance = $amount;
+            // $admin->save();
+
+            $totalsellerCommition = ($serviceOrder->amount - $amount);
 
             $vendor = User::find($serviceOrder->vendor_id);
-            $vendor->balance = ($serviceOrder->amount - $amount);
+            $vendor->balance = $totalsellerCommition;
             $vendor->save();
+
+            PaymentHistoryService::store(uniqid(), $totalsellerCommition, 'My wallet', 'Service sell', '+', '', $serviceOrder->vendor_id);
+
         }
 
         if ($validateData['status'] == 'revision') {

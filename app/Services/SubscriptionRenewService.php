@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Models\Coupon;
+use App\Models\CouponUsed;
 use App\Models\PaymentStore;
 use App\Models\Product;
 use App\Models\ProductDetails;
@@ -125,14 +126,14 @@ class SubscriptionRenewService
         if ($validatedData['payment_method'] == 'my-wallet') {
             $user->balance = convertfloat($user->balance) - ($totalprice);
             $user->save();
-            return  self::subscriptionadd($user, $subscriptionid, $trxid, 'My wallet', 'Renew');
+            return  self::subscriptionadd($user, $subscriptionid, $trxid, 'My wallet', 'Renew',$totalsubscriptionamount = $totalprice,$couponName = request('coupon_id'));
         }
 
         if ($validatedData['payment_method'] == 'aamarpay') {
             $successurl = url('api/aaparpay/renew-success');
 
             $validatedData['user_id'] = auth()->id();
-
+            $validatedData['coupon'] = request('coupon_id');
             PaymentStore::create([
                 'payment_gateway' => 'aamarpay',
                 'trxid' => $trxid,
@@ -148,14 +149,34 @@ class SubscriptionRenewService
 
 
     // $trxid, $amount, $payment_method, $transition_type, $balance_type, $coupon, $userid
-    static function subscriptionadd($user, $subscriptionid, $trxid, $payment_method, $transition_type)
+    static function subscriptionadd($user, $subscriptionid, $trxid, $payment_method, $transition_type, $totalsubscriptionamount = null, $couponName = '')
     {
         $userCurrentSubscription = $user->usersubscription;
         $getsubscription = Subscription::find($subscriptionid);
         $usersubscriptionPlan = Subscription::find($userCurrentSubscription->subscription_id);
         $addMonth =  getmonth($getsubscription->subscription_package_type);
 
-        PaymentHistoryService::store($trxid, $getsubscription->subscription_amount, $payment_method, $transition_type, '-', '', $user->id);
+        PaymentHistoryService::store($trxid, ($totalsubscriptionamount ?? $getsubscription->subscription_amount), $payment_method, $transition_type, '-', ($couponName), $user->id);
+
+
+
+        // PaymentHistoryService::store($trxid, $totalamount, $paymentmethod, 'Subscription', '-', $coupon, $user->id);
+        $getcoupon = Coupon::find($couponName ?? 0);
+
+        if ($getcoupon) {
+            $couponUser = User::find($getcoupon->user_id);
+            $couponUser->increment('balance', $getcoupon->commission);
+
+            CouponUsed::create([
+                'user_id'=>$getcoupon->user_id,
+                'coupon_id'=>$couponName,
+                'total_commission'=>$getcoupon->commission
+            ]);
+
+            PaymentHistoryService::store($trxid, $getcoupon->commission, 'My wallet', 'Referral bonus', '+', $couponName, $couponUser->id);
+        }
+
+
 
         $userCurrentSubscription->subscription_price = $getsubscription->subscription_amount;
 

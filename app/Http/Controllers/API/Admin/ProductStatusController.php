@@ -12,6 +12,9 @@ class ProductStatusController extends Controller
 
     public function AdminRequestPending()
     {
+        if(checkpermission('pending-request') != 1){
+            return $this->permissionmessage();
+        }
         $search = request('search');
         $product = ProductDetails::query()
             ->with(['vendor', 'affiliator', 'product'])
@@ -35,6 +38,10 @@ class ProductStatusController extends Controller
 
     public function AdminRequestActive()
     {
+        if(checkpermission('active-request') != 1){
+            return $this->permissionmessage();
+        }
+
         $search = request('search');
         $product = ProductDetails::query()
             ->with(['vendor:id,name', 'affiliator:id,name', 'product:id,name,image,discount_rate',])
@@ -58,6 +65,10 @@ class ProductStatusController extends Controller
 
     function AdminRequestAll()
     {
+        if(checkpermission('all-request') != 1){
+            return $this->permissionmessage();
+        }
+
         $search = request('search');
         $product = ProductDetails::query()
             ->with(['vendor:id,name', 'affiliator:id,name', 'product:id,name,image,discount_rate',])
@@ -81,6 +92,9 @@ class ProductStatusController extends Controller
 
     function RequestRejected()
     {
+        if(checkpermission('rejected-request') != 1){
+            return $this->permissionmessage();
+        }
         $search = request('search');
         $product = ProductDetails::query()
             ->with(['vendor', 'affiliator', 'product'])
@@ -129,7 +143,8 @@ class ProductStatusController extends Controller
         $product = ProductDetails::with(['vendor', 'affiliator', 'product' => function ($query) {
             $query->with('productImage');
         }])->find($id);
-        // 'sizes','colors'
+
+
 
         return response()->json([
             'status' => 200,

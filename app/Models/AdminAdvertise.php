@@ -43,4 +43,7 @@ class AdminAdvertise extends Model
             $query->advertiseLocationFiles()->delete();
         });
     }
+    function user(){
+        return $this->belongsTo(User::class);
+    }
 }

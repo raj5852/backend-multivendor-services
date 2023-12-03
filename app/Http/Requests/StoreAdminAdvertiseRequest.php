@@ -48,11 +48,11 @@ class StoreAdminAdvertiseRequest extends FormRequest
             'inventory'  => ['required'],
             'format'  => ['required'],
 
-            'destination'  => ['required'],
-            'tracking'  => ['required'],
-            'url_perimeter'  => ['required', 'url'],
-            'number'  => ['required', 'numeric'],
-            'last_description'  => ['required'],
+            'destination'  => ['nullable'],
+            'tracking'  => ['nullable'],
+            'url_perimeter'  => ['nullable', 'url'],
+            'number'  => ['nullable', 'numeric'],
+            'last_description'  => ['nullable'],
             'status'  => ['required', 'in:pending,progress,cancel,complited'],
 
             // 'advertise_audience_files' => 'required|array',

@@ -42,10 +42,10 @@ return new class extends Migration
             // $table->string('call_to_action');
             $table->text('ad_creative');
 
-            $table->string('destination');
-            $table->string('tracking');
-            $table->string('url_perimeter');
-            $table->string('number');
+            $table->string('destination')->nullable();
+            $table->string('tracking')->nullable();
+            $table->string('url_perimeter')->nullable();
+            $table->string('number')->nullable();
             $table->longText('last_description')->nullable();
             $table->string('status');
             $table->softDeletes();

@@ -2,15 +2,12 @@
 
 namespace App\Http\Requests;
 
-use App\Rules\RenewPackageId;
-use App\Rules\RenewPaymentRule;
-use App\Rules\SubscriptionTypeRule;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Validation\Rule;
 
-class RenewRequest extends FormRequest
+class RolePermissionUpdateRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -29,10 +26,19 @@ class RenewRequest extends FormRequest
      */
     public function rules()
     {
+        $id = $this->route('id');
         return [
-            'package_id'=>['required','integer', new RenewPackageId()],
-            'payment_method'=>['required',Rule::in('my-wallet','aamarpay')],
-            'coupon_id'=>['nullable']
+            'role'=>['required',Rule::unique('roles','name')->ignore($id)],
+            'permission' => [
+                'required',
+                'array',
+                'exists:permissions,name',
+                function ($attribute, $value, $fail) {
+                    if (count($value) !== count(array_unique($value))) {
+                        $fail('The '.$attribute.' array must not contain duplicate values.');
+                    }
+                },
+            ],
         ];
     }
 

@@ -15,6 +15,10 @@ class WithdrawController extends Controller
     //
     function index()
     {
+        if(checkpermission('withdraw') != 1){
+            return $this->permissionmessage();
+        }
+
         $search = request('search');
         $withdraw  = Withdraw::query()
         ->latest()

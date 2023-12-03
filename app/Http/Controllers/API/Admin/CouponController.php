@@ -20,13 +20,16 @@ class CouponController extends Controller
      */
     public function index()
     {
+        if(checkpermission('active-coupon') != 1){
+            return $this->permissionmessage();
+        }
 
         $data = Coupon::query()
             ->latest()
             ->with('user:id,name,email')
             ->when((request('form') != '') && request('to') != '', function ($query) {
                 $fromDate = Carbon::parse(request('form'));
-                $toDate = Carbon::parse(request('to'));
+                $toDate = Carbon::parse(request('to'))->addDay(1);
 
                 $query->withCount(['couponused' => function ($query) use ($fromDate, $toDate) {
                     $query->whereBetween('created_at', [$fromDate, $toDate]);
@@ -51,6 +54,10 @@ class CouponController extends Controller
      */
     public function store(StoreCouponRequest $request)
     {
+        if(checkpermission('create-coupon') != 1){
+            return $this->permissionmessage();
+        }
+
         $validatedData = $request->validated();
 
         CouponService::create($validatedData);

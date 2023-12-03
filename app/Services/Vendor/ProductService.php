@@ -30,6 +30,7 @@ class ProductService
         if (request()->hasFile('image')) {
             $vendorService->image =  fileUpload(request()->file('image'), 'uploads/vendor');
         }
+        $vendorService->uniqueid = uniqid();
         $vendorService->save();
 
 

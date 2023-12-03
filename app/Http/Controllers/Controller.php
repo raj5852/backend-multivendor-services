@@ -21,5 +21,14 @@ class Controller extends BaseController
         );
     }
 
+    function permissionmessage(){
+        return response()->json(
+            [
+                'data' => 'success',
+                'message' => 'You have no permission to access this page',
+            ]
+        );
+    }
+
 
 }

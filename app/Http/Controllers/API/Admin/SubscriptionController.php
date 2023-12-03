@@ -19,6 +19,10 @@ class SubscriptionController extends Controller
      */
     public function index()
     {
+        if(checkpermission('subscription') != 1){
+            return $this->permissionmessage();
+        }
+
        $data =  Subscription::all();
        return response()->json([
             'status' => 200,
@@ -55,6 +59,12 @@ class SubscriptionController extends Controller
      */
     public function show($id)
     {
+        if(checkpermission('subscription') != 1){
+            return $this->permissionmessage();
+        }
+
+
+
         $data = Subscription::find($id);
         return response()->json([
             'status' => 200,

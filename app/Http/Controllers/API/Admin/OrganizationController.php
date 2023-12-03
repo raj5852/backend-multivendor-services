@@ -16,6 +16,9 @@ class OrganizationController extends Controller
      */
     public function index()
     {
+        if(checkpermission('organization') != 1){
+            return $this->permissionmessage();
+        }
         $organizations = Organization::latest()->get();
         return response()->json([
             'status' => 200,

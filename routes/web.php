@@ -1,9 +1,11 @@
 <?php
 
 use App\Enums\Status;
+use App\Http\Controllers\API\Admin\DashboardController;
 use App\Http\Controllers\TestController;
 use App\Models\AdminAdvertise;
 use App\Models\CancelOrderBalance;
+use App\Models\Category;
 use App\Models\Coupon;
 use App\Models\CouponUsed;
 use App\Models\Order;
@@ -12,15 +14,17 @@ use App\Models\ServiceOrder;
 use App\Models\Subscription;
 use App\Models\SupportBox;
 use App\Models\User;
+use App\Models\UserSubscription;
 use App\Models\VendorService;
 use App\Models\Withdraw;
 use App\Services\SubscriptionDueService;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Auth;
-
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Route;
-
+use Spatie\Permission\Models\Permission;
+use Spatie\Permission\Models\Role;
 
 /*
 |--------------------------------------------------------------------------
@@ -54,9 +58,29 @@ Route::get('seed', function () {
     Artisan::call('db:seed');
 });
 
+Route::get('role-permission', function () {
+    $user = User::find(1);
+    $role = Role::first();
+
+    $permissions = Permission::pluck('id', 'id')->all();
+
+    $role->syncPermissions($permissions);
+
+    $user->assignRole([$role->id]);
+});
 
 
-
+// Route::get('demo',[DashboardController::class,'index']);
 Route::get('demo', function () {
-    // return ServiceOrder::where('user_id',2)->where('status','pending')->get();
+
+ return   UserSubscription::query()
+    ->where('subscription_price', 0)
+    ->whereDate('expire_date', '<', now()->addDay(12))
+    ->first()
+    ->update([
+        'expire_date'=>now()->addDay(2)
+    ]);
+
+
+
 });

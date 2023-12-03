@@ -2,6 +2,7 @@
 
 use App\Models\Coupon;
 use App\Models\Subscription;
+use App\Models\User;
 use App\Models\UserSubscription;
 use Carbon\Carbon;
 use Illuminate\Support\Str;
@@ -198,7 +199,7 @@ function couponget($coupon_id)
 {
     $coupon =  Coupon::query()
         ->where(['id' => $coupon_id, 'status' => 'active'])
-        ->whereDate('expire_date', '>', now())
+        ->whereDate('expire_date', '>=', now())
         ->withCount('couponused')
         ->first();
 
@@ -210,4 +211,11 @@ function couponget($coupon_id)
         }
         return $coupon;
     }
+}
+
+function
+checkpermission($permission)
+{
+    return User::find(auth()->id())->hasPermissionTo($permission);
+
 }
