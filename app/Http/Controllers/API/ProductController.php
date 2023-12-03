@@ -451,7 +451,8 @@ class ProductController extends Controller
         }
     }
 
-    function producteditrequest()
+    public function producteditrequest()
     {
+        //
     }
 }
