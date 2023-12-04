@@ -78,6 +78,7 @@ Route::middleware('auth:sanctum')->group(function () {
     // advertise-success
 
     Route::get('all-advertise', [AdvertiseController::class, 'index']);
+    Route::get('advertise-count', [AdvertiseController::class, 'advertiseCount']);
     Route::get('advertise/{id}', [AdvertiseController::class, 'show']);
 
     Route::get('coupon-lists', [CouponListController::class, 'index']);

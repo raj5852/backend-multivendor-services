@@ -30,4 +30,19 @@ class AdvertiseController extends Controller
         return $this->response($data);
 
     }
+
+
+    public function advertiseCount() {
+        $pending  = AdminAdvertise::where('user_id', auth()->user()->id)->where('status', 'pending')->count();
+        $progress  = AdminAdvertise::where('user_id', auth()->user()->id)->where('status', 'progress')->count();
+        $delivered  = AdminAdvertise::where('user_id', auth()->user()->id)->where('status', 'delivered')->count();
+        $cancel  = AdminAdvertise::where('user_id', auth()->user()->id)->where('status', 'cancel')->count();
+        return response()->json([
+            'pending' => $pending,
+            'progress' => $progress,
+            'delivered' => $delivered,
+            'cancel' => $cancel,
+        ]);
+    }
+
 }
