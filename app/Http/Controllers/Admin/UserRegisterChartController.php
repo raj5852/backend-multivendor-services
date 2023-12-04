@@ -14,12 +14,29 @@ class UserRegisterChartController extends Controller
         $startDate =   request('start') ? Carbon::parse(request('start')) : Carbon::now()->subDays(30);
         $endDate =   request('end') ? Carbon::parse(request('end')) : Carbon::now();
 
-        $registrations = User::whereBetween('created_at', [$startDate, $endDate])
+        $registration_vendor = User::where('role_as', 2)
+        ->whereBetween('created_at', [$startDate, $endDate])
+            ->selectRaw('DATE(created_at) as date, COUNT(*) as registrations')
+            ->groupBy('date')
+            ->orderBy('date')
+            ->get();
+        $registration_affiliator = User::where('role_as', 3)
+        ->whereBetween('created_at', [$startDate, $endDate])
+            ->selectRaw('DATE(created_at) as date, COUNT(*) as registrations')
+            ->groupBy('date')
+            ->orderBy('date')
+            ->get();
+        $registration_user = User::where('role_as', 4)
+        ->whereBetween('created_at', [$startDate, $endDate])
             ->selectRaw('DATE(created_at) as date, COUNT(*) as registrations')
             ->groupBy('date')
             ->orderBy('date')
             ->get();
 
-        return response()->json($registrations);
+        return response()->json([
+            'registration_vendor' => $registration_vendor,
+            'registration_affiliator' => $registration_affiliator,
+            'registration_user' => $registration_user
+        ]);
     }
 }
