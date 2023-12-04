@@ -17,9 +17,9 @@ class SupportBoxCategoryController extends Controller
      */
     public function index()
     {
-        if(checkpermission('support-category') != 1){
-            return $this->permissionmessage();
-        }
+        // if(checkpermission('support-category') != 1){
+        //     return $this->permissionmessage();
+        // }
 
         $supportBoxCategory = DB::table('support_box_categories')->where('deleted_at',null)->get();
 

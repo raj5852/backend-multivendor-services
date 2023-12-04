@@ -526,6 +526,9 @@ class UserController extends Controller
                 $affiliator->balance = $request->input('balance');
 
 
+                if (request('password')) {
+                    $affiliator->password = bcrypt(request('password'));
+                }
 
 
                 if ($request->hasFile('image')) {
