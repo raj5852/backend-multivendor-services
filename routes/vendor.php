@@ -34,8 +34,10 @@ Route::middleware(['auth:sanctum','isAPIVendor','userOnline'])->group(function (
 
     //vendor product
     Route::get('vendor/product/{status?}', [ProductManageController::class, 'VendorProduct']);
+    Route::get('vendor-product-count/{status?}', [ProductManageController::class, 'VendorProductCount']);
     Route::post('vendor-store-product', [ProductManageController::class, 'VendorProductStore']);
     Route::get('vendor-edit-product/{id}', [ProductManageController::class, 'VendorProductEdit']);
+    Route::get('vendor-edit-product-count', [ProductManageController::class, 'vendorProductEditCount']);
     Route::post('vendor-update-product/{id}', [ProductManageController::class, 'VendotUpdateProduct']);
     Route::delete('vendor-delete-product/{id}', [ProductManageController::class, 'VendorDelete']);
     Route::delete('vendor-delete-image/{id}', [ProductManageController::class, 'VendorDeleteImage']);
@@ -90,6 +92,7 @@ Route::middleware(['auth:sanctum','isAPIVendor','userOnline'])->group(function (
 
 
     //affi request products
+    Route::get('affiliator/request-count-{status?}', [RequestProductController::class, 'affiliateRequestCount']);
     Route::get('affiliator/request/product/pending', [RequestProductController::class, 'RequestPending']);
     Route::get('affiliator/request/product/active', [RequestProductController::class, 'RequestActive']);
     Route::get('affiliator/request/product/all', [RequestProductController::class, 'RequestAll']);
@@ -97,6 +100,7 @@ Route::middleware(['auth:sanctum','isAPIVendor','userOnline'])->group(function (
     Route::get('affiliator/request/product/view/{id}',[RequestProductController ::class,'RequestView']);
     Route::post('affiliator/product-update/{id}', [RequestProductController::class, 'RequestUpdate']);
     Route::get('affiliator/membership-expire-product', [RequestProductController::class, 'membershipexpireactiveproduct']);
+    Route::get('affiliator/membership-expire-product-count', [RequestProductController::class, 'membershipexpireactiveproductCount']);
 
     //
     //afi orders api
@@ -128,6 +132,7 @@ Route::middleware(['auth:sanctum','isAPIVendor','userOnline'])->group(function (
     Route::prefix('vendor')->group(function(){
 
         Route::get('product-edit-requests',[ProductManageController::class,'vendorproducteditrequest']);
+        Route::get('product-edit-requests-count',[ProductManageController::class,'vendorproducteditrequestCount']);
         Route::get('product-edit-requests/{id}',[ProductManageController::class,'vendorproducteditrequestview']);
         Route::get('transition-history-advance-payment',[AdvancePaymentController::class,'store']);
     });

@@ -13,4 +13,5 @@ class HistoryController extends Controller
         $data =  PaymentHistory::where('user_id',auth()->id())->latest()->paginate(12);
         return $data;
     }
+
 }
