@@ -45,6 +45,7 @@ Route::post('logout', [AuthController::class, 'logout']);
 Route::middleware('auth:sanctum')->group(function () {
 
     Route::resource('main-services', VendorServiceController::class);
+    Route::get('main-service-count', [VendorServiceController::class, 'serviceCount']);
     Route::get('service/orders', [VendorServiceController::class, 'serviceorders']);
     Route::post('service/status', [VendorServiceController::class, 'statusChange']);
 
