@@ -111,6 +111,7 @@ Route::middleware(['auth:sanctum','isAPIVendor','userOnline'])->group(function (
     Route::get('vendor/delivered-orders',[VendorOrderController::class,'DeliveredOrders']);
     Route::get('vendor/cancel-orders',[VendorOrderController::class,'CanceldOrders']);
     Route::get('vendor/hold-orders',[VendorOrderController::class,'HoldOrders']);
+    Route::get('vendor/order-count',[VendorOrderController::class,'orderCount']);
 
     Route::post('vendor/order/update/{id}',[VendorOrderController::class,'productorderstatus']);
     Route::get('vendor/order/view/{id}',[VendorOrderController::class,'orderView']);

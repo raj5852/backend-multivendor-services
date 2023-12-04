@@ -214,4 +214,24 @@ class OrderController extends Controller
             'message' => $orders
         ]);
     }
+
+    public function orderCount() {
+        $all = Order::where('vendor_id', auth()->user()->id)->count();
+        $hold = Order::where('vendor_id', auth()->user()->id)->where('status', 'hold')->count();
+        $pending = Order::where('vendor_id', auth()->user()->id)->where('status', 'pending')->count();
+        $received = Order::where('vendor_id', auth()->user()->id)->where('status', 'received')->count();
+        $progress = Order::where('vendor_id', auth()->user()->id)->where('status', 'progress')->count();
+        $delivered = Order::where('vendor_id', auth()->user()->id)->where('status', 'delivered')->count();
+        $cancel = Order::where('vendor_id', auth()->user()->id)->where('status', 'cancel')->count();
+        return response()->json([
+            'status' => 200,
+            'all' => $all,
+            'hold' => $hold,
+            'pending' => $pending,
+            'progress' => $progress,
+            'received' => $received,
+            'delivered' => $delivered,
+            'cancel' => $cancel
+        ]);
+    }
 }
