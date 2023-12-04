@@ -33,6 +33,7 @@ class AdvertiseController extends Controller
 
 
     public function advertiseCount() {
+        $all  = AdminAdvertise::where('user_id', auth()->user()->id)->count();
         $pending  = AdminAdvertise::where('user_id', auth()->user()->id)->where('status', 'pending')->count();
         $progress  = AdminAdvertise::where('user_id', auth()->user()->id)->where('status', 'progress')->count();
         $delivered  = AdminAdvertise::where('user_id', auth()->user()->id)->where('status', 'delivered')->count();
@@ -42,6 +43,7 @@ class AdvertiseController extends Controller
             'progress' => $progress,
             'delivered' => $delivered,
             'cancel' => $cancel,
+            'all' => $all,
         ]);
     }
 

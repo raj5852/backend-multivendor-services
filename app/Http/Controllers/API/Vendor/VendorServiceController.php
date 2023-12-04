@@ -251,11 +251,13 @@ class VendorServiceController extends Controller
     }
 
     public function serviceCount() {
+        $all = VendorService::where('user_id', auth()->user()->id)->count();
         $active = VendorService::where('user_id', auth()->user()->id)->where('status', 'active')->count();
         $pending = VendorService::where('user_id', auth()->user()->id)->where('status', 'pending')->count();
         return response()->json([
             'active' => $active,
-            'pending' => $pending
+            'pending' => $pending,
+            'all' => $all,
         ]);
     }
 
