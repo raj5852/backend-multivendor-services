@@ -258,4 +258,22 @@ class VendorServiceController extends Controller
             'pending' => $pending
         ]);
     }
+
+    public function serviceOrderCount() {
+        $success = ServiceOrder::where('user_id', auth()->user()->id)->where('status', 'success')->count();
+        $delivered = ServiceOrder::where('user_id', auth()->user()->id)->where('status', 'delivered')->count();
+        $revision = ServiceOrder::where('user_id', auth()->user()->id)->where('status', 'revision')->count();
+        $pending = ServiceOrder::where('user_id', auth()->user()->id)->where('status', 'pending')->count();
+        $canceled = ServiceOrder::where('user_id', auth()->user()->id)->where('status', 'canceled')->count();
+        $progress = ServiceOrder::where('user_id', auth()->user()->id)->where('status', 'progress')->count();
+
+        return response()->json([
+            'success' => $success,
+            'delivered' => $delivered,
+            'revision' => $revision,
+            'pending' => $pending,
+            'canceled' => $canceled,
+            'progress' => $progress,
+        ]);
+    }
 }
