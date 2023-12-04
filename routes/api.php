@@ -58,6 +58,7 @@ Route::middleware('auth:sanctum')->group(function () {
 
     Route::resource('supportbox', SupportBoxController::class);
     Route::post('ticket-review', [SupportBoxController::class, 'review']);
+    Route::get('support-count', [SupportBoxController::class, 'supportCount']);
 
     Route::post('ticket-replay', [SupportBoxController::class, 'supportreplay']);
 
