@@ -127,4 +127,19 @@ class SupportBoxController extends Controller
 
         return $this->response('Successfull');
     }
+
+    public function supportCount() {
+        $all_support = SupportBox::where('user_id', auth()->user()->id)
+        ->withCount(['ticketreplay as total_admin_replay' => function ($query) {
+            $query->where('user_id', 1);
+        }])
+        ->with(['latestTicketreplay','category:id,name','problem_topic:id,name'])
+        ->get();
+        $closed = SupportBox::where('user_id', auth()->user()->id)->where('is_close', 1)->count();
+
+        return response()->json([
+            'closed' => $closed,
+            'all_support' => $all_support
+        ]);
+    }
 }
