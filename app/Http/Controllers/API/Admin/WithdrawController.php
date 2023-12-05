@@ -76,6 +76,7 @@ class WithdrawController extends Controller
         }
 
         $withdraw->admin_bank_name = $request->admin_bank_name;
+        $withdraw->text = $request->text;
         $withdraw->status = Status::Success->value;
         $withdraw->save();
 
