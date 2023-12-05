@@ -65,7 +65,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('ticket-replay', [SupportBoxController::class, 'supportreplay']);
 
     Route::apiResource('service/order', ServiceOrderController::class);
-    Route::get('service-order-count', [ServiceOrderController::class, 'serviceOrderCount']);
+    Route::get('service-buy-count', [ServiceOrderController::class, 'serviceOrderCount']);
     Route::post('service/order/status', [ServiceOrderController::class, 'status']);
     // Route::apiResource('coupon-list', CouponUsedController::class);
     Route::get('all-ticket-category', [SupportBoxCategoryController::class, 'index']);
