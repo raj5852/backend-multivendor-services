@@ -262,14 +262,16 @@ class VendorServiceController extends Controller
     }
 
     public function serviceOrderCount() {
-        $success = ServiceOrder::where('user_id', auth()->user()->id)->where('status', 'success')->count();
-        $delivered = ServiceOrder::where('user_id', auth()->user()->id)->where('status', 'delivered')->count();
-        $revision = ServiceOrder::where('user_id', auth()->user()->id)->where('status', 'revision')->count();
-        $pending = ServiceOrder::where('user_id', auth()->user()->id)->where('status', 'pending')->count();
-        $canceled = ServiceOrder::where('user_id', auth()->user()->id)->where('status', 'canceled')->count();
-        $progress = ServiceOrder::where('user_id', auth()->user()->id)->where('status', 'progress')->count();
+        $all = ServiceOrder::where('vendor_id', auth()->user()->id)->count();
+        $success = ServiceOrder::where('vendor_id', auth()->user()->id)->where('status', 'success')->count();
+        $delivered = ServiceOrder::where('vendor_id', auth()->user()->id)->where('status', 'delivered')->count();
+        $revision = ServiceOrder::where('vendor_id', auth()->user()->id)->where('status', 'revision')->count();
+        $pending = ServiceOrder::where('vendor_id', auth()->user()->id)->where('status', 'pending')->count();
+        $canceled = ServiceOrder::where('vendor_id', auth()->user()->id)->where('status', 'canceled')->count();
+        $progress = ServiceOrder::where('vendor_id', auth()->user()->id)->where('status', 'progress')->count();
 
         return response()->json([
+            'all' => $all,
             'success' => $success,
             'delivered' => $delivered,
             'revision' => $revision,
