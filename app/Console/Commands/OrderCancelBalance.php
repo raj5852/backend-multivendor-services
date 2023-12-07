@@ -31,7 +31,7 @@ class OrderCancelBalance extends Command
      */
     public function handle()
     {
-        CancelOrderBalance::where('created_at', '<', now()->subHour(24))->chunk(100, function ($datas) {
+        CancelOrderBalance::where('created_at', '<', now()->subHour(12))->chunk(100, function ($datas) {
             foreach ($datas as $data) {
                 $trxid = uniqid();
                 PaymentHistoryService::store($trxid, $data->amount, 'My wallet', 'Cancel product order', '+', '', $data->user_id);

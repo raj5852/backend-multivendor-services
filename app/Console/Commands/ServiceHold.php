@@ -33,7 +33,7 @@ class ServiceHold extends Command
         ->chunk(100, function ($orders) {
             foreach($orders as $order){
                 $order->update([
-                    'success' => 'holde'
+                    'status' => 'holde'
                 ]);
             }
 

@@ -289,6 +289,7 @@ Route::middleware(['auth:sanctum', 'isAPIAdmin'])->group(function () {
 
         Route::post('add-manager',[RolePermissionController::class,'addmanager']);
         Route::get('get-manager-data/{id}',[RolePermissionController::class,'getaddmanager']);
+        // Route::get('all-manager-list',[RolePermissionController::class,'getaddmanager']);
 
         Route::post('update-manager-data/{id}',[RolePermissionController::class,'updateamanager']);
 
