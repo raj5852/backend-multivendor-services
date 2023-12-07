@@ -17,8 +17,8 @@ class User extends Authenticatable
         HasFactory,
         SoftDeletes,
         Notifiable,
+        HasApiTokens,
         HasRoles;
-
     /**
      * The attributes that are mass assignable.
      *
