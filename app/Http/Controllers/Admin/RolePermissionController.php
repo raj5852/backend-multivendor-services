@@ -18,7 +18,7 @@ class RolePermissionController extends Controller
 
 
     function rolepermission(RolePermissionRequest $request){
-        $role = Role::create(['name' => request('role'),'guard_name' => 'sanctum']);
+        $role = Role::create(['name' => request('role')]);
 
         $role->syncPermissions(request('permission'));
         return response()->json(['success'=>true,'message'=>'Role created successfully']);
