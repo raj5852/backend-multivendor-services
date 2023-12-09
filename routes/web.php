@@ -93,4 +93,6 @@ Route::get('demo', function () {
 
 //  return   Carbon::parse()->diffInMinutes(now());
 
+    return colculateflatpercentage('percentage',500 ,5);
+
 });

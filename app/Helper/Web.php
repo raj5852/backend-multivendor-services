@@ -239,3 +239,12 @@ checkpermission($permission)
     return false;
 
 }
+
+function colculateflatpercentage($type, $amount, $discountamount)
+{
+    if ($type == 'flat') {
+        return $discountamount;
+    } else {
+        return  ($amount / 100) * $discountamount;
+    }
+}

@@ -32,6 +32,7 @@ class StoreCouponRequest extends FormRequest
             'type' => ['required',Rule::in(['flat','percentage'])],
             'amount' => ['required'],
             'commission' => ['required'],
+            'commission_type' => ['required',Rule::in(['flat','percentage'])],
             'expire_date' => ['required'],
             'limitation' => ['required'],
             'user_id' => ['required', 'integer',Rule::exists('users', 'id')->whereIn('role_as', [2, 3]),function($attribute,$value,$fail){
@@ -43,7 +44,7 @@ class StoreCouponRequest extends FormRequest
                         $fail('Already coupon exists');
                     }
                 }
-            }]
+            }],
         ];
     }
 
