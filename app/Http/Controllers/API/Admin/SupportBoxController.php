@@ -18,15 +18,20 @@ class SupportBoxController extends Controller
      */
     public function index()
     {
-        if(checkpermission('support') != 1){
-            return $this->permissionmessage();
-        }
+        // if(checkpermission('support') != 1){
+        //     return $this->permissionmessage();
+        // }
 
         $supportData = SupportBox::query()
             ->with(['user', 'latestTicketreplay','category:id,name','problem_topic:id,name'])
             ->withCount(['ticketreplay as total_admin_replay'=>function($query){
-                $query->where('user_id',1);
+                $query->where('role_as',1);
             }])
+            ->when(checkpermission('support') != 1,function($query){
+                $query->whereHas('supportassigned',function($query){
+                    $query->where('user_id',auth()->id());
+                });
+            })
             ->latest()
             ->paginate(10);
 
