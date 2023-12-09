@@ -107,7 +107,9 @@ class RolePermissionController extends Controller
     }
 
     function allmanagerlist(){
-        $data = User::where('role_as',1)->where('id','!=',1)->get();
+        $data = User::where('role_as',1)->where('id','!=',1)
+            ->with('roles')
+        ->get();
         return $data;
     }
 
