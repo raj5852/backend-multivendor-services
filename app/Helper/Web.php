@@ -222,8 +222,17 @@ checkpermission($permission)
 
 
     $permission =  Permission::where('name', $permission)->first();
+    if(!$permission){
+        return false;
+    }
     $rolepermission = RolePermission::where('permission_id', $permission->id)->first();
+    if(!$rolepermission){
+        return false;
+    }
     $userrole = DB::table('model_has_roles')->where('model_id', auth()->id())->first();
+    if(!$userrole){
+        return false;
+    }
     if ($userrole?->role_id == $rolepermission?->role_id) {
         return 1;
     }
