@@ -90,6 +90,12 @@ Route::get('demo', function () {
     // }
     // return false;
 
+        $user = User::find(1);
+    $role = Role::create(['name' => 'Admin']);
 
+    $permissions = Permission::pluck('id','id')->all();
 
+    $role->syncPermissions($permissions);
+
+    $user->assignRole([$role->id]);
 });
