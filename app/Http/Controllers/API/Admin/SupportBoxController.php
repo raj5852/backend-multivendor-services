@@ -25,7 +25,10 @@ class SupportBoxController extends Controller
         $supportData = SupportBox::query()
             ->with(['user', 'latestTicketreplay','category:id,name','problem_topic:id,name'])
             ->withCount(['ticketreplay as total_admin_replay'=>function($query){
-                $query->where('role_as',1);
+
+                $query->whereHas('user',function($query){
+                    $query->where('role_as',1);
+                });
             }])
             ->when(checkpermission('support') != 1,function($query){
                 $query->whereHas('supportassigned',function($query){
