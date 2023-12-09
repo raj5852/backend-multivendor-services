@@ -48,15 +48,16 @@ class SubscriptionService
 
         if ($getcoupon) {
             $couponUser = User::find($getcoupon->user_id);
-            $couponUser->increment('balance', $getcoupon->commission);
+            $totalreffralBonus = colculateflatpercentage($getcoupon->commission_type, $subscription->subscription_amount ,$getcoupon->commission );
+            $couponUser->increment('balance', $totalreffralBonus);
 
             CouponUsed::create([
                 'user_id'=>$getcoupon->user_id,
                 'coupon_id'=>$coupon,
-                'total_commission'=>$getcoupon->commission
+                'total_commission'=>$totalreffralBonus
             ]);
 
-            PaymentHistoryService::store($trxid, $getcoupon->commission, 'My wallet', 'Referral bonus', '+', $coupon, $couponUser->id);
+            PaymentHistoryService::store($trxid, $totalreffralBonus, 'My wallet', 'Referral bonus', '+', $coupon, $couponUser->id);
         }
 
         if (userrole($user->role_as) == 'user') {
