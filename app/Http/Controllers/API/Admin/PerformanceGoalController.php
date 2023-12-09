@@ -16,7 +16,9 @@ class PerformanceGoalController extends Controller
      */
     public function index()
     {
-        $goals = PerfomanceGoal::latest()->paginate(10);
+        $goals = PerfomanceGoal::latest()
+        ->with('category')
+        ->paginate(10);
         return $this->response($goals);
     }
 
