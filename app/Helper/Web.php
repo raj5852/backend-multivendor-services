@@ -1,12 +1,15 @@
 <?php
 
 use App\Models\Coupon;
+use App\Models\RolePermission;
 use App\Models\Subscription;
 use App\Models\User;
 use App\Models\UserSubscription;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 use Intervention\Image\Facades\Image;
+use Spatie\Permission\Models\Permission;
 
 function slugCreate($modelName, $slug_text, $slugColumn = 'slug')
 {
@@ -216,6 +219,14 @@ function couponget($coupon_id)
 function
 checkpermission($permission)
 {
-    return User::find(auth()->id())->hasPermissionTo($permission);
+
+
+    $permission =  Permission::where('name', $permission)->first();
+    $rolepermission = RolePermission::where('permission_id', $permission->id)->first();
+    $userrole = DB::table('model_has_roles')->where('model_id', auth()->id())->first();
+    if ($userrole->role_id == $rolepermission->role_id) {
+        return 1;
+    }
+    return false;
 
 }

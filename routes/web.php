@@ -10,6 +10,7 @@ use App\Models\Coupon;
 use App\Models\CouponUsed;
 use App\Models\Order;
 use App\Models\Product;
+use App\Models\RolePermission;
 use App\Models\ServiceOrder;
 use App\Models\Subscription;
 use App\Models\SupportBox;
@@ -73,14 +74,21 @@ Route::get('role-permission', function () {
 // Route::get('demo',[DashboardController::class,'index']);
 Route::get('demo', function () {
 
- return   UserSubscription::query()
-    ->where('subscription_price', 0)
-    ->whereDate('expire_date', '<', now()->addDay(12))
-    ->first()
-    ->update([
-        'expire_date'=>now()->addDay(2)
-    ]);
+    //  return   UserSubscription::query()
+    //     ->where('subscription_price', 0)
+    //     ->whereDate('expire_date', '<', now()->addDay(12))
+    //     ->first()
+    //     ->update([
+    //         'expire_date'=>now()->addDay(2)
+    //     ]);
 
+    // $permission =  Permission::where('name', 'add-affiliate')->first();
+    // $rolepermission = RolePermission::where('permission_id', $permission->id)->first();
+    // $userrole = DB::table('model_has_roles')->where('model_id', auth()->id())->first();
+    // if ($userrole->role_id == $rolepermission->role_id) {
+    //     return 1;
+    // }
+    // return false;
 
 
 });
