@@ -33,4 +33,9 @@ class SupportBox extends Model
         return $this->hasOne(TicketReply::class,'support_box_id')->latestOfMany();
     }
 
+    function supportassigned()
+    {
+        return $this->hasMany(SupportAssigned::class);
+    }
+
 }
