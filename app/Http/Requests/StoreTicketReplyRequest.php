@@ -2,9 +2,11 @@
 
 namespace App\Http\Requests;
 
+use App\Models\SupportBox;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
+use Illuminate\Validation\Rule;
 
 class StoreTicketReplyRequest extends FormRequest
 {
@@ -26,7 +28,18 @@ class StoreTicketReplyRequest extends FormRequest
     public function rules()
     {
         return [
-            'support_box_id'=>'required|exists:support_boxes,id',
+            'support_box_id'=>['required', function($attribute,$value,$fail){
+                $supportBox = SupportBox::query()
+                ->when(checkpermission('support') != 1,function($query){
+                    $query->whereHas('supportassigned',function($query){
+                        $query->where('user_id',auth()->id());
+                    });
+                })
+                ->find($value);
+                if (!$supportBox) {
+                    $fail('Not found');
+                }
+            }],
             'description'=>'required',
             'file'=>['nullable','file']
         ];

@@ -61,11 +61,17 @@ class SupportBoxController extends Controller
      */
     public function show($id)
     {
-        if(checkpermission('support') != 1){
-            return $this->permissionmessage();
-        }
+        // if(checkpermission('support') != 1){
+        //     return $this->permissionmessage();
+        // }
 
-        $supportBox = SupportBox::find($id);
+        $supportBox = SupportBox::query()
+        ->when(checkpermission('support') != 1,function($query){
+            $query->whereHas('supportassigned',function($query){
+                $query->where('user_id',auth()->id());
+            });
+        })
+        ->find($id);
         if (!$supportBox) {
             return responsejson('Not found', 'fail');
         }
@@ -97,7 +103,13 @@ class SupportBoxController extends Controller
      */
     public function destroy($id)
     {
-        $support = SupportBox::find($id);
+        $support = SupportBox::query()
+        ->when(checkpermission('support') != 1,function($query){
+            $query->whereHas('supportassigned',function($query){
+                $query->where('user_id',auth()->id());
+            });
+        })
+        ->find($id);
         if (File::exists($support->file)) {
             File::delete($support->file);
         }
