@@ -3,6 +3,7 @@
 use App\Http\Controllers\Admin\RolePermissionController;
 use App\Http\Controllers\Admin\UserRegisterChartController;
 use App\Http\Controllers\API\Admin\AdminAdvertiseController;
+use App\Http\Controllers\API\Admin\AssignController;
 use App\Http\Controllers\API\Admin\BankController;
 use App\Http\Controllers\API\Admin\CampaignCategoryController;
 use App\Http\Controllers\API\Admin\CompanionController;
@@ -292,7 +293,7 @@ Route::middleware(['auth:sanctum', 'isAPIAdmin'])->group(function () {
         Route::get('all-manager-list',[RolePermissionController::class,'allmanagerlist']);
 
         Route::post('update-manager-data/{id}',[RolePermissionController::class,'updateamanager']);
-
+        Route::post('assign-ticket',[AssignController::class,'store']);
 
     });
 
