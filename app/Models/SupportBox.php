@@ -35,7 +35,7 @@ class SupportBox extends Model
 
     function supportassigned()
     {
-        return $this->hasMany(SupportAssigned::class);
+        return $this->hasOne(SupportAssigned::class);
     }
 
 }
