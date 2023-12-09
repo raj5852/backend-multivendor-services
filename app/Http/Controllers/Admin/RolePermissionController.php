@@ -68,7 +68,11 @@ class RolePermissionController extends Controller
         $user->balance = 0;
         $user->save();
 
-        $user->assignRole(request('role'));
+        DB::table('model_has_roles')->insert([
+            'role_id'=>request('role'),
+            'model_type'=>'App\Models\User',
+            'model_id'=>$user->id
+        ]);
 
         return response()->json(['success'=>true,'message'=>'created successfully']);
     }
@@ -90,7 +94,12 @@ class RolePermissionController extends Controller
 
         DB::table('model_has_roles')->where('model_id',$id)->delete();
 
-        $user->assignRole(request('role'));
+        // $user->assignRole(request('role'));
+        DB::table('model_has_roles')->insert([
+            'role_id'=>request('role'),
+            'model_type'=>'App\Models\User',
+            'model_id'=>$user->id
+        ]);
 
         return response()->json(['success'=>true,'message'=>'Updated successfully']);
 
