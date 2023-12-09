@@ -87,6 +87,7 @@ class RolePermissionController extends Controller
 
     }
 
+
     function updateamanager(UpdateManagerRequest $request, $id){
 
         $user = User::find($id);
@@ -103,6 +104,11 @@ class RolePermissionController extends Controller
 
         return response()->json(['success'=>true,'message'=>'Updated successfully']);
 
+    }
+
+    function allmanagerlist(){
+        $data = User::where('role_as',1)->where('id','!=',1)->get();
+        return $data;
     }
 
 }
