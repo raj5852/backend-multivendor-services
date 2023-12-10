@@ -77,7 +77,7 @@ class RolePermissionController extends Controller
         return response()->json(['success'=>true,'message'=>'created successfully']);
     }
 
-    function getaddmanager($id){
+    function getaddmanager(){
 
         $user = User::find(auth()->id());
         if(!$user){
