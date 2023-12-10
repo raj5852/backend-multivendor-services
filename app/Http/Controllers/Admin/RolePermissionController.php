@@ -79,7 +79,7 @@ class RolePermissionController extends Controller
 
     function getaddmanager($id){
 
-        $user = User::find($id);
+        $user = User::find(auth()->id());
         if(!$user){
             return response()->json('Not found');
         }
