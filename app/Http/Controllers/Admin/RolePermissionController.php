@@ -17,35 +17,40 @@ class RolePermissionController extends Controller
 {
 
 
-    function rolepermission(RolePermissionRequest $request){
+    function rolepermission(RolePermissionRequest $request)
+    {
         $role = Role::create(['name' => request('role')]);
 
         $role->syncPermissions(request('permission'));
-        return response()->json(['success'=>true,'message'=>'Role created successfully']);
+        return response()->json(['success' => true, 'message' => 'Role created successfully']);
     }
 
-    function allroll(){
+    function allroll()
+    {
         return response()->json(Role::all());
     }
 
-    function allpermission(){
+    function allpermission()
+    {
         return response()->json(Permission::all());
     }
 
-    function rolewithpermission($id){
+    function rolewithpermission($id)
+    {
         $role = Role::find($id);
-        if(!$role){
+        if (!$role) {
             return response()->json('Not found');
         }
 
         return response()->json($role->load('permissions'));
     }
 
-    function rolepermissionupdate(RolePermissionUpdateRequest $request,$id){
+    function rolepermissionupdate(RolePermissionUpdateRequest $request, $id)
+    {
 
         $role =  Role::find($id);
 
-        if(!$role){
+        if (!$role) {
             return response()->json('Not found');
         }
 
@@ -54,10 +59,11 @@ class RolePermissionController extends Controller
 
         $role->syncPermissions(request('permission'));
 
-        return response()->json(['success'=>true,'message'=>'Updated successfully']);
+        return response()->json(['success' => true, 'message' => 'Updated successfully']);
     }
 
-    function addmanager(AddManagerRequest $request){
+    function addmanager(AddManagerRequest $request)
+    {
         $user = new User();
         $user->name = request('name');
         $user->email = request('email');
@@ -69,56 +75,64 @@ class RolePermissionController extends Controller
         $user->save();
 
         DB::table('model_has_roles')->insert([
-            'role_id'=>request('role'),
-            'model_type'=>'App\Models\User',
-            'model_id'=>$user->id
+            'role_id' => request('role'),
+            'model_type' => 'App\Models\User',
+            'model_id' => $user->id
         ]);
 
-        return response()->json(['success'=>true,'message'=>'created successfully']);
+        return response()->json(['success' => true, 'message' => 'created successfully']);
     }
 
-    function getaddmanager(){
+    function getaddmanager($id)
+    {
 
-        $user = User::find(auth()->id());
-        if(!$user){
+        $user = User::find($id);
+        if (!$user) {
             return response()->json('Not found');
         }
         return response()->json($user->load('roles'));
-
     }
 
 
-    function updateamanager(UpdateManagerRequest $request, $id){
+    function updateamanager(UpdateManagerRequest $request, $id)
+    {
 
         $user = User::find($id);
 
 
-        DB::table('model_has_roles')->where('model_id',$id)->delete();
+        DB::table('model_has_roles')->where('model_id', $id)->delete();
 
         // $user->assignRole(request('role'));
         DB::table('model_has_roles')->insert([
-            'role_id'=>request('role'),
-            'model_type'=>'App\Models\User',
-            'model_id'=>$user->id
+            'role_id' => request('role'),
+            'model_type' => 'App\Models\User',
+            'model_id' => $user->id
         ]);
 
-        return response()->json(['success'=>true,'message'=>'Updated successfully']);
-
+        return response()->json(['success' => true, 'message' => 'Updated successfully']);
     }
 
-    function allmanagerlist(){
-        $data = User::where('role_as',1)->where('id','!=',1)
+    function allmanagerlist()
+    {
+        $data = User::where('role_as', 1)->where('id', '!=', 1)
             ->with('roles')
-        ->get();
+            ->get();
         return $data;
     }
 
-    function managerpermission(){
+    function managerpermission()
+    {
         $user = User::find(auth()->id());
-        if(!$user){
+        if (!$user) {
             return response()->json('Not found');
         }
-        return User::with('permissions')->find(auth()->id());
-    }
+        $roleid = $user->roles[0]?->id;
 
+        $role = Role::find($roleid);
+        if (!$role) {
+            return response()->json('Not found');
+        }
+
+        return response()->json($role->load('permissions'));
+    }
 }
