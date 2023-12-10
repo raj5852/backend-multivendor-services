@@ -113,4 +113,12 @@ class RolePermissionController extends Controller
         return $data;
     }
 
+    function managerpermission(){
+        $user = User::find(auth()->id());
+        if(!$user){
+            return response()->json('Not found');
+        }
+        return User::with('permissions')->find(auth()->id());
+    }
+
 }

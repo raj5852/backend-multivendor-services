@@ -73,26 +73,10 @@ Route::get('role-permission', function () {
 
 // Route::get('demo',[DashboardController::class,'index']);
 Route::get('demo', function () {
-
-    //  return   UserSubscription::query()
-    //     ->where('subscription_price', 0)
-    //     ->whereDate('expire_date', '<', now()->addDay(12))
-    //     ->first()
-    //     ->update([
-    //         'expire_date'=>now()->addDay(2)
-    //     ]);
-
-    // $permission =  Permission::where('name', 'add-affiliate')->first();
-    // $rolepermission = RolePermission::where('permission_id', $permission->id)->first();
-    // $userrole = DB::table('model_has_roles')->where('model_id', auth()->id())->first();
-    // if ($userrole->role_id == $rolepermission->role_id) {
-    //     return 1;
-    // }
-    // return false;
-    // User
-
-//  return   Carbon::parse()->diffInMinutes(now());
-
-    return colculateflatpercentage('percentage',500 ,5);
+    $user = User::find(1);
+    if(!$user){
+        return response()->json('Not found');
+    }
+    return User::with('permissions')->find(1);
 
 });
