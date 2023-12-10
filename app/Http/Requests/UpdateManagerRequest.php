@@ -27,6 +27,9 @@ class UpdateManagerRequest extends FormRequest
     {
         return [
             'role'=>'required',
+            'name'=>'required',
+            'email'=>'required|email',
+            'number'=>'required',
         ];
     }
 
