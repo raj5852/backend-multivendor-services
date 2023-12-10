@@ -98,7 +98,14 @@ class RolePermissionController extends Controller
     {
 
         $user = User::find($id);
+        if(!$user){
+            return response()->json('Not found');
+        }
 
+        $user->name = request('name');
+        $user->email = request('email');
+        $user->number =  request('number');
+        $user->save();
 
         DB::table('model_has_roles')->where('model_id', $id)->delete();
 
