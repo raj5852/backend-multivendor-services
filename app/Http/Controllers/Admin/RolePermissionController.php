@@ -19,7 +19,7 @@ class RolePermissionController extends Controller
 
     function rolepermission(RolePermissionRequest $request)
     {
-        if(!checkpermission('role')){
+        if(checkpermission('role') != 1){
             return $this->permissionmessage();
         }
         $role = Role::create(['name' => request('role')]);
@@ -67,7 +67,7 @@ class RolePermissionController extends Controller
 
     function addmanager(AddManagerRequest $request)
     {
-        if(!checkpermission('role')){
+        if(checkpermission('role') != 1){
             return $this->permissionmessage();
         }
 
@@ -103,7 +103,7 @@ class RolePermissionController extends Controller
 
     function updateamanager(UpdateManagerRequest $request, $id)
     {
-        if(!checkpermission('role')){
+        if(checkpermission('role') != 1){
             return $this->permissionmessage();
         }
         $user = User::find($id);
@@ -130,7 +130,7 @@ class RolePermissionController extends Controller
 
     function allmanagerlist()
     {
-        if(!checkpermission('role')){
+        if(checkpermission('role') != 1){
             return $this->permissionmessage();
         }
         $data = User::where('role_as', 1)->where('id', '!=', 1)
@@ -141,7 +141,7 @@ class RolePermissionController extends Controller
 
     function managerpermission()
     {
-        if(!checkpermission('role')){
+        if(checkpermission('role') != 1){
             return $this->permissionmessage();
         }
 
