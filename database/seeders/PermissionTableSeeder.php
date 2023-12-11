@@ -130,7 +130,11 @@ class PermissionTableSeeder extends Seeder
 
             // Service Order
             'service-order',
-            'membership'
+            'membership',
+
+            //role
+            'role'
+
         ];
         foreach ($permissions as $permission) {
             Permission::create(['name' => $permission]);
