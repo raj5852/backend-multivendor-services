@@ -311,7 +311,8 @@ Route::middleware(['auth:sanctum', 'isAPIAdmin'])->group(function () {
             if(!$permission){
                 return false;
             }
-            $rolepermission = RolePermission::where('permission_id', $permission->id)->first();
+            $userrole = DB::table('model_has_roles')->where('model_id', auth()->id())->first();
+            $rolepermission = RolePermission::where('permission_id', $permission->id)->where('role_id',$userrole->role_id)->first();
             if(!$rolepermission){
                 return false;
             }
