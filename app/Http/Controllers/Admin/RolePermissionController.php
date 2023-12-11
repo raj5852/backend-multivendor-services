@@ -19,6 +19,9 @@ class RolePermissionController extends Controller
 
     function rolepermission(RolePermissionRequest $request)
     {
+        if(!checkpermission('role')){
+            return $this->permissionmessage();
+        }
         $role = Role::create(['name' => request('role')]);
 
         $role->syncPermissions(request('permission'));
@@ -127,6 +130,9 @@ class RolePermissionController extends Controller
 
     function allmanagerlist()
     {
+        if(!checkpermission('role')){
+            return $this->permissionmessage();
+        }
         $data = User::where('role_as', 1)->where('id', '!=', 1)
             ->with('roles')
             ->get();
