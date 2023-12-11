@@ -142,4 +142,20 @@ class RolePermissionController extends Controller
 
         return response()->json($role->load('permissions'));
     }
+    function deleterole(){
+        $role = Role::find(request('id'));
+        if(!$role){
+            return response()->json('Not found');
+        }
+        $role->delete();
+        return response()->json(['success' => true, 'message' => 'Deleted successfully']);
+    }
+    function deletemanager($id){
+        $user = User::find($id);
+        if(!$user){
+            return response()->json('Not found');
+        }
+        $user->delete();
+        return response()->json(['success' => true, 'message' => 'Deleted successfully']);
+    }
 }

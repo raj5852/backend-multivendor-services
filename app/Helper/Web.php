@@ -229,10 +229,12 @@ checkpermission($permission)
     if(!$rolepermission){
         return false;
     }
+
     $userrole = DB::table('model_has_roles')->where('model_id', auth()->id())->first();
     if(!$userrole){
         return false;
     }
+
     if ($userrole?->role_id == $rolepermission?->role_id) {
         return 1;
     }
@@ -248,3 +250,5 @@ function colculateflatpercentage($type, $amount, $discountamount)
         return  ($amount / 100) * $discountamount;
     }
 }
+
+
