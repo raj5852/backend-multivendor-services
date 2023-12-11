@@ -50,6 +50,9 @@ use App\Http\Controllers\API\ProductController;
 use App\Http\Controllers\API\UserController;
 use App\Http\Controllers\API\Vendor\ServiceCategoryController;
 use App\Http\Controllers\API\Vendor\ServiceSubCategoryController;
+use App\Models\Permission;
+use App\Models\RolePermission;
+use Illuminate\Support\Facades\DB;
 // use App\Http\Controllers\HomeController;
 use Illuminate\Support\Facades\Route;
 
@@ -300,6 +303,30 @@ Route::middleware(['auth:sanctum', 'isAPIAdmin'])->group(function () {
         // delete role
         Route::delete('delete-role/{id}',[RolePermissionController::class,'deleterole']);
         Route::delete('delete-manager/{id}',[RolePermissionController::class,'deletemanager']);
+
+
+
+        Route::get('test-test',function(){
+            $permission =  Permission::where('name', 'alluser')->first();
+            if(!$permission){
+                return false;
+            }
+            $rolepermission = RolePermission::where('permission_id', $permission->id)->first();
+            if(!$rolepermission){
+                return false;
+            }
+
+            $userrole = DB::table('model_has_roles')->where('model_id', auth()->id())->first();
+            if(!$userrole){
+                return false;
+            }
+
+            if ($userrole?->role_id == $rolepermission?->role_id) {
+                return 1;
+            }
+            return false;
+
+        });
 
     });
 
