@@ -322,7 +322,7 @@ Route::middleware(['auth:sanctum', 'isAPIAdmin'])->group(function () {
             }
 
             if ($userrole?->role_id == $rolepermission?->role_id) {
-                return 1;
+                return response()->json(1);
             }
             return false;
 
