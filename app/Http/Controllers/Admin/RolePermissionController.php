@@ -164,7 +164,7 @@ class RolePermissionController extends Controller
         if(!$role){
             return response()->json('Not found');
         }
-        $role = DB::table('roles')->where('id',$id)->first();
+        $role = DB::table('roles')->where('id',$id)->delete();
         return $this->response('Deleted successfully');
 
     }
