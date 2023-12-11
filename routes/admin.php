@@ -306,28 +306,7 @@ Route::middleware(['auth:sanctum', 'isAPIAdmin'])->group(function () {
 
 
 
-        Route::get('test-test',function(){
-            $permission =  Permission::where('name', 'alluser')->first();
-            if(!$permission){
-                return false;
-            }
-            $userrole = DB::table('model_has_roles')->where('model_id', auth()->id())->first();
-            $rolepermission = RolePermission::where('permission_id', $permission->id)->where('role_id',$userrole->role_id)->first();
-            if(!$rolepermission){
-                return false;
-            }
 
-            $userrole = DB::table('model_has_roles')->where('model_id', auth()->id())->first();
-            if(!$userrole){
-                return false;
-            }
-
-            if ($userrole?->role_id == $rolepermission?->role_id) {
-                return response()->json(1);
-            }
-            return false;
-
-        });
 
     });
 
