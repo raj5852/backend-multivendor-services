@@ -297,6 +297,10 @@ Route::middleware(['auth:sanctum', 'isAPIAdmin'])->group(function () {
         Route::post('update-manager-data/{id}',[RolePermissionController::class,'updateamanager']);
         Route::post('assign-ticket',[AssignController::class,'store']);
 
+        // delete role
+        Route::delete('delete-role/{id}',[RolePermissionController::class,'deleterole']);
+        Route::delete('delete-manager/{id}',[RolePermissionController::class,'deletemanager']);
+
     });
 
 });
