@@ -11,7 +11,6 @@ use Illuminate\Support\Carbon;
 
 class DashboardController extends Controller
 {
-    public $message = 0;
 
     function index()
     {
@@ -27,9 +26,7 @@ class DashboardController extends Controller
             return $this->permissionmessage();
         }
 
-        if ($this->message == 1) {
-            return $this->permissionmessage();
-        }
+
         return  DashboardService::orderVsRevenue();
     }
     function recentOrder()
@@ -37,9 +34,7 @@ class DashboardController extends Controller
         if (checkpermission('dashboard') != 1) {
             return $this->permissionmessage();
         }
-        if ($this->message == 1) {
-            return $this->permissionmessage();
-        }
+
         return  DashboardService::recentOrder();
     }
     function categoryStatus()
@@ -48,9 +43,7 @@ class DashboardController extends Controller
             return $this->permissionmessage();
         }
 
-        if ($this->message == 1) {
-            return $this->permissionmessage();
-        }
+
         return  DashboardService::categoryStatus();
     }
 }
