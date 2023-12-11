@@ -141,9 +141,6 @@ class RolePermissionController extends Controller
 
     function managerpermission()
     {
-        if(checkpermission('role') != 1){
-            return $this->permissionmessage();
-        }
 
         $user = User::find(auth()->id());
         if (!$user) {
