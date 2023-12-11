@@ -14,7 +14,7 @@ class DashboardController extends Controller
 
     function index()
     {
-        if (!checkpermission('dashboard') != 1) {
+        if (checkpermission('dashboard') != 1) {
             return $this->permissionmessage();
         }
 
@@ -22,7 +22,7 @@ class DashboardController extends Controller
     }
     function orderVsRevenue()
     {
-        if (!checkpermission('dashboard') != 1) {
+        if (checkpermission('dashboard') != 1) {
             return $this->permissionmessage();
         }
 
@@ -31,7 +31,7 @@ class DashboardController extends Controller
     }
     function recentOrder()
     {
-        if (!checkpermission('dashboard')) {
+        if (checkpermission('dashboard') != 1) {
             return $this->permissionmessage();
         }
 
@@ -39,7 +39,7 @@ class DashboardController extends Controller
     }
     function categoryStatus()
     {
-        if (!checkpermission('dashboard') != 1) {
+        if (checkpermission('dashboard') != 1) {
             return $this->permissionmessage();
         }
 
