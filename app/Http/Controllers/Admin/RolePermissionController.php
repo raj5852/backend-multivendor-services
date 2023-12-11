@@ -148,7 +148,7 @@ class RolePermissionController extends Controller
             return response()->json('Not found');
         }
         $role->delete();
-        return response()->json(['success' => true, 'message' => 'Deleted successfully']);
+        return $this->response('Deleted successfully');
     }
     function deletemanager($id){
         $user = User::find($id);
@@ -156,6 +156,6 @@ class RolePermissionController extends Controller
             return response()->json('Not found');
         }
         $user->delete();
-        return response()->json(['success' => true, 'message' => 'Deleted successfully']);
+        return $this->response('Deleted successfully');
     }
 }
