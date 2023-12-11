@@ -64,6 +64,10 @@ class RolePermissionController extends Controller
 
     function addmanager(AddManagerRequest $request)
     {
+        if(!checkpermission('role')){
+            return $this->permissionmessage();
+        }
+
         $user = new User();
         $user->name = request('name');
         $user->email = request('email');
@@ -96,7 +100,9 @@ class RolePermissionController extends Controller
 
     function updateamanager(UpdateManagerRequest $request, $id)
     {
-
+        if(!checkpermission('role')){
+            return $this->permissionmessage();
+        }
         $user = User::find($id);
         if(!$user){
             return response()->json('Not found');
@@ -129,6 +135,10 @@ class RolePermissionController extends Controller
 
     function managerpermission()
     {
+        if(!checkpermission('role')){
+            return $this->permissionmessage();
+        }
+
         $user = User::find(auth()->id());
         if (!$user) {
             return response()->json('Not found');
