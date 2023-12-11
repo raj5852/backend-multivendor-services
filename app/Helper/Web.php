@@ -237,7 +237,7 @@ checkpermission($permission)
     }
 
     if ($userrole?->role_id == $rolepermission?->role_id) {
-        return response()->json(1);
+        return 1;
     }
     return false;
 
