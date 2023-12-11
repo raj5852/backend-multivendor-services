@@ -217,11 +217,11 @@ function couponget($coupon_id)
 }
 
 function
-checkpermission($permissionname)
+checkpermission($permission)
 {
 
 
-    $permission =  Permission::where('name', $permissionname)->first();
+    $permission =  Permission::where('name', $permission)->first();
     if(!$permission){
         return false;
     }
