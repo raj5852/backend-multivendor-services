@@ -39,6 +39,7 @@ class StoreAdminAdvertiseRequest extends FormRequest
             'start_date'  => ['required'],
             'end_date'  => ['required'],
             'age'  => ['required', 'string'],
+            'ageto'  => ['required', 'string'],
             'gender'  => ['required'],
             'detail_targeting'  => ['required'],
             'country'  => ['required'],

@@ -36,6 +36,7 @@ class AdminAdvertiseService
         $adminadvaertise->start_date   =  $validatData['start_date'];
         $adminadvaertise->end_date   =  $validatData['end_date'];
         $adminadvaertise->age   =  $validatData['age'];
+        $adminadvaertise->ageto   =  $validatData['ageto'];
         $adminadvaertise->gender   =  $validatData['gender'];
         $adminadvaertise->detail_targeting   =  $validatData['detail_targeting'];
         $adminadvaertise->country   =  $validatData['country'];
@@ -111,6 +112,7 @@ class AdminAdvertiseService
         $adminadvaertise->start_date   =  $validatData['start_date'];
         $adminadvaertise->end_date   =  $validatData['end_date'];
         $adminadvaertise->age   =  $validatData['age'];
+        $adminadvaertise->ageto   =  $validatData['ageto'];
         $adminadvaertise->gender   =  $validatData['gender'];
         $adminadvaertise->detail_targeting   =  $validatData['detail_targeting'];
         $adminadvaertise->country   =  $validatData['country'];

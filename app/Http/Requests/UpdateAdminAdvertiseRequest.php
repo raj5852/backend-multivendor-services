@@ -38,6 +38,7 @@ class UpdateAdminAdvertiseRequest extends FormRequest
             'start_date'  => ['required'],
             'end_date'  => ['required'],
             'age'  => ['required', 'numeric'],
+            'ageto'  => ['required'],
             'gender'  => ['required'],
             'detail_targeting'  => ['required'],
             'country'  => ['required'],
