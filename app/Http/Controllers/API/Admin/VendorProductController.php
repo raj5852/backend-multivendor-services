@@ -12,7 +12,7 @@ class VendorProductController extends Controller
 {
     function index()
     {
-        if(checkpermission('edit-products')){
+        if(checkpermission('edit-products') != 1){
             return $this->permissionmessage();
         }
         return Product::query()
