@@ -47,13 +47,13 @@ use App\Http\Controllers\API\SubCategoryController;
 use App\Http\Controllers\API\BrandController;
 use App\Http\Controllers\API\CouponRequestController;
 use App\Http\Controllers\API\ProductController;
+use App\Http\Controllers\API\StatisticsController;
 use App\Http\Controllers\API\UserController;
 use App\Http\Controllers\API\Vendor\ServiceCategoryController;
 use App\Http\Controllers\API\Vendor\ServiceSubCategoryController;
 use App\Models\Permission;
 use App\Models\RolePermission;
 use Illuminate\Support\Facades\DB;
-// use App\Http\Controllers\HomeController;
 use Illuminate\Support\Facades\Route;
 
 //admin route
@@ -304,27 +304,13 @@ Route::middleware(['auth:sanctum', 'isAPIAdmin'])->group(function () {
         Route::delete('delete-role/{id}',[RolePermissionController::class,'deleterole']);
         Route::delete('delete-manager/{id}',[RolePermissionController::class,'deletemanager']);
 
-        Route::get('test-test',function(){
-        //     $permission =  Permission::where('name', 'alluser')->first();
-        //     if(!$permission){
-        //         return false;
-        //     }
-        //     $userrole = DB::table('model_has_roles')->where('model_id', auth()->id())->first();
-        //   return  $rolepermission = RolePermission::where('permission_id', $permission->id)->where('role_id',$userrole->role_id)->first();
-        //     if(!$rolepermission){
-        //         return false;
-        //     }
-
-        //     $userrole = DB::table('model_has_roles')->where('model_id', auth()->id())->first();
-        //     if(!$userrole){
-        //         return false;
-        //     }
-
-        //     if ($userrole?->role_id == $rolepermission?->role_id) {
-        //         return 1;
-        //     }
-        //     return false;
-        });
+        Route::get('user-statistics',[StatisticsController::class,'users']);
+        Route::get('vendor-product-statistics',[StatisticsController::class,'products']);
+        Route::get('affiliate-request-statistics',[StatisticsController::class,'affiliaterequest']);
+        Route::get('manage-productorder-statistics',[StatisticsController::class,'manageproductorder']);
+        Route::get('manage-service-statistics',[StatisticsController::class,'manageservice']);
+        Route::get('service-order-statistics',[StatisticsController::class,'serviceorder']);
+        Route::get('advertise-order-statistics',[StatisticsController::class,'advertise']);
 
     });
 
