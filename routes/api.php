@@ -105,6 +105,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('service-buy-status',[ServiceBuyStatusController::class,'index']);
     Route::post('cancel-own-serviceorder-request',[ServiceBuyStatusController::class,'cancelownserviceorderrequest']);
     Route::post('cancel-other-serviceorder-request',[ServiceBuyStatusController::class,'cancelotherserviceorderrequest']);
+
 });
 
 Route::prefix('aaparpay')->group(function () {
