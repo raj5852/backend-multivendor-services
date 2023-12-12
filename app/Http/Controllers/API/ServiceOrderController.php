@@ -100,7 +100,7 @@ class ServiceOrderController extends Controller
         $delivered = ServiceOrder::where('user_id', auth()->user()->id)->where('status', 'delivered')->count();
         $revision = ServiceOrder::where('user_id', auth()->user()->id)->where('status', 'revision')->count();
         $pending = ServiceOrder::where('user_id', auth()->user()->id)->where('status', 'pending')->count();
-        $canceled = ServiceOrder::where('user_id', auth()->user()->id)->where('status', 'canceled')->count();
+        $canceled = ServiceOrder::where('user_id', auth()->user()->id)->where('is_paid',1)->where('status', 'canceled')->count();
         $progress = ServiceOrder::where('user_id', auth()->user()->id)->where('status', 'progress')->count();
 
         return response()->json([

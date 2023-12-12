@@ -19,11 +19,13 @@ class ServiceOrderShowController extends Controller
 
     public function index()
     {
-        if(checkpermission('service-order') != 1){
+        if (checkpermission('service-order') != 1) {
             return $this->permissionmessage();
         }
 
-        $serviceOrderDetails  = ServiceOrder::with(['customerdetails', 'vendor', 'servicedetails'])->latest()
+        $serviceOrderDetails  = ServiceOrder::with(['customerdetails', 'vendor', 'servicedetails'])
+            ->where('is_paid', 1)
+            ->latest()
             ->when(request('search'), fn ($q, $orderid) => $q->where('trxid', 'like', "%{$orderid}%"))
             ->paginate(10);
         return $this->response($serviceOrderDetails);
@@ -47,7 +49,7 @@ class ServiceOrderShowController extends Controller
      */
     public function show($id)
     {
-        if(checkpermission('service-order') != 1){
+        if (checkpermission('service-order') != 1) {
             return $this->permissionmessage();
         }
 
@@ -66,7 +68,7 @@ class ServiceOrderShowController extends Controller
      */
     public function update(CustomerServiceShow $request, $id)
     {
-        if(checkpermission('service-order') != 1){
+        if (checkpermission('service-order') != 1) {
             return $this->permissionmessage();
         }
         $validatedData = $request->validated();
