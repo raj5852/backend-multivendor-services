@@ -18,7 +18,7 @@ class OrderController extends Controller
 {
     function allOrders()
     {
-        if(checkpermission('all-order')){
+        if(checkpermission('all-order') != 1){
             return $this->permissionmessage();
         }
 
