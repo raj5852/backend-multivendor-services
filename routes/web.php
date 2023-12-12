@@ -73,10 +73,7 @@ Route::get('role-permission', function () {
 
 // Route::get('demo',[DashboardController::class,'index']);
 Route::get('demo', function () {
-    $user = User::find(1);
-    if(!$user){
-        return response()->json('Not found');
-    }
-    return User::with('permissions')->find(1);
+
+
 
 });

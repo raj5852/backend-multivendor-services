@@ -130,9 +130,9 @@ class RolePermissionController extends Controller
 
     function allmanagerlist()
     {
-        if(checkpermission('role') != 1){
-            return $this->permissionmessage();
-        }
+        // if(checkpermission('role') != 1){
+        //     return $this->permissionmessage();
+        // }
         $data = User::where('role_as', 1)->where('id', '!=', 1)
             ->with('roles')
             ->get();
