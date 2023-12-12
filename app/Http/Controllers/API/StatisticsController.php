@@ -90,7 +90,7 @@ class StatisticsController extends Controller
     }
 
     function manageservice(){
-        $service = VendorService::query()->where('is_paid',1);
+        $service = VendorService::query();
         $totalservice = (clone $service)->count();
         $totalactiveservice = (clone $service)->where('status', 'active')->count();
         $totalpendingservice = (clone $service)->where('status', 'pending')->count();
@@ -105,7 +105,7 @@ class StatisticsController extends Controller
     }
 
     function serviceorder(){
-        $serviceorder = ServiceOrder::query();
+        $serviceorder = ServiceOrder::query()->where('is_paid',1);
 
         $totalserviceorder = (clone $serviceorder)->count();
         $totalpendingservice = (clone $serviceorder)->where('status','pending')->count();
