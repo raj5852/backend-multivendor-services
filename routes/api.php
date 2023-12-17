@@ -42,7 +42,7 @@ Route::post('login', [AuthController::class, 'login']);
 Route::post('logout', [AuthController::class, 'logout']);
 
 
-Route::middleware('auth:sanctum')->group(function () {
+Route::middleware(['auth:sanctum','userOnline'])->group(function () {
 
     Route::resource('main-services', VendorServiceController::class);
     Route::get('main-service-count', [VendorServiceController::class, 'serviceCount']);

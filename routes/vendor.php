@@ -23,7 +23,7 @@ use App\Http\Controllers\API\Vendor\DashboardController as VendorDashboardContro
 
 
 // vendor
-Route::middleware(['auth:sanctum','isAPIVendor','userOnline'])->group(function () {
+Route::middleware(['auth:sanctum','isAPIVendor',])->group(function () {
 
     Route::get('/checkingAuthenticatedVendor', function () {
         return response()->json(['message' => 'You are in', 'status' => 200], 200);

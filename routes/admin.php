@@ -57,7 +57,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Route;
 
 //admin route
-Route::middleware(['auth:sanctum', 'isAPIAdmin'])->group(function () {
+Route::middleware(['auth:sanctum', 'isAPIAdmin','userOnline'])->group(function () {
 
     Route::get('/checkingAuthenticated', function () {
         return response()->json(['message' => 'You are in', 'status' => 200], 200);
