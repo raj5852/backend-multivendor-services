@@ -16,10 +16,6 @@ class ProfileDataController extends Controller
 
     public function profile()
     {
-        if(Carbon::parse(auth()->user()->last_seen)->diffInMinutes(Carbon::now()) > 30){
-            auth()->logout(auth()->user());
-        }
-
         $user = User::find(auth()->id())
         ->load(['usersubscription.subscription:id,card_heading']);
 

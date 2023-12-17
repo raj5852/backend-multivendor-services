@@ -3,6 +3,7 @@
 namespace App\Http\Middleware;
 
 use App\Models\User;
+use Carbon\Carbon;
 use Closure;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -20,9 +21,11 @@ class UserOnlineMiddleware
     {
         // return $next($request);
         if (Auth::check()) {
-
-            /* last seen */
-            User::where('id', auth()->id())->update(['last_seen' => now()]);
+            if(Carbon::parse(auth()->user()->last_seen)->diffInMinutes(Carbon::now()) > 30){
+                auth()->logout(auth()->user());
+            }else{
+                User::where('id', auth()->id())->update(['last_seen' => now()]);
+            }
         }
 
         return $next($request);
