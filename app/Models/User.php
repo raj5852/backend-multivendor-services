@@ -33,7 +33,8 @@ class User extends Authenticatable
         'image',
         'status',
         'balance',
-        'uniqid'
+        'uniqid',
+        'last_seen'
     ];
 
     /**
