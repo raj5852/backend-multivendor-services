@@ -91,7 +91,7 @@ class AuthController extends Controller
                 {
                     $token = $user->createToken('API TOKEN')->plainTextToken;
                 }
-                User::where('id', auth()->id())->update(['last_seen' => now()]);
+                // User::where('id', auth()->id())->update(['last_seen' => now()]);
 
                 return response()->json([
                     'status' => 200,
