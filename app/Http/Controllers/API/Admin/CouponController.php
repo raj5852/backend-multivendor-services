@@ -41,7 +41,7 @@ class CouponController extends Controller
                 $query->withCount('couponused')
                     ->withSum('couponused', 'total_commission');
             })
-            ->where($search, function ($query) use ($search) {
+            ->when($search, function ($query) use ($search) {
                 $query->search($search);
             })
             ->paginate(10);
