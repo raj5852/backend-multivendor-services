@@ -81,8 +81,6 @@ class AuthController extends Controller
                     'message' => 'Account is inactive please Conatct Admin Panel',
                 ]);
             } else {
-                $user->last_seeen = now();
-                $user->save();
                 if ($user->role_as == 1) //1= Admin
                 {
                     $token = $user->createToken('API TOKEN')->plainTextToken;
