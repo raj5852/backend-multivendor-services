@@ -20,10 +20,10 @@ class CouponController extends Controller
      */
     public function index()
     {
-        if(checkpermission('active-coupon') != 1){
+        if (checkpermission('active-coupon') != 1) {
             return $this->permissionmessage();
         }
-
+        $search = request('search', '');
         $data = Coupon::query()
             ->latest()
             ->with('user:id,name,email')
@@ -41,6 +41,9 @@ class CouponController extends Controller
                 $query->withCount('couponused')
                     ->withSum('couponused', 'total_commission');
             })
+            ->where($search, function ($query) use ($search) {
+                $query->search($search);
+            })
             ->paginate(10);
 
         return $this->response($data);
@@ -54,7 +57,7 @@ class CouponController extends Controller
      */
     public function store(StoreCouponRequest $request)
     {
-        if(checkpermission('create-coupon') != 1){
+        if (checkpermission('create-coupon') != 1) {
             return $this->permissionmessage();
         }
 
