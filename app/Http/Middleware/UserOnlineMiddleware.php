@@ -21,12 +21,11 @@ class UserOnlineMiddleware
     {
         // return $next($request);
         if (Auth::check()) {
-            // if(Carbon::parse(auth()->user()->last_seen)->diffInMinutes(Carbon::now()) > 30){
-            //     auth()->user()->tokens()->delete();
-            // }else{
-            // }
-            User::where('id', auth()->id())->update(['last_seen' => now()]);
-
+            if(Carbon::parse(auth()->user()->last_seen)->diffInMinutes(Carbon::now()) > 30){
+                auth()->user()->tokens()->delete();
+            }else{
+                User::where('id', auth()->id())->update(['last_seen' => now()]);
+            }
         }
 
         return $next($request);
