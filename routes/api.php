@@ -30,6 +30,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\API\Vendor\VendorServiceController;
 use App\Http\Controllers\API\Vendor\OrderDeliveryController;
 use App\Http\Controllers\API\Vendor\ServiceCategoryController;
+use App\Http\Controllers\CountryController;
 use App\Http\Controllers\DollerRateController;
 use App\Http\Controllers\RenewController;
 
@@ -170,6 +171,8 @@ Route::post('email-subscribe', [EmailSubscribeController::class, 'store']);
 Route::get('service-category',[ServiceCategoryController::class,'index']);
 
 
+Route::get('countries',[CountryController::class,'country']);
+Route::get('cities/{id}',[CountryController::class,'cities']);
 
 
 Route::middleware('auth:sanctum')->get('/user', function () {

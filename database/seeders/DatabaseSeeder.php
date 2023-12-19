@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
@@ -20,6 +21,10 @@ class DatabaseSeeder extends Seeder
         // $this->call(SubscriptionSedder::class);
         // $this->call(PlanTypeSeeder::class);
 
-        $this->call(PermissionTableSeeder::class);
+        // $this->call(PermissionTableSeeder::class);
+
+        $this->call(CountriesTableSeeder::class);
+        // $this->call(StatesTableSeeder::class);
+        // $this->call(CitiesTableSeeder::class);
     }
 }

@@ -6,6 +6,8 @@ use App\Http\Controllers\TestController;
 use App\Models\AdminAdvertise;
 use App\Models\CancelOrderBalance;
 use App\Models\Category;
+use App\Models\City;
+use App\Models\Country;
 use App\Models\Coupon;
 use App\Models\CouponUsed;
 use App\Models\Order;
@@ -60,20 +62,13 @@ Route::get('seed', function () {
 });
 
 Route::get('role-permission', function () {
-    $user = User::find(1);
-    $role = Role::first();
 
-    $permissions = Permission::pluck('id', 'id')->all();
-
-    $role->syncPermissions($permissions);
-
-    $user->assignRole([$role->id]);
 });
 
 
 // Route::get('demo',[DashboardController::class,'index']);
 Route::get('demo', function () {
 
-
+    return Country::where('id','18')->first()->cites;
 
 });
