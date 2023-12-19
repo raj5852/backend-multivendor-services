@@ -12,7 +12,7 @@ class Placement extends Model
 
     protected $guarded = [];
 
-    function campaincategory(){
+    function category(){
         return $this->belongsTo(CampaignCategory::class,'campaign_category_id');
     }
 }
