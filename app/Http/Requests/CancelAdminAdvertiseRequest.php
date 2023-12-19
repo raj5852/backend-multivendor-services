@@ -27,7 +27,8 @@ class CancelAdminAdvertiseRequest extends FormRequest
     {
         return [
             'advertise_id'=>'required',
-            'reason'=>'required'
+            'reason'=>'required',
+            'return_balance'=>['required','min:0','numeric']
         ];
     }
 

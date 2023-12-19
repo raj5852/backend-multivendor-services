@@ -11,4 +11,8 @@ class Placement extends Model
     use HasFactory,SoftDeletes;
 
     protected $guarded = [];
+
+    function campaincategory(){
+        return $this->belongsTo(CampaignCategory::class,'campaign_category_id');
+    }
 }

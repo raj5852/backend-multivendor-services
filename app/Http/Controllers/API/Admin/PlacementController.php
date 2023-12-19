@@ -12,7 +12,15 @@ class PlacementController extends Controller
 
     public function index($colum)
     {
-        $placements = Placement::select('id', $colum)->where($colum, '!=', '')->get();
+        $placements = Placement::where($colum, '!=', '')
+        ->when($colum == '',function($query) use($colum){
+            $query->select('id', $colum);
+        },function($query) use ($colum){
+            $query->select('id', $colum,'campaign_category_id')
+            ->with('campaincategory')
+            ;
+        })
+        ->get();
 
         return $this->response($placements);
     }

@@ -9,6 +9,7 @@ use App\Http\Requests\AdvertiseDeliveryRequest;
 use App\Http\Requests\CancelAdminAdvertiseRequest;
 use App\Http\Requests\StoreAdminAdvertiseRequest;
 use App\Http\Requests\UpdateAdminAdvertiseRequest;
+use App\Models\DollerRate;
 use App\Models\User;
 use App\Services\Admin\AdminAdvertiseService;
 use Illuminate\Support\Facades\DB;
@@ -165,6 +166,13 @@ class AdminAdvertiseController extends Controller
         $advertise->status = "cancel";
         $advertise->reason = request('reason');
         $advertise->save();
+
+        $user = User::find($advertise->user_id)->update();
+        $dollerrate = DollerRate::first()?->amount;
+
+       $totalreturn = $dollerrate * request('return_balance');
+       $user->increment('balance',$totalreturn);
+
 
         return $this->response('Cancel successfully!');
     }

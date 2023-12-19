@@ -10,6 +10,7 @@ use App\Models\City;
 use App\Models\Country;
 use App\Models\Coupon;
 use App\Models\CouponUsed;
+use App\Models\DollerRate;
 use App\Models\Order;
 use App\Models\Product;
 use App\Models\RolePermission;
@@ -71,11 +72,13 @@ Route::get('demo', function () {
 
     // return Country::where('id','18')->first()->cites;
     // return User::
-    $test = request('test',null);
-    return User::where('id',1)
-    ->when($test,function(){
-        dd(1);
-    })
-    ->first();
+    // $test = request('test',null);
+    // return User::where('id',1)
+    // ->when($test,function(){
+    //     dd(1);
+    // })
+    // ->first();
+
+    return DollerRate::first();
 
 });
