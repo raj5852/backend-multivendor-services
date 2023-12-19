@@ -17,7 +17,7 @@ class PlacementController extends Controller
             $query->select('id', $colum);
         },function($query) use ($colum){
             $query->select('id', $colum,'campaign_category_id')
-            ->with('campaincategory')
+            ->with('category')
             ;
         })
         ->get();
