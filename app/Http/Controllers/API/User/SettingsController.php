@@ -112,7 +112,7 @@ class SettingsController extends Controller
         ->when($categoryid,function($query) use($categoryid){
             $query->where('campaign_category_id',$categoryid);
         })
-        ->paginate(50);
+        ->get();
         return $this->response($data);
     }
 }
