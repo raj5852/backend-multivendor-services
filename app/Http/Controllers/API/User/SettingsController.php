@@ -106,8 +106,13 @@ class SettingsController extends Controller
         return $this->response($goals);
     }
 
-    public function campaignDynamicData($colum) {
-        $data = Placement::select('id', $colum)->where($colum, '!=','')->latest()->paginate(10);
+    public function campaignDynamicData($colum,$categoryid = null) {
+        $data = Placement::select('id', $colum)->where($colum, '!=','')
+        ->latest()
+        ->when($categoryid,function($query) use($categoryid){
+            $query->where('campaign_category_id',$categoryid);
+        })
+        ->paginate(50);
         return $this->response($data);
     }
 }

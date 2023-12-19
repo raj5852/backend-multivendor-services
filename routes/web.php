@@ -69,6 +69,13 @@ Route::get('role-permission', function () {
 // Route::get('demo',[DashboardController::class,'index']);
 Route::get('demo', function () {
 
-    return Country::where('id','18')->first()->cites;
+    // return Country::where('id','18')->first()->cites;
+    // return User::
+    $test = request('test',null);
+    return User::where('id',1)
+    ->when($test,function(){
+        dd(1);
+    })
+    ->first();
 
 });

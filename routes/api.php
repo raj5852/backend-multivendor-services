@@ -158,7 +158,7 @@ Route::get('/testimonials', [SettingsController::class, 'testimonial']);
 Route::get('front-campaign-category',[SettingsController::class,'campaignCategory']);
 Route::get('front-campaign-converstion-location/{id}',[SettingsController::class,'campaignConverstionLocation']);
 Route::get('front-campaign-performance-goal/{id}',[SettingsController::class,'campaignPerformanceGoal']);
-Route::get('front-dynamic-data/{colum}',[SettingsController::class,'campaignDynamicData']);
+Route::get('front-dynamic-data/{colum}/{id?}',[SettingsController::class,'campaignDynamicData']);
 
 
 

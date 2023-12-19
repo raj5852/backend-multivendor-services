@@ -12,7 +12,13 @@ class AdminAdvertise extends Model
 
     protected $guarded = [];
 
-    protected $casts = ['ad_creative' => 'json', 'placements' => 'json', 'device' => 'json', 'platform' => 'json'];
+    protected $casts = [
+        'ad_creative' => 'json',
+        'placements' => 'json',
+        'device' => 'json',
+        'platform' => 'json',
+        'city'=>'json'
+    ];
 
     public function AdvertiseAudienceFile()
     {
@@ -43,7 +49,8 @@ class AdminAdvertise extends Model
             $query->advertiseLocationFiles()->delete();
         });
     }
-    function user(){
+    function user()
+    {
         return $this->belongsTo(User::class);
     }
 }

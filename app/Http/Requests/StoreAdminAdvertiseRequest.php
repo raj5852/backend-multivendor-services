@@ -43,7 +43,7 @@ class StoreAdminAdvertiseRequest extends FormRequest
             'gender'  => ['required'],
             'detail_targeting'  => ['required'],
             'country'  => ['required'],
-            'city'  => ['required'],
+            'city'  => ['required','array'],
             'device'  => ['required'],
             'platform'  => ['required'],
             'inventory'  => ['required'],
@@ -58,9 +58,9 @@ class StoreAdminAdvertiseRequest extends FormRequest
 
             // 'advertise_audience_files' => 'required|array',
             // 'location_files'   => 'required|array',
-            'advertise_audience_files' => 'required|array',
+            'advertise_audience_files' => 'array',
             'advertise_audience_files.*' => 'image|mimes:jpeg,png,jpg,gif|max:20480', // You can customize the allowed image types and maximum file size.
-            'location_files' => 'required|array',
+            'location_files' => 'array',
             'location_files.*' => 'image|mimes:jpeg,png,jpg,gif|max:20480',
 
             'placements'=>'required',
