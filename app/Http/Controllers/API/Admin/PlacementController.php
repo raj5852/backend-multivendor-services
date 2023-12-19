@@ -66,7 +66,8 @@ class PlacementController extends Controller
             return responsejson('Not found !', 'fail');
         }
         Placement::find($id)->update([
-            $colum => request($colum)
+            $colum => request($colum),
+            'campaign_category_id'=>request('campaign_category_id')
         ]);
         return $this->response('Update successfull');
     }
