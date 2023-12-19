@@ -12,6 +12,7 @@ use App\Http\Requests\UpdateAdminAdvertiseRequest;
 use App\Models\DollerRate;
 use App\Models\User;
 use App\Services\Admin\AdminAdvertiseService;
+use App\Services\PaymentHistoryService;
 use Illuminate\Support\Facades\DB;
 
 class AdminAdvertiseController extends Controller
@@ -24,15 +25,15 @@ class AdminAdvertiseController extends Controller
     public function index()
     {
 
-        if(checkpermission('all-advertiser') != 1){
+        if (checkpermission('all-advertiser') != 1) {
             return $this->permissionmessage();
         }
 
         $data = AdminAdvertise::query()
             ->latest()
             ->when(request('search'), fn ($q, $search) => $q->where('unique_id', 'like', "%{$search}%"))
-            ->where('is_paid',1)
-            ->select('id','campaign_name','campaign_objective','budget_amount','start_date','end_date','is_paid','created_at','status','unique_id')
+            ->where('is_paid', 1)
+            ->select('id', 'campaign_name', 'campaign_objective', 'budget_amount', 'start_date', 'end_date', 'is_paid', 'created_at', 'status', 'unique_id')
             ->with('user:id,name,email')
             ->paginate(10);
 
@@ -74,7 +75,7 @@ class AdminAdvertiseController extends Controller
         // $userID = userid();
 
         $userID = userid();
-        $adminAdvertise = AdminAdvertise::with('AdvertiseAudienceFile', 'advertisePlacement', 'advertiseLocationFiles','files')->find($id);
+        $adminAdvertise = AdminAdvertise::with('AdvertiseAudienceFile', 'advertisePlacement', 'advertiseLocationFiles', 'files')->find($id);
         if ($adminAdvertise) {
             return response()->json([
                 'status' => 200,
@@ -170,9 +171,10 @@ class AdminAdvertiseController extends Controller
         $user = User::find($advertise->user_id)->update();
         $dollerrate = DollerRate::first()?->amount;
 
-       $totalreturn = $dollerrate * request('return_balance');
-       $user->increment('balance',$totalreturn);
+        $totalreturn = $dollerrate * request('return_balance');
+        $user->increment('balance', $totalreturn);
 
+        PaymentHistoryService::store(uniqid(), $totalreturn, 'My wallet', 'Return ads amount', '+', '', $user->id);
 
         return $this->response('Cancel successfully!');
     }
