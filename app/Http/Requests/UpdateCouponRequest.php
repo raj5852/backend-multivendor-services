@@ -29,10 +29,10 @@ class UpdateCouponRequest extends FormRequest
     {
         return [
             'name' => ['required', 'max:256'],
-            'type' => ['required|in:flat,percentage'],
+            'type' => ['required',Rule::in(['flat','percentage'])],
             'amount' => ['required'],
             'commission' => ['required'],
-            'commission_type' => ['required|in:flat,percentage'],
+            'commission_type' => ['required',Rule::in(['flat','percentage'])],
             'expire_date' => ['required'],
             'limitation' => ['required'],
             'user_id' => ['required', 'integer', Rule::exists('users', 'id')->whereIn('role_as', [2, 3,4])],
