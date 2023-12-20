@@ -27,7 +27,7 @@ class VendorProductController extends Controller
 
     function productview(int $id)
     {
-        if(checkpermission('edit-products')){
+        if(checkpermission('edit-products') != 1){
             return $this->permissionmessage();
         }
 
