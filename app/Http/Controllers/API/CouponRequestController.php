@@ -49,7 +49,7 @@ class CouponRequestController extends Controller
         }
 
 
-
+        $search = request('search','');
         return CouponRequest::query()
             ->with('user')
             ->when(request('status') == 'reject', function ($query) {
@@ -58,6 +58,9 @@ class CouponRequestController extends Controller
                 $query->where('status', '!=', 'reject');
             })
             ->latest()
+            ->when($search,function($query){
+                $query->search();
+            })
             ->paginate(10);
     }
 
