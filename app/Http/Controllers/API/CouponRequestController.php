@@ -53,16 +53,14 @@ class CouponRequestController extends Controller
         return CouponRequest::query()
             ->with('user')
             ->when(request('status') == 'reject', function ($query) use($search){
-                $query->where('status', 'reject')
-                ->when($search, function ($query) use($search){
-                    $query->search($search);
-                });
+                $query->where('status', 'reject');
             }, function ($query) use ($search) {
-                $query->where('status', '!=', 'reject')
-                ->when($search, function ($query) use($search){
-                    $query->search($search);
-                })
-                ;
+                $query->where('status', '!=', 'reject');
+            })
+            ->when($search,function($query) use($search){
+                $query->whereHas('user',function($query) use($search){
+                    $query->where('email','like',"%{$search}%");
+                });
             })
             ->latest()
             ->paginate(10);
