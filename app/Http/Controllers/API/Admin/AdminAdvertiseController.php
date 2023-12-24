@@ -168,7 +168,7 @@ class AdminAdvertiseController extends Controller
         $advertise->reason = request('reason');
         $advertise->save();
 
-        $user = User::find($advertise->user_id)->first();
+        $user = User::find($advertise->user_id);
         $dollerrate = DollerRate::first()?->amount;
 
         $totalreturn = $dollerrate * request('return_balance');
